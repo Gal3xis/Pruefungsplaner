@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <TextView
+        android:id="@+id/txtmessage"
+        android:layout_width="235dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="336dp"
+        android:layout_marginBottom="103dp"
+        android:text="TextView"
+        android:textSize="16sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/BtnOk"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="0dp"
+        android:layout_height="496dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="68dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:orientation="vertical"
+        android:padding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="306dp"
+            android:layout_height="wrap_content"
+
+            android:layout_marginBottom="5sp"
+            android:text="Modul (aktuelle Prüfperiode):"
+            android:textColor="#eeeeee"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <Spinner
+            android:id="@+id/spStudiengang"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="6dp"
+            tools:layout_editor_absoluteY="37dp" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
+            android:text="Prüfer:"
+            android:textColor="#eeeeee"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="81dp" />
+
+        <AutoCompleteTextView
+            android:id="@+id/acProfessor"
+            android:layout_width="403dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
+            android:hint="Alle"
+            android:singleLine="true"
+            android:textColor="#eeeeee"
+            android:textColorLink="@color/colorPrimary"
+            android:textSize="20sp"
+            android:theme="@style/Base.Theme.MaterialComponents.Light"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="101dp" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5sp"
+            android:text="Semester:"
+            android:textColor="#eeeeee"
+            android:textSize="20sp"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="133dp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="33dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btns1"
+                android:layout_width="29sp"
+                android:layout_height="25sp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="47dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="1"
+                android:textColor="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+
+            <Button
+                android:id="@+id/btns2"
+                android:layout_width="29dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="47dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="2"
+                android:textColor="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+
+            <Button
+                android:id="@+id/btns3"
+                android:layout_width="29dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="47dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="3"
+                android:textColor="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+
+            <Button
+                android:id="@+id/btns4"
+                android:layout_width="29dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="47dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="4"
+                android:textColor="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+
+            <Button
+                android:id="@+id/btns5"
+                android:layout_width="29dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="47dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="5"
+                android:textColor="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+
+            <Button
+                android:id="@+id/btns6"
+                android:layout_width="29dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="47dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="6"
+                android:textColor="#eeeeee"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spSemester"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="153dp" />
+
+        <LinearLayout
+            android:layout_width="123dp"
+            android:layout_height="76dp"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/spDatum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="5dp"
+            tools:layout_editor_absoluteY="234dp" />
+
+        <Spinner
+            android:id="@+id/spProf"
+            android:layout_width="wrap_content"
+            android:layout_height="53dp"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="277dp"
+            tools:layout_editor_absoluteY="290dp" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/BtnOk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="272dp"
+        android:background="@drawable/button_rounded_corners"
+        android:text="OK"
+        android:textColor="#eeeeee"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.907"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</android.support.constraint.ConstraintLayout>

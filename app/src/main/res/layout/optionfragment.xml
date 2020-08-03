@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="51dp"
+    android:minHeight="140dp"
+    android:screenOrientation="portrait"
+    tools:layout_editor_absoluteY="81dp">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="   Serveradresse:"
+            android:textColor="#eeeeee"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/txtAdresse"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="2dp"
+            android:background="@drawable/button_rounded_corners2"
+            android:baselineAligned="false"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:text="http://thor.ad.fh-bielefeld.de:8080/"
+            android:textColor="#eeeeee"
+            app:layout_constraintBottom_toTopOf="parent"
+            tools:layout_editor_absoluteX="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btnFav"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text=" Favoriten löschen "
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnDB"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text=" Datenbank löschen "
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnupdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="Prüfungen aktualisieren"
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnCalClear"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="Kalender Einträge löschen "
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnGoogleUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:text="Kalender aktualisieren"
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+            <Switch
+                android:id="@+id/switch2"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:padding="10dp"
+                android:text="Synchronisation Kalender"
+                android:textColor="#eeeeee"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/fhb" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

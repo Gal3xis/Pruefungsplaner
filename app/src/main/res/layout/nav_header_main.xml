@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_header"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:layout_gravity="left"
+    android:background="#444444"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="220dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout5"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/fhb" />
+
+    <TextView
+        android:id="@+id/nav_header_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Benutzerlogin"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/eTuser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="25"
+                android:hint="Username"
+                android:inputType="textPersonName"
+                android:textSize="12sp" />
+
+            <EditText
+                android:id="@+id/eTpasswort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="5"
+                android:hint="Passwort"
+                android:inputType="textPassword"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnlogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_weight="0.2"
+            android:text="login" />
+
+    </LinearLayout>
+
+</LinearLayout>

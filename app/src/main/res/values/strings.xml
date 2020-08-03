@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Pruefungsplaner</string>
+
+    <string name="title_calender">Termine</string>
+    <string name="title_medication">Suche</string>
+    <string name="title_diary">Prüfungen</string>
+    <string name="title_settings">Optionen</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_recycleview_tabelle">RecycleviewTabelle</string>
+</resources>

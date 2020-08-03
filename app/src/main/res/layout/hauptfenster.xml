@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#445555"
+
+
+    android:screenOrientation="portrait"
+    tools:layout_editor_absoluteY="25dp">
+
+
+    <FrameLayout
+        android:id="@+id/frame_placeholder"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="1dp"
+        android:addStatesFromChildren="true"
+        android:background="@drawable/nav_background"
+        android:minHeight="0dp"
+        app:itemIconTint="#eeeeee"
+        app:itemTextColor="#eeeeee"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+        app:menu="@menu/navigation">
+
+    </android.support.design.widget.BottomNavigationView>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:minHeight="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnopen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="47dp"
+                    android:layout_weight="0"
+                    android:background="@drawable/nav_background"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="..."
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#dddddd"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/txtAnzeige"
+                    android:layout_width="wrap_content"
+                    android:layout_height="47dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/nav_background"
+                    android:gravity="center"
+                    android:text="Termine"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="#dddddd"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnDatum"
+                android:layout_width="match_parent"
+                android:layout_height="26dp"
+                android:background="#50333333"
+                android:text="Kalender  öffnen"
+                android:textColor="#bbbbbb" />
+
+            <CalendarView
+                android:id="@+id/caCalender"
+                android:layout_width="match_parent"
+                android:layout_height="292dp"
+
+                android:background="#dddddd"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_color_border"
+                    android:text="Termine"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/button6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_color_border"
+                    android:text="Prüfungen"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_color_border"
+                    android:text="Suche"
+                    android:textSize="10sp" />
+
+                <Button
+                    android:id="@+id/button3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/rounded_color_border"
+                    android:text="Optionen"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView4"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:visibility="invisible"
+                app:layout_constrainedWidth="false">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/tvtextanzeige"
+                android:layout_width="411dp"
+                android:layout_height="0dp"
+                android:text=""
+                android:visibility="invisible" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="59dp"
+            android:layout_height="52dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginRight="0dp"
+            app:srcCompat="@mipmap/bielefeld" />
+
+    </RelativeLayout>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        tools:layout_editor_absoluteY="601dp"
+        tools:openDrawer="start">
+
+        <include
+            layout="@layout/app_bar_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:theme="@style/Base.AlertDialog.AppCompat"
+            app:headerLayout="@layout/nav_header_main"
+            app:menu="@menu/navigation" />
+
+    </android.support.v4.widget.DrawerLayout>
+
+</android.support.constraint.ConstraintLayout>

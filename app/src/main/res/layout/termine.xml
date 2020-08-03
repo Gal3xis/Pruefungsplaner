@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingBottom="2dp"
+    android:screenOrientation="portrait"
+    tools:layout_editor_absoluteY="25dp"
+    tools:onClick="onClickdd">
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_color_border"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_rounded_corners"
+                android:minHeight="0dp"
+                android:text="Datum"
+                android:textColor="#fffeee"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal"
+                android:paddingBottom="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/firstLine"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/firstLine">
+
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="44dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentTop="false"
+                    android:contentDescription="TODO"
+                    android:src="@android:drawable/ic_input_add"
+                    tools:layout_editor_absoluteY="50dp"
+                    tools:onClick="@android:drawable/btn_star" />
+
+                <LinearLayout
+                    android:id="@+id/LinearLayout5"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/firstLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignWithParentIfMissing="true"
+                        android:layout_above="@id/secondLine"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_toRightOf="@id/icon"
+                        android:gravity="center_vertical"
+                        android:paddingBottom="0dp"
+                        android:scrollbars="horizontal|vertical"
+                        android:text="Example application"
+                        android:textColor="#111111"
+                        android:textSize="19sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/secondLine"
+                        app:layout_constraintStart_toStartOf="@+id/secondLine"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/secondLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignWithParentIfMissing="true"
+                        android:layout_above="@id/secondLine"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="6dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:layout_toRightOf="@id/icon"
+                        android:gravity="center_vertical"
+                        android:paddingTop="0dp"
+                        android:text="Example application"
+                        android:textSize="16sp"
+                        android:visibility="gone"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/firstLine" />
+
+                    <TextView
+                        android:id="@+id/thirdLine"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignWithParentIfMissing="true"
+                        android:layout_above="@id/secondLine"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginTop="0dp"
+
+                        android:layout_marginEnd="6dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_marginBottom="0dp"
+                        android:layout_toRightOf="@id/icon"
+
+                        android:gravity="center_vertical"
+                        android:paddingTop="0dp"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/firstLine" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtSecondscreen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_rounded_corners"
+                android:baselineAligned="false"
+                android:padding="5dp"
+                android:text="Second screen \n Second screen \n  Second screen \n  Second screen \n  Second screen \n "
+                android:textColor="#eeeeee"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
