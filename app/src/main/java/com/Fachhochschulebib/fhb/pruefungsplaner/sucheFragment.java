@@ -346,7 +346,7 @@ public class sucheFragment extends Fragment {
             }
 
             //Auswahlmöglichkeit "Alle Module" hinzufügen
-            spinnerModuleArrayList.add(1, "Alle Module");
+            spinnerModuleArrayList.add(0, "Alle Module");
 
             //Spinner-Array Prüfer mit Werten füllen
             for (int i = 0; i < ppeList.size(); i++) {
@@ -355,6 +355,7 @@ public class sucheFragment extends Fragment {
 
             //LG Frage: Kann es zu doppelten Namenseinträgen bei den Modulen überhaupt kommen?
             //Doppelte Namenseinträge für Module löschen
+            /*
             for (int i = 0; i < spinnerModuleArrayList.size(); i++) {
                 for (int a = i; a < spinnerModuleArrayList.size(); a++) {
 
@@ -363,6 +364,7 @@ public class sucheFragment extends Fragment {
                     }
                 }
             }
+             */
 
             //Doppelte Namenseinträge für Prüfer löschen
             for (int i = 0; i < spinnerProfArrayList.size(); i++) {
@@ -374,16 +376,23 @@ public class sucheFragment extends Fragment {
             }
 
             //Adapter-Aufruf (LG: Sind hier alle drei Adapter notwendig?)
+            // Auswahl Module
             ArrayAdapter<String> adapterModule = new ArrayAdapter<String>(
                     v.getContext(), R.layout.simple_spinner_item, spinnerModuleArrayList);
+
+            /*
+            Wird nicht verwendet
             ArrayAdapter<String> adapterProf = new ArrayAdapter<String>(
-                    v.getContext(), android.R.layout.simple_spinner_item, spinnerProfArrayList);
+                     v.getContext(), android.R.layout.simple_spinner_item, spinnerProfArrayList);
+             */
+
+            // Für das AutoComplete
             ArrayAdapter<String> adapterProfAutoComplete = new ArrayAdapter<String>
                     (v.getContext(), android.R.layout.simple_list_item_1, spinnerProfArrayList);
 
             //Grafische Ausgabe dropdown
             adapterModule.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            adapterProf.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            // adapterProf.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
             //Grafische Ausgabe
             //DONE (08/2020) LG unused Code?

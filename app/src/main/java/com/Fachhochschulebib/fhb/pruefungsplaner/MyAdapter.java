@@ -57,7 +57,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private Intent calIntent;
     private RecyclerView.LayoutManager aktuelleslayout;
     private List<String> pruefplanid;
-    private GregorianCalendar calDate =new GregorianCalendar();
+    private GregorianCalendar calDate = new GregorianCalendar();
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapter(List<String> module,
@@ -112,7 +112,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // Start Merlin Gürtler
         // the Pattern describes the color of each
         // course of studies
-        List<Pair> colorPattern = new ArrayList<Pair>(){
+        List<Pair> colorPattern = new ArrayList<Pair>() {
             {
                 add(new Pair<>("Ingenieurinformatik", "#add8e6"));
                 add(new Pair<>("Elektrotechnik", "#7FFFD4"));
@@ -121,20 +121,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         };
         int a;
-        for(a = 0; a < colorPattern.size(); a++) {
+        for (a = 0; a < colorPattern.size(); a++) {
             // TODO REFACTOREN
-            if(colorPattern.get(a).first.equals(modulname[modulname.length - 1]))
-            {
+            if (colorPattern.get(a).first.equals(modulname[modulname.length - 1])) {
 
                 // Creates the gradient for the Background of each item
                 GradientDrawable backGroundGradient = new GradientDrawable(
                         GradientDrawable.Orientation.TOP_BOTTOM,
-                        new int[] {Color.parseColor(colorPattern.get(a).second.toString()),
+                        new int[]{Color.parseColor(colorPattern.get(a).second.toString()),
                                 Color.parseColor(colorPattern.get(a).second.toString())});
                 backGroundGradient.setCornerRadius(40);
 
                 final int sdk = Build.VERSION.SDK_INT;
-                if(sdk < Build.VERSION_CODES.JELLY_BEAN) {
+                if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
                     holder.layout.setBackgroundDrawable(backGroundGradient);
                 } else {
                     holder.layout.setBackground(backGroundGradient);
@@ -152,14 +151,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         //Datenbank und Pruefplan laden
-        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank =  com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(context);
+        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(context);
         List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
 
         // Überprüfung, ob Prüfitem favorisiert wurde
         //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
         //                  Toast.LENGTH_SHORT).show();
         speicher = false;
-        if(position>0) {
+        if (position > 0) {
             int pruefid = Integer.valueOf(pruefplanid.get(position));
 
             for (int i = 0; i < ppeList.size(); i++) {
@@ -177,7 +176,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             favcheck = false;
 
             //Datenbank und Pruefplan laden
-            com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank1 =  AppDatabase.getAppDatabase(context);
+            com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank1 = AppDatabase.getAppDatabase(context);
             List<PruefplanEintrag> ppeList1 = datenbank1.userDao().getAll2();
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
@@ -186,33 +185,33 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             // Toast.LENGTH_SHORT).show();
             speicher = false;
             for (i = 0; i < ppeList1.size(); i++) {
-                        if ((ppeList1.get(i).getID().toString()
-                                           .equals(pruefplanid.get(position) ) &
-                                ( ppeList1.get(i).getFavorit() ))) {
-                            speicher = true;
-                           // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                        } }
+                if ((ppeList1.get(i).getID().toString()
+                        .equals(pruefplanid.get(position)) &
+                        (ppeList1.get(i).getFavorit()))) {
+                    speicher = true;
+                    // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+                }
+            }
 
             int pruefid = Integer.valueOf(pruefplanid.get(position));
             for (i = 0; i < ppeList1.size(); i++) {
-                if (Integer.valueOf(ppeList1.get(i).getID()).equals(pruefid))
-                {
-                        holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
-                        // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+                if (Integer.valueOf(ppeList1.get(i).getID()).equals(pruefid)) {
+                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
+                    // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                 }
             }
 
             //Speichern des Prüfitem als Favorit
             if (!speicher) {
-               // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
                 for (i = 0; i < ppeList1.size(); i++) {
-                        if ((ppeList1.get(i).getID().toString()
-                                           .equals(pruefplanid.get(position) ) &
-                                (!ppeList1.get(i).getFavorit() ))) {
-                            datenbank1.userDao()
-                                     .update(true,
-                                             Integer.valueOf(pruefplanid.get(position)));
-                        }
+                    if ((ppeList1.get(i).getID().toString()
+                            .equals(pruefplanid.get(position)) &
+                            (!ppeList1.get(i).getFavorit()))) {
+                        datenbank1.userDao()
+                                .update(true,
+                                        Integer.valueOf(pruefplanid.get(position)));
+                    }
                 }
 
                 //Überprüfung ob Pürfungen zum Google Kalender Hinzugefügt werden sollen
@@ -229,7 +228,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 boolean speicher2 = false;
 
                 for (int zaehler = 0; zaehler < checkGooglecalender.length(); zaehler++) {
-                     String ss1 = String.valueOf(checkGooglecalender.charAt(zaehler));
+                    String ss1 = String.valueOf(checkGooglecalender.charAt(zaehler));
                     if (ss1.equals(String.valueOf(1))) {
                         speicher2 = true;
                     }
@@ -240,7 +239,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 checkeintrag.setCtx(context);
 
                 //Abfrage des geklickten Items
-                if(checkeintrag.checkCal(Integer.valueOf(pruefplanid.get(position)))) {
+                if (checkeintrag.checkCal(Integer.valueOf(pruefplanid.get(position)))) {
                     if (speicher2) {
 
                         //Ermitteln benötigter Variablen
@@ -257,7 +256,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                         + splitTagMonatJahr[0].toString());
                         final String[] sa = prueferUSemster.get(position).split(" ");
                         holder.txtFooter
-                                .setText( "Prüfer: " + sa[0] + ", " + sa[1]
+                                .setText("Prüfer: " + sa[0] + ", " + sa[1]
                                         + "  Semester: " + sa[2]);
                         String name1 = uebergebeneModule.get(position);
                         String[] modulname1 = name1.split(" ");
@@ -281,8 +280,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         int calendarid = calendarID(studiengang);
 
                         //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
-                        checkeintrag.insertCal( Integer.valueOf(pruefplanid.get(position)),
-                                                calendarid);
+                        checkeintrag.insertCal(Integer.valueOf(pruefplanid.get(position)),
+                                calendarid);
 
                     }
                 }
@@ -308,13 +307,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         System.out.println(splitTage[0]);
         holder.txtthirdline.setText("Uhrzeit: " + splitTage[1].substring(0, 5).toString());
         holder.button.setText(splitMonatJahrTage[2].toString() + "."
-                            + splitMonatJahrTage[1].toString() + "."
-                            + splitMonatJahrTage[0].toString());
+                + splitMonatJahrTage[1].toString() + "."
+                + splitMonatJahrTage[0].toString());
         final String[] splitPrueferUndSemester = prueferUSemster.get(position).split(" ");
         holder.txtFooter.setText("Prüfer: "
-                                + splitPrueferUndSemester[0] + ", "
-                                + splitPrueferUndSemester[1]
-                                + "  Semester: " + splitPrueferUndSemester[2]);
+                + splitPrueferUndSemester[0] + ", "
+                + splitPrueferUndSemester[1]
+                + "  Semester: " + splitPrueferUndSemester[2]);
         //holder.txtthirdline.setText("Semester: " + Semester5.toString());
     }
 
@@ -328,27 +327,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             for (b = 0; b < (modulname.length - 1); b++) {
                 studiengang = (studiengang + " " + modulname[b]);
             }
-        String raum2 = raumAdapter.get(position);
-        String[] aufteilung1 = Datum.get(position).split(" ");
-        String[] aufteilung2 = aufteilung1[0].split("-");
-        //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-        final String[] sa = prueferUSemster.get(position).split(" ");
+            String raum2 = raumAdapter.get(position);
+            String[] aufteilung1 = Datum.get(position).split(" ");
+            String[] aufteilung2 = aufteilung1[0].split("-");
+            //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
+            final String[] sa = prueferUSemster.get(position).split(" ");
 
-        //String mit dem Inhalt für weitere Informationen
-        String s = ("Informationen zur Prüfung \n \n " +
+            //String mit dem Inhalt für weitere Informationen
+            String s = ("Informationen zur Prüfung \n \n " +
                     "Studiengang: " + modulname[modulname.length - 1]
                     + "\n Modul: " + studiengang
                     + "\n Erstprüfer: " + sa[0]
                     + " \n Zweitprüfer: " + sa[1]
                     + "\n Datum: " + aufteilung2[2].toString() + "."
-                                   + aufteilung2[1].toString() + "."
-                                   + aufteilung2[0].toString()
-                    + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +" Uhr"
-                    + " \n Raum: "+ raum2
-                    +"\n Prüfungsform: "+ pruefform.get(position) + "\n \n \n \n \n \n ");
+                    + aufteilung2[1].toString() + "."
+                    + aufteilung2[0].toString()
+                    + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() + " Uhr"
+                    + " \n Raum: " + raum2
+                    + "\n Prüfungsform: " + pruefform.get(position) + "\n \n \n \n \n \n ");
 
-        return (s);
-        }catch(Exception e){
+            return (s);
+        } catch (Exception e) {
             //TODO!!!
         }
         return ("0");  //?????
@@ -394,7 +393,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public int calendarID(String eventtitle){
+    public int calendarID(String eventtitle) {
 
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
@@ -418,10 +417,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         context.getContentResolver().insert(baseUri, event);
 
         int result = 0;
-        String projection[] = { "_id", "title" };
+        String projection[] = {"_id", "title"};
         Cursor cursor = context.getContentResolver()
-                               .query(baseUri, null,
-                                       null, null, null);
+                .query(baseUri, null,
+                        null, null, null);
 
         if (cursor.moveToFirst()) {
 

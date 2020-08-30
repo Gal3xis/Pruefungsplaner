@@ -11,6 +11,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -19,15 +20,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-// import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,6 +63,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
 
+    private boolean firstClickListener = true;
     public static String pruefJahr = null;
     public static String aktuellePruefphase = null;
     public static String rueckgabeStudiengang = null;
@@ -140,11 +144,6 @@ public class MainActivity extends AppCompatActivity {
         List<String> jahresZeit = new ArrayList<String>();
         jahresZeit.add("Sommer");
         jahresZeit.add("Winter");
-
-        //spinner füllen mit werten für Sommer/Winter
-        final ArrayAdapter<String> studiengang = new ArrayAdapter<String>(
-                getBaseContext(), R.layout.simple_spinner_item, jahresZeit);
-        studiengang.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
 
         //Kalender:: aktuelles Jahr --> Bestimmung der Prüfphase (WiSe, SoSe)
         Calendar calendar = Calendar.getInstance();
@@ -255,33 +254,28 @@ public class MainActivity extends AppCompatActivity {
                  */
                 //spinnerarray für die studiengänge
                 //adapter aufruf
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                        getBaseContext(), R.layout.simple_spinner_item, spinnerArray);
-                adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
-                spStudiengangMain = (Spinner) findViewById(R.id.spStudiengang);
-                spStudiengangMain.setAdapter(adapter);
                 final List<String> studiengangsList = new ArrayList();
 
-                //Spinner: Studiengangsauswahl
-                spStudiengangMain.setOnItemSelectedListener(
-                        new AdapterView.OnItemSelectedListener() {
-                            public void onItemSelected(AdapterView<?> parent,
-                                                       View view,
-                                                       int position, long id) {
-                                //((TextView) parent.getChildAt(0)).setBackgroundColor(Color.BLUE);
-                                ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                //((TextView) parent.getChildAt(0)).setTextSize(5);
-                                studiengangsList.add(parent.getItemAtPosition(position)
-                                        .toString()); //this is your selected item
-                                // TODO funktioniert nur wenn ein anderer Wert gewählt wurde
+                // Start Merlin Gürtler
+                findViewById(R.id.buttonForSpinner).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this);
+                        String[] courses = new String [spinnerArray.size()];
+                        for(int i = 0;i < spinnerArray.size(); i++) {
+                            courses[i] = spinnerArray.get(i);
+                        }
+                        chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                studiengangsList.add(courses[which]); //this is your selected item
                                 for (int i = 0 ; i < spinnerArray.size(); i++)
                                 {
-                                    if (parent.getItemAtPosition(position).toString()
+                                    if (courses[which]
                                             .equals(spinnerArray.get(i))) {
                                         try{
-                                            // Änderung Merlin Gürtler
-                                            // -1 da im Objekt "Studiengang auswählen" nicht vorhanden ist.
-                                            JSONObject object = jsonArrayStudiengaenge.getJSONObject(i - 1);
+                                            JSONObject object = jsonArrayStudiengaenge.getJSONObject(i);
                                             rueckgabeStudiengang = object.get("sgid").toString();
                                             Log.d("Output Studiengang",
                                                     rueckgabeStudiengang.toString());
@@ -295,16 +289,17 @@ public class MainActivity extends AppCompatActivity {
                                     }//if
                                 }//for
 
-                                // Start Merlin Gürtler
-                                if(!parent.getItemAtPosition(position).toString().equals("Studiengang auswählen")) {
-                                    Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                                    startActivity(hauptfenster);
-                                }
-                                // Ende Merlin Gürtler
+                                dialog.dismiss();
+                                Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                                startActivity(hauptfenster);
                             }
-                            public void onNothingSelected(AdapterView<?> parent) {
-                            }
+
                         });
+
+                        chooseCourse.show();
+                    }
+                });
+                // Ende Merlin Gürtler
             }
         });
     }
@@ -321,10 +316,6 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences sharedPrefsStudiengaenge
                     = getApplicationContext()
                     .getSharedPreferences("Studiengaenge", 0);
-
-            // Update Merlin Gürtler
-            spinnerArray.add("Studiengang auswählen");
-            // Ende Merlin Gürtler
 
             //Verbindungsaufbau zum Webserver
             try {

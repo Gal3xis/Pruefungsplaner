@@ -108,13 +108,6 @@ public class Favoritenfragment extends Fragment {
                                 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
 
 
-                        // Start Merlin Gürtler
-                        layoutinformationen.setOnFocusChangeListener((v1, hasFocus) -> {
-                            System.out.println("TEST " + hasFocus);
-                            Log.d("TEST","TEST");
-                        });
-                        // Ende Merlin Gürtler
-
                         //überprüfung ob das linear layout geklickt wurde
                         layoutinformationen.setOnClickListener(new  View.OnClickListener() {
                             @Override

@@ -119,7 +119,6 @@ public class Terminefragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
-
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
 
@@ -163,7 +162,6 @@ public class Terminefragment extends Fragment {
                                 try {
                                     final TextView txtSecondScreen2
                                             = (TextView) holder.findViewById(R.id.txtSecondscreen);
-
                                     if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
                                         txtSecondScreen2.setVisibility(v.GONE);
                                     }
@@ -198,14 +196,6 @@ public class Terminefragment extends Fragment {
                     positionAlt = position;
                 })
         );
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-            }
-        });
 
         //Touchhelper für die Recyclerview-Komponente, zum Überprüfen, ob gescrollt wurde
         //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);

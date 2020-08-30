@@ -27,7 +27,7 @@
         android:layout_marginTop="57dp"
         android:layout_marginBottom="67dp"
         android:src="@drawable/fhb"
-        app:layout_constraintBottom_toBottomOf="@+id/spStudiengang"
+        app:layout_constraintBottom_toBottomOf="@+id/buttonForSpinner"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -43,18 +43,15 @@
         android:textSize="16sp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-        app:layout_constraintStart_toStartOf="@+id/spStudiengang" />
+        app:layout_constraintStart_toStartOf="@+id/buttonForSpinner" />
 
-
-    <Spinner
-        android:id="@+id/spStudiengang"
+    <Button
+        android:id="@+id/buttonForSpinner"
         style="@android:style/Widget.DeviceDefault.Spinner"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
         android:layout_marginEnd="28dp"
-        android:layout_marginRight="28dp"
         android:layout_marginBottom="280dp"
         android:background="@drawable/button_rounded_corners"
         android:paddingLeft="30dp"
@@ -66,6 +63,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#eeeeee"
+        android:textSize="20sp"
+        android:text="Studiengang auswählen" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
