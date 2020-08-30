@@ -16,12 +16,12 @@
 
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse;
-
 import java.util.List;
 
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse;
 import retrofit2.Call;
 import retrofit2.http.GET;
+
 
 public interface RequestInterface {
     @GET(" ")

@@ -3,13 +3,9 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 // favoritenfragment
 //
 //
-//
 // autor:
 // inhalt:  stelllt die favorisierten prüfungen bereit.
 // zugriffsdatum: 11.12.19
-//
-//
-//
 //
 //
 //
@@ -17,9 +13,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +22,12 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +42,12 @@ public class Favoritenfragment extends Fragment {
     List<Boolean> check = new ArrayList<>();
 
     // Datenbank initialisierung
-    AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,38 +71,49 @@ public class Favoritenfragment extends Fragment {
         List<String> pruefungsNr = new ArrayList<>();
         List<String> raum = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
-        List<Pruefplan> pruefplandaten = roomdaten.userDao().getAll2();
+        List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll2();
 
 
         // Abfrage ob Prüfungen favorisiert wurden
         // Favorisierte Prüfungen für die Anzeige vorbereiten
-        for (int i = 0; i < pruefplandaten.size(); i++) {
-            if (pruefplandaten.get(i).getFavorit()) {
-                studiengang.add(pruefplandaten.get(i).getModul() + " " + pruefplandaten.get(i).getStudiengang());
-                profnamen.add(pruefplandaten.get(i).getErstpruefer() + " " + pruefplandaten.get(i).getZweitpruefer() + " " + pruefplandaten.get(i).getSemester().toString());
-                datum.add(pruefplandaten.get(i).getDatum());
-                pruefungsNr.add(pruefplandaten.get(i).getID());
-                raum.add(pruefplandaten.get(i).getRaum());
+        for (int i = 0; i < ppeList.size(); i++) {
+            if (ppeList.get(i).getFavorit()) {
+                studiengang.add(ppeList.get(i).getModul() + " "
+                                + ppeList.get(i).getStudiengang());
+                profnamen.add(ppeList.get(i).getErstpruefer() + " "
+                                + ppeList.get(i).getZweitpruefer() + " "
+                                + ppeList.get(i).getSemester().toString());
+                datum.add(ppeList.get(i).getDatum());
+                pruefungsNr.add(ppeList.get(i).getID());
+                raum.add(ppeList.get(i).getRaum());
                 check.add(true);
             }
         }
 
         // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-        mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
-
-
+        mAdapter = new com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                new com.Fachhochschulebib.fhb.pruefungsplaner.RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick( final View view, final  int position) {
 
                         //einblenden vom Textview für die weiteren Informationen
-                        final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                        LinearLayout layoutinformationen =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                        final TextView txtSecondScreen
+                                = (TextView) view.findViewById(R.id.txtSecondscreen);
+                        View viewItem
+                                = recyclerView.getLayoutManager().findViewByPosition(position);
+                        LinearLayout layoutinformationen
+                                =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
 
+
+                        // Start Merlin Gürtler
+                        layoutinformationen.setOnFocusChangeListener((v1, hasFocus) -> {
+                            System.out.println("TEST " + hasFocus);
+                            Log.d("TEST","TEST");
+                        });
+                        // Ende Merlin Gürtler
 
                         //überprüfung ob das linear layout geklickt wurde
                         layoutinformationen.setOnClickListener(new  View.OnClickListener() {
@@ -119,28 +124,48 @@ public class Favoritenfragment extends Fragment {
                                     check.set(position,false);
 
                                 } else {
+
+                                    // Start Merlin Gürtler
+                                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                                        View holder = recyclerView.getLayoutManager().findViewByPosition(i);
+                                        // Try and Catch, da die App crasht
+                                        // wenn das Element nicht im View Port ist
+                                        try {
+                                            final TextView txtSecondScreen2
+                                                    = (TextView) holder.findViewById(R.id.txtSecondscreen);
+
+                                            if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
+                                                txtSecondScreen2.setVisibility(v.GONE);
+                                            }
+                                        }catch (Exception e) {
+                                            Log.d("ERROR","NOT IN VIEW PORT " + e);
+                                        }
+
+                                    }
+                                    // Ende Merlin Gürtler
+
                                     txtSecondScreen.setVisibility(v.VISIBLE);
-                                    txtSecondScreen.setText(((MyAdapterfavorits) mAdapter).giveString(position));
+                                    txtSecondScreen.setText(((MyAdapterfavorits) mAdapter)
+                                                   .giveString(position));
                                 }
                             }
                         });
 
+                        /*
                         try{
                             if(check.get(position)) {
                                 txtSecondScreen.setVisibility(v.VISIBLE);
-                                txtSecondScreen.setText(((MyAdapterfavorits) mAdapter).giveString(position));
+                                txtSecondScreen.setText(((MyAdapterfavorits) mAdapter)
+                                               .giveString(position));
                             }}
                         catch(Exception e){
 
                         }
+                         */
                     }
                 })
         );
         recyclerView.setAdapter(mAdapter);
         return v;
     }
-
-
-
-
 }

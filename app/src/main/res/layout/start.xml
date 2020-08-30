@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PRÜFUNGSPLAN"
+        android:text="PRÜFPLAN"
         android:textColor="@android:color/background_light"
         android:textSize="30sp"
         app:fontFamily="monospace"
@@ -40,9 +40,11 @@
         android:layout_marginLeft="44dp"
         android:layout_marginBottom="8dp"
         android:textColor="#eeeeee"
-        android:textSize="14sp"
+        android:textSize="16sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="@+id/spStudiengang" />
+
 
     <Spinner
         android:id="@+id/spStudiengang"
@@ -55,100 +57,15 @@
         android:layout_marginRight="28dp"
         android:layout_marginBottom="280dp"
         android:background="@drawable/button_rounded_corners"
-        android:padding="10dp"
+        android:paddingLeft="30dp"
+        android:paddingTop="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
+        android:popupBackground="@drawable/button_rounded_corners"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <Spinner
-        android:id="@+id/spDatum"
-        android:layout_width="0dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="65dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginRight="28dp"
-        android:layout_marginBottom="63dp"
-        android:padding="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/spPrüfungsphase"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/spStudiengang" />
-
-    <Spinner
-        android:id="@+id/spPrüfungsphase"
-        android:layout_width="0dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginLeft="28dp"
-        android:layout_marginTop="81dp"
-        android:layout_marginEnd="28dp"
-        android:layout_marginRight="28dp"
-        android:layout_marginBottom="79dp"
-        android:padding="0dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/btnGO2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spStudiengang" />
-
-    <Button
-        android:id="@+id/btnGO"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="39dp"
-        android:background="@drawable/button_rounded_corners"
-        android:text="OK"
-        android:textColor="#eeeeee"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/btnGO2"
-        android:layout_width="46dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="56dp"
-        android:layout_marginLeft="56dp"
-        android:layout_marginTop="37dp"
-        android:layout_marginEnd="59dp"
-        android:layout_marginRight="59dp"
-        android:layout_marginBottom="39dp"
-        android:background="@drawable/button_rounded_corners"
-        android:text="update"
-        android:textColor="#eeeeee"
-        android:textSize="10sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/btnGO"
-        app:layout_constraintTop_toBottomOf="@+id/rBPruefung2" />
-
-    <RadioButton
-        android:id="@+id/rBPruefung1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Prüfungsphase 1"
-        android:textColor="#eeeeee"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/spPrüfungsphase"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RadioButton
-        android:id="@+id/rBPruefung2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="24dp"
-        android:text="Prüfungsphase 2"
-        android:textColor="#eeeeee"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/btnGO"
-        app:layout_constraintStart_toEndOf="@+id/rBPruefung1" />
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

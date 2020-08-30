@@ -26,17 +26,14 @@ public class JsonResponse {
         private String Erstpruefer;
 
 
-
         @SerializedName("Zweitpruefer")
         @Expose
         private String Zweitpruefer;
 
 
-
         @SerializedName("Pruefform")
         @Expose
         private String Pruefform;
-
 
 
         @SerializedName("Semester")
@@ -59,21 +56,24 @@ public class JsonResponse {
         private String Studiengang;
 
 
-
         @SerializedName("Termin")
         @Expose
         private String Termin;
-
 
 
         @SerializedName("ID")
         @Expose
         private String ID;
 
-    @SerializedName("Raum")
-    @Expose
-    private String Raum;
+        @SerializedName("Raum")
+        @Expose
+        private String Raum;
 
+        // Start Merlin Gürtler
+        @SerializedName("StudiengangId")
+        @Expose
+        private String StudiengangId;
+        // Ende Merlin Gürtler
 
 
         public String getErstpruefer() {
@@ -84,16 +84,15 @@ public class JsonResponse {
             this.Erstpruefer = erstpruefer;
         }
 
-    public String getRaum() {
+        public String getRaum() {
         return Raum;
     }
 
-    public void setRaum(String raum) {
+        public void setRaum(String raum) {
         this.Raum = raum;
     }
 
-
-    public String getDatum() {
+        public String getDatum() {
             return Datum;
         }
 
@@ -101,62 +100,68 @@ public class JsonResponse {
             this.Datum = datum;
         }
 
-    public String getZweitpruefer() {
+        public String getZweitpruefer() {
         return Zweitpruefer;
     }
 
-    public void setZweitpruefer(String zweitpruefer) {
+        public void setZweitpruefer(String zweitpruefer) {
         Zweitpruefer = zweitpruefer;
     }
 
-    public String getPruefform() {
+        public String getPruefform() {
         return Pruefform;
     }
 
-    public void setPruefform(String pruefform) {
+        public void setPruefform(String pruefform) {
         Pruefform = pruefform;
     }
 
-    public String getSemester() {
+        public String getSemester() {
         return Semester;
     }
 
-    public void setSemester(String semester) {
+        public void setSemester(String semester) {
         Semester = semester;
     }
 
-    public String getModul() {
+        public String getModul() {
         return Modul;
     }
 
-    public void setModul(String modul) {
+        public void setModul(String modul) {
         Modul = modul;
     }
 
-
-    public String getStudiengang() {
+        public String getStudiengang() {
         return Studiengang;
     }
 
-    public void setStudiengang(String studiengang) {
+        public void setStudiengang(String studiengang) {
         Studiengang = studiengang;
     }
 
-    public String getTermin() {
+        public String getTermin() {
         return Termin;
     }
 
-    public void setTermin(String termin) {
+        public void setTermin(String termin) {
         Termin = termin;
     }
 
-
-    public String getID() {
+        public String getID() {
         return ID;
     }
 
-    public void setID(String ID) {
+        public void setID(String ID) {
         this.ID = ID;
+    }
+
+        public String getStudiengangId() {
+            return StudiengangId;
+        }
+
+        public void setStudiengangId(String studiengangId) {
+            StudiengangId = studiengangId;
     }
 
 }

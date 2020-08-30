@@ -1,51 +1,58 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.data;
 
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
+
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
 
 import java.util.List;
-
-
 
 @Dao
 public interface UserDao {
 
+    // Start Merlin Gürtler
+    @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul")
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getModule(String modul);
 
-    @Query("SELECT * FROM Pruefplan WHERE Validation = :validation")
-    List<Pruefplan> getAll(String validation);
+    @Query("UPDATE PruefplanEintrag SET Datum = :datum where ID = :id")
+    void updateExam(String datum, String id);
+    // Ende Merlin Gürtler
 
-    @Query("SELECT * FROM Pruefplan")
-    List<Pruefplan> getAll2();
 
-    @Query("SELECT Studiengang FROM Pruefplan")
+    @Query("SELECT * FROM PruefplanEintrag WHERE Validation = :validation")
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getAll(String validation);
+
+    @Query("SELECT * FROM PruefplanEintrag")
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getAll2();
+
+    @Query("SELECT Studiengang FROM PruefplanEintrag")
     List<String> getStudiengang();
 
-    @Query("SELECT Erstpruefer FROM Pruefplan")
+    @Query("SELECT Erstpruefer FROM PruefplanEintrag")
     List<String> getErstpruefer();
 
-    @Query("SELECT Modul FROM Pruefplan")
+    @Query("SELECT Modul FROM PruefplanEintrag")
     List<String> getModul();
 
-    @Query("SELECT COUNT(*) from Pruefplan")
+    @Query("SELECT COUNT(*) from PruefplanEintrag")
     int countUsers();
 
     @Insert
-    void insertAll(Pruefplan... pruefplans);
+    void insertAll(com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag... pruefplanEintrags);
 
-    @Query ("UPDATE Pruefplan SET Favorit = :favorit WHERE ID = :id")
-    void update(boolean favorit, int id );
+    @Query ("UPDATE PruefplanEintrag SET Favorit = :favorit WHERE ID = :id")
+    void update(boolean favorit, int id);
 
-    @Query ("UPDATE Pruefplan SET Ausgewaehlt = :pruefungen WHERE ID = :id")
-    void update2(boolean pruefungen,int id);
+    @Query ("UPDATE PruefplanEintrag SET Ausgewaehlt = :pruefungen WHERE ID = :id")
+    void update2(boolean pruefungen, int id);
 
-    @Query ("UPDATE Pruefplan SET Validation  = :nullSetzen WHERE Validation = :validation")
+    @Query ("UPDATE PruefplanEintrag SET Validation  = :nullSetzen WHERE Validation = :validation")
     void updateValidation(String nullSetzen, String validation);
 
-    @Query ("UPDATE Pruefplan SET Ausgewaehlt = :pruefungen ")
-    void suchezuruecksetzen(boolean pruefungen);
+    @Query ("UPDATE PruefplanEintrag SET Ausgewaehlt = :pruefungen ")
+    void sucheUndZurueckSetzen(boolean pruefungen);
 
     @Delete
-    void delete(Pruefplan pruefplan);
+    void delete(com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag pruefplanEintrag);
 }

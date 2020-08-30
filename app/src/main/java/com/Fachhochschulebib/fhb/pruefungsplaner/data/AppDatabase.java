@@ -1,11 +1,12 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.data;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {Pruefplan.class}, version = 1)
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+
+@Database(entities = {PruefplanEintrag.class}, version = 1, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
 
     private static AppDatabase INSTANCE;
@@ -15,23 +16,20 @@ public abstract class AppDatabase extends RoomDatabase {
     public static AppDatabase getAppDatabase(Context context) {
         if (INSTANCE == null) {
             INSTANCE =
-                    Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, "user-database16")
+                    Room.databaseBuilder(
+                            context.getApplicationContext(),
+                            AppDatabase.class, "pruefplandaten")
                             // allow queries on the main thread.
                             // Don't do this on a real app! See PersistenceBasicSample for an example.
                             .allowMainThreadQueries()
                             .build();
-
         }
         return INSTANCE;
     }
 
-
-
     public static void destroyInstance() {
         INSTANCE = null;
     }
-
-
 
 }
 

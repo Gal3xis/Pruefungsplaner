@@ -1,20 +1,12 @@
 //////////////////////////////
 // RetrofitConnect
 //
-//
-//
 // autor:
 // inhalt: Verbindungsaufbau zum Webserver
 // zugriffsdatum: 11.12.19
 //
 //
-//
-//
-//
-//
 //////////////////////////////
-
-
 
 package com.Fachhochschulebib.fhb.pruefungsplaner.model;
 
@@ -25,7 +17,11 @@ import android.util.Log;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,181 +37,259 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 public class RetrofitConnect {
     public String termine;
     public static boolean checkuebertragung = false;
     private boolean checkvalidate = false;
     Context ctx2;
 
-    public void retro(Context ctx, final AppDatabase roomdaten, final String jahr, final String studiengang, final String pruefungsphase, final String termin){
+    //TODO: DB-Abfrage, neue Formen hinzukommen (O_90, I_60, Kombinationsprüfung etc.)
+    String klausur = "K_90";
+    String klausur60 = "K_60";
+    String klausur120 = "K_120";
+    String klausur180 = "K_180";
+
+    //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
+    public <serverAdress> void RetrofitWebAccess(Context ctx,
+                                                 final com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten,
+                                                 final String jahr,
+                                                 final String studiengang,
+                                                 final String pruefungsphase,
+                                                 final String termin,
+                                                 final String serverAdress,
+                                                 final String relativePPlanUrl){
         //Serveradresse
-        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+        SharedPreferences mSharedPreferencesAdresse
+                = ctx.getSharedPreferences("Server_Address", 0);
 
-
-         ctx2 = ctx;
-         termine = termin;
+        ctx2 = ctx;
+        termine = termin;
         //Creating editor to store uebergebeneModule to shared preferences
-        String urlfhb = mSharedPreferencesAdresse.getString("Server-Adresse2","http://thor.ad.fh-bielefeld.de:8080/");
-
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
         Log.d("Output Studiengang",pruefungsphase.toString());
         Log.d("Output Studiengang",termin.toString());
         Log.d("Output Studiengang",jahr.toString());
 
+        //Uebergabe der Parameter an den relativen Server-Pfad
+        String relPathWithParameters = relativePPlanUrl
+                            + "entity.pruefplaneintrag/"
+                            + pruefungsphase +"/"
+                            + termin +"/"
+                            + jahr +"/";
+
+        String URL = urlfhb + relPathWithParameters;
+        Retrofit.Builder builder = new Retrofit.Builder();
+        builder.baseUrl(URL);
+        builder.addConverterFactory(GsonConverterFactory.create());
+        Retrofit retrofit = builder.build();
+
+        final com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface request = retrofit.create(com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface.class);
+        Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call = request.getJSON();
+        call.enqueue(new Callback<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>>() {
+            @Override
+            public void onResponse(Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call, Response<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> response) {
+                response.body();
+                if (response.isSuccessful()) {
+
+                    //Hole alle Einträge aus der lokalen Room-DB
+                    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> dataListFromLocalDB = null;
+                    try { //DONE (08/2020) LG
+                        dataListFromLocalDB = roomdaten.userDao().getAll2();
+                        //roomdaten.clearAllTables();
+                    } catch (Exception e) {
+                        Log.d("Fehler: ","Kein Zugriff auf die Datenbank!");
+                    }
+
+                    String validation = jahr+studiengang+pruefungsphase;
+                    //String checkTermin = "0";
+
+                    //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
+                    if(dataListFromLocalDB!=null) { //DONE (08/2020) LG
+                        for (int j = 0; j < dataListFromLocalDB.size(); j++) {
+                            if (dataListFromLocalDB.get(j).getValidation().equals(validation)) {
+                                //checkTermin = dataListFromLocalDB.get(j).getTermin();
+                                //TODO: Macht das Sinn? Die Variable wird N-mal überschrieben!
+                                checkvalidate = true;
+                            }
+                        }
+                    }//if
+
+                    //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
+                    //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
+                    for (int i = response.body().size()-1 ; i >= 0; --i) {
+
+                        //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
+                        com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag pruefplanEintrag = new com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag();
+
+                        //Festlegen vom Dateformat
+                        String datumZeitzone;
+                        String datumDerPruefung = response.body().get(i).getDatum();
+                        datumZeitzone = datumDerPruefung.replaceFirst("CET", "");
+                        datumZeitzone = datumZeitzone.replaceFirst("CEST","");
+                        String datumLetzePruefungFormatiert = null;
+
+                        try {
+                            DateFormat dateFormat = new SimpleDateFormat(
+                                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+                            Date datumLetztePruefung = dateFormat.parse(datumZeitzone);
+                            SimpleDateFormat targetFormat
+                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            datumLetzePruefungFormatiert = targetFormat.format(datumLetztePruefung);
+                            Date datumAktuell = Calendar.getInstance().getTime();
+                            SimpleDateFormat df
+                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String datumAktuellFormatiert = df.format(datumAktuell);
 
 
+                            Log.d("Datum letzte Prüfung",datumLetzePruefungFormatiert);
+                            Log.d("Datum aktuell",datumAktuellFormatiert);
 
-        //String URLFHB = "http://thor.ad.fh-bielefeld.de:8080/";
-        //String URLFHB = "http://192.168.178.39:44631/";
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        /*
+                            DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
+                            jetzt hinzugefügt.
+                         */
+                         if(!checkvalidate){
+                             //erhaltene Werte zur Datenbank hinzufügen
+                            pruefplanEintrag.setErstpruefer(response.body().get(i).getErstpruefer());
+                            pruefplanEintrag.setZweitpruefer(response.body().get(i).getZweitpruefer());
+                            pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
+                            pruefplanEintrag.setID(response.body().get(i).getID());
+                            pruefplanEintrag.setStudiengang(response.body().get(i).getStudiengang());
+                            pruefplanEintrag.setModul(response.body().get(i).getModul());
+                            pruefplanEintrag.setSemester(response.body().get(i).getSemester());
+                            pruefplanEintrag.setTermin(response.body().get(i).getTermin());
+                            pruefplanEintrag.setRaum(response.body().get(i).getRaum());
+
+                            //lokale datenbank initialiseren
+                             //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
+                             //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
+                             //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
+                             //Log.d("Test4", String.valueOf(userdaten2.size()));
+
+                             try {
+                                 for (int b = 0; b < com.Fachhochschulebib.fhb.pruefungsplaner.Optionen.idList.size(); b++) {
+                                     if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
+                                         //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
+                                         pruefplanEintrag.setFavorit(true);
+                                     }
+                                 }
+                             }
+                             catch (Exception e)
+                             {
+                                Log.d("Fehler RetrofitConnect",
+                                      "Fehler beim Ermitteln der favorisierten Prüfungen");
+                             }
+
+                             //Überprüfung von Klausur oder Mündliche Prüfung
+                             pruefplanEintrag.setPruefform("Mündliche Prüfung / Hausarbeit");
+
+                             if(klausur.equals(response.body().get(i).getPruefform())) {
+                                pruefplanEintrag.setPruefform("Klausur 90 Minuten");
+
+                             }
+                             if(klausur120.equals(response.body().get(i).getPruefform())) {
+                                 pruefplanEintrag.setPruefform("Klausur 120 Minuten");
+
+                             }
+                             if(klausur60.equals(response.body().get(i).getPruefform())) {
+                                 pruefplanEintrag.setPruefform("Klausur 60 Minuten");
+
+                             }
+                             if(klausur180.equals(response.body().get(i).getPruefform())) {
+                                 pruefplanEintrag.setPruefform("Klausur 180 Minuten");
+
+                             }
+
+                             //Start Änderungen vorgenommen Merlin Gürtler
+                             //Schlüssel für die Erkennung bzw unterscheidung Festlegen
+                             pruefplanEintrag.setValidation(jahr + response.body().get(i).getStudiengangId() + pruefungsphase);
+
+                             // Ende Merlin Gürtler
+                             addUser(roomdaten, pruefplanEintrag);
+
+                        }
+                    }
+                    checkuebertragung = true;
+
+                }//if(response.isSuccessful())
+                else { System.out.println(" :::. NO Retrofit RESPONSE .::: "); }
+            }
+
+            @Override
+            public void onFailure(Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+
+            }
+        });
+    }
+
+    // Start Merlin Gürtler
+    public void retroUpdate(Context ctx, final com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten,
+                            final String serverAdress,
+                            final String relativePPlanUrl) {
+        //Serveradresse
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+        ctx2 = ctx;
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
+
+        JSONArray knownExamsJson = new JSONArray();
+        List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> knownExams = roomdaten.userDao().getAll2();
+        // Create the JSON Array
+        for(int i = 0; i < knownExams.size(); i++) {
+            JSONObject knownExam = new JSONObject();
+            try {
+                knownExam.put("Datum", knownExams.get(i).getDatum());
+                knownExam.put("ID", knownExams.get(i).getID());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            knownExamsJson.put(knownExam);
+
+        }
+        // Stringify for the Request
+        String sendExams = knownExamsJson.toString();
         //uebergabe der parameter an die Adresse
-        //String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+Pruefungsphase+"/"+aktuellerTermin+"/"+jahr+"/";
-        String adresse = "PruefplanApplika/webresources/entities.pruefplaneintrag/"+pruefungsphase+"/"+termin+"/"+jahr+"/"+studiengang+"/";
+        String adresse = "PruefplanverwaltungRestIF/webresources/entity.pruefplaneintrag/update/" + sendExams + "/";
 
         String URL = urlfhb+adresse;
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
-        final RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<List<JsonResponse>> call = request.getJSON();
-        call.enqueue(new Callback<List<JsonResponse>>() {
+        final com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call = request.getJSON();
+        call.enqueue(new Callback<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>>() {
             @Override
-            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
+            public void onResponse(Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call, Response<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> response) {
                 response.body();
-                if (response.isSuccessful()) {
-                    List<Pruefplan> database = roomdaten.userDao().getAll2();
-                    //roomdaten.clearAllTables();
-
-                    String validation = jahr+studiengang+pruefungsphase;
-
-                    String checkTermin = "0";
-                    for(int j = 0; j < database.size();j++) {
-                        if (database.get(j).getValidation().equals(validation)){
-                            //System.out.println("aufgerufen2223");
-                            checkTermin = database.get(j).getTermin();
-                            checkvalidate = true;
-
-                        }}
-
-                    //Schleife um jedes erhaltene Prüfungsobjekt in die lokale Datenbank hinzuzufügen
-                    for (int i = response.body().size()-1 ; i > 0; --i) {
-
-                        //Pruefplan ist die modelklasse für die angekommenden Prüfungsobjekte
-                        Pruefplan pruefplan = new Pruefplan();
-
-                        //Festlegen vom Dateformat
-                        String datumZeitzone;
-                        String datumDerPrüfung = response.body().get(i).getDatum();
-                        datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
-                        datumZeitzone = datumZeitzone.replaceFirst("CEST","");
-                        String datumLetzePruefungFormatiert;
-                        datumLetzePruefungFormatiert = null;
+                if (response.isSuccessful() && response.body().size() > 0) {
+                    for(int i = 0; response.body().size() > i; i++) {
                         try {
+                            String datumZeitzone;
+                            String datumDerPrüfung = response.body().get(i).getDatum();
+                            String datumLetzePruefungFormatiert = null;
+                            datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
+                            datumZeitzone = datumZeitzone.replaceFirst("CEST","");
                             DateFormat dateFormat = new SimpleDateFormat(
                                     "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                            Date datumLetztePrüfung = dateFormat.parse(datumZeitzone);
+                            Date datumLetztePrüfung = null;
+
+                            datumLetztePrüfung = dateFormat.parse(datumZeitzone);
+
                             SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             datumLetzePruefungFormatiert = targetFormat.format(datumLetztePrüfung);
-                            Date datumAktuell = Calendar.getInstance().getTime();
-                            SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String datumAktuellFormatiert = df.format(datumAktuell);
-
-
-                            Log.d("datum letzte prüfung",datumLetzePruefungFormatiert);
-                            Log.d("datum aktuell",datumAktuellFormatiert);
-
-
-                            //auskommentiert weil noch keine neuen Pürungstermine hochgeladen wurden.
-
-                            /*
-                            //Vergleich aktuelles Datum und datum der letzen Prüfung.
-                            //wenn true dann datenbank löschen und die neuen Prüfungen laden
-                            if(datumAktuell.getTime() > datumLetztePrüfung.getTime())
-                            {
-                                if (termine.equals("0")) {
-                                    if(!termine.equals("1")) {
-                                        roomdaten.clearAllTables();
-                                    }
-                                    //überprüfung zweiter termin aktuelle prüfperiode
-                                    retro(ctx2, roomdaten, jahr, studiengang, pruefungsphase, "1");
-                                    System.out.println("aufgerufen");
-                                    break;
-                                }
-                            }
-
-                             */
-
+                            roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
+                                    response.body().get(i).getID());
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
-                         if(!checkvalidate){
-                             System.out.println("aufgerufen222");
-                             //erhaltene Werte zur Datenbank hinzufügen
-                            pruefplan.setErstpruefer(response.body().get(i).getErstpruefer());
-                            pruefplan.setZweitpruefer(response.body().get(i).getZweitpruefer());
-                            pruefplan.setDatum(String.valueOf(datumLetzePruefungFormatiert));
-                            pruefplan.setID(response.body().get(i).getID());
-                            pruefplan.setStudiengang(response.body().get(i).getStudiengang());
-                            pruefplan.setModul(response.body().get(i).getModul());
-                            pruefplan.setSemester(response.body().get(i).getSemester());
-                            pruefplan.setTermin(response.body().get(i).getTermin());
-                            pruefplan.setRaum(response.body().get(i).getRaum());
-
-                            //lokale datenbank initialiseren
-                             AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                             List<Pruefplan> userdaten2 = database2.userDao().getAll2();
-                             //Log.d("Test4", String.valueOf(userdaten2.size()));
-
-                             try {
-                                 for (int b = 0; b < Optionen.ID.size(); b++) {
-                                     if (pruefplan.getID().equals(Optionen.ID.get(b))) {
-                                         //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                                         pruefplan.setFavorit(true);
-                                     }
-                                 }
-                             }
-                             catch (Exception e)
-                             {
-                                Log.d("Fehler RetrofitConnect","Fehler beim ermitteln der favorisierten Prüfungen");
-
-                             }
-
-                            //Überprüfung von Klausur oder Mündliche Prüfung
-                             String klausur = "K_90";
-                             String klausur60 = "K_60";
-                             String klausur120 = "K_120";
-                             String klausur180 = "K_180";
-
-                             pruefplan.setPruefform("Mündliche Prüfung / Hausarbeit");
-
-                             if(klausur.equals(response.body().get(i).getPruefform())) {
-                                pruefplan.setPruefform("Klausur 90 Minuten");
-
-                            }
-                             if(klausur120.equals(response.body().get(i).getPruefform())) {
-                                 pruefplan.setPruefform("Klausur 120 Minuten");
-
-                             }
-                             if(klausur60.equals(response.body().get(i).getPruefform())) {
-                                 pruefplan.setPruefform("Klausur 60 Minuten");
-
-                             }
-                             if(klausur180.equals(response.body().get(i).getPruefform())) {
-                                 pruefplan.setPruefform("Klausur 180 Minuten");
-
-                             }
-
-                            //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                            pruefplan.setValidation(jahr + studiengang + pruefungsphase);
-                             System.out.println(jahr + studiengang + pruefungsphase);
-                             addUser(roomdaten, pruefplan);
-
-                        }
                     }
-                    checkuebertragung = true;
-
                 }
                 else { System.out.println(" :::. NO RESPONSE .::: "); }
             }
@@ -230,14 +304,10 @@ public class RetrofitConnect {
         });
     }
 
-    public static Pruefplan addUser(final AppDatabase db, Pruefplan pruefplan) {
-        db.userDao().insertAll(pruefplan);
-        System.out.println(pruefplan.getErstpruefer());
-        System.out.println("\n");
-        return pruefplan;
+    // Ende Merlin Gürtler
+
+    //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!
+    public static void addUser(final AppDatabase db, PruefplanEintrag pruefplanEintrag) {
+        db.userDao().insertAll(pruefplanEintrag);
     }
-
-
-
-
-    }
+}

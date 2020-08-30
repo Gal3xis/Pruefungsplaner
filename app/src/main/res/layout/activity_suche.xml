@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -38,12 +38,12 @@
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="306dp"
+            android:layout_width="385dp"
             android:layout_height="wrap_content"
 
             android:layout_marginBottom="5sp"
-            android:text="Modul (aktuelle Prüfperiode):"
-            android:textColor="#eeeeee"
+            android:text="Modulauswahl (aktueller Prüftermin):"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="6dp"
             tools:layout_editor_absoluteY="16dp" />
@@ -62,8 +62,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5sp"
-            android:text="Prüfer:"
-            android:textColor="#eeeeee"
+            android:text="Prüferauswahl:"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="81dp" />
@@ -75,7 +75,7 @@
             android:layout_marginBottom="5sp"
             android:hint="Alle"
             android:singleLine="true"
-            android:textColor="#eeeeee"
+            android:textColor="@android:color/white"
             android:textColorLink="@color/colorPrimary"
             android:textSize="20sp"
             android:theme="@style/Base.Theme.MaterialComponents.Light"
@@ -88,7 +88,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5sp"
             android:text="Semester:"
-            android:textColor="#eeeeee"
+            android:textColor="@android:color/white"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="133dp" />
@@ -199,30 +199,6 @@
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="153dp" />
 
-        <LinearLayout
-            android:layout_width="123dp"
-            android:layout_height="76dp"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-        <Spinner
-            android:id="@+id/spDatum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="5dp"
-            tools:layout_editor_absoluteY="234dp" />
-
-        <Spinner
-            android:id="@+id/spProf"
-            android:layout_width="wrap_content"
-            android:layout_height="53dp"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="277dp"
-            tools:layout_editor_absoluteY="290dp" />
-
     </LinearLayout>
 
     <Button
@@ -239,4 +215,4 @@
         app:layout_constraintStart_toStartOf="parent" />
 
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

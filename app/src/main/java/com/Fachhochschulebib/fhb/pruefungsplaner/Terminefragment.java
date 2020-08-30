@@ -6,12 +6,9 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //
 // autor:
-// inhalt:  Prüfungen aus der Klasse Prüfplaneintrag werden abgefragt und zur darstelllung an den Recycleview adapter übergeben
+// inhalt:  Prüfungen aus der Klasse Prüfplaneintrag werden abgefragt und
+// zur Darstelllung an den Recycleview-Adapter übergeben
 // zugriffsdatum: 20.2.20
-//
-//
-//
-//
 //
 //
 //////////////////////////////
@@ -19,10 +16,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,21 +24,27 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
+
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
+
+//TODO: Shared Prefs???
 
 public class Terminefragment extends Fragment {
 
     SharedPreferences mSharedPreferences;
-    public List<String> WerteZumAnzeigen;
-    private FragmentTransaction ft;
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
@@ -53,56 +52,58 @@ public class Terminefragment extends Fragment {
     private String month2;
     private String day2;
     int positionAlt = 0;
-    private int aktuellePosition = 0;
     private String year2;
-    List<Boolean> check = new ArrayList<>();
+    List<Boolean> checkList = new ArrayList<>();
+    //Variablen
+    List<String> modulUndStudiengangsList = new ArrayList<>();
+    List<String> prueferUndSemesterList = new ArrayList<>();
+    List<String> datumsList = new ArrayList<>();
+    List<String> modulList = new ArrayList<>();
+    List<String> idList = new ArrayList<>();
+    List<String> pruefFormList = new ArrayList<>();
+    List<String> raumList = new ArrayList<>();
+
     public static String validation;
     MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayout;
 
     AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
-    List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
-
+    List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
     public void onCreate(Bundle savedInstanceState) {
-
-
-
 
         LongOperation asynctask = new LongOperation();
 
         asynctask.execute("");
-       validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
+        validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
 
-       super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
     }
 
     class LongOperation extends AsyncTask<String, Void, String> {
 
         @Override
         protected String doInBackground(String... params) {
-            List<Pruefplan> datenbank = Terminefragment.this.datenbank.userDao().getAll(validation);
-            if(datenbank.size() < 1) {
+            List<PruefplanEintrag> ppeList
+                    = com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.this.datenbank.userDao().getAll(validation);
+            if(ppeList.size() < 1) {
                 for (int c = 0; c < 1000; c++) {
                     try {
                         Thread.sleep(3000);
                         if (RetrofitConnect.checkuebertragung) {
                             return "Executed";
                         }
-
                     } catch (InterruptedException e) {
                         Thread.interrupted();
-
                     }
                 }
             }
-
             return "null";
         }
 
         @Override
         protected void onPostExecute(String result) {
-            Adapteruebergabe();
+            AdapterUebergabe();
         }
 
         @Override
@@ -113,9 +114,6 @@ public class Terminefragment extends Fragment {
         protected void onProgressUpdate(Void... values) {}
     }
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -125,9 +123,7 @@ public class Terminefragment extends Fragment {
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
 
-
         recyclerView.setVisibility(View.VISIBLE);
-
 
         // use this setting to
         // improve performance if you know that changes
@@ -135,51 +131,71 @@ public class Terminefragment extends Fragment {
         // of the RecyclerView
         recyclerView.setHasFixedSize(true);
 
-        mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
+        //mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
         // use a linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
         mLayout = recyclerView.getLayoutManager();
 
-        Adapteruebergabe();
+        AdapterUebergabe();
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick( final View view, final  int position) {
-                        //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
-                        final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                        LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
-                        layout1.setOnClickListener(new  View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Log.e("@@@@@", "" + position);
-                                if (txtSecondScreen.getVisibility() == v.VISIBLE) {
-                                    txtSecondScreen.setVisibility(v.GONE);
-                                    check.set(position,false);
+                new RecyclerItemClickListener(getActivity(), (RecyclerItemClickListener.OnItemClickListener) (view, position) -> {
+                    //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
+                    final TextView txtSecondScreen
+                            = (TextView) view.findViewById(R.id.txtSecondscreen);
+                    View viewItem
+                            = recyclerView.getLayoutManager().findViewByPosition(position);
 
-                                } else {
-                                    txtSecondScreen.setVisibility(v.VISIBLE);
+                    LinearLayout layout1
+                            =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                    layout1.setOnClickListener(v1 -> {
+                        Log.e("@@@@@", "" + position);
+                        if (txtSecondScreen.getVisibility() == v1.VISIBLE) {
+                            txtSecondScreen.setVisibility(v1.GONE);
+                            checkList.set(position,false);
+                        } else {
+                            // Start Merlin Gürtler
+                            for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                                View holder = recyclerView.getLayoutManager().findViewByPosition(i);
+                                // Try and Catch, da die App crasht
+                                // wenn das Element nicht im View Port ist
+                                try {
+                                    final TextView txtSecondScreen2
+                                            = (TextView) holder.findViewById(R.id.txtSecondscreen);
 
-                                    txtSecondScreen.setText(mAdapter.giveString(position));
+                                    if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
+                                        txtSecondScreen2.setVisibility(v.GONE);
+                                    }
+                                }catch (Exception e) {
+                                    Log.d("ERROR","NOT IN VIEW PORT " + e);
                                 }
                             }
-                        });
+                            // Ende Merlin Gürtler
+                            txtSecondScreen.setVisibility(v1.VISIBLE);
+                            txtSecondScreen.setText(mAdapter.giveString(position));
+                        }
+                    });
 
-                        try{
-                        if(check.get(position)) {
+                    /* Merlin Gürtler
+                    Dieser Code scheint nichts zu tun
+                    try{
+                        if(checkList.get(position)) {
+                            for(int i = 0; i < recyclerView.getAdapter().getItemCount(); i++) {
+
+                            }
+
+
                             txtSecondScreen.setVisibility(v.VISIBLE);
                             txtSecondScreen.setText(mAdapter.giveString(position));
                         }}
-                        catch(Exception e){
-                            Log.e("Fehler Terminefragment","Fehler weitere Informationen");
-                        }
-
-                        // TODO Handle item click
-                        //Log.e("@@@@@",""+ aktuellePosition);
-                    positionAlt = position;
+                    catch(Exception e){
+                        Log.e("Fehler Terminefragment",
+                                "Fehler weitere Informationen");
                     }
+                    */
+                    // TODO Handle item click
+                    positionAlt = position;
                 })
         );
 
@@ -191,9 +207,7 @@ public class Terminefragment extends Fragment {
             }
         });
 
-
-
-        //Tocuhhelper für die Recyclerview-Komponente, zum überprüfen ob gescrollt wurde
+        //Touchhelper für die Recyclerview-Komponente, zum Überprüfen, ob gescrollt wurde
         //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
         //itemTouchhelper.attachToRecyclerView(recyclerView);
 
@@ -205,35 +219,28 @@ public class Terminefragment extends Fragment {
         calendar.setVisibility(View.GONE);
 
         //Clicklistener für den Kalender,
-        //Es wird überprüft welches Datum ausgewählt wurde
+        //Es wird überprüft, welches Datum ausgewählt wurde.
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
             @Override
             public void onClick(View v) {
                 if (!speicher) {
                     calendar.setVisibility(View.GONE);
-                    Adapteruebergabe();
+                    AdapterUebergabe();
                     speicher = true;
 
                 } else {
                     //Kalender wurde eingeschalet
                     calendar.setVisibility(View.VISIBLE);
 
-                    //Es werden durch setOnDateChangeListener nur Prüfungen mit dem ausgewählten Datum angezeigt
+                    /*  Es werden durch setOnDateChangeListener nur Prüfungen
+                        mit dem ausgewählten Datum angezeigt
+                     */
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-                        public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-
+                        public void onSelectedDayChange(CalendarView view,
+                                                        int year, int month, int dayOfMonth) {
                             //Datenbank
-                            List<Pruefplan> userdaten = datenbank.userDao().getAll(validation);
-
-                            //Variablen
-                            List<String> modulUndStudiengang = new ArrayList<>();
-                            List<String> prueferUndSemester = new ArrayList<>();
-                            List<String> datum = new ArrayList<>();
-                            List<String> module = new ArrayList<>();
-                            List<String> ID = new ArrayList<>();
-                            List<String> Pruefform = new ArrayList<>();
-                            List<String> raum = new ArrayList<>();
+                            List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
                             //unnötige Werte entfernen
                             if (month < 9) {
@@ -249,27 +256,42 @@ public class Terminefragment extends Fragment {
                             year2 = String.valueOf(year);
                             date = year2 + "-" + month2 + "-" + day2;
                             System.out.println(date);
-                            check.clear();
-                            for (int i = 0; i < userdaten.size(); i++) {
-                                String[] date2 = userdaten.get(i).getDatum().split(" ");
+                            checkList.clear();
+
+                            ClearLists();
+
+                            for (int i = 0; i < ppeList.size(); i++) {
+                                String[] date2 = ppeList.get(i).getDatum().split(" ");
                                 System.out.println(date2[0]);
 
-                                //Überprüfung ob das Prüfitem Datum mit dem ausgewählten Kalender datum übereinstimmt
+                                /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
+                                    Kalender datum übereinstimmt
+                                 */
                                 if (date2[0].equals(date)) {
-                                    modulUndStudiengang.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
-                                    prueferUndSemester.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
-                                    datum.add(userdaten.get(i).getDatum());
-                                    module.add(userdaten.get(i).getModul());
-                                    ID.add(userdaten.get(i).getID());
-                                    Pruefform.add(userdaten.get(i).getPruefform());
-                                    raum.add(userdaten.get(i).getRaum());
-                                    check.add(true);
+                                    modulUndStudiengangsList.add(
+                                            ppeList.get(i).getModul()
+                                            + "\n " + ppeList.get(i).getStudiengang());
+                                    prueferUndSemesterList.add(
+                                            ppeList.get(i).getErstpruefer()
+                                            + " " + ppeList.get(i).getZweitpruefer()
+                                            + " " + ppeList.get(i).getSemester() + " ");
+                                    datumsList.add(ppeList.get(i).getDatum());
+                                    modulList.add(ppeList.get(i).getModul());
+                                    idList.add(ppeList.get(i).getID());
+                                    pruefFormList.add(ppeList.get(i).getPruefform());
+                                    raumList.add(ppeList.get(i).getRaum());
+                                    checkList.add(true);
                                 }
                             }// define an adapter
 
                             //Adapter mit Werten füllen
-                            mAdapter = new MyAdapter(modulUndStudiengang, prueferUndSemester, datum, module,ID,Pruefform,mLayout,raum);
-
+                            mAdapter = new MyAdapter(   modulUndStudiengangsList,
+                                                        prueferUndSemesterList,
+                                                        datumsList,
+                                                        modulList,
+                                                        idList,
+                                                        pruefFormList,mLayout,
+                                                        raumList);
                             //Anzeigen
                             recyclerView.setAdapter(mAdapter);
                         }
@@ -281,44 +303,50 @@ public class Terminefragment extends Fragment {
         return v;
     }
 
-    public void Adapteruebergabe()
+    public void AdapterUebergabe()
     {
-
         //Datenbankaufruf
-        final List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
+        final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
-        List<String> modulUndStudiengang = new ArrayList<>();
-        List<String> prueferUndSemester = new ArrayList<>();
-        List<String> datum = new ArrayList<>();
-        List<String> modul = new ArrayList<>();
-        List<String> ID = new ArrayList<>();
-        List<String> pruefform = new ArrayList<>();
-        List<String> raum = new ArrayList<>();
-        check.clear();
+        checkList.clear();
+        ClearLists();
 
-        for (int i = 0; i < pruefplandaten.size(); i++) {
-            modulUndStudiengang.add(pruefplandaten.get(i).getModul() + "\n " + pruefplandaten.get(i).getStudiengang());
-            prueferUndSemester.add(pruefplandaten.get(i).getErstpruefer() + " " + pruefplandaten.get(i).getZweitpruefer() + " " + pruefplandaten.get(i).getSemester() + " ");
-            datum.add(pruefplandaten.get(i).getDatum());
-            modul.add(pruefplandaten.get(i).getModul());
-            ID.add(pruefplandaten.get(i).getID());
-            pruefform.add(pruefplandaten.get(i).getPruefform());
-            raum.add(pruefplandaten.get(i).getRaum());
-            check.add(true);
+        for (int i = 0; i < ppeList.size(); i++) {
+            modulUndStudiengangsList.add(
+                    ppeList.get(i).getModul() + "\n "
+                    + ppeList.get(i).getStudiengang());
+            prueferUndSemesterList.add(
+                    ppeList.get(i).getErstpruefer()
+                    + " " + ppeList.get(i).getZweitpruefer()
+                    + " " + ppeList.get(i).getSemester() + " ");
+            datumsList.add(ppeList.get(i).getDatum());
+            modulList.add(ppeList.get(i).getModul());
+            idList.add(ppeList.get(i).getID());
+            pruefFormList.add(ppeList.get(i).getPruefform());
+            raumList.add(ppeList.get(i).getRaum());
+            checkList.add(true);
         }// define an adapter
 
-        mAdapter = new MyAdapter(modulUndStudiengang, prueferUndSemester, datum, modul,ID,pruefform,mLayout,raum);
+        mAdapter = new MyAdapter(   modulUndStudiengangsList,
+                                    prueferUndSemesterList,
+                                    datumsList,
+                                    modulList,
+                                    idList,
+                                    pruefFormList,
+                                    mLayout,
+                                    raumList);
         recyclerView.setAdapter(mAdapter);
-
         // System.out.println(String.valueOf(userdaten.size()));
-
     }
 
-
+    public void ClearLists()
+    {
+        modulUndStudiengangsList.clear();
+        prueferUndSemesterList.clear();
+        datumsList.clear();
+        modulList.clear();
+        idList.clear();
+        pruefFormList.clear();
+        raumList.clear();
+    }
 }
-
-
-
-
-
-

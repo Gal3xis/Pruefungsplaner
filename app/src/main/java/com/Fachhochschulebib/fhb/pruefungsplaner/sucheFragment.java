@@ -3,56 +3,94 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 // sucheFragment
 //
-//
-//
 // autor:
-// inhalt:  auswählen und suchen von professoren,modulen,semestern, prüfungsphase
+// inhalt:  Auswahl und Suche von Professoren, Modulen, Semestern, Prüfungsphase
 // zugriffsdatum: 11.12.19
-//
-//
-//
-//
 //
 //
 //////////////////////////////
 
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.regex.Pattern;
 
 import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
 import static com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.validation;
 
+//TODO: Shared prefs???
 
 public class sucheFragment extends Fragment {
-    final List<String> studiengang = new ArrayList();
-    final List<String> prof = new ArrayList();
-    final List<Integer> rueckgabe = new ArrayList();
-    final List<Integer> rueckgabeStudiengang = new ArrayList();
-    final List<Integer> rueckgabeDatum = new ArrayList();
-    final List<Integer> rueckgabeSemester = new ArrayList();
-    final List<String> fertigsortiert = new ArrayList();
-    private AppDatabase database = AppDatabase.getAppDatabase(getContext());
+    final List<String> sgModulList = new ArrayList();
+    final List<String> profList = new ArrayList();
+    final List<Integer> rueckgabeProfList = new ArrayList();
+    final List<Integer> rueckgabeSgModuleList = new ArrayList();
+    final List<Integer> rueckgabeDatumsList = new ArrayList();
+    final List<Integer> rueckgabeSemModulList = new ArrayList();
+    final List<String> sortedList = new ArrayList();
+    private com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
 
-    AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
-    List<Pruefplan> datenEinlesen = roomDaten.userDao().getAll(validation);
+    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomDaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = roomDaten.userDao().getAll(validation);
 
+    // Start Merlin Gürtler
+    public void registerButton(Button btn, int value) {
+        btn.setOnClickListener(new Button.OnClickListener() {
+            boolean clicked = true;
+
+            @Override
+            public void onClick(View v) {
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
+                        }
+                    }
+
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(value).equals(ppeList.get(i).getSemester())) {
+                            btn.setBackgroundResource(R.drawable.button_rounded_corners);
+                            rueckgabeSemModulList.set(i, i);
+
+                        }
+                    }
+                    clicked = false;
+                } else {
+
+                    btn.setBackgroundResource(R.drawable.button_rounded_corners2);
+
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(value).equals(ppeList.get(i).getSemester())) {
+                            rueckgabeSemModulList.set(i, 99999);
+                        }
+                    }
+
+                    clicked = true;
+                }
+            }
+        });
+    }
+
+    // Ende Merlin Gürtler
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +103,7 @@ public class sucheFragment extends Fragment {
         //setContentView(R.layout.hauptfenster);
 
         //Initialiseren der UI Komponente
+        //Spinners spinner = new Spinners();
         final Button btnSemester1 = (Button) v.findViewById(R.id.btns1);
         final Button btnSemester2 = (Button) v.findViewById(R.id.btns2);
         final Button btnSemester3 = (Button) v.findViewById(R.id.btns3);
@@ -72,327 +111,405 @@ public class sucheFragment extends Fragment {
         final Button btnSemester5 = (Button) v.findViewById(R.id.btns5);
         final Button btnSemester6 = (Button) v.findViewById(R.id.btns6);
 
-        //Überprüfung ob ein Semster-Button geklickt wurde
+        //Überprüfung, ob ein Semester-Button geklickt wurde
         //der Wert des Semsters wird gespeichert
-        rueckgabeSemester.clear();
+        rueckgabeSemModulList.clear();
+
+        /* TODO: 6-mal Wiederholung des gleichen Codes mit einem Parameter (Btn.-Nr.)
+            --> Einfügen einer kleinen Methode, die dann 6-mal parametrisiert aufgerufen wird.
+         */
+
+        // Start Merlin Gürtler
+        registerButton(btnSemester1,1);
+        registerButton(btnSemester2,2);
+        registerButton(btnSemester3,3);
+        registerButton(btnSemester4,4);
+        registerButton(btnSemester5,5);
+        registerButton(btnSemester6,6);
+        // Ende Merlin Gürtler
+
+        /*
         btnSemester1.setOnClickListener(new Button.OnClickListener() {
-            boolean geklickt = true;
+            boolean clicked = true;
             @Override
             public void onClick(View v) {
-                if (geklickt) {
-                    if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (datenEinlesen.size()); i++) {
-                            rueckgabeSemester.add(99999);
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(1).equals(datenEinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(1).equals(ppeList.get(i).getSemester())) {
                             btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemester.set(i, i);
+                            rueckgabeSemModulList.set(i, i);
 
                         }
                     }
-                    geklickt = false;
+                    clicked = false;
                 } else {
 
                     btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(1).equals(datenEinlesen.get(i).getSemester())) {
-                            rueckgabeSemester.set(i, 99999);
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(1).equals(ppeList.get(i).getSemester())) {
+                            rueckgabeSemModulList.set(i, 99999);
                         }
                     }
 
-                    geklickt = true;
+                    clicked = true;
                 }
             }
         });
 
         btnSemester2.setOnClickListener(new Button.OnClickListener() {
-            boolean geklickt = true;
+            boolean clicked = true;
 
             @Override
             public void onClick(View v) {
-                if (geklickt) {
-                    if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (datenEinlesen.size()); i++) {
-                            rueckgabeSemester.add(99999);
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(2).equals(datenEinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(2).equals(ppeList.get(i).getSemester())) {
                             btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemester.set(i, i);
+                            rueckgabeSemModulList.set(i, i);
 
                         }
                     }
-                    geklickt = false;
+                    clicked = false;
                 } else {
 
                     btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(2).equals(datenEinlesen.get(i).getSemester())) {
-                            rueckgabeSemester.set(i, 99999);
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(2).equals(ppeList.get(i).getSemester())) {
+                            rueckgabeSemModulList.set(i, 99999);
                         }
                     }
 
-                    geklickt = true;
+                    clicked = true;
                 }
             }
         });
+
         btnSemester3.setOnClickListener(new Button.OnClickListener() {
-            boolean geklickt = true;
+            boolean clicked = true;
 
             @Override
             public void onClick(View v) {
-                if (geklickt) {
-                    if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (datenEinlesen.size()); i++) {
-                            rueckgabeSemester.add(99999);
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(3).equals(datenEinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(3).equals(ppeList.get(i)
+                                             .getSemester().toString())) {
                             btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemester.set(i, i);
+                            rueckgabeSemModulList.set(i, i);
 
                         }
                     }
-                    geklickt = false;
+                    clicked = false;
                 } else {
 
                     btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(3).equals(datenEinlesen.get(i).getSemester().toString())) {
-                            rueckgabeSemester.set(i, 99999);
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(3).equals(ppeList.get(i)
+                                             .getSemester().toString())) {
+                            rueckgabeSemModulList.set(i, 99999);
                         }
                     }
 
-                    geklickt = true;
+                    clicked = true;
                 }
             }
         });
 
         btnSemester4.setOnClickListener(new Button.OnClickListener() {
-            boolean geklickt = true;
+            boolean clicked = true;
 
             @Override
             public void onClick(View v) {
-                if (geklickt) {
-                    if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (datenEinlesen.size()); i++) {
-                            rueckgabeSemester.add(99999);
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
                         }
                     }
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(4).equals(datenEinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(4).equals(ppeList.get(i).getSemester())) {
                             btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemester.set(i, i);
+                            rueckgabeSemModulList.set(i, i);
 
                         }
                     }
-                    geklickt = false;
+                    clicked = false;
                 } else {
 
                     btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(4).equals(datenEinlesen.get(i).getSemester().toString())) {
-                            rueckgabeSemester.set(i, 99999);
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(4).equals(ppeList.get(i)
+                                             .getSemester().toString())) {
+                            rueckgabeSemModulList.set(i, 99999);
                         }
                     }
 
-                    geklickt = true;
+                    clicked = true;
                 }
             }
         });
 
         btnSemester5.setOnClickListener(new Button.OnClickListener() {
-            boolean geklickt = true;
+            boolean clicked = true;
 
             @Override
             public void onClick(View v) {
-                if (geklickt) {
-                    if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (datenEinlesen.size()); i++) {
-                            rueckgabeSemester.add(99999);
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
                         }
                     }
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(5).equals(datenEinlesen.get(i).getSemester().toString())) {
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(5).equals(ppeList.get(i)
+                                             .getSemester().toString())) {
                             btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemester.set(i, i);
+                            rueckgabeSemModulList.set(i, i);
                         }
                     }
-                    geklickt = false;
+                    clicked = false;
                 } else {
                     btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners2);
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(5).equals(datenEinlesen.get(i).getSemester().toString())) {
-                            rueckgabeSemester.set(i, 99999);
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(5).equals(ppeList.get(i)
+                                             .getSemester().toString())) {
+                            rueckgabeSemModulList.set(i, 99999);
                         }
                     }
-                    geklickt = true;
+                    clicked = true;
                 }
             }
         });
 
         btnSemester6.setOnClickListener(new Button.OnClickListener() {
-            boolean geklickt = true;
+            boolean clicked = true;
 
             @Override
             public void onClick(View v) {
-                if (geklickt) {
-                    if (rueckgabeSemester.size() <= 0) {
-                        for (int i = 0; i < (datenEinlesen.size()); i++) {
-                            rueckgabeSemester.add(99999);
+                if (clicked) {
+                    if (rueckgabeSemModulList.size() <= 0) {
+                        for (int i = 0; i < (ppeList.size()); i++) {
+                            rueckgabeSemModulList.add(99999);
                         }
                     }
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(6).equals(datenEinlesen.get(i).getSemester())) {
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(6).equals(ppeList.get(i).getSemester())) {
                             btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemester.set(i, i);
+                            rueckgabeSemModulList.set(i, i);
                         }
                     }
-                    geklickt = false;
+                    clicked = false;
                 } else {
 
                     btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners2);
 
-                    for (int i = 0; i < datenEinlesen.size(); i++) {
-                        if (String.valueOf(6).equals(datenEinlesen.get(i).getSemester())) {
-                            rueckgabeSemester.set(i, 99999);
+                    for (int i = 0; i < ppeList.size(); i++) {
+                        if (String.valueOf(6).equals(ppeList.get(i).getSemester())) {
+                            rueckgabeSemModulList.set(i, 99999);
                         }
                     }
-                    geklickt = true;
+                    clicked = true;
                 }
             }
         });
-
+        */
         try {
-            //Spinner aufruf und setzen der Spinner mit werten füllen
-            List<String> spinnerArray = new ArrayList<String>();
-            List<String> spinnerArrayProf = new ArrayList<String>();
-            //hinzufügen der Module zum Spinneritem
-            for (int i = 0; i < datenEinlesen.size(); i++) {
-                spinnerArray.add(datenEinlesen.get(i).getModul());
-            }
-            //auswahlmöglichkeit Alle Module hinzufügen
-            spinnerArray.add(1, "Alle Module");
+            //Spinner-Aufruf und Spinner mit Werten füllen
+            List<String> spinnerModuleArrayList = new ArrayList<String>();
+            List<String> spinnerProfArrayList = new ArrayList<String>();
 
-
-            // SpinenArray Prüfer mit Werten füllen
-            for (int i = 0; i < datenEinlesen.size(); i++) {
-                spinnerArrayProf.add(datenEinlesen.get(i).getErstpruefer());
-
+            //Hinzufügen der Module zum Spinner-Item
+            for (int i = 0; i < ppeList.size(); i++) {
+                spinnerModuleArrayList.add(ppeList.get(i).getModul());
             }
 
-            //doppelte Nameneinträge löschen für Module und Prüfer
-            for (int i = 0; i < spinnerArray.size(); i++) {
-                for (int a = i; a < spinnerArray.size(); a++) {
+            //Auswahlmöglichkeit "Alle Module" hinzufügen
+            spinnerModuleArrayList.add(1, "Alle Module");
 
-                    if (spinnerArray.get(i).equals(spinnerArray.get(a))) {
-
-                        spinnerArray.remove(a);
-                    }
-                }
+            //Spinner-Array Prüfer mit Werten füllen
+            for (int i = 0; i < ppeList.size(); i++) {
+                spinnerProfArrayList.add(ppeList.get(i).getErstpruefer());
             }
-            //doppelte Nameneinträge löschen für Module und Prüfer
-            for (int i = 0; i < spinnerArrayProf.size(); i++) {
-                for (int a = i; a < spinnerArrayProf.size(); a++) {
-                    if (spinnerArrayProf.get(i).equals(spinnerArrayProf.get(a))) {
-                        spinnerArrayProf.remove(a);
+
+            //LG Frage: Kann es zu doppelten Namenseinträgen bei den Modulen überhaupt kommen?
+            //Doppelte Namenseinträge für Module löschen
+            for (int i = 0; i < spinnerModuleArrayList.size(); i++) {
+                for (int a = i; a < spinnerModuleArrayList.size(); a++) {
+
+                    if (spinnerModuleArrayList.get(i).equals(spinnerModuleArrayList.get(a))) {
+                        spinnerModuleArrayList.remove(a);
                     }
                 }
             }
 
+            //Doppelte Namenseinträge für Prüfer löschen
+            for (int i = 0; i < spinnerProfArrayList.size(); i++) {
+                for (int a = i; a < spinnerProfArrayList.size(); a++) {
+                    if (spinnerProfArrayList.get(i).equals(spinnerProfArrayList.get(a))) {
+                        spinnerProfArrayList.remove(a);
+                    }
+                }
+            }
 
-
-
-            //adapter aufruf
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                    v.getContext(), R.layout.simple_spinner_item, spinnerArray);
+            //Adapter-Aufruf (LG: Sind hier alle drei Adapter notwendig?)
+            ArrayAdapter<String> adapterModule = new ArrayAdapter<String>(
+                    v.getContext(), R.layout.simple_spinner_item, spinnerModuleArrayList);
             ArrayAdapter<String> adapterProf = new ArrayAdapter<String>(
-                    v.getContext(), android.R.layout.simple_spinner_item, spinnerArrayProf);
+                    v.getContext(), android.R.layout.simple_spinner_item, spinnerProfArrayList);
+            ArrayAdapter<String> adapterProfAutoComplete = new ArrayAdapter<String>
+                    (v.getContext(), android.R.layout.simple_list_item_1, spinnerProfArrayList);
 
-            ArrayAdapter<String> adapteracPof = new ArrayAdapter<String>
-                    (v.getContext(), android.R.layout.simple_list_item_1, spinnerArrayProf);
-
-
-
-            //grafische ausgabe dropdown
-            adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item);
+            //Grafische Ausgabe dropdown
+            adapterModule.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             adapterProf.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
+            //Grafische Ausgabe
+            //DONE (08/2020) LG unused Code?
 
+            Spinner spSGModule = (Spinner) v.findViewById(R.id.spStudiengang);
+            spSGModule.setAdapter(adapterModule);
+            //Spinner spProf = (Spinner) v.findViewById(R.id.spProf);
+            //spProf.setAdapter(adapterProf);
 
-
-            //grafische ausgabe
-            Spinner spStudiengang = (Spinner) v.findViewById(R.id.spStudiengang);
-            spStudiengang.setAdapter(adapter);
-            Spinner spProf = (Spinner) v.findViewById(R.id.spProf);
-            spProf.setAdapter(adapterProf);
-
-            final AutoCompleteTextView acProf = (AutoCompleteTextView) v.findViewById(R.id.acProfessor);
+            final AutoCompleteTextView acProf
+                    = (AutoCompleteTextView) v.findViewById(R.id.acProfessor);
             acProf.setThreshold(1);//will start working from first character
-            acProf.setAdapter(adapteracPof);//setting the adapter data into the AutoCompleteTextView
+            acProf.setAdapter(adapterProfAutoComplete);//setting the adapter data
+            // into the AutoCompleteTextView
+            profList.add("Alle");
+            sgModulList.add("Alle");
 
-            prof.add("Alle");
-            studiengang.add("Alle");
-            //initialisierung der anfagswerte
+            //Initialisierung der Anfangswerte
             int i;
-            for (i = 0; i < datenEinlesen.size(); i++) {
-                rueckgabe.add(i);
-                rueckgabeStudiengang.add(i);
-                rueckgabeDatum.add(i);
-
+            for (i = 0; i < ppeList.size(); i++) {
+                rueckgabeProfList.add(i);
+                rueckgabeSgModuleList.add(i);
+                rueckgabeDatumsList.add(i);
             }
+
+            // Start Merlin Gürtler
+            // The TextChanged Listener is listening
+            // on the input events of the AutoCompleteTextView acProf
+            // this is necessary because the rueckgabe before
+            // only changed when the field was clicked
+            acProf.addTextChangedListener(new TextWatcher() {
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                // After the text changed the name is saved in
+                // after the input the app iterate
+                // through the intern Database and select
+                // the dozent
+                @Override
+                public void afterTextChanged(Editable s) {
+                    int a;
+                    rueckgabeProfList.clear();
+                    for (a = 0; a < ppeList.size(); a++) {
+                        if (acProf.getText().toString().equals("Alle")) {
+                            rueckgabeProfList.add(a);
+                        } else if (Pattern.matches("^.*("                       // Wildcard begin
+                                        + acProf.getText().toString().trim().toLowerCase()    // Input Name
+                                        +").*$",                                              // Wildcard end
+                                ppeList.get(a).getErstpruefer().toLowerCase())) // Name in db
+                        {
+                            rueckgabeProfList.add(a);
+                        }
+                    }
+                }
+
+
+            });
+
+            // Ende Merlin Gürtler
+
             acProf.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    // Start Merlin Gürtler
+                    // Close the Keyboard when an Item/Dozent is chosen for better UX
+                    InputMethodManager inputMethodManager =
+                            (InputMethodManager) getActivity().getSystemService(
+                                    Activity.INPUT_METHOD_SERVICE);
+                    inputMethodManager.hideSoftInputFromWindow(
+                            getActivity().getCurrentFocus().getWindowToken(), 0);
+                    // This part is unecessary the Text changed Listener is the better
+                    // solution because now the user can write an professor on his own,
+                    // so he must not choose the Item
+                    // Ende Merlin Gürtler
+                    /*
                     int a;
-                    rueckgabe.clear();
-                    for (a = 0; a < datenEinlesen.size(); a++) {
+                    rueckgabeProfList.clear();
+                    for (a = 0; a < ppeList.size(); a++) {
                         if (acProf.getText().toString().equals("Alle")) {
-                            rueckgabe.add(a);
+                            rueckgabeProfList.add(a);
 
-                        } else if (acProf.getText().toString().equals(datenEinlesen.get(a).getErstpruefer())) {
-                            rueckgabe.add(a);
-                            TextView textt = (TextView) v.findViewById(R.id.txtmessage);
-
+                        } else if (acProf.getText()
+                                         .toString()
+                                         .equals(ppeList.get(a).getErstpruefer())) {
+                            rueckgabeProfList.add(a);
+                            //TextView textt = (TextView) v.findViewById(R.id.txtmessage);
                         }
                     }
-                    //txtview.setText(prof.get(prof.size()-1).toString() + pruefplandaten.profname[i].toString());
+                    //txtview.setText(prof.get(prof.size()-1).toString()
+                    // + pruefplandaten.profname[i].toString());
+                    */
                 }
+
                 //... your stuf
             });
 
+            spSGModule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parent,
+                                           View view, int position, long id) {
+                    rueckgabeSgModuleList.clear();
+                    //this is your selected item
+                    sgModulList.add(parent.getItemAtPosition(position).toString());
 
-
-
-            spStudiengang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    rueckgabeStudiengang.clear();
-                    studiengang.add(parent.getItemAtPosition(position).toString()); //this is your selected item
                     int i;
                     String a;
-                    for (i = 0; i < (datenEinlesen.size()); i++) {
-                        if (studiengang.get(studiengang.size() - 1).toString().equals("Alle Module")) {
-                            rueckgabeStudiengang.add(i);
+                    for (i = 0; i < (ppeList.size()); i++) {
+                        if (sgModulList.get(sgModulList.size() - 1).toString()
+                                .equals("Alle Module")) {
+                            rueckgabeSgModuleList.add(i);
                         } else {
-                            if (studiengang.get(studiengang.size() - 1).toString().equals(datenEinlesen.get(i).getModul().toString())) {
-                                rueckgabeStudiengang.add(i);
+                            if (sgModulList.get(sgModulList.size() - 1).toString()
+                                    .equals(ppeList.get(i).getModul().toString())) {
+                                rueckgabeSgModuleList.add(i);
                                 // database.userDao().Checkverbindung(Tabellenrueckgabe());
-
                             }
                         }
-                        //txtview.setText(prof.get(prof.size()-1).toString() + pruefplandaten.profname[i].toString());
+                        //txtview.setText(prof.get(prof.size()-1).toString()
+                        // + pruefplandaten.profname[i].toString());
                     }
                 }
 
@@ -401,24 +518,48 @@ public class sucheFragment extends Fragment {
                 }
             });
 
-            Button but1 = (Button) v.findViewById(R.id.BtnOk);
-            final TextView textt = (TextView) v.findViewById(R.id.txtmessage);
-            but1.setOnClickListener(new View.OnClickListener() {
+            Button btnOk = (Button) v.findViewById(R.id.BtnOk);
+            //final TextView textt = (TextView) v.findViewById(R.id.txtmessage);
+            btnOk.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (acProf.getText().toString().equals("Alle")) {
-                        int a;
-                        rueckgabe.clear();
-                        for (a = 0; a < (datenEinlesen.size()); a++) {
-                            rueckgabe.add(a);
+                    // Start Merlin Gürtler
+                    if(profList.get(0).equals("Alle")
+                            &&  !sgModulList .get(sgModulList .size() - 1).equals("Alle Module"))
+                    {
+                        sortedList .clear();
+                        ppeList = roomDaten.userDao().getModule(sgModulList .get(sgModulList .size() - 1));
+                        for(int m = 0; m < ppeList.size(); m++) {
+                            sortedList.add(String.valueOf(ppeList.get(m).getID()));
                         }
-                    }
 
-                    database.userDao().suchezuruecksetzen(false);
-                    List<Pruefplan> userdaten = AppDatabase.getAppDatabase(v.getContext()).userDao().getAll(validation);
-                    for (int i =0; i< Tabellenrueckgabe().size();i++) {
-                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
-                        database.userDao().update2(true,Integer.valueOf(userdaten.get(Integer.valueOf(Tabellenrueckgabe().get(i))).getID()));
+                        database.userDao().sucheUndZurueckSetzen(false);
+                        for (int i =0; i< sortedList.size();i++) {
+                            // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                            database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                        }
+                    } else {
+
+                        // Ende Merlin Gürtler
+
+                        if (acProf.getText().toString().equals("Alle")) {
+                            int a;
+                            rueckgabeProfList.clear();
+                            for (a = 0; a < (ppeList.size()); a++) {
+                                rueckgabeProfList.add(a);
+                            }
+                        }
+
+                        database.userDao().sucheUndZurueckSetzen(false);
+                        List<PruefplanEintrag> ppeList = AppDatabase.getAppDatabase(v.getContext())
+                                .userDao().getAll(validation);
+                        for (int i = 0; i < Tabellenrueckgabe().size(); i++) {
+                            // Toast.makeText(getContext(),Tabellenrueckgabe().get(i),
+                            // Toast.LENGTH_SHORT).show();
+                            database.userDao().update2(true,
+                                    Integer.valueOf(ppeList.get(
+                                            Integer.valueOf(Tabellenrueckgabe().get(i))).getID()));
+                        }
                     }
 
                     ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -428,69 +569,63 @@ public class sucheFragment extends Fragment {
                 }
             });
 
-
         }catch (Exception e)
         {
-            Log.d("Fehler sucheFragment","Fehler beim ermitteln der Module");
+            Log.d("Fehler sucheFragment","Fehler beim Ermitteln der Module");
         }
-
-
-
 
         return v;
     }
-        public List<String> Tabellenrueckgabe () {
-            int i;
-            int j;
-            int k;
-            int l;
-            String test = "a";
-            boolean checkSemester = true;
-            for(int z = 0; z< rueckgabeSemester.size(); z++)
+
+    public List<String> Tabellenrueckgabe () {
+        int i, j, k, l;
+        String test = "a";
+        boolean checkSemester = true;
+        for(int z = 0; z< rueckgabeSemModulList.size(); z++)
+        {
+            //überprüfung, ob Semester ausgewählt wurden. Sonst alle Semester anzeigen.
+            if(!rueckgabeSemModulList.get(z).equals(rueckgabeSemModulList.get(z+1)))
             {
-                //überprüfung ob Semester ausgewählt wurden, sonst alle Semester anzeigen
-                if(rueckgabeSemester.get(z).equals(rueckgabeSemester.get(z+1)))
-                {
-
-                }
-                else{
-                    //nicht Alle Semester anzeigen, weil ein Semester oder mehrere Semester ausgewählt wurden
-                    checkSemester = false;
-                    break;
-                }
-
+                // DONE (08/2020) LG: Vereinfachung if(!...)
+                // Gäbler: Nicht alle Semester anzeigen, weil ein oder
+                // mehrere Semester ausgewählt wurden
+                checkSemester = false;
+                break;
             }
-
-            if (checkSemester)
-            {
-                for (int z = 0; z < datenEinlesen.size(); z++) {
-                        rueckgabeSemester.add(z);
-                }
-            }
-
-
-            fertigsortiert.clear();
-            for (i = 0; i < (rueckgabeStudiengang.size()); i++) {
-                for (j = 0; j < (rueckgabeSemester.size()); j++) {
-                    if (rueckgabeStudiengang.get(i).equals(rueckgabeSemester.get(j))) {
-                        for (k = 0; k < (rueckgabeDatum.size()); k++) {
-                            if (rueckgabeDatum.get(k).equals(rueckgabeStudiengang.get(i))) {
-                                for (l = 0; l < (rueckgabe.size()); l++) {
-                                    if (rueckgabe.get(l).equals(rueckgabeStudiengang.get(i))) {
-                                        fertigsortiert.add(String.valueOf(rueckgabeStudiengang.get(i)));
-                                        test = String.valueOf(rueckgabeDatum.get(k)) + test;
-                                    }
-                                }
-                            }
-                        }
-                        //rueckgabeStudiengang.add(i);
-                    }
-                }
-                //txtview.setText(prof.get(prof.size()-1).toString() + pruefplandaten.profname[i].toString());
-            }
-            return (fertigsortiert);
         }
 
+        if (checkSemester)
+        {
+            for (int z = 0; z < ppeList.size(); z++) {
+                rueckgabeSemModulList.add(z);
+            }
+        }
 
+        sortedList.clear();
+        for (i = 0; i < (rueckgabeSgModuleList.size()); i++) {
+            for (j = 0; j < (rueckgabeSemModulList.size()); j++) {
+                if (rueckgabeSgModuleList.get(i).equals(rueckgabeSemModulList.get(j))) {
+                    for (k = 0; k < (rueckgabeDatumsList.size()); k++) {
+                        if (rueckgabeDatumsList
+                                .get(k)
+                                .equals(rueckgabeSgModuleList.get(i))) {
+                            for (l = 0; l < (rueckgabeProfList.size()); l++) {
+                                if (rueckgabeProfList
+                                        .get(l)
+                                        .equals(rueckgabeSgModuleList.get(i))) {
+                                    sortedList.add(
+                                            String.valueOf(rueckgabeSgModuleList.get(i)));
+                                    test = String.valueOf(rueckgabeDatumsList.get(k)) + test;
+                                }//if
+                            }//for
+                        }//of
+                    }//for
+                    //rueckgabeStudiengang.add(i);
+                }//if
+            }//for
+            //txtview.setText(prof.get(prof.size()-1).toString() +
+            // pruefplandaten.profname[i].toString());
+        }//for
+        return (sortedList);
     }
-
+}

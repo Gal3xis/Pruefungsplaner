@@ -15,7 +15,6 @@
 //////////////////////////////
 
 
-
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
@@ -27,14 +26,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
 import android.util.Log;
+
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
-
-
 
 
 public class CheckGoogleCalendar {
@@ -42,14 +41,12 @@ public class CheckGoogleCalendar {
     private int pruefID;
     private int googleID;
     private Context context;
-    private List<String>  ids = new ArrayList<String>();
+    private List<String> idList = new ArrayList<String>();
     //private String[] ids = new String[100];
 
 
     public void setCtx (Context cx){
         context = cx;
-
-
     }
 
 
@@ -62,7 +59,8 @@ public class CheckGoogleCalendar {
 
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        SharedPreferences mSharedPreferences
+                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         SharedPreferences.Editor mEditor = mSharedPreferences.edit();
         String stringids = mSharedPreferences.getString("IDs","");
 
@@ -71,7 +69,7 @@ public class CheckGoogleCalendar {
         try {
             elements = stringids.split("/");
         }catch (Exception e){
-            Log.d("Fehler CheckGoogleCal","Fehler beim aufteilen der String elemente");
+            Log.d("Fehler CheckGoogleCal","Fehler beim Aufteilen der String-Elemente!");
         }
         // step two : convert String array to list of String
         List<String> fixedLenghtList = Arrays.asList(elements);
@@ -93,8 +91,6 @@ public class CheckGoogleCalendar {
 
         //Log.i("test", String.valueOf(idsTOstring));
 
-
-
         //step six : add to database
 
         mEditor.putString("IDs",String.valueOf(idsTOstring));
@@ -107,15 +103,16 @@ public class CheckGoogleCalendar {
         pruefID = pruefid;
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        SharedPreferences mSharedPreferences
+                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         SharedPreferences.Editor mEditor = mSharedPreferences.edit();
         String stringids = mSharedPreferences.getString("IDs", "");
 
         // step one : converting comma separate String to array of String
-        String[] elements = stringids.split("-");
+        String[] elementList = stringids.split("-");
 
         // step two : convert String array to list of String
-        List<String> fixedLenghtList = Arrays.asList(elements);
+        List<String> fixedLenghtList = Arrays.asList(elementList);
 
         // step three : copy fixed list to an ArrayList
         ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
@@ -123,7 +120,7 @@ public class CheckGoogleCalendar {
         //step fifth : change Stringarray to String type
         Log.i("check_Googlekalender", String.valueOf(listOfString.size()));
 
-        String idsTOstring = null;
+        //String idsTOstring = null;
         for (int i = 1; i < listOfString.size(); i++) {
             // step six : split Prüfid und GoogleID
             String[] element = listOfString.get(i).split(",");
@@ -137,8 +134,7 @@ public class CheckGoogleCalendar {
             }
         }
 
-        //wenn prüfid nicht vorhanden return true
-
+        //wenn prüfid nicht vorhanden --> return true
         return true;
     }
 
@@ -148,15 +144,16 @@ public class CheckGoogleCalendar {
     {
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        SharedPreferences mSharedPreferences
+                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         SharedPreferences.Editor mEditor = mSharedPreferences.edit();
         String stringids = mSharedPreferences.getString("IDs", "");
 
         // step one : converting comma separate String to array of String
-        String[] elements = stringids.split("-");
+        String[] elementList = stringids.split("-");
 
         // step two : convert String array to list of String
-        List<String> fixedLenghtList = Arrays.asList(elements);
+        List<String> fixedLenghtList = Arrays.asList(elementList);
 
         // step three : copy fixed list to an ArrayList
         ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
@@ -198,22 +195,22 @@ public class CheckGoogleCalendar {
     public void updateCal()
     {
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences Googleeintrag = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        SharedPreferences Googleeintrag
+                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
         String stringids = Googleeintrag.getString("IDs", "");
 
         // step one : converting comma separate String to array of String
-        String[] elements = stringids.split("-");
+        String[] elementsList = stringids.split("-");
 
-        Log.i("userID", String.valueOf(elements.length));
+        Log.i("userID", String.valueOf(elementsList.length));
         // step two : convert String array to list of String
-        List<String> fixedLenghtList = Arrays.asList(elements);
+        List<String> fixedLenghtList = Arrays.asList(elementsList);
 
         // step three : copy fixed list to an ArrayList
         ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
 
-
         //step four: Database connect
-        List<Pruefplan> pruefplan = databaseConnect();
+        List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = databaseConnect();
 
         //step fifth: Schleifen zum vergleichen
         Log.i("userID", String.valueOf(listOfString.size()));
@@ -222,11 +219,11 @@ public class CheckGoogleCalendar {
             String[] element = listOfString.get(i).split(",");
             Log.i("userID", element.toString());
             Log.i("elemnt[0}", String.valueOf(element[0]));
-            for (int j = 0; j< pruefplan.size(); j++) {
+            for (int j = 0; j< ppeList.size(); j++) {
                 // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
                 // ist die GoogleCalendar Id für den gespeicherten eintrag
-                Log.i("userID2", pruefplan.get(j).getID());
-                if(pruefplan.get(j).getID().equals(element[0])) {
+                Log.i("userID2", ppeList.get(j).getID());
+                if(ppeList.get(j).getID().equals(element[0])) {
                     //output tag
                     String DEBUG_TAG = "MyActivity";
                     //eventID ist die Google calendar Id
@@ -239,7 +236,7 @@ public class CheckGoogleCalendar {
                     // Sieht so aus wie 22-01-2019 10:00 Uhr
                     // es wird nach dem Leerzeichen getrennt
                     //trennen von datum und Uhrzeit
-                    String[] s = pruefplan.get(j).getDatum().split(" ");
+                    String[] s = ppeList.get(j).getDatum().split(" ");
                     //print Datum
                     System.out.println(s[0]);
                     //aufteilen von tag, monat und jahr.
@@ -249,20 +246,25 @@ public class CheckGoogleCalendar {
                     int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
                     int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
                     // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, pruefplan.get(j).getModul());
-                    values.put(CalendarContract.Events.EVENT_LOCATION, "Fachhochschule BielefeldUpdate");
+                    values.put(CalendarContract.Events.TITLE, ppeList.get(j).getModul());
+                    values.put(CalendarContract.Events.EVENT_LOCATION,
+                               "Fachhochschule Bielefeld Update");
                     values.put(CalendarContract.Events.DESCRIPTION, "");
                     //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
-                    GregorianCalendar calDate = new GregorianCalendar(Integer.valueOf(ss[0]), (Integer.valueOf(ss[1]) - 1), Integer.valueOf(ss[2]), uhrzeit1, uhrzeit2);
+                    GregorianCalendar calDate = new GregorianCalendar(
+                            Integer.valueOf(ss[0]),
+                            Integer.valueOf(ss[1]) - 1,
+                            Integer.valueOf(ss[2]),
+                            uhrzeit1, uhrzeit2);
                     values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                     values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
-                    values.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));
+                    values.put( CalendarContract.Events.DTEND,
+                                calDate.getTimeInMillis() + (90 * 60000));
                     //uebergebeneModule.put(CalendarContract.Events.);
                     //Checkverbindung Eintrag
                     Uri baseUri;
                     if (Build.VERSION.SDK_INT >= 8) {
                         baseUri = Uri.parse("content://com.android.calendar/events");
-
                     } else {
                         baseUri = Uri.parse("content://calendar/events");
                     }
@@ -278,10 +280,10 @@ public class CheckGoogleCalendar {
         }
     }
 
-    public List<Pruefplan> databaseConnect(){
-        AppDatabase database2 = AppDatabase.getAppDatabase(context);
-        List<Pruefplan> userdaten2 = database2.userDao().getAll2();
-     return(userdaten2);
+    public List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> databaseConnect(){
+        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database2 = AppDatabase.getAppDatabase(context);
+        List<PruefplanEintrag> ppeList = database2.userDao().getAll2();
+     return(ppeList);
     }
 
     @SuppressLint("InlinedApi")
@@ -289,13 +291,12 @@ public class CheckGoogleCalendar {
         int iNumRowsUpdated = 0;
 
         Uri eventUri;
-        if (android.os.Build.VERSION.SDK_INT <= 7) {
+        if (Build.VERSION.SDK_INT <= 7) {
             // the old way
 
             eventUri = Uri.parse("content://calendar/events");
         } else {
             // the new way
-
             eventUri = Uri.parse("content://com.android.calendar/events");
         }
 

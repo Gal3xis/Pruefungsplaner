@@ -3,8 +3,11 @@
     style="@style/spinnerDropDownItemStyle"
     android:singleLine="true"
     android:ellipsize="marquee"
-    android:layout_width="match_parent"
+    android:layout_width="fill_parent"
     android:background="#06ABF9"
     android:textColor="#eeeeee"
     android:textSize="20sp"
-    android:layout_height="wrap_content" />
+    android:paddingLeft="30dp"
+    android:paddingRight="10dp"
+    android:paddingTop="10dp"
+    android:layout_height="match_parent" />

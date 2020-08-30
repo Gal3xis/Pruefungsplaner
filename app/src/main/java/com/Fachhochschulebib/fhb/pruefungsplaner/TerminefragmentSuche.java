@@ -18,9 +18,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,8 +27,12 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Pruefplan;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,15 +48,23 @@ public class TerminefragmentSuche extends Fragment {
     private CalendarView calendar;
     private Button btnsuche;
     private String date;
-    List<Boolean> check = new ArrayList<>();
+
+    List<Boolean> checkList = new ArrayList<>();
+    List<String> modulUndStudiengangsList = new ArrayList<>();
+    List<String> prueferUndSemesterList = new ArrayList<>();
+    List<String> datumsList = new ArrayList<>();
+    List<String> modulList = new ArrayList<>();
+    List<String> idList = new ArrayList<>();
+    List<String> pruefFormList = new ArrayList<>();
+    List<String> raumList = new ArrayList<>();
+
     private String month2;
     private String day2;
-    private int position2 = 0;
+    // private int position2 = 0;
     private String year2;
     private RecyclerView.LayoutManager mLayout;
-    SwipeController swipeController = null;
-    MyAdapter mAdapter;
-    List<Integer> WerteZumAnzeigen= new ArrayList<>();
+    com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapter mAdapter;
+    List<Integer> WerteZumAnzeigenList = new ArrayList<>();
 
 
 
@@ -90,16 +99,18 @@ public class TerminefragmentSuche extends Fragment {
 
 
         //Userinterface Komponenten Initialiseren
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
-        recyclerView.setVisibility(View.VISIBLE);
+        // recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
+        // recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
 
         Adapteruebergabe();
 
-        //btnsuche clicklistener überprüft ob der Kalender öffnen button angetippt wurde
-        //Es werden bei eingeschalteten Kalender nur Prüfobjekte mit übereinstimmenden Datum angezeigt
         calendar.setVisibility(View.GONE);
+        //btnsuche clicklistener überprüft, ob der "Kalender öffnen" - Button angetippt wurde
+        /*  Es werden bei eingeschaltetem Kalender nur Prüfobjekte mit übereinstimmenden
+            Datum angezeigt.
+         */
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
             @Override
@@ -113,15 +124,10 @@ public class TerminefragmentSuche extends Fragment {
                     calendar.setVisibility(View.VISIBLE);
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                            AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-                            List<Pruefplan> userdaten = roomdaten.userDao().getAll(validation);
-                            List<String> studiengangUndModul = new ArrayList<>();
-                            List<String> prueferUndSemester = new ArrayList<>();
-                            List<String> datum = new ArrayList<>();
-                            List<String> modul = new ArrayList<>();
-                            List<String> ID = new ArrayList<>();
-                            List<String> pruefform = new ArrayList<>();
-                            List<String> raum = new ArrayList<>();
+                            com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
+                            List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = roomdaten.userDao().getAll(validation);
+
+                            ClearLists();
 
                             //Creating editor to store uebergebeneModule to shared preferences
                             if (month < 10) {
@@ -136,21 +142,34 @@ public class TerminefragmentSuche extends Fragment {
                             }
                             year2 = String.valueOf(year);
                             date = year2 + "-" + month2 + "-" + day2;
-                            for (int i = 0; i < userdaten.size(); i++) {
-                                String[] date2 = userdaten.get(i).getDatum().split(" ");
+                            for (int i = 0; i < ppeList.size(); i++) {
+                                String[] date2 = ppeList.get(i).getDatum().split(" ");
                                 if (date2[0].equals(date)) {
-                                    studiengangUndModul.add(userdaten.get(i).getModul() + "\n " + userdaten.get(i).getStudiengang());
-                                    prueferUndSemester.add(userdaten.get(i).getErstpruefer() + " " + userdaten.get(i).getZweitpruefer() + " " + userdaten.get(i).getSemester() + " ");
-                                    datum.add(userdaten.get(i).getDatum());
-                                    modul.add(userdaten.get(i).getModul());
-                                    ID.add(userdaten.get(i).getID());
-                                    pruefform.add(userdaten.get(i).getPruefform());
-                                    raum.add(userdaten.get(i).getRaum());
+                                    modulUndStudiengangsList.add(
+                                            ppeList.get(i).getModul() + "\n "
+                                                    + ppeList.get(i).getStudiengang());
+                                    prueferUndSemesterList.add(
+                                            ppeList.get(i).getErstpruefer()
+                                                    + " " + ppeList.get(i).getZweitpruefer()
+                                                    + " " + ppeList.get(i).getSemester() + " ");
+                                    datumsList.add(ppeList.get(i).getDatum());
+                                    modulList.add(ppeList.get(i).getModul());
+                                    idList.add(ppeList.get(i).getID());
+                                    pruefFormList.add(ppeList.get(i).getPruefform());
+                                    raumList.add(ppeList.get(i).getRaum());
                                 }
                             }
                             // define an adapter
                             //Werte an den Adapter übergeben
-                            mAdapter = new MyAdapter(studiengangUndModul, prueferUndSemester, datum, modul,ID,pruefform,mLayout,raum);
+                            mAdapter = new com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapter(
+                                    modulUndStudiengangsList,
+                                    prueferUndSemesterList,
+                                    datumsList,
+                                    modulList,
+                                    idList,
+                                    pruefFormList,
+                                    mLayout,
+                                    raumList);
                             //Anzeigen von recyclerview
                             recyclerView.setAdapter(mAdapter);
                         }
@@ -161,12 +180,15 @@ public class TerminefragmentSuche extends Fragment {
         });
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                new com.Fachhochschulebib.fhb.pruefungsplaner.RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
-                        final TextView txtSecondScreen = (TextView) view.findViewById(R.id.txtSecondscreen);
-                        View viewItem = recyclerView.getLayoutManager().findViewByPosition(position);
-                        LinearLayout layout1 =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                        final TextView txtSecondScreen
+                                = (TextView) view.findViewById(R.id.txtSecondscreen);
+                        View viewItem
+                                = recyclerView.getLayoutManager().findViewByPosition(position);
+                        LinearLayout layout1
+                                =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
 
                         layout1.setOnClickListener(new  View.OnClickListener() {
                             @Override
@@ -174,7 +196,7 @@ public class TerminefragmentSuche extends Fragment {
                                 Log.e("@@@@@", "" + position);
                                 if (txtSecondScreen.getVisibility() == v.VISIBLE) {
                                     txtSecondScreen.setVisibility(v.GONE);
-                                    check.set(position,false);
+                                    checkList.set(position,false);
                                 } else {
                                     txtSecondScreen.setVisibility(v.VISIBLE);
                                     txtSecondScreen.setText(mAdapter.giveString(position));
@@ -182,7 +204,7 @@ public class TerminefragmentSuche extends Fragment {
                             }
                         });
 
-                        if(check.get(position)) {
+                        if(checkList.get(position)) {
                             txtSecondScreen.setVisibility(v.VISIBLE);
                             txtSecondScreen.setText(mAdapter.giveString(position));
                         }
@@ -196,43 +218,57 @@ public class TerminefragmentSuche extends Fragment {
     {
 
         //Datenbank initialisieren
-        AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
-        List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
+        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
 
+        // Änderung Merlin Gürtler
+        // List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
+        // Für die Suche von Modulen
+        List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+        // Ende Änderung Merlin Gürtler
 
-        //
-        for (int i =0;i<pruefplandaten.size();i++) {
-            System.out.println(pruefplandaten.get(i).getAusgewaehlt());
-            if(pruefplandaten.get(i).getAusgewaehlt()) {
-                WerteZumAnzeigen.add(i);
+        ClearLists();
+
+        for (int i =0;i<ppeList.size();i++) {
+            System.out.println(ppeList.get(i).getAusgewaehlt());
+            if(ppeList.get(i).getAusgewaehlt()) {
+                WerteZumAnzeigenList.add(i);
             }
         }
 
-
-        //Variablen zum speichern der Werte
-        List<String> studiengangUndModul = new ArrayList<>();
-        List<String> prueferUndSemster = new ArrayList<>();
-        List<String> datum = new ArrayList<>();
-        List<String> module = new ArrayList<>();
-        List<String> ID = new ArrayList<>();
-        List<String> Pruefform = new ArrayList<>();
-        List<String> raum = new ArrayList<>();
-
         //Variablen mit Werten aus der lokalen Datenbank füllen
-        for (int i = 0; i < WerteZumAnzeigen.size(); i++) {
-            studiengangUndModul.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul() + "\n " + pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getStudiengang());
-            prueferUndSemster.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getErstpruefer() + " " + pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getZweitpruefer() + " " + pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getSemester() + " ");
-            datum.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getDatum());
-            module.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getModul());
-            ID.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getID());
-            Pruefform.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getPruefform());
-            raum.add(pruefplandaten.get(Integer.valueOf(WerteZumAnzeigen.get(i))).getRaum());
-            check.add(true);
+        for (int i = 0; i < WerteZumAnzeigenList.size(); i++) {
+            modulUndStudiengangsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul() + "\n " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStudiengang());
+            prueferUndSemesterList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getErstpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getZweitpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getSemester() + " ");
+            datumsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getDatum());
+            modulList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul());
+            idList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getID());
+            pruefFormList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getPruefform());
+            raumList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getRaum());
+            checkList.add(true);
         }
 
         // define an adapter
-        mAdapter = new MyAdapter(studiengangUndModul, prueferUndSemster, datum, module,ID,Pruefform,mLayout,raum);
+        mAdapter = new MyAdapter(
+                modulUndStudiengangsList,
+                prueferUndSemesterList,
+                datumsList,
+                modulList,
+                idList,
+                pruefFormList,
+                mLayout,
+                raumList);
         recyclerView.setAdapter(mAdapter);
+    }
+
+    public void ClearLists()
+    {
+        modulUndStudiengangsList.clear();
+        prueferUndSemesterList.clear();
+        datumsList.clear();
+        modulList.clear();
+        idList.clear();
+        pruefFormList.clear();
+        raumList.clear();
     }
 
 }
