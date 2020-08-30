@@ -21,4 +21,9 @@
         android:icon="@drawable/optionen_nav"
         android:title="@string/title_settings"/>
 
+    <item
+        android:id="@+id/navigation_start"
+        android:icon="@drawable/optionen_nav"
+        android:title="Studiengang Ändern"/>
+
 </menu>

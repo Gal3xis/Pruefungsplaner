@@ -10,6 +10,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,6 +60,18 @@ public class Tabelle extends AppCompatActivity  {
 
         dl = findViewById(R.id.drawer_layout);
 
+        TextView btnOpen = (TextView) findViewById(R.id.btnopen);
+
+        btnOpen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("button pressed");
+                dl.openDrawer(GravityCompat.START);
+                dl.setVisibility(View.VISIBLE);
+
+            }
+        });
+
         nv = findViewById(R.id.nav_view);
         if (!nv.isFocused())
         {
@@ -68,13 +81,13 @@ public class Tabelle extends AppCompatActivity  {
         dl.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
-                //Called when a drawer's position changes.
+                // Called when a drawer's position changes.
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
-                //Called when a drawer has settled in a completely open state.
-                //The drawer is interactive at this point.
+                // Called when a drawer has settled in a completely open state.
+                // The drawer is interactive at this point.
                 // If you have 2 drawers (left and right) you can distinguish
                 // them by using id of the drawerView. int id = drawerView.getId();
                 // id will be your layout's id: for example R.id.left_drawer
@@ -159,6 +172,20 @@ public class Tabelle extends AppCompatActivity  {
                         ft.commit();
 
                         return true;
+
+                    // Start Merlin Gürtler
+                    case R.id.navigation_start:
+                        txtAnzeigeMenu.setText("Studiengang Ändern");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.closeDrawer(GravityCompat.START);
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+
+
+                        return true;
+                    // Ende Merlin Gürtler
                     default:
                         return true;
                 }
