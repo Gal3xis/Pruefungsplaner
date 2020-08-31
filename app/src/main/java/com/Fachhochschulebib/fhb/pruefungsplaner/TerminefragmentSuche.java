@@ -198,6 +198,22 @@ public class TerminefragmentSuche extends Fragment {
                                     txtSecondScreen.setVisibility(v.GONE);
                                     checkList.set(position,false);
                                 } else {
+                                    // Start Merlin Gürtler
+                                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                                        View holder = recyclerView.getLayoutManager().findViewByPosition(i);
+                                        // Try and Catch, da die App crasht
+                                        // wenn das Element nicht im View Port ist
+                                        try {
+                                            final TextView txtSecondScreen2
+                                                    = (TextView) holder.findViewById(R.id.txtSecondscreen);
+                                            if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
+                                                txtSecondScreen2.setVisibility(v.GONE);
+                                            }
+                                        }catch (Exception e) {
+                                            Log.d("ERROR","NOT IN VIEW PORT " + e);
+                                        }
+                                    }
+                                    // Ende Merlin Gürtler
                                     txtSecondScreen.setVisibility(v.VISIBLE);
                                     txtSecondScreen.setText(mAdapter.giveString(position));
                                 }

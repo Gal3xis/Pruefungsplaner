@@ -263,6 +263,18 @@ public class Tabelle extends AppCompatActivity  {
                     //ft.addToBackStack(null);
                     ft.commit();
                     return true;
+                // Start Merlin Gürtler
+                case R.id.navigation_start:
+                    txtAnzeigeMenu.setText("Studiengang Ändern");
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    calendar.setVisibility(View.GONE);
+                    btnsuche.setVisibility(View.GONE);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+
+                    return true;
+                // Ende Merlin Gürtler
             }
             return false;
         }

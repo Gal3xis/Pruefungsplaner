@@ -115,10 +115,6 @@ public class sucheFragment extends Fragment {
         //der Wert des Semsters wird gespeichert
         rueckgabeSemModulList.clear();
 
-        /* TODO: 6-mal Wiederholung des gleichen Codes mit einem Parameter (Btn.-Nr.)
-            --> Einfügen einer kleinen Methode, die dann 6-mal parametrisiert aufgerufen wird.
-         */
-
         // Start Merlin Gürtler
         registerButton(btnSemester1,1);
         registerButton(btnSemester2,2);
@@ -128,213 +124,6 @@ public class sucheFragment extends Fragment {
         registerButton(btnSemester6,6);
         // Ende Merlin Gürtler
 
-        /*
-        btnSemester1.setOnClickListener(new Button.OnClickListener() {
-            boolean clicked = true;
-            @Override
-            public void onClick(View v) {
-                if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
-                        for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
-                        }
-                    }
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(1).equals(ppeList.get(i).getSemester())) {
-                            btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
-
-                        }
-                    }
-                    clicked = false;
-                } else {
-
-                    btnSemester1.setBackgroundResource(R.drawable.button_rounded_corners2);
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(1).equals(ppeList.get(i).getSemester())) {
-                            rueckgabeSemModulList.set(i, 99999);
-                        }
-                    }
-
-                    clicked = true;
-                }
-            }
-        });
-
-        btnSemester2.setOnClickListener(new Button.OnClickListener() {
-            boolean clicked = true;
-
-            @Override
-            public void onClick(View v) {
-                if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
-                        for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
-                        }
-                    }
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(2).equals(ppeList.get(i).getSemester())) {
-                            btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
-
-                        }
-                    }
-                    clicked = false;
-                } else {
-
-                    btnSemester2.setBackgroundResource(R.drawable.button_rounded_corners2);
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(2).equals(ppeList.get(i).getSemester())) {
-                            rueckgabeSemModulList.set(i, 99999);
-                        }
-                    }
-
-                    clicked = true;
-                }
-            }
-        });
-
-        btnSemester3.setOnClickListener(new Button.OnClickListener() {
-            boolean clicked = true;
-
-            @Override
-            public void onClick(View v) {
-                if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
-                        for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
-                        }
-                    }
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(3).equals(ppeList.get(i)
-                                             .getSemester().toString())) {
-                            btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
-
-                        }
-                    }
-                    clicked = false;
-                } else {
-
-                    btnSemester3.setBackgroundResource(R.drawable.button_rounded_corners2);
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(3).equals(ppeList.get(i)
-                                             .getSemester().toString())) {
-                            rueckgabeSemModulList.set(i, 99999);
-                        }
-                    }
-
-                    clicked = true;
-                }
-            }
-        });
-
-        btnSemester4.setOnClickListener(new Button.OnClickListener() {
-            boolean clicked = true;
-
-            @Override
-            public void onClick(View v) {
-                if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
-                        for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
-                        }
-                    }
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(4).equals(ppeList.get(i).getSemester())) {
-                            btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
-
-                        }
-                    }
-                    clicked = false;
-                } else {
-
-                    btnSemester4.setBackgroundResource(R.drawable.button_rounded_corners2);
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(4).equals(ppeList.get(i)
-                                             .getSemester().toString())) {
-                            rueckgabeSemModulList.set(i, 99999);
-                        }
-                    }
-
-                    clicked = true;
-                }
-            }
-        });
-
-        btnSemester5.setOnClickListener(new Button.OnClickListener() {
-            boolean clicked = true;
-
-            @Override
-            public void onClick(View v) {
-                if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
-                        for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
-                        }
-                    }
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(5).equals(ppeList.get(i)
-                                             .getSemester().toString())) {
-                            btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
-                        }
-                    }
-                    clicked = false;
-                } else {
-                    btnSemester5.setBackgroundResource(R.drawable.button_rounded_corners2);
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(5).equals(ppeList.get(i)
-                                             .getSemester().toString())) {
-                            rueckgabeSemModulList.set(i, 99999);
-                        }
-                    }
-                    clicked = true;
-                }
-            }
-        });
-
-        btnSemester6.setOnClickListener(new Button.OnClickListener() {
-            boolean clicked = true;
-
-            @Override
-            public void onClick(View v) {
-                if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
-                        for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
-                        }
-                    }
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(6).equals(ppeList.get(i).getSemester())) {
-                            btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
-                        }
-                    }
-                    clicked = false;
-                } else {
-
-                    btnSemester6.setBackgroundResource(R.drawable.button_rounded_corners2);
-
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        if (String.valueOf(6).equals(ppeList.get(i).getSemester())) {
-                            rueckgabeSemModulList.set(i, 99999);
-                        }
-                    }
-                    clicked = true;
-                }
-            }
-        });
-        */
         try {
             //Spinner-Aufruf und Spinner mit Werten füllen
             List<String> spinnerModuleArrayList = new ArrayList<String>();
@@ -345,26 +134,13 @@ public class sucheFragment extends Fragment {
                 spinnerModuleArrayList.add(ppeList.get(i).getModul());
             }
 
-            //Auswahlmöglichkeit "Alle Module" hinzufügen
-            spinnerModuleArrayList.add(0, "Alle Module");
+            //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
+            spinnerModuleArrayList.add(0, "Klicken um Modul zu wählen");
 
             //Spinner-Array Prüfer mit Werten füllen
             for (int i = 0; i < ppeList.size(); i++) {
                 spinnerProfArrayList.add(ppeList.get(i).getErstpruefer());
             }
-
-            //LG Frage: Kann es zu doppelten Namenseinträgen bei den Modulen überhaupt kommen?
-            //Doppelte Namenseinträge für Module löschen
-            /*
-            for (int i = 0; i < spinnerModuleArrayList.size(); i++) {
-                for (int a = i; a < spinnerModuleArrayList.size(); a++) {
-
-                    if (spinnerModuleArrayList.get(i).equals(spinnerModuleArrayList.get(a))) {
-                        spinnerModuleArrayList.remove(a);
-                    }
-                }
-            }
-             */
 
             //Doppelte Namenseinträge für Prüfer löschen
             for (int i = 0; i < spinnerProfArrayList.size(); i++) {
@@ -380,11 +156,6 @@ public class sucheFragment extends Fragment {
             ArrayAdapter<String> adapterModule = new ArrayAdapter<String>(
                     v.getContext(), R.layout.simple_spinner_item, spinnerModuleArrayList);
 
-            /*
-            Wird nicht verwendet
-            ArrayAdapter<String> adapterProf = new ArrayAdapter<String>(
-                     v.getContext(), android.R.layout.simple_spinner_item, spinnerProfArrayList);
-             */
 
             // Für das AutoComplete
             ArrayAdapter<String> adapterProfAutoComplete = new ArrayAdapter<String>
@@ -449,8 +220,10 @@ public class sucheFragment extends Fragment {
                         } else if (Pattern.matches("^.*("                       // Wildcard begin
                                         + acProf.getText().toString().trim().toLowerCase()    // Input Name
                                         +").*$",                                              // Wildcard end
-                                ppeList.get(a).getErstpruefer().toLowerCase())) // Name in db
+                            ppeList.get(a).getErstpruefer().toLowerCase())) // Name in db
                         {
+                            // Hier Weitermachen
+                            System.out.println(a);
                             rueckgabeProfList.add(a);
                         }
                     }
@@ -508,7 +281,7 @@ public class sucheFragment extends Fragment {
                     String a;
                     for (i = 0; i < (ppeList.size()); i++) {
                         if (sgModulList.get(sgModulList.size() - 1).toString()
-                                .equals("Alle Module")) {
+                                .equals("Klicken um Modul zu wählen")) {
                             rueckgabeSgModuleList.add(i);
                         } else {
                             if (sgModulList.get(sgModulList.size() - 1).toString()
@@ -534,7 +307,7 @@ public class sucheFragment extends Fragment {
                 public void onClick(View v) {
                     // Start Merlin Gürtler
                     if(profList.get(0).equals("Alle")
-                            &&  !sgModulList .get(sgModulList .size() - 1).equals("Alle Module"))
+                            &&  !sgModulList.get(sgModulList.size() - 1).equals("Klicken um Modul zu wählen"))
                     {
                         sortedList .clear();
                         ppeList = roomDaten.userDao().getModule(sgModulList .get(sgModulList .size() - 1));

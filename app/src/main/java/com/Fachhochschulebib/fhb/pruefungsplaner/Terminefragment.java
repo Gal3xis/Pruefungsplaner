@@ -68,7 +68,7 @@ public class Terminefragment extends Fragment {
     private RecyclerView.LayoutManager mLayout;
 
     AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
-    List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+    // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
     public void onCreate(Bundle savedInstanceState) {
 
