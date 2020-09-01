@@ -17,6 +17,9 @@ public interface UserDao {
 
     @Query("UPDATE PruefplanEintrag SET Datum = :datum where ID = :id")
     void updateExam(String datum, String id);
+
+    @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getModuleProf(String prof);
     // Ende Merlin Gürtler
 
 

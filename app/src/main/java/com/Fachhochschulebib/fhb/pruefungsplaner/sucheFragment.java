@@ -222,8 +222,6 @@ public class sucheFragment extends Fragment {
                                         +").*$",                                              // Wildcard end
                             ppeList.get(a).getErstpruefer().toLowerCase())) // Name in db
                         {
-                            // Hier Weitermachen
-                            System.out.println(a);
                             rueckgabeProfList.add(a);
                         }
                     }
@@ -306,7 +304,7 @@ public class sucheFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // Start Merlin Gürtler
-                    if(profList.get(0).equals("Alle")
+                    if(acProf.getText().equals("Alle")
                             &&  !sgModulList.get(sgModulList.size() - 1).equals("Klicken um Modul zu wählen"))
                     {
                         sortedList .clear();
@@ -320,10 +318,20 @@ public class sucheFragment extends Fragment {
                             // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
                             database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                         }
+                    } else if(!acProf.getText().equals("Alle")) {
+                        sortedList .clear();
+                        ppeList = roomDaten.userDao().getModuleProf(acProf.getText().toString());
+                        for(int m = 0; m < ppeList.size(); m++) {
+                            sortedList.add(String.valueOf(ppeList.get(m).getID()));
+                        }
+
+                        database.userDao().sucheUndZurueckSetzen(false);
+                        for (int i =0; i< sortedList.size();i++) {
+                            // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                            database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                        }
                     } else {
-
                         // Ende Merlin Gürtler
-
                         if (acProf.getText().toString().equals("Alle")) {
                             int a;
                             rueckgabeProfList.clear();
