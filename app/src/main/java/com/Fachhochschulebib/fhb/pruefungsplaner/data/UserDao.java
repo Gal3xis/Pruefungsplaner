@@ -20,6 +20,17 @@ public interface UserDao {
 
     @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
     List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getModuleProf(String prof);
+
+    @Query("SELECT DISTINCT Studiengang FROM PruefplanEintrag")
+    List<String> getStudiengangDistinct();
+
+    @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul AND Studiengang = :studiengang")
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag>
+    getModuleWithCourseAndModule(String modul, String studiengang);
+
+    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang")
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag>
+    getModuleWithCourse(String studiengang);
     // Ende Merlin Gürtler
 
 

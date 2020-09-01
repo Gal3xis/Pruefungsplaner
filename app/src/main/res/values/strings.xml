@@ -5,7 +5,7 @@
     <string name="title_medication">Suche</string>
     <string name="title_diary">Prüfungen</string>
     <string name="title_settings">Optionen</string>
-    <string name="title_electiveModule">Wahlmodul suchen</string>
+    <string name="title_electiveModule">Wahlmodule</string>
 
     <string name="title_activity_recycleview_tabelle">RecycleviewTabelle</string>
 </resources>

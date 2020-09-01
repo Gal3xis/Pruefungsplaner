@@ -47,6 +47,7 @@ public class sucheFragment extends Fragment {
     final List<Integer> rueckgabeDatumsList = new ArrayList();
     final List<Integer> rueckgabeSemModulList = new ArrayList();
     final List<String> sortedList = new ArrayList();
+    private String profName = "Alle";
     private com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
 
     com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomDaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
@@ -214,6 +215,7 @@ public class sucheFragment extends Fragment {
                 public void afterTextChanged(Editable s) {
                     int a;
                     rueckgabeProfList.clear();
+                    profName = acProf.getText().toString();
                     for (a = 0; a < ppeList.size(); a++) {
                         if (acProf.getText().toString().equals("Alle")) {
                             rueckgabeProfList.add(a);
@@ -304,10 +306,10 @@ public class sucheFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // Start Merlin Gürtler
-                    if(acProf.getText().equals("Alle")
-                            &&  !sgModulList.get(sgModulList.size() - 1).equals("Klicken um Modul zu wählen"))
+                    if(profName.equals("Alle")
+                            &&  !sgModulList.get(sgModulList.size() - 1).toString().equals("Klicken um Modul zu wählen"))
                     {
-                        sortedList .clear();
+                        sortedList.clear();
                         ppeList = roomDaten.userDao().getModule(sgModulList .get(sgModulList .size() - 1));
                         for(int m = 0; m < ppeList.size(); m++) {
                             sortedList.add(String.valueOf(ppeList.get(m).getID()));
@@ -318,9 +320,10 @@ public class sucheFragment extends Fragment {
                             // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
                             database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                         }
-                    } else if(!acProf.getText().equals("Alle")) {
+                    } else if(!profName.equals("Alle")) {
                         sortedList .clear();
-                        ppeList = roomDaten.userDao().getModuleProf(acProf.getText().toString());
+                        ppeList = roomDaten.userDao().getModuleProf("%" +
+                                acProf.getText().toString().trim() + "%");
                         for(int m = 0; m < ppeList.size(); m++) {
                             sortedList.add(String.valueOf(ppeList.get(m).getID()));
                         }

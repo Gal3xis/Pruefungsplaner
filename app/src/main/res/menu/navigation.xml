@@ -22,7 +22,7 @@
         android:title="@string/title_settings"/>
 
     <item
-        android:id="@+id/navigation_start"
+        android:id="@+id/navigation_electiveModule"
         android:icon="@drawable/optionen_nav"
         android:title="@string/title_electiveModule"/>
 

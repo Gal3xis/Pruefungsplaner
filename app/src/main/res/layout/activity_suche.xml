@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     tools:layout_editor_absoluteY="25dp">
 
 
@@ -40,7 +39,6 @@
             android:id="@+id/textView4"
             android:layout_width="385dp"
             android:layout_height="wrap_content"
-
             android:layout_marginBottom="5sp"
             android:text="Modulauswahl (aktueller Prüftermin):"
             android:textColor="@android:color/white"

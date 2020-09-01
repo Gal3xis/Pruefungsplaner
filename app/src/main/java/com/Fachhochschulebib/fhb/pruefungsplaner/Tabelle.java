@@ -118,7 +118,7 @@ public class Tabelle extends AppCompatActivity  {
                 {
                     case R.id.navigation_calender:
                         //Menüpunkt termine
-                        txtAnzeigeMenu.setText("termine");
+                        txtAnzeigeMenu.setText("Termine");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -174,15 +174,14 @@ public class Tabelle extends AppCompatActivity  {
                         return true;
 
                     // Start Merlin Gürtler
-                    case R.id.navigation_start:
-                        txtAnzeigeMenu.setText("Studiengang Ändern");
+                    case R.id.navigation_electiveModule:
+                        txtAnzeigeMenu.setText("Wahlmodule");
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-
+                        ft.replace(R.id.frame_placeholder, new WahlModulSucheFragment());
+                        ft.commit();
 
                         return true;
                     // Ende Merlin Gürtler
@@ -264,13 +263,13 @@ public class Tabelle extends AppCompatActivity  {
                     ft.commit();
                     return true;
                 // Start Merlin Gürtler
-                case R.id.navigation_start:
-                    txtAnzeigeMenu.setText("Studiengang Ändern");
+                case R.id.navigation_electiveModule:
+                    txtAnzeigeMenu.setText("Wahlmodule");
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
+                    ft.replace(R.id.frame_placeholder, new WahlModulSucheFragment());
+                    ft.commit();
 
 
                     return true;
