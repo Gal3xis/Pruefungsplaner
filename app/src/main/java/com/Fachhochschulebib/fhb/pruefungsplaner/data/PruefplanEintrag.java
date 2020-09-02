@@ -26,7 +26,6 @@ public class PruefplanEintrag {
     @ColumnInfo(name = "Zweitpruefer")
     private String Zweitpruefer;
 
-
     @ColumnInfo(name = "Validation")
     private String Validation;
 

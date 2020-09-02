@@ -110,35 +110,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         String[] modulname = name.split(" ");
 
         // Start Merlin Gürtler
-        // the Pattern describes the color of each
-        // course of studies
-        List<Pair> colorPattern = new ArrayList<Pair>() {
-            {
-                add(new Pair<>("Ingenieurinformatik", "#add8e6"));
-                add(new Pair<>("Elektrotechnik", "#7FFFD4"));
-                add(new Pair<>("Energien", "#8b2323"));
-                add(new Pair<>("ET", "#ff7f50"));
-            }
-        };
-        int a;
-        for (a = 0; a < colorPattern.size(); a++) {
-            // TODO REFACTOREN
-            if (colorPattern.get(a).first.equals(modulname[modulname.length - 1])) {
+        // erhalte den ausgewählten Studiengang
+        SharedPreferences sharedPrefSelectedStudiengang = context.
+                getSharedPreferences("selectedStudiengang",0);
+        String selectedStudiengang = sharedPrefSelectedStudiengang.getString("selectedStudiengang","0");
 
-                // Creates the gradient for the Background of each item
-                GradientDrawable backGroundGradient = new GradientDrawable(
-                        GradientDrawable.Orientation.TOP_BOTTOM,
-                        new int[]{Color.parseColor(colorPattern.get(a).second.toString()),
-                                Color.parseColor(colorPattern.get(a).second.toString())});
-                backGroundGradient.setCornerRadius(40);
+        String colorElectiveModule = "#7FFFD4";
 
-                final int sdk = Build.VERSION.SDK_INT;
-                if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.layout.setBackgroundDrawable(backGroundGradient);
-                } else {
-                    holder.layout.setBackground(backGroundGradient);
-                }
-                break;
+        if(!selectedStudiengang.equals(modulname[modulname.length - 1]))
+        {
+            // Lege die Farben für die Wahlmodule fest
+            GradientDrawable backGroundGradient = new GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[] {Color.parseColor(colorElectiveModule),
+                            Color.parseColor(colorElectiveModule)});
+            backGroundGradient.setCornerRadius(40);
+            final int sdk = android.os.Build.VERSION.SDK_INT;
+            if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                holder.layout.setBackgroundDrawable(backGroundGradient);
+            } else {
+                holder.layout.setBackground(backGroundGradient);
             }
         }
 

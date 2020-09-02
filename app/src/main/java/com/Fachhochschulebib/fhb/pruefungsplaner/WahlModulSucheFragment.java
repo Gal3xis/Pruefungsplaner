@@ -120,7 +120,7 @@ public class WahlModulSucheFragment extends Fragment {
 
                 ppeList = database.userDao().getModuleWithCourse(selectedstudiengang);
 
-            }
+                }
 
 
 

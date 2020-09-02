@@ -1,6 +1,8 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
@@ -42,6 +44,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     private List<String> raumList;
     private String studiengang;
     private String name;
+    private Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapterfavorits(List<String> moduleListParam,
@@ -77,6 +80,9 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 inflater.inflate(R.layout.favoriten, parent, false);
         // set the view's size, margins, paddings and layout parameters
         ViewHolder vh = new ViewHolder(v);
+
+        // Merlin Gürtler für den globalen Context
+        context = parent.getContext();
 
         return vh;
     }
@@ -125,35 +131,26 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         }
 
         // Start Merlin Gürtler
-        // the Pattern describes the color of each
-        // course of studies
-        List<Pair> colorPattern = new ArrayList<Pair>(){
-            {
-                add(new Pair<>("Ingenieurinformatik", "#add8e6"));
-                add(new Pair<>("Elektrotechnik", "#7FFFD4"));
-                add(new Pair<>("Energien", "#8b2323"));
-                add(new Pair<>("ET", "#ff7f50"));
-            }
-        };
-        int a;
-        for(a = 0; a < colorPattern.size(); a++) {
+        // erhalte den ausgewählten Studiengang
+        SharedPreferences sharedPrefSelectedStudiengang = context.
+                getSharedPreferences("selectedStudiengang",0);
+        String selectedStudiengang = sharedPrefSelectedStudiengang.getString("selectedStudiengang","0");
 
-            // TODO REFACTOREN
-            if(colorPattern.get(a).first.equals(modulname[modulname.length - 1]))
-            {
-                // Creates the gradient for the Background of each item
-                GradientDrawable backGroundGradient = new GradientDrawable(
-                        GradientDrawable.Orientation.TOP_BOTTOM,
-                        new int[] {Color.parseColor(colorPattern.get(a).second.toString()),
-                                Color.parseColor(colorPattern.get(a).second.toString())});
-                backGroundGradient.setCornerRadius(40);
-                final int sdk = android.os.Build.VERSION.SDK_INT;
-                if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.layout.setBackgroundDrawable(backGroundGradient);
-                } else {
-                    holder.layout.setBackground(backGroundGradient);
-                }
-                break;
+        String colorElectiveModule = "#7FFFD4";
+
+        if(!selectedStudiengang.equals(modulname[modulname.length - 1]))
+        {
+            // Lege die Farben für die Wahlmodule fest
+            GradientDrawable backGroundGradient = new GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM,
+                    new int[] {Color.parseColor(colorElectiveModule),
+                            Color.parseColor(colorElectiveModule)});
+            backGroundGradient.setCornerRadius(40);
+            final int sdk = android.os.Build.VERSION.SDK_INT;
+            if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                holder.layout.setBackgroundDrawable(backGroundGradient);
+            } else {
+                holder.layout.setBackground(backGroundGradient);
             }
         }
 

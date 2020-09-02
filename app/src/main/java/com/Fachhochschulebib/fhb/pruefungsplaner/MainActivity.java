@@ -273,7 +273,14 @@ public class MainActivity extends AppCompatActivity {
                                             rueckgabeStudiengang = object.get("sgid").toString();
                                             Log.d("Output Studiengang",
                                                     rueckgabeStudiengang.toString());
-
+                                            // Erstelle Shared Pref für die anderen Fragmente
+                                            SharedPreferences sharedPrefSelectedStudiengang =
+                                                    getApplicationContext().
+                                                            getSharedPreferences("selectedStudiengang",0);
+                                            SharedPreferences.Editor editorSelectedStudiengang =
+                                                    sharedPrefSelectedStudiengang.edit();
+                                            editorSelectedStudiengang.putString("selectedStudiengang", courses[which]);
+                                            editorSelectedStudiengang.apply();
                                         }
                                         catch (Exception e)
                                         {
