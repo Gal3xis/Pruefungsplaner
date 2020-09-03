@@ -42,12 +42,20 @@ public class RetrofitConnect {
     public static boolean checkuebertragung = false;
     private boolean checkvalidate = false;
     Context ctx2;
-
-    //TODO: DB-Abfrage, neue Formen hinzukommen (O_90, I_60, Kombinationsprüfung etc.)
+    
     String klausur = "K_90";
     String klausur60 = "K_60";
     String klausur120 = "K_120";
     String klausur180 = "K_180";
+    String muendlich = "M_30";
+    String projektarbeit = "PA_30";
+    String kombination15 = "KP_15";
+    String kombination30 = "KP_30";
+    String ilias60 = "I_60";
+    String ilias90 = "I_90";
+    String online60 = "0_60";
+    String online90 = "0_90";
+
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
     public <serverAdress> void RetrofitWebAccess(Context ctx,
@@ -104,15 +112,18 @@ public class RetrofitConnect {
                     //String checkTermin = "0";
 
                     //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
+                    /*
+                    Merlin Gürtler
+                    Es Funktioniert auch ohne checkvalidate
                     if(dataListFromLocalDB!=null) { //DONE (08/2020) LG
                         for (int j = 0; j < dataListFromLocalDB.size(); j++) {
                             if (dataListFromLocalDB.get(j).getValidation().equals(validation)) {
                                 //checkTermin = dataListFromLocalDB.get(j).getTermin();
-                                //TODO: Macht das Sinn? Die Variable wird N-mal überschrieben!
                                 checkvalidate = true;
                             }
                         }
                     }//if
+                    */
 
                     //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
                     //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
@@ -152,66 +163,98 @@ public class RetrofitConnect {
                             DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
                             jetzt hinzugefügt.
                          */
-                         if(!checkvalidate){
+                         // if(!checkvalidate){
                              //erhaltene Werte zur Datenbank hinzufügen
-                            pruefplanEintrag.setErstpruefer(response.body().get(i).getErstpruefer());
-                            pruefplanEintrag.setZweitpruefer(response.body().get(i).getZweitpruefer());
-                            pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
-                            pruefplanEintrag.setID(response.body().get(i).getID());
-                            pruefplanEintrag.setStudiengang(response.body().get(i).getStudiengang());
-                            pruefplanEintrag.setModul(response.body().get(i).getModul());
-                            pruefplanEintrag.setSemester(response.body().get(i).getSemester());
-                            pruefplanEintrag.setTermin(response.body().get(i).getTermin());
-                            pruefplanEintrag.setRaum(response.body().get(i).getRaum());
+                        pruefplanEintrag.setErstpruefer(response.body().get(i).getErstpruefer());
+                        pruefplanEintrag.setZweitpruefer(response.body().get(i).getZweitpruefer());
+                        pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
+                        pruefplanEintrag.setID(response.body().get(i).getID());
+                        pruefplanEintrag.setStudiengang(response.body().get(i).getStudiengang());
+                        pruefplanEintrag.setModul(response.body().get(i).getModul());
+                        pruefplanEintrag.setSemester(response.body().get(i).getSemester());
+                        pruefplanEintrag.setTermin(response.body().get(i).getTermin());
+                        pruefplanEintrag.setRaum(response.body().get(i).getRaum());
 
-                            //lokale datenbank initialiseren
-                             //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
-                             //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                             //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
-                             //Log.d("Test4", String.valueOf(userdaten2.size()));
+                        //lokale datenbank initialiseren
+                         //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
+                         //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
+                         //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
+                         //Log.d("Test4", String.valueOf(userdaten2.size()));
 
-                             try {
-                                 for (int b = 0; b < com.Fachhochschulebib.fhb.pruefungsplaner.Optionen.idList.size(); b++) {
-                                     if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
-                                         //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                                         pruefplanEintrag.setFavorit(true);
-                                     }
+                         try {
+                             for (int b = 0; b < com.Fachhochschulebib.fhb.pruefungsplaner.Optionen.idList.size(); b++) {
+                                 if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
+                                     //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
+                                     pruefplanEintrag.setFavorit(true);
                                  }
                              }
-                             catch (Exception e)
-                             {
-                                Log.d("Fehler RetrofitConnect",
-                                      "Fehler beim Ermitteln der favorisierten Prüfungen");
-                             }
+                         }
+                         catch (Exception e)
+                         {
+                            Log.d("Fehler RetrofitConnect",
+                                  "Fehler beim Ermitteln der favorisierten Prüfungen");
+                         }
 
-                             //Überprüfung von Klausur oder Mündliche Prüfung
-                             pruefplanEintrag.setPruefform("Mündliche Prüfung / Hausarbeit");
+                         //Überprüfung von Klausur oder Mündliche Prüfung
+                         pruefplanEintrag.setPruefform("Mündliche Prüfung / Hausarbeit");
 
-                             if(klausur.equals(response.body().get(i).getPruefform())) {
-                                pruefplanEintrag.setPruefform("Klausur 90 Minuten");
+                         if(klausur.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Klausur 90 Minuten");
 
-                             }
-                             if(klausur120.equals(response.body().get(i).getPruefform())) {
-                                 pruefplanEintrag.setPruefform("Klausur 120 Minuten");
+                         }
+                         if(klausur120.equals(response.body().get(i).getPruefform())) {
+                             pruefplanEintrag.setPruefform("Klausur 120 Minuten");
 
-                             }
-                             if(klausur60.equals(response.body().get(i).getPruefform())) {
-                                 pruefplanEintrag.setPruefform("Klausur 60 Minuten");
+                         }
+                         if(klausur60.equals(response.body().get(i).getPruefform())) {
+                             pruefplanEintrag.setPruefform("Klausur 60 Minuten");
 
-                             }
-                             if(klausur180.equals(response.body().get(i).getPruefform())) {
-                                 pruefplanEintrag.setPruefform("Klausur 180 Minuten");
+                         }
+                         if(klausur180.equals(response.body().get(i).getPruefform())) {
+                             pruefplanEintrag.setPruefform("Klausur 180 Minuten");
 
-                             }
-
-                             //Start Änderungen vorgenommen Merlin Gürtler
-                             //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                             pruefplanEintrag.setValidation(jahr + response.body().get(i).getStudiengangId() + pruefungsphase);
-
-                             // Ende Merlin Gürtler
-                             addUser(roomdaten, pruefplanEintrag);
+                         }
+                        if(muendlich.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Mündliche Prüfung");
 
                         }
+                        if(projektarbeit.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Projektarbeit");
+
+                        }
+                        if(kombination15.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Kombinationsprüfung 15 Minuten");
+
+                        }
+                        if(kombination30.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Kombinationsprüfung 30 Minuten");
+
+                        }
+                        if(ilias60.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Ilias-Test 60 Minuten");
+
+                        }
+                        if(ilias90.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Ilias-Test 90 Minuten");
+
+                        }
+                        if(online60.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Onlineprüfung 60 Minuten");
+
+                        }
+                        if(online90.equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform("Onlineprüfung 90 Minuten");
+
+                        }
+
+                         //Start Änderungen vorgenommen Merlin Gürtler
+                         //Schlüssel für die Erkennung bzw unterscheidung Festlegen
+                         pruefplanEintrag.setValidation(jahr + response.body().get(i).getStudiengangId() + pruefungsphase);
+
+                         // Ende Merlin Gürtler
+                         addUser(roomdaten, pruefplanEintrag);
+
+                        // }
                     }
                     checkuebertragung = true;
 

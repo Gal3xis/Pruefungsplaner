@@ -112,7 +112,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
         SharedPreferences sharedPrefSelectedStudiengang = context.
-                getSharedPreferences("selectedStudiengang",Context.MODE_PRIVATE);
+                getSharedPreferences("validation",Context.MODE_PRIVATE);
         String[] selectedStudiengang = sharedPrefSelectedStudiengang.
                 getString("selectedStudiengang","0").split(" ");
 
