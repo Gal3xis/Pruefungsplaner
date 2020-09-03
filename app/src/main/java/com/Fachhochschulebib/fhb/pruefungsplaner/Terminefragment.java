@@ -36,15 +36,10 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
-
-//TODO: Shared Prefs???
 
 public class Terminefragment extends Fragment {
 
-    SharedPreferences mSharedPreferences;
+    SharedPreferences mSharedPreferencesValidation;
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
@@ -62,6 +57,7 @@ public class Terminefragment extends Fragment {
     List<String> idList = new ArrayList<>();
     List<String> pruefFormList = new ArrayList<>();
     List<String> raumList = new ArrayList<>();
+    String pruefJahr, aktuellePruefphase, rueckgabeStudiengang;
 
     public static String validation;
     MyAdapter mAdapter;
@@ -72,10 +68,23 @@ public class Terminefragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
 
+        // Start Merlin Gürtler
+        // Nun aus Shared Preferences
+
+        mSharedPreferencesValidation
+                = com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.
+                this.getContext().getSharedPreferences("validation", 0);
+
+        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+
+        validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
+        // Ende Merlin Gürtler
+
         LongOperation asynctask = new LongOperation();
 
         asynctask.execute("");
-        validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
 
         super.onCreate(savedInstanceState);
     }
@@ -192,7 +201,6 @@ public class Terminefragment extends Fragment {
                                 "Fehler weitere Informationen");
                     }
                     */
-                    // TODO Handle item click
                     positionAlt = position;
                 })
         );

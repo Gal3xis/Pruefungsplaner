@@ -51,11 +51,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
-
-//TODO: Besser via Shared Prefs???
 
 public class Optionen extends Fragment {
     private boolean speicher;
@@ -70,7 +65,9 @@ public class Optionen extends Fragment {
 
     //DONE: 08/2020 LG
     SharedPreferences mSharedPreferencesPPServerAddress;
-    String serverAddress, relativePPlanURL;
+    SharedPreferences mSharedPreferencesValidation;
+    String serverAddress, relativePPlanURL, pruefJahr,
+            aktuellePruefphase, rueckgabeStudiengang;
 
     public static List<String> idList = new ArrayList<String>();
 
@@ -81,6 +78,16 @@ public class Optionen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Start Merlin Gürtler
+        // Nun aus Shared Preferences
+        mSharedPreferencesValidation
+                = container.getContext().getSharedPreferences("validation", 0);
+
+        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        // Ende Merlin Gürtler
 
         final View v = inflater.inflate(R.layout.optionfragment, container, false);
 

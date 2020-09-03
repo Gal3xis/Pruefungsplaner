@@ -11,6 +11,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -32,13 +33,6 @@ import com.google.android.material.navigation.NavigationView;
 
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.aktuellePruefphase;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.pruefJahr;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.rueckgabeStudiengang;
-
-//TODO: Shared Prefs???
-
-
 // Eigentlich die Hauptklasse wurde noch nicht umgenannt
 // von hier werden die fragmente aufgerufen
 public class Tabelle extends AppCompatActivity  {
@@ -49,12 +43,28 @@ public class Tabelle extends AppCompatActivity  {
     private DrawerLayout dl;
     private NavigationView nv;
     private TextView txtAnzeigeMenu;
+
+    SharedPreferences mSharedPreferencesValidation;
+    String pruefJahr,
+            aktuellePruefphase, rueckgabeStudiengang;
     //Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Start Merlin Gürtler
+        // Nun aus Shared Preferences
+        mSharedPreferencesValidation
+                = Tabelle.this.getSharedPreferences("validation", 0);
+
+        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        // Ende Merlin Gürtler
+
+
         setContentView(R.layout.hauptfenster);
         txtAnzeigeMenu = findViewById(R.id.txtAnzeige);
 

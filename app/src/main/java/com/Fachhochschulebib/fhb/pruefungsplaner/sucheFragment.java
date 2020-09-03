@@ -11,6 +11,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,11 +36,10 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.validation;
-
-//TODO: Shared prefs???
 
 public class sucheFragment extends Fragment {
+
+    SharedPreferences mSharedPreferencesValidation;
     final List<String> sgModulList = new ArrayList();
     final List<String> profList = new ArrayList();
     final List<Integer> rueckgabeProfList = new ArrayList();
@@ -48,10 +48,13 @@ public class sucheFragment extends Fragment {
     final List<Integer> rueckgabeSemModulList = new ArrayList();
     final List<String> sortedList = new ArrayList();
     private String profName = "Alle";
+    String pruefJahr, aktuellePruefphase,
+            rueckgabeStudiengang, validation;
+    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = new ArrayList();
+
     private com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
 
     com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomDaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = roomDaten.userDao().getAll(validation);
 
     // Start Merlin Gürtler
     public void registerButton(Button btn, int value) {
@@ -100,6 +103,23 @@ public class sucheFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Start Merlin Gürtler
+        // Nun aus Shared Preferences
+        // Hole die Werte für die Validierung
+        mSharedPreferencesValidation
+                = container.getContext().getSharedPreferences("validation", 0);
+
+        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+
+        // Erstelle Validierung und starte DB Abfrage
+        validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
+        ppeList = roomDaten.userDao().getAll(validation);
+        // Ende Merlin Gürtler
+
+
         final View v = inflater.inflate(R.layout.activity_suche, container, false);
         //setContentView(R.layout.hauptfenster);
 

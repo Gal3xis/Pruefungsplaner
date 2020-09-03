@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -133,12 +132,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
         SharedPreferences sharedPrefSelectedStudiengang = context.
-                getSharedPreferences("selectedStudiengang",0);
-        String selectedStudiengang = sharedPrefSelectedStudiengang.getString("selectedStudiengang","0");
+                getSharedPreferences("selectedStudiengang",Context.MODE_PRIVATE);
+        String selectedStudiengang [] = sharedPrefSelectedStudiengang.
+                getString("selectedStudiengang","0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
 
-        if(!selectedStudiengang.equals(modulname[modulname.length - 1]))
+        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(modulname[modulname.length - 1]))
         {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(

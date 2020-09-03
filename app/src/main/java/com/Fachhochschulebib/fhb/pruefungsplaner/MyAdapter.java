@@ -112,12 +112,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
         SharedPreferences sharedPrefSelectedStudiengang = context.
-                getSharedPreferences("selectedStudiengang",0);
-        String selectedStudiengang = sharedPrefSelectedStudiengang.getString("selectedStudiengang","0");
+                getSharedPreferences("selectedStudiengang",Context.MODE_PRIVATE);
+        String[] selectedStudiengang = sharedPrefSelectedStudiengang.
+                getString("selectedStudiengang","0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
 
-        if(!selectedStudiengang.equals(modulname[modulname.length - 1]))
+        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(modulname[modulname.length - 1]))
         {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(

@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private Message msg = new Message();
 
     SharedPreferences mSharedPreferencesPPServerAdress;
+    SharedPreferences mSharedPreferencesPruefPhase;
     String serverAddress, relativePPlanURL;
 
     @Override
@@ -170,6 +171,18 @@ public class MainActivity extends AppCompatActivity {
                 pruefJahr = String.valueOf(thisYear +1);
             }
         }
+
+        // Start Merlin Gürtler
+        // Schreiben der Pruefphase in eine shared preference
+
+        mSharedPreferencesPruefPhase
+                = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
+        SharedPreferences.Editor mEditorPruefPhaseUndJahr = mSharedPreferencesPruefPhase.edit();
+        mEditorPruefPhaseUndJahr.putString("aktuellePruefphase", aktuellePruefphase);
+        mEditorPruefPhaseUndJahr.putString("pruefJahr", pruefJahr);
+        mEditorPruefPhaseUndJahr.apply();
+
+        // Ende Merlin Gürtler
 
         //Anzahl der Elemente
         //Adapter-Aufruf
@@ -274,13 +287,14 @@ public class MainActivity extends AppCompatActivity {
                                             Log.d("Output Studiengang",
                                                     rueckgabeStudiengang.toString());
                                             // Erstelle Shared Pref für die anderen Fragmente
-                                            SharedPreferences sharedPrefSelectedStudiengang =
+                                            SharedPreferences sharedPrefStudiengangValidation =
                                                     getApplicationContext().
-                                                            getSharedPreferences("selectedStudiengang",0);
-                                            SharedPreferences.Editor editorSelectedStudiengang =
-                                                    sharedPrefSelectedStudiengang.edit();
-                                            editorSelectedStudiengang.putString("selectedStudiengang", courses[which]);
-                                            editorSelectedStudiengang.apply();
+                                                            getSharedPreferences("validation",0);
+                                            SharedPreferences.Editor editorStudiengangValidation =
+                                                    sharedPrefStudiengangValidation.edit();
+                                            editorStudiengangValidation.putString("selectedStudiengang", courses[which]);
+                                            editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
+                                            editorStudiengangValidation.apply();
                                         }
                                         catch (Exception e)
                                         {
@@ -565,6 +579,7 @@ public class MainActivity extends AppCompatActivity {
 
                     SharedPreferences.Editor mEditorTermin = mSharedPreferencesPruefTermin.edit();
                     mEditorTermin.putString("aktPruefTermin", aktuellerTermin);
+
                     mEditorTermin.apply();  //Ausführen der Schreiboperation!
                     //-------------------------------------------------------------------
 
@@ -600,25 +615,21 @@ public class MainActivity extends AppCompatActivity {
                     String strJson
                             = mSharedPreferencesPPeriode.getString("aktPruefPeriode", "0");
                     if (strJson != null) {
-                        try {
-                            if (strJson.equals(pruefPeriodeDatum))
-                            {
+                        if (strJson.equals(pruefPeriodeDatum))
+                        {
 
-                            }
-                            else{
-                                mEditor.clear();
-                                mEditor.apply();
-                                mEditor.putString("aktPruefPeriode", pruefPeriodeDatum);
-                                mEditor.apply();
-                                // Start Merlin Gürtler
-                                // Dies ist nötig, da die Serverantwort dauert,
-                                // somit wird vorher der Standardwert 0 geladen
-                                TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
-                                txtpruefperiode.setText(pruefPeriodeDatum);
-                                // Ende Merlin Gürtler
-                            }
-                        } catch (Exception e) {
-                            //TODO???
+                        }
+                        else{
+                            mEditor.clear();
+                            mEditor.apply();
+                            mEditor.putString("aktPruefPeriode", pruefPeriodeDatum);
+                            mEditor.apply();
+                            // Start Merlin Gürtler
+                            // Dies ist nötig, da die Serverantwort dauert,
+                            // somit wird vorher der Standardwert 0 geladen
+                            TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
+                            txtpruefperiode.setText(pruefPeriodeDatum);
+                            // Ende Merlin Gürtler
                         }
                     }
                     Log.d("Output PruefPeriode","abgeschlossen");
