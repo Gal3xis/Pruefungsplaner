@@ -476,7 +476,6 @@ public class MainActivity extends AppCompatActivity {
                         getApplicationContext(),
                         datenbank,
                         pruefJahr,
-                        rueckgabeStudiengang,
                         aktuellePruefphase,
                         aktuellerTermin,
                         serverAddress,

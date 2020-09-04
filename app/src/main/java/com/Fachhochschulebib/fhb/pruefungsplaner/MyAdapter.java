@@ -311,7 +311,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     //Methode zum Darstellen der "weiteren Informationen"
     public String giveString(int position) {
-        try {
             String name = uebergebeneModule.get(position);
             String[] modulname = name.split(" ");
             studiengang = "";
@@ -339,10 +338,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     + "\n Prüfungsform: " + pruefform.get(position) + "\n \n \n \n \n \n ");
 
             return (s);
-        } catch (Exception e) {
-            //TODO!!!
-        }
-        return ("0");  //?????
     }
 
     //Item anzahl

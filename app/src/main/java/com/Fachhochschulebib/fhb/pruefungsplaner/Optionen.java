@@ -401,13 +401,11 @@ public class Optionen extends Fragment {
                     com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                     //retrofit auruf
                     for (int a = 1; a < validationList.size(); a++) {
-                        String[] stringaufteilung = validationList.get(a).split("");
                         com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect();
                         retrofit.RetrofitWebAccess(
                                         getContext(),
                                         roomdaten,
                                         pruefJahr,
-                                        stringaufteilung[5],
                                         aktuellePruefphase,
                                         aktuellerTermin,
                                         serverAddress,

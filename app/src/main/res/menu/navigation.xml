@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/navigation_electiveModule"
-        android:icon="@drawable/optionen_nav"
+        android:icon="@drawable/ic_elective"
         android:title="@string/title_electiveModule"/>
 
 </menu>

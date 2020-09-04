@@ -40,9 +40,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitConnect {
     public String termine;
     public static boolean checkuebertragung = false;
-    private boolean checkvalidate = false;
+    // private boolean checkvalidate = false;
     Context ctx2;
-    
+
     String klausur = "K_90";
     String klausur60 = "K_60";
     String klausur120 = "K_120";
@@ -61,7 +61,6 @@ public class RetrofitConnect {
     public <serverAdress> void RetrofitWebAccess(Context ctx,
                                                  final com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten,
                                                  final String jahr,
-                                                 final String studiengang,
                                                  final String pruefungsphase,
                                                  final String termin,
                                                  final String serverAdress,
@@ -108,7 +107,7 @@ public class RetrofitConnect {
                         Log.d("Fehler: ","Kein Zugriff auf die Datenbank!");
                     }
 
-                    String validation = jahr+studiengang+pruefungsphase;
+                    // String validation = jahr+studiengang+pruefungsphase;
                     //String checkTermin = "0";
 
                     //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
