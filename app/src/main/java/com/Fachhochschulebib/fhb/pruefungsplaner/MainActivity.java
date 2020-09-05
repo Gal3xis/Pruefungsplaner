@@ -10,6 +10,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -450,7 +451,20 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean retroThread(boolean update) {
         //eigenständiger Thread, weil die Abfrage asynchron ist
-        new Thread(new Runnable() {
+
+        // Start Merlin Gürtker
+        final ProgressDialog progressBar;
+        progressBar = new ProgressDialog(MainActivity.this,
+                R.style.ProgressStyle);
+
+        // Erstelle den Fortschrittsbalken
+        progressBar.setMessage("Prüfungsdaten werden geladen");
+        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressBar.setCancelable(false);
+        // Zeige den Fortschrittsbalken
+        progressBar.show();
+        // Ende Merlin Gürtler
+        Thread RetroThread = new Thread(new Runnable() {
             public void run() {
 
                 //initialisierung room database
@@ -482,7 +496,22 @@ public class MainActivity extends AppCompatActivity {
                         relativePPlanURL);
                 }
             }
+        });
+
+        // Start Merlin Gürtler
+        RetroThread.start();
+        // Starte Thread zum prüfen ob der RetroThread fertig ist
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(RetroThread.isAlive()){
+                    // Pooling
+                }
+                progressBar.dismiss();
+            }
         }).start();
+        // Ende Merlin Gürtler
+
         return true;
     }
 
