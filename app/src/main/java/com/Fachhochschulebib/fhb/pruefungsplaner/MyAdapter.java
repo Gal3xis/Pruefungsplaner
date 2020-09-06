@@ -36,7 +36,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -54,7 +53,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private TextView txtSecondScreen;
     static boolean favcheck = true;
     private Context context;
-    private Intent calIntent;
+    // private Intent calIntent;
     private RecyclerView.LayoutManager aktuelleslayout;
     private List<String> pruefplanid;
     private GregorianCalendar calDate = new GregorianCalendar();
@@ -153,9 +152,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         if (position > 0) {
             int pruefid = Integer.valueOf(pruefplanid.get(position));
 
-            for (int i = 0; i < ppeList.size(); i++) {
-                if (Integer.valueOf(ppeList.get(i).getID()).equals(pruefid)) {
-                    if (ppeList.get(i).getFavorit()) {
+            for (PruefplanEintrag eintrag: ppeList) {
+                if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
+                    if (eintrag.getFavorit()) {
                         holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
                         // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                     }
@@ -176,18 +175,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
             // Toast.LENGTH_SHORT).show();
             speicher = false;
-            for (i = 0; i < ppeList1.size(); i++) {
-                if ((ppeList1.get(i).getID().toString()
+            for (PruefplanEintrag eintrag: ppeList1) {
+                if ((eintrag.getID().toString()
                         .equals(pruefplanid.get(position)) &
-                        (ppeList1.get(i).getFavorit()))) {
+                        (eintrag.getFavorit()))) {
                     speicher = true;
                     // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                 }
             }
 
             int pruefid = Integer.valueOf(pruefplanid.get(position));
-            for (i = 0; i < ppeList1.size(); i++) {
-                if (Integer.valueOf(ppeList1.get(i).getID()).equals(pruefid)) {
+            for (PruefplanEintrag eintrag: ppeList1) {
+                if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
                     holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
                     // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                 }
@@ -196,10 +195,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             //Speichern des Prüfitem als Favorit
             if (!speicher) {
                 // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-                for (i = 0; i < ppeList1.size(); i++) {
-                    if ((ppeList1.get(i).getID().toString()
+                for (PruefplanEintrag eintrag: ppeList1) {
+                    if ((eintrag.getID().toString()
                             .equals(pruefplanid.get(position)) &
-                            (!ppeList1.get(i).getFavorit()))) {
+                            (!eintrag.getFavorit()))) {
                         datenbank1.userDao()
                                 .update(true,
                                         Integer.valueOf(pruefplanid.get(position)));

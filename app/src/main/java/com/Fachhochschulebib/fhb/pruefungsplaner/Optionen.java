@@ -191,23 +191,23 @@ public class Optionen extends Fragment {
                     com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar googlecal = new com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar();
                     googlecal.setCtx(getContext());
 
-                    for(int i = 0; i <ppeList.size(); i++)
+                    for(PruefplanEintrag eintrag: ppeList)
                     {
                         //überprüfung von favorisierten Prüfungen
-                        if (ppeList.get(i).getFavorit()) {
-                            String id = ppeList.get(i).getID();
+                        if (eintrag.getFavorit()) {
+                            String id = eintrag.getID();
 
                             //überprüfung von ein/aus Google Kalender
                             if(googlecal.checkCal(Integer.valueOf(id)))
                             {
                                 //ermitteln von benötigten Variablen
                                 String[] splitDatumUndUhrzeit
-                                        = ppeList.get(i).getDatum().split(" ");
+                                        = eintrag.getDatum().split(" ");
                                 System.out.println(splitDatumUndUhrzeit[0]);
                                 String[] splitTagMonatJahr
                                         = splitDatumUndUhrzeit[0].split("-");
-                                studiengang = ppeList.get(i).getStudiengang();
-                                studiengang = studiengang + " " + ppeList.get(i).getModul();
+                                studiengang = eintrag.getStudiengang();
+                                studiengang = studiengang + " " + eintrag.getModul();
                                 int uhrzeitStart
                                         = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
                                 int uhrzeitEnde

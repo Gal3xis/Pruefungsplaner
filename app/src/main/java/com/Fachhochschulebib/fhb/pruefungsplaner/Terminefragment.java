@@ -257,9 +257,8 @@ public class Terminefragment extends Fragment {
                             checkList.clear();
 
                             ClearLists();
-
-                            for (int i = 0; i < ppeList.size(); i++) {
-                                String[] date2 = ppeList.get(i).getDatum().split(" ");
+                            for(PruefplanEintrag eintrag: ppeList) {
+                                String[] date2 = eintrag.getDatum().split(" ");
                                 System.out.println(date2[0]);
 
                                 /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
@@ -267,17 +266,17 @@ public class Terminefragment extends Fragment {
                                  */
                                 if (date2[0].equals(date)) {
                                     modulUndStudiengangsList.add(
-                                            ppeList.get(i).getModul()
-                                            + "\n " + ppeList.get(i).getStudiengang());
+                                            eintrag.getModul()
+                                            + "\n " + eintrag.getStudiengang());
                                     prueferUndSemesterList.add(
-                                            ppeList.get(i).getErstpruefer()
-                                            + " " + ppeList.get(i).getZweitpruefer()
-                                            + " " + ppeList.get(i).getSemester() + " ");
-                                    datumsList.add(ppeList.get(i).getDatum());
-                                    modulList.add(ppeList.get(i).getModul());
-                                    idList.add(ppeList.get(i).getID());
-                                    pruefFormList.add(ppeList.get(i).getPruefform());
-                                    raumList.add(ppeList.get(i).getRaum());
+                                            eintrag.getErstpruefer()
+                                            + " " + eintrag.getZweitpruefer()
+                                            + " " + eintrag.getSemester() + " ");
+                                    datumsList.add(eintrag.getDatum());
+                                    modulList.add(eintrag.getModul());
+                                    idList.add(eintrag.getID());
+                                    pruefFormList.add(eintrag.getPruefform());
+                                    raumList.add(eintrag.getRaum());
                                     checkList.add(true);
                                 }
                             }// define an adapter
@@ -309,19 +308,19 @@ public class Terminefragment extends Fragment {
         checkList.clear();
         ClearLists();
 
-        for (int i = 0; i < ppeList.size(); i++) {
+        for (PruefplanEintrag eintrag: ppeList) {
             modulUndStudiengangsList.add(
-                    ppeList.get(i).getModul() + "\n "
-                    + ppeList.get(i).getStudiengang());
+                    eintrag.getModul() + "\n "
+                    + eintrag.getStudiengang());
             prueferUndSemesterList.add(
-                    ppeList.get(i).getErstpruefer()
-                    + " " + ppeList.get(i).getZweitpruefer()
-                    + " " + ppeList.get(i).getSemester() + " ");
-            datumsList.add(ppeList.get(i).getDatum());
-            modulList.add(ppeList.get(i).getModul());
-            idList.add(ppeList.get(i).getID());
-            pruefFormList.add(ppeList.get(i).getPruefform());
-            raumList.add(ppeList.get(i).getRaum());
+                    eintrag.getErstpruefer()
+                    + " " + eintrag.getZweitpruefer()
+                    + " " + eintrag.getSemester() + " ");
+            datumsList.add(eintrag.getDatum());
+            modulList.add(eintrag.getModul());
+            idList.add(eintrag.getID());
+            pruefFormList.add(eintrag.getPruefform());
+            raumList.add(eintrag.getRaum());
             checkList.add(true);
         }// define an adapter
 

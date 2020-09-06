@@ -270,7 +270,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this);
                         String[] courses = new String [spinnerArray.size()];
-                        for(int i = 0;i < spinnerArray.size(); i++) {
+
+                        for(int i = 0; i < spinnerArray.size(); i++) {
                             courses[i] = spinnerArray.get(i);
                         }
                         chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {

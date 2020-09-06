@@ -76,16 +76,16 @@ public class Favoritenfragment extends Fragment {
 
         // Abfrage ob Prüfungen favorisiert wurden
         // Favorisierte Prüfungen für die Anzeige vorbereiten
-        for (int i = 0; i < ppeList.size(); i++) {
-            if (ppeList.get(i).getFavorit()) {
-                studiengang.add(ppeList.get(i).getModul() + " "
-                                + ppeList.get(i).getStudiengang());
-                profnamen.add(ppeList.get(i).getErstpruefer() + " "
-                                + ppeList.get(i).getZweitpruefer() + " "
-                                + ppeList.get(i).getSemester().toString());
-                datum.add(ppeList.get(i).getDatum());
-                pruefungsNr.add(ppeList.get(i).getID());
-                raum.add(ppeList.get(i).getRaum());
+        for (PruefplanEintrag eintrag: ppeList) {
+            if (eintrag.getFavorit()) {
+                studiengang.add(eintrag.getModul() + " "
+                                + eintrag.getStudiengang());
+                profnamen.add(eintrag.getErstpruefer() + " "
+                                + eintrag.getZweitpruefer() + " "
+                                + eintrag.getSemester());
+                datum.add(eintrag.getDatum());
+                pruefungsNr.add(eintrag.getID());
+                raum.add(eintrag.getRaum());
                 check.add(true);
             }
         }

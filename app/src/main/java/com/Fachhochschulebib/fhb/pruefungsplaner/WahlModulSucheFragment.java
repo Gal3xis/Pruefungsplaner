@@ -137,9 +137,9 @@ public class WahlModulSucheFragment extends Fragment {
 
                     // Setze die gewählten Daten in der DB
                     database.userDao().sucheUndZurueckSetzen(false);
-                    for (int i = 0; i < ppeList.size(); i++) {
+                    for (PruefplanEintrag eintrag: ppeList) {
                         database.userDao().update2(true,
-                                Integer.valueOf(ppeList.get(i).getID()));
+                                Integer.valueOf(eintrag.getID()));
                     }
 
                     ft = getActivity().getSupportFragmentManager().beginTransaction();

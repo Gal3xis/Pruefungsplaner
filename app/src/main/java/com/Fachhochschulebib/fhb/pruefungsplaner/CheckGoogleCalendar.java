@@ -219,11 +219,11 @@ public class CheckGoogleCalendar {
             String[] element = listOfString.get(i).split(",");
             Log.i("userID", element.toString());
             Log.i("elemnt[0}", String.valueOf(element[0]));
-            for (int j = 0; j< ppeList.size(); j++) {
+            for (PruefplanEintrag eintrag: ppeList) {
                 // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
                 // ist die GoogleCalendar Id für den gespeicherten eintrag
-                Log.i("userID2", ppeList.get(j).getID());
-                if(ppeList.get(j).getID().equals(element[0])) {
+                Log.i("userID2", eintrag.getID());
+                if(eintrag.getID().equals(element[0])) {
                     //output tag
                     String DEBUG_TAG = "MyActivity";
                     //eventID ist die Google calendar Id
@@ -236,7 +236,7 @@ public class CheckGoogleCalendar {
                     // Sieht so aus wie 22-01-2019 10:00 Uhr
                     // es wird nach dem Leerzeichen getrennt
                     //trennen von datum und Uhrzeit
-                    String[] s = ppeList.get(j).getDatum().split(" ");
+                    String[] s = eintrag.getDatum().split(" ");
                     //print Datum
                     System.out.println(s[0]);
                     //aufteilen von tag, monat und jahr.
@@ -246,7 +246,7 @@ public class CheckGoogleCalendar {
                     int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
                     int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
                     // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, ppeList.get(j).getModul());
+                    values.put(CalendarContract.Events.TITLE, eintrag.getModul());
                     values.put(CalendarContract.Events.EVENT_LOCATION,
                                "Fachhochschule Bielefeld Update");
                     values.put(CalendarContract.Events.DESCRIPTION, "");

@@ -102,9 +102,9 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
                 // second parameter is necessary ie.,
                 // Value to return if this preference does not exist.
-                for (int i = 0; i < ppeList.size();i++){
-                    if(ppeList.get(i).getFavorit()){
-                        if(ppeList.get(i).getID().equals(ppIdList.get(position))){
+                for (PruefplanEintrag eintrag: ppeList){
+                    if(eintrag.getFavorit()){
+                        if(eintrag.getID().equals(ppIdList.get(position))){
                             datenbank.userDao()
                                      .update(false,Integer.valueOf(ppIdList.get(position)));
                             remove(holder.getAdapterPosition());
