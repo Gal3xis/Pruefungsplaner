@@ -21,7 +21,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     //KlassenVariablen
     private JSONArray jsonArrayStudiengaenge;
     final List<String> spinnerArray = new ArrayList<String>();
-    private Spinner spStudiengangMain;
+    // private Spinner spStudiengangMain;
     //List<String> idList = new ArrayList<String>();
     private Message msg = new Message();
 
@@ -268,17 +267,20 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.buttonForSpinner).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this);
+                        // Erstelle das Dialog Feld für die Auswahl
+                        AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this,
+                                R.style.customAlertDialog);
                         String[] courses = new String [spinnerArray.size()];
 
                         for(int i = 0; i < spinnerArray.size(); i++) {
                             courses[i] = spinnerArray.get(i);
                         }
+                        // Der Listener für die Item Auswahl
                         chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                studiengangsList.add(courses[which]); //this is your selected item
+                                studiengangsList.add(courses[which]); // das ausgewählte Item
                                 for (int i = 0 ; i < spinnerArray.size(); i++)
                                 {
                                     if (courses[which]

@@ -151,16 +151,16 @@ public class sucheFragment extends Fragment {
             List<String> spinnerProfArrayList = new ArrayList<String>();
 
             //Hinzufügen der Module zum Spinner-Item
-            for (int i = 0; i < ppeList.size(); i++) {
-                spinnerModuleArrayList.add(ppeList.get(i).getModul());
+            for (PruefplanEintrag eintrag: ppeList) {
+                spinnerModuleArrayList.add(eintrag.getModul());
             }
 
             //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
             spinnerModuleArrayList.add(0, "Klicken um Modul zu wählen");
 
             //Spinner-Array Prüfer mit Werten füllen
-            for (int i = 0; i < ppeList.size(); i++) {
-                spinnerProfArrayList.add(ppeList.get(i).getErstpruefer());
+            for (PruefplanEintrag eintrag: ppeList) {
+                spinnerProfArrayList.add(eintrag.getErstpruefer());
             }
 
             //Doppelte Namenseinträge für Prüfer löschen
@@ -331,8 +331,8 @@ public class sucheFragment extends Fragment {
                     {
                         sortedList.clear();
                         ppeList = roomDaten.userDao().getModule(sgModulList .get(sgModulList .size() - 1));
-                        for(int m = 0; m < ppeList.size(); m++) {
-                            sortedList.add(String.valueOf(ppeList.get(m).getID()));
+                        for(PruefplanEintrag eintrag: ppeList) {
+                            sortedList.add(String.valueOf(eintrag.getID()));
                         }
 
                         database.userDao().sucheUndZurueckSetzen(false);
