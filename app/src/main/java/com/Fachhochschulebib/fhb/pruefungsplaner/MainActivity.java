@@ -464,7 +464,7 @@ public class MainActivity extends AppCompatActivity {
         // Zeige den Fortschrittsbalken
         progressBar.show();
         // Ende Merlin Gürtler
-        Thread RetroThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             public void run() {
 
                 //initialisierung room database
@@ -495,22 +495,9 @@ public class MainActivity extends AppCompatActivity {
                         serverAddress,
                         relativePPlanURL);
                 }
-            }
-        });
-
-        // Start Merlin Gürtler
-        RetroThread.start();
-        // Starte Thread zum prüfen ob der RetroThread fertig ist
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while(RetroThread.isAlive()){
-                    // Pooling
-                }
                 progressBar.dismiss();
             }
         }).start();
-        // Ende Merlin Gürtler
 
         return true;
     }
