@@ -16,16 +16,20 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -43,7 +47,7 @@ public class WahlModulSucheFragment extends Fragment {
     com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomDaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
     List<PruefplanEintrag> ppeList = roomDaten.userDao().getAll2();
 
-    private String selectedstudiengang = "Alle Studiengänge";
+    private String selectedStudiengangSpinner = "Alle Studiengänge";
     private String modulName = "Alle";
 
     public void onCreate(Bundle savedInstanceState) {
@@ -56,24 +60,50 @@ public class WahlModulSucheFragment extends Fragment {
         final View v = inflater.inflate(R.layout.wahlmodul, container, false);
 
         final Button searchBtn = v.findViewById(R.id.BtnOk);
-        final EditText editWahlModul = v.findViewById(R.id.wahlModulName);
+        final AutoCompleteTextView editWahlModul = v.findViewById(R.id.wahlModulName);
         final Spinner spStudiengang = v.findViewById(R.id.spStudiengang);
 
+
+        // Damit keine Module des gewählten Studienganges angezeigt werden
+        SharedPreferences sharedPrefSelectedStudiengang = getContext().
+                getSharedPreferences("validation",Context.MODE_PRIVATE);
+        String selectedStudiengang  = sharedPrefSelectedStudiengang.
+                getString("selectedStudiengang","0");
+
+        List<String> modulNameArrayList = database.userDao().getModuleExceptCourse(selectedStudiengang);
+        ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
+                (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
+        editWahlModul.setAdapter(adapterModuleAutoComplete);
+
         // Studiengang auswahl
-        List<String> StudiengangArrayList = database.userDao().getStudiengangDistinct();
-        StudiengangArrayList.add(0,"Alle Studiengänge");
+        List<String> studiengangArrayList = database.userDao().getStudiengangDistinct(selectedStudiengang);
+        studiengangArrayList.add(0,"Alle Studiengänge");
 
         // Design für den Spinner
         ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
-                v.getContext(), R.layout.simple_spinner_item, StudiengangArrayList);
+                v.getContext(), R.layout.simple_spinner_item, studiengangArrayList);
         adapterStudiengang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spStudiengang.setAdapter(adapterStudiengang);
+
+        editWahlModul.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Schließe das Keyboard nach auswahl des Modules
+                InputMethodManager inputMethodManager =
+                        (InputMethodManager) getActivity().getSystemService(
+                                Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(
+                        getActivity().getCurrentFocus().getWindowToken(), 0);
+            }
+
+        });
 
         spStudiengang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Setze den ausgewählten Studiengang
-                selectedstudiengang = parent.getItemAtPosition(position).toString();
+                selectedStudiengangSpinner = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -111,26 +141,26 @@ public class WahlModulSucheFragment extends Fragment {
                  */
 
                 if((modulName.trim().length() > 3 && !modulName.equals("Alle"))
-                        || !selectedstudiengang.equals("Alle Studiengänge")) {
+                        || !selectedStudiengangSpinner.equals("Alle Studiengänge")) {
 
                     // Nur ein Modulnamen eingetragen
-                    if (selectedstudiengang.equals("Alle Studiengänge")
+                    if (selectedStudiengangSpinner.equals("Alle Studiengänge")
                             && !modulName.equals("Alle")) {
 
                         ppeList = database.userDao().getModule("%" + modulName.trim() + "%");
 
                     // Alles eingegeben
-                    } else if (!selectedstudiengang.equals("Alle Studiengänge")
+                    } else if (!selectedStudiengangSpinner.equals("Alle Studiengänge")
                             && !modulName.equals("Alle")) {
 
                         ppeList = database.userDao().getModuleWithCourseAndModule("%" +
-                                modulName.trim() + "%", selectedstudiengang);
+                                modulName.trim() + "%", selectedStudiengangSpinner);
 
                     // Nur ein Studiengang ausgewählt
-                    } else if (!selectedstudiengang.equals("Alle Studiengänge")
+                    } else if (!selectedStudiengangSpinner.equals("Alle Studiengänge")
                             && modulName.equals("Alle")) {
 
-                        ppeList = database.userDao().getModuleWithCourse(selectedstudiengang);
+                        ppeList = database.userDao().getModuleWithCourse(selectedStudiengangSpinner);
 
                     }
 

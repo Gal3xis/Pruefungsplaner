@@ -194,6 +194,18 @@ public class Tabelle extends AppCompatActivity  {
                         ft.commit();
 
                         return true;
+
+
+                    case R.id.navigation_changeCourse:
+                        txtAnzeigeMenu.setText("Studiengang ändern");
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.closeDrawer(GravityCompat.START);
+                        Intent myIntent = new Intent(recyclerView.getContext(), MainActivity.class);
+                        recyclerView.getContext().startActivity(myIntent);
+
+                        return true;
                     // Ende Merlin Gürtler
                     default:
                         return true;

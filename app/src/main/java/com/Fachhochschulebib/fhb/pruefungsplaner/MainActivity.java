@@ -294,8 +294,10 @@ public class MainActivity extends AppCompatActivity {
                                             SharedPreferences sharedPrefStudiengangValidation =
                                                     getApplicationContext().
                                                             getSharedPreferences("validation",0);
+
                                             SharedPreferences.Editor editorStudiengangValidation =
                                                     sharedPrefStudiengangValidation.edit();
+
                                             editorStudiengangValidation.putString("selectedStudiengang", courses[which]);
                                             editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
                                             editorStudiengangValidation.apply();
@@ -474,7 +476,7 @@ public class MainActivity extends AppCompatActivity {
                 AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
 
                 //retrofit auruf
-                RetrofitConnect retrofit = new RetrofitConnect();
+                RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
                 //TODO: Aktuellen Termin aus Prüfperiode (ppNum) abfragen!!!
                 //DONE (8/2020 LG): s. Prüfperiodenabfrage etwa Zeile: 529
@@ -486,8 +488,7 @@ public class MainActivity extends AppCompatActivity {
                 // Änderung Merlin Gürtler
                 if(update) {
                     retrofit.retroUpdate(getApplicationContext(), datenbank,
-                            serverAddress,
-                            relativePPlanURL);
+                            serverAddress);
                 } else {
                     retrofit.RetrofitWebAccess(
                         getApplicationContext(),
@@ -495,8 +496,7 @@ public class MainActivity extends AppCompatActivity {
                         pruefJahr,
                         aktuellePruefphase,
                         aktuellerTermin,
-                        serverAddress,
-                        relativePPlanURL);
+                        serverAddress);
                 }
                 progressBar.dismiss();
             }

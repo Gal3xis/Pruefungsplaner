@@ -40,6 +40,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitConnect {
     public String termine;
     public static boolean checkuebertragung = false;
+    private String relativePPlanUrl;
     // private boolean checkvalidate = false;
     Context ctx2;
 
@@ -56,6 +57,10 @@ public class RetrofitConnect {
     String online60 = "0_60";
     String online90 = "0_90";
 
+    public RetrofitConnect(String relativePPlanUrl) {
+        this.relativePPlanUrl = relativePPlanUrl;
+    }
+
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
     public <serverAdress> void RetrofitWebAccess(Context ctx,
@@ -63,8 +68,7 @@ public class RetrofitConnect {
                                                  final String jahr,
                                                  final String pruefungsphase,
                                                  final String termin,
-                                                 final String serverAdress,
-                                                 final String relativePPlanUrl){
+                                                 final String serverAdress){
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse
                 = ctx.getSharedPreferences("Server_Address", 0);
@@ -271,8 +275,7 @@ public class RetrofitConnect {
 
     // Start Merlin Gürtler
     public void retroUpdate(Context ctx, final com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten,
-                            final String serverAdress,
-                            final String relativePPlanUrl) {
+                            final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
@@ -297,7 +300,7 @@ public class RetrofitConnect {
         // Stringify for the Request
         String sendExams = knownExamsJson.toString();
         //uebergabe der parameter an die Adresse
-        String adresse = "PruefplanverwaltungRestIF/webresources/entity.pruefplaneintrag/update/" + sendExams + "/";
+        String adresse = relativePPlanUrl + "entity.pruefplaneintrag/update/" + sendExams + "/";
 
         String URL = urlfhb+adresse;
         Retrofit retrofit = new Retrofit.Builder()

@@ -53,7 +53,7 @@
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="81dp" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/wahlModulName"
             android:layout_width="403dp"
             android:layout_height="wrap_content"

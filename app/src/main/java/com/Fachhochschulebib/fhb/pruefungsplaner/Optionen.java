@@ -401,15 +401,14 @@ public class Optionen extends Fragment {
                     com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                     //retrofit auruf
                     for (int a = 1; a < validationList.size(); a++) {
-                        com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect();
+                        com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         retrofit.RetrofitWebAccess(
                                         getContext(),
                                         roomdaten,
                                         pruefJahr,
                                         aktuellePruefphase,
                                         aktuellerTermin,
-                                        serverAddress,
-                                        relativePPlanURL);
+                                        serverAddress);
 
                         // Log.d("Test3",String.valueOf(stringaufteilung[5]));
                     }

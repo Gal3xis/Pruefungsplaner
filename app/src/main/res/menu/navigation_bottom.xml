@@ -21,14 +21,4 @@
         android:icon="@drawable/ic_elective"
         android:title="@string/title_electiveModule"/>
 
-    <item
-        android:id="@+id/navigation_changeCourse"
-        android:icon="@drawable/ic_elective"
-        android:title="@string/title_changeCourse"/>
-
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@drawable/optionen_nav"
-        android:title="@string/title_settings"/>
-
 </menu>
