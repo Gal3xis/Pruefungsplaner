@@ -23,7 +23,7 @@
 
     <item
         android:id="@+id/navigation_changeCourse"
-        android:icon="@drawable/ic_elective"
+        android:icon="@drawable/ic_change_course"
         android:title="@string/title_changeCourse"/>
 
     <item
