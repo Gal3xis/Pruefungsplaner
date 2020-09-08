@@ -184,8 +184,8 @@ public class Optionen extends Fragment {
                     mEditorGoogleKalender.putString("jsondata2", response.toString());
                     mEditorGoogleKalender.apply();
 
-                    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank =  com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
-                    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                    AppDatabase datenbank =  AppDatabase.getAppDatabase(getContext());
+                    List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
 
 
                     com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar googlecal = new com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar();
@@ -285,7 +285,7 @@ public class Optionen extends Fragment {
         //interne DB löschen
         btnDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(v.getContext());
+                AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
                 Log.d("Test", "Lokale DB löschen.");
                 datenbank.clearAllTables();
 
@@ -321,16 +321,16 @@ public class Optionen extends Fragment {
         //Favoriten Löschen
         btnFav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(v.getContext());
-                List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
-                for (int i = 0; i < ppeList.size(); i++) {
-                        if (ppeList.get(i).getFavorit()) {
+                AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
+                List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                for (PruefplanEintrag eintrag: ppeList) {
+                        if (eintrag.getFavorit()) {
 
                             Log.d("Test Favoriten löschen.",
-                                    String.valueOf(ppeList.get(i).getID()));
+                                    String.valueOf(eintrag.getID()));
                             datenbank.userDao()
                                      .update(false,
-                                             Integer.valueOf(ppeList.get(i).getID()));
+                                             Integer.valueOf(eintrag.getID()));
                             Toast.makeText(
                                     v.getContext(),
                                     "Favorisierte Prüfungen gelöscht.",
@@ -375,7 +375,7 @@ public class Optionen extends Fragment {
                         "Prüfungen wurden aktualisiert.",
                         Toast.LENGTH_SHORT).show();
 
-                com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
+                AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
@@ -384,7 +384,7 @@ public class Optionen extends Fragment {
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
                 //Initialisierung: room database
-                com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+                AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                 //retrofit auruf
                 com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                 retrofit.RetrofitWebAccess(

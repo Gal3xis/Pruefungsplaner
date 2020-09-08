@@ -42,7 +42,7 @@ public class Favoritenfragment extends Fragment {
     List<Boolean> check = new ArrayList<>();
 
     // Datenbank initialisierung
-    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+    AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

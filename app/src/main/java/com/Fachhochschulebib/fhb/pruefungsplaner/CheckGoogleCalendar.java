@@ -210,7 +210,7 @@ public class CheckGoogleCalendar {
         ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
 
         //step four: Database connect
-        List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = databaseConnect();
+        List<PruefplanEintrag> ppeList = databaseConnect();
 
         //step fifth: Schleifen zum vergleichen
         Log.i("userID", String.valueOf(listOfString.size()));
@@ -280,8 +280,8 @@ public class CheckGoogleCalendar {
         }
     }
 
-    public List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> databaseConnect(){
-        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database2 = AppDatabase.getAppDatabase(context);
+    public List<PruefplanEintrag> databaseConnect(){
+        AppDatabase database2 = AppDatabase.getAppDatabase(context);
         List<PruefplanEintrag> ppeList = database2.userDao().getAll2();
      return(ppeList);
     }

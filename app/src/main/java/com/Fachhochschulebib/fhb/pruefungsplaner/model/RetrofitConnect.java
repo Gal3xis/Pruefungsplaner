@@ -64,7 +64,7 @@ public class RetrofitConnect {
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
     public <serverAdress> void RetrofitWebAccess(Context ctx,
-                                                 final com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten,
+                                                 final AppDatabase roomdaten,
                                                  final String jahr,
                                                  final String pruefungsphase,
                                                  final String termin,
@@ -101,7 +101,7 @@ public class RetrofitConnect {
                 if (response.isSuccessful()) {
 
                     //Hole alle Einträge aus der lokalen Room-DB
-                    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> dataListFromLocalDB = null;
+                    List<PruefplanEintrag> dataListFromLocalDB = null;
                     try { //DONE (08/2020) LG
                         dataListFromLocalDB = roomdaten.userDao().getAll2();
                         //roomdaten.clearAllTables();
@@ -131,7 +131,7 @@ public class RetrofitConnect {
                     for (int i = response.body().size()-1 ; i >= 0; --i) {
 
                         //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
-                        com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag pruefplanEintrag = new com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag();
+                        PruefplanEintrag pruefplanEintrag = new PruefplanEintrag();
 
                         //Festlegen vom Dateformat
                         String datumZeitzone;
@@ -272,7 +272,7 @@ public class RetrofitConnect {
     }
 
     // Start Merlin Gürtler
-    public void retroUpdate(Context ctx, final com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten,
+    public void retroUpdate(Context ctx, final AppDatabase roomdaten,
                             final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
@@ -282,7 +282,7 @@ public class RetrofitConnect {
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         JSONArray knownExamsJson = new JSONArray();
-        List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> knownExams = roomdaten.userDao().getAll2();
+        List<PruefplanEintrag> knownExams = roomdaten.userDao().getAll2();
         // Create the JSON Array
         for(int i = 0; i < knownExams.size(); i++) {
             JSONObject knownExam = new JSONObject();

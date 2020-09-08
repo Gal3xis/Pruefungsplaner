@@ -148,28 +148,22 @@ public class MainActivity extends AppCompatActivity {
         if (kalenderMonat  <= 4)
         {
             aktuellePruefphase = "WiSe";
-            for (int i = 0; i < 1; i++) {
-                int thisYear = calendar.get(Calendar.YEAR);
-                pruefJahr = String.valueOf(thisYear);
-            }
+            int thisYear = calendar.get(Calendar.YEAR);
+            pruefJahr = String.valueOf(thisYear);
         }
 
         if (kalenderMonat  > 4)
         {
             aktuellePruefphase = "SoSe";
-            for (int i = 0; i < 1; i++) {
-                int thisYear = calendar.get(Calendar.YEAR);
-                pruefJahr = String.valueOf(thisYear);
-            }
+            int thisYear = calendar.get(Calendar.YEAR);
+            pruefJahr = String.valueOf(thisYear);
         }
 
         if (kalenderMonat >= 9) {
 
             aktuellePruefphase = "WiSe";
-            for (int i = 0; i < 1; i++) {
-                int thisYear = calendar.get(Calendar.YEAR);
-                pruefJahr = String.valueOf(thisYear +1);
-            }
+            int thisYear = calendar.get(Calendar.YEAR);
+            pruefJahr = String.valueOf(thisYear +1);
         }
 
         // Start Merlin Gürtler

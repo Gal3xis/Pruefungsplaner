@@ -13,23 +13,23 @@ public interface UserDao {
 
     // Start Merlin Gürtler
     @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul")
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getModule(String modul);
+    List<PruefplanEintrag> getModule(String modul);
 
     @Query("UPDATE PruefplanEintrag SET Datum = :datum where ID = :id")
     void updateExam(String datum, String id);
 
     @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getModuleProf(String prof);
+    List<PruefplanEintrag> getModuleProf(String prof);
 
     @Query("SELECT DISTINCT Studiengang FROM PruefplanEintrag WHERE Studiengang != :selectedStudiengang")
     List<String> getStudiengangDistinct(String selectedStudiengang);
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul AND Studiengang = :studiengang")
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag>
+    List<PruefplanEintrag>
     getModuleWithCourseAndModule(String modul, String studiengang);
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang")
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag>
+    List<PruefplanEintrag>
     getModuleWithCourse(String studiengang);
 
     @Query("SELECT DISTINCT Modul FROM PruefplanEintrag WHERE Studiengang != :selectedStudiengang")
@@ -44,17 +44,14 @@ public interface UserDao {
 
     @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
     String getTermin();
-
-    @Query("DELETE FROM PruefplanEintrag")
-    void deleteDatabase();
     // Ende Merlin Gürtler
 
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Validation = :validation")
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getAll(String validation);
+    List<PruefplanEintrag> getAll(String validation);
 
     @Query("SELECT * FROM PruefplanEintrag")
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> getAll2();
+    List<PruefplanEintrag> getAll2();
 
     @Query("SELECT Studiengang FROM PruefplanEintrag")
     List<String> getStudiengang();
@@ -69,7 +66,7 @@ public interface UserDao {
     int countUsers();
 
     @Insert
-    void insertAll(com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag... pruefplanEintrags);
+    void insertAll(PruefplanEintrag... pruefplanEintrags);
 
     @Query ("UPDATE PruefplanEintrag SET Favorit = :favorit WHERE ID = :id")
     void update(boolean favorit, int id);
@@ -84,5 +81,5 @@ public interface UserDao {
     void sucheUndZurueckSetzen(boolean pruefungen);
 
     @Delete
-    void delete(com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag pruefplanEintrag);
+    void delete(PruefplanEintrag pruefplanEintrag);
 }

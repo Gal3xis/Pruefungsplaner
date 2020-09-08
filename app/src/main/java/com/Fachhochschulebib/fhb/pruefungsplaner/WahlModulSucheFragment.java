@@ -35,6 +35,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
 import java.util.List;
@@ -43,8 +44,8 @@ import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
 
 public class WahlModulSucheFragment extends Fragment {
 
-    private com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
-    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomDaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
+    private AppDatabase database = AppDatabase.getAppDatabase(getContext());
+    AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
     List<PruefplanEintrag> ppeList = roomDaten.userDao().getAll2();
 
     private String selectedStudiengangSpinner = "Alle Studiengänge";

@@ -50,11 +50,11 @@ public class sucheFragment extends Fragment {
     private String profName = "Alle";
     String pruefJahr, aktuellePruefphase,
             rueckgabeStudiengang, validation;
-    List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = new ArrayList();
+    List<PruefplanEintrag> ppeList = new ArrayList();
 
-    private com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
+    private AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
-    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomDaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
+    AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
 
     // Start Merlin Gürtler
     public void registerButton(Button btn, int value) {

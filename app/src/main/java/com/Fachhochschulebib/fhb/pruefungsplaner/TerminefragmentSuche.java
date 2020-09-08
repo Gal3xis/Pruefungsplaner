@@ -124,8 +124,8 @@ public class TerminefragmentSuche extends Fragment {
                     calendar.setVisibility(View.VISIBLE);
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                            com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
-                            List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = roomdaten.userDao().getAll(validation);
+                            AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+                            List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll(validation);
 
                             ClearLists();
 
@@ -234,7 +234,7 @@ public class TerminefragmentSuche extends Fragment {
     {
 
         //Datenbank initialisieren
-        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
+        AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
 
         // Änderung Merlin Gürtler
         // List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);

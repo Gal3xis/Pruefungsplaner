@@ -142,8 +142,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         //Datenbank und Pruefplan laden
-        com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(context);
-        List<com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+        AppDatabase datenbank = AppDatabase.getAppDatabase(context);
+        List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
 
         // Überprüfung, ob Prüfitem favorisiert wurde
         //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -167,7 +167,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             favcheck = false;
 
             //Datenbank und Pruefplan laden
-            com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank1 = AppDatabase.getAppDatabase(context);
+            AppDatabase datenbank1 = AppDatabase.getAppDatabase(context);
             List<PruefplanEintrag> ppeList1 = datenbank1.userDao().getAll2();
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt

@@ -20,7 +20,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -98,7 +97,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
+                AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
                 List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
                 // second parameter is necessary ie.,
                 // Value to return if this preference does not exist.
@@ -161,7 +160,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
         holder.txtthirdline.setText("Uhrzeit: "
                                     + splitDatumUndUhrzeit[1].substring(0, 5).toString()
-                                    + " datum: "
+                                    + " Datum: "
                                     + splitTagMonatJahr[2].toString() + "."
                                     + splitTagMonatJahr[1].toString() + "."
                                     + splitTagMonatJahr[0].toString());
