@@ -226,10 +226,8 @@ public class MainActivity extends AppCompatActivity {
         if(datenbank.userDao().getAll2().size() > 0) {
             retroThread(true);
         } else {
-            if (spinnerArray.size() > 1) {
-                //auslagern von Retrofit in einen Thread
-                retroThread(false);
-            }
+            //auslagern von Retrofit in einen Thread
+            retroThread(false);
         }
         // Ende Merlin Gürtler
     }
@@ -457,7 +455,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean retroThread(boolean update) {
         //eigenständiger Thread, weil die Abfrage asynchron ist
 
-        // Start Merlin Gürtker
+        // Start Merlin Gürtler
         final ProgressDialog progressBar;
         progressBar = new ProgressDialog(MainActivity.this,
                 R.style.ProgressStyle);
@@ -478,18 +476,30 @@ public class MainActivity extends AppCompatActivity {
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
-                //TODO: Aktuellen Termin aus Prüfperiode (ppNum) abfragen!!!
                 //DONE (8/2020 LG): s. Prüfperiodenabfrage etwa Zeile: 529
                 //aktuellerTermin = "2";
-                pingPruefPeriode();
+
+                // Start Merlin Gürtler
+
+                SharedPreferences sharedPrefSPruefTermin = getApplicationContext().
+                        getSharedPreferences("PruefTermin",Context.MODE_PRIVATE);
+                String pruefPeriode  = sharedPrefSPruefTermin.
+                        getString("aktPruefTermin","0");
+
+                // Ende Merlin Gürtler
 
                 // Datei: RetrofitConnect.java
                 // DONE (08/2020) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
                 // Änderung Merlin Gürtler
-                if(update) {
+                // Prüfe zusätzlich ob sich die PruefPeriode geändert hat, falls ja erneuere die Datenbank
+                if(update
+                        && pruefPeriode.equals(datenbank.userDao().getTermin())
+                        && datenbank.userDao().getTermin() != null) {
+
                     retrofit.retroUpdate(getApplicationContext(), datenbank,
                             serverAddress);
                 } else {
+                    datenbank.clearAllTables();
                     retrofit.RetrofitWebAccess(
                         getApplicationContext(),
                         datenbank,

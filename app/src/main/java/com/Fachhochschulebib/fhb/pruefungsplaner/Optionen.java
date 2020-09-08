@@ -377,42 +377,25 @@ public class Optionen extends Fragment {
 
                 com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase database = com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase.getAppDatabase(getContext());
 
-                List<PruefplanEintrag> ppeList = database.userDao().getAll2();
-                List<String> validationList = new ArrayList<String>();
-
-                validationList.add("0");
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
-                if (ppeList.size() > 1) {
-                    validationList.add(ppeList.get(0).getValidation().toString());
-                    for (int i = 0; i < ppeList.size(); i++) {
-                        //Log.d("Test",String.valueOf(pruefplanDaten.get(i).getFavorit()));
-                        if (ppeList.get(i).getFavorit()) {
-                            idList.add(ppeList.get(i).getID().toString());
-                            validationList.add(ppeList.get(i).getValidation().toString());
-                            //Log.d("Test2",String.valueOf(pruefplanDaten.get(i).getValidation()));
-                        }
-                    }// define an adapter
-                    database.clearAllTables();
+                database.clearAllTables();
 
-                    //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
+                //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
-                    //Initialisierung: room database
-                    com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-                    //retrofit auruf
-                    for (int a = 1; a < validationList.size(); a++) {
-                        com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-                        retrofit.RetrofitWebAccess(
-                                        getContext(),
-                                        roomdaten,
-                                        pruefJahr,
-                                        aktuellePruefphase,
-                                        aktuellerTermin,
-                                        serverAddress);
+                //Initialisierung: room database
+                com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+                //retrofit auruf
+                com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                retrofit.RetrofitWebAccess(
+                                getContext(),
+                                roomdaten,
+                                pruefJahr,
+                                aktuellePruefphase,
+                                aktuellerTermin,
+                                serverAddress);
 
-                        // Log.d("Test3",String.valueOf(stringaufteilung[5]));
-                    }
-                }
+                // Log.d("Test3",String.valueOf(stringaufteilung[5]));
             }
         });
     }

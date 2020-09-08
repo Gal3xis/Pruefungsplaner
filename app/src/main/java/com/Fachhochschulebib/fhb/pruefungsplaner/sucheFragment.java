@@ -113,6 +113,8 @@ public class sucheFragment extends Fragment {
         pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
         aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
         rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        String selectedStudiengang  = mSharedPreferencesValidation.
+                getString("selectedStudiengang","0");
 
         // Erstelle Validierung und starte DB Abfrage
         validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
@@ -147,30 +149,13 @@ public class sucheFragment extends Fragment {
 
         try {
             //Spinner-Aufruf und Spinner mit Werten füllen
-            List<String> spinnerModuleArrayList = new ArrayList<String>();
-            List<String> spinnerProfArrayList = new ArrayList<String>();
+            List<String> spinnerModuleArrayList = roomDaten.userDao().getModuleWithCourseDistinct(selectedStudiengang);
+            List<String> spinnerProfArrayList = roomDaten.userDao().getErstprueferDistinct(selectedStudiengang);
 
-            //Hinzufügen der Module zum Spinner-Item
-            for (PruefplanEintrag eintrag: ppeList) {
-                spinnerModuleArrayList.add(eintrag.getModul());
-            }
 
             //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
             spinnerModuleArrayList.add(0, "Klicken um Modul zu wählen");
 
-            //Spinner-Array Prüfer mit Werten füllen
-            for (PruefplanEintrag eintrag: ppeList) {
-                spinnerProfArrayList.add(eintrag.getErstpruefer());
-            }
-
-            //Doppelte Namenseinträge für Prüfer löschen
-            for (int i = 0; i < spinnerProfArrayList.size(); i++) {
-                for (int a = i; a < spinnerProfArrayList.size(); a++) {
-                    if (spinnerProfArrayList.get(i).equals(spinnerProfArrayList.get(a))) {
-                        spinnerProfArrayList.remove(a);
-                    }
-                }
-            }
 
             //Adapter-Aufruf (LG: Sind hier alle drei Adapter notwendig?)
             // Auswahl Module

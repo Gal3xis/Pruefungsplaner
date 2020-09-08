@@ -35,6 +35,18 @@ public interface UserDao {
     @Query("SELECT DISTINCT Modul FROM PruefplanEintrag WHERE Studiengang != :selectedStudiengang")
     List<String>
     getModuleExceptCourse(String selectedStudiengang);
+
+    @Query("SELECT DISTINCT Erstpruefer FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang")
+    List<String> getErstprueferDistinct(String selectedStudiengang);
+
+    @Query("SELECT DISTINCT Modul FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang")
+    List<String> getModuleWithCourseDistinct(String selectedStudiengang);
+
+    @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
+    String getTermin();
+
+    @Query("DELETE FROM PruefplanEintrag")
+    void deleteDatabase();
     // Ende Merlin Gürtler
 
 

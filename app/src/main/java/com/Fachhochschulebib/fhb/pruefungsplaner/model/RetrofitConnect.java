@@ -77,9 +77,6 @@ public class RetrofitConnect {
         termine = termin;
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
-        Log.d("Output Studiengang",pruefungsphase.toString());
-        Log.d("Output Studiengang",termin.toString());
-        Log.d("Output Studiengang",jahr.toString());
 
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
@@ -89,6 +86,7 @@ public class RetrofitConnect {
                             + jahr +"/";
 
         String URL = urlfhb + relPathWithParameters;
+
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(URL);
         builder.addConverterFactory(GsonConverterFactory.create());
