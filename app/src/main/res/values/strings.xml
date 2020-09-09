@@ -1,13 +1,106 @@
 <resources>
     <string name="app_name">Pruefungsplaner</string>
 
+    <!-- Ui -->
+    <string name="chose_module">Modulauswahl (aktueller Prüftermin):</string>
+    <string name="chose_course">Studiengang auswählen</string>
+    <string name="chose_course2">Studiengang auswählen:</string>
+    <string name="chose_prof">Prüferauswahl:</string>
+    <string name="semester_ui">Semester:</string>
+    <string name="ok">Ok</string>
+    <string name="plan">PRÜFPLAN</string>
+    <string name="search">Suche</string>
+    <string name="open_calendar">Kalender öffnen</string>
+    <string name="date_ui">Datum</string>
+    <string name="server">&#160;&#160;&#160;Serveradresse:</string>
+    <string name="settings_del_fav">&#160;Favoriten löschen&#160;</string>
+    <string name="settings_del_db">&#160;Datenbank löschen&#160;</string>
+    <string name="settings_act_fav">Prüfungen aktualisieren</string>
+    <string name="settings_del_cal">Kalender Einträge löschen&#160;</string>
+    <string name="settings_act_cal">Kalender aktualisieren</string>
+    <string name="settings_sync_cal">Synchronisation Kalender</string>
+
     <!-- Navigation -->
     <string name="title_calender">Termine</string>
-    <string name="title_medication">Suche</string>
-    <string name="title_diary">Prüfungen</string>
+    <string name="title_search">Suche</string>
+    <string name="title_exam">Prüfungen</string>
     <string name="title_settings">Optionen</string>
     <string name="title_electiveModule">Wahlmodule</string>
     <string name="title_changeCourse">Studiengang ändern</string>
+
+    <!-- Klausur Typen -->
+    <string name="klausur">K_90</string>
+    <string name="klausur60">K_60</string>
+    <string name="klausur120">K_120</string>
+    <string name="klausur180">K_180</string>
+    <string name="projektarbeit">PA_30</string>
+    <string name="kombination15">KP_15</string>
+    <string name="kombination30">KP_30</string>
+    <string name="ilias60">I_60</string>
+    <string name="ilias90">I_90</string>
+    <string name="online60">0_60</string>
+    <string name="online90">0_90</string>
+
+    <!-- Klausur Name -->
+    <string name="klausur_text">Klausur 90 Minuten</string>
+    <string name="klausur60_text">Klausur 60 Minuten</string>
+    <string name="klausur120_text">Klausur 120 Minuten</string>
+    <string name="klausur180_text">Klausur 180 Minuten</string>
+    <string name="projektarbeit_text">Projektarbeit</string>
+    <string name="kombination15_text">Kombinationsprüfung 15 Minuten</string>
+    <string name="kombination30_text">Kombinationsprüfung 35 Minuten</string>
+    <string name="ilias60_text">Ilias-Test 60 Minuten</string>
+    <string name="ilias90_text">Ilias-Test 90 Minuten</string>
+    <string name="online60_text">Onlineprüfung 60 Minuten</string>
+    <string name="online90_text">Onlineprüfung 90 Minuten</string>
+    <string name="mundHaus_text">Mündliche Prüfung / Hausarbeit</string>
+
+    <!-- Jahreszeiten -->
+    <string name="sommer">Sommer</string>
+    <string name="sommer_short">SoSe</string>
+    <string name="winter">Winter</string>
+    <string name="winter_short">WiSe</string>
+
+    <!-- Nachricht -->
+    <string name="noConnection">Keine Verbindung zum Server möglich.</string>
+    <string name="load">Prüfungsdaten werden geladen</string>
+    <string name="add">Hinzugefügt</string>
+    <string name="delete">Entfernt</string>
+    <string name="add_calendar">Prüfungen werden jetzt zum Kalender hinzugefügt.</string>
+    <string name="delete_db">Lokale Datenbank gelöscht.</string>
+    <string name="delete_calendar">Google Kalender Einträge gelöscht.</string>
+    <string name="actualisation_calendar">Google Kalender aktualisiert.</string>
+    <string name="delete_favorite">Favorisierte Prüfungen gelöscht.</string>
+    <string name="add_favorite">Prüfungen wurden aktualisiert.</string>
+    <string name="elective_search">Bitte wählen Sie einen Studiengang aus,
+        oder geben einen Modulnamen ein der länger als drei Zeichen ist.</string>
+
+    <!-- Start -->
+    <string name="current">Aktuelle Prüfungsphase: \n&#160;</string>
+    <string name="bis">&#160;bis&#160;</string>
+
+    <!-- Klausuren Dastellung -->
+    <string name="time">Uhrzeit:&#160;</string>
+    <string name="prof">Prüfer:&#160;</string>
+    <string name="semester">&#160;&#160;Semester:&#160;</string>
+    <string name="information">&#160;Informationen zur Prüfung \n \n&#160;</string>
+    <string name="course">Studiengang:&#160;</string>
+    <string name="modul">\n Modul:&#160;</string>
+    <string name="firstProf">\n Erstprüfer:&#160;</string>
+    <string name="secondProf">\n Zweitprüfer:&#160;</string>
+    <string name="date">\n  Datum:&#160;</string>
+    <string name="date2">&#160;Datum:&#160;</string>
+    <string name="clockTime">\n Uhrzeit:&#160;</string>
+    <string name="clockTime2">Uhrzeit:&#160;</string>
+    <string name="clock">&#160;Uhr</string>
+    <string name="room">\n Raum:&#160;</string>
+    <string name="form">\n Prüfungsform:&#160;</string>
+    <string name="fh_name">Fachhochschule Bielefeld</string>
+
+    <!-- Suche -->
+    <string name="all">Alle</string>
+    <string name="all_cours">Alle Studiengänge</string>
+    <string name="modul_search">Klicken um Modul zu wählen</string>
 
     <string name="title_activity_recycleview_tabelle">RecycleviewTabelle</string>
 </resources>

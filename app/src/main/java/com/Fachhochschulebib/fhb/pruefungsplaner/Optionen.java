@@ -231,7 +231,7 @@ public class Optionen extends Fragment {
 
                     Toast.makeText(
                             v.getContext(),
-                            "Prüfungen werden jetzt zum Kalender hinzugefügt.",
+                            v.getContext().getString(R.string.add_calendar),
                             Toast.LENGTH_SHORT).show();
                 }
 
@@ -291,7 +291,7 @@ public class Optionen extends Fragment {
 
                 Toast.makeText(
                         v.getContext(),
-                        "Lokale Datenbank gelöscht.",
+                        v.getContext().getString(R.string.delete_db),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -302,7 +302,7 @@ public class Optionen extends Fragment {
                kalenderLöschen();
                 Toast.makeText(
                         v.getContext(),
-                        "Google Kalender Einträge gelöscht",
+                        v.getContext().getString(R.string.delete_calendar),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -313,7 +313,7 @@ public class Optionen extends Fragment {
                 kalenderUpdate();
                 Toast.makeText(
                         v.getContext(),
-                        "Google Kalender aktualisiert",
+                        v.getContext().getString(R.string.actualisation_calendar),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -333,7 +333,7 @@ public class Optionen extends Fragment {
                                              Integer.valueOf(eintrag.getID()));
                             Toast.makeText(
                                     v.getContext(),
-                                    "Favorisierte Prüfungen gelöscht.",
+                                    v.getContext().getString(R.string.delete_favorite),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -355,7 +355,7 @@ public class Optionen extends Fragment {
             public void run() {
                 Toast.makeText(
                         getContext(),
-                        "Keine Verbindung zum Server möglich!",
+                        getContext().getString(R.string.noConnection),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -372,7 +372,7 @@ public class Optionen extends Fragment {
             public void run() {
                 Toast.makeText(
                         getContext(),
-                        "Prüfungen wurden aktualisiert.",
+                        getContext().getString(R.string.add_favorite),
                         Toast.LENGTH_SHORT).show();
 
                 AppDatabase database = AppDatabase.getAppDatabase(getContext());
@@ -451,7 +451,7 @@ public class Optionen extends Fragment {
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
         event.put(CalendarContract.Events.TITLE, studiengang);
-        event.put(CalendarContract.Events.DESCRIPTION, "Fachhochschule Bielefeld");
+        event.put(CalendarContract.Events.DESCRIPTION, getContext().getString(R.string.fh_name));
         event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
         event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));
         event.put(CalendarContract.Events.ALL_DAY, 0);   // 0 for false, 1 for true

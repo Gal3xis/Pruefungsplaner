@@ -15,6 +15,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
+import com.Fachhochschulebib.fhb.pruefungsplaner.R;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
@@ -43,19 +44,6 @@ public class RetrofitConnect {
     private String relativePPlanUrl;
     // private boolean checkvalidate = false;
     Context ctx2;
-
-    String klausur = "K_90";
-    String klausur60 = "K_60";
-    String klausur120 = "K_120";
-    String klausur180 = "K_180";
-    String muendlich = "M_30";
-    String projektarbeit = "PA_30";
-    String kombination15 = "KP_15";
-    String kombination30 = "KP_30";
-    String ilias60 = "I_60";
-    String ilias90 = "I_90";
-    String online60 = "0_60";
-    String online90 = "0_90";
 
     public RetrofitConnect(String relativePPlanUrl) {
         this.relativePPlanUrl = relativePPlanUrl;
@@ -197,54 +185,50 @@ public class RetrofitConnect {
                          }
 
                          //Überprüfung von Klausur oder Mündliche Prüfung
-                         pruefplanEintrag.setPruefform("Mündliche Prüfung / Hausarbeit");
+                         pruefplanEintrag.setPruefform(ctx.getString(R.string.mundHaus_text));
 
-                         if(klausur.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Klausur 90 Minuten");
-
-                         }
-                         if(klausur120.equals(response.body().get(i).getPruefform())) {
-                             pruefplanEintrag.setPruefform("Klausur 120 Minuten");
+                         if(ctx.getString(R.string.klausur).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur_text));
 
                          }
-                         if(klausur60.equals(response.body().get(i).getPruefform())) {
-                             pruefplanEintrag.setPruefform("Klausur 60 Minuten");
+                         if(ctx.getString(R.string.klausur120).equals(response.body().get(i).getPruefform())) {
+                             pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur120_text));
 
                          }
-                         if(klausur180.equals(response.body().get(i).getPruefform())) {
-                             pruefplanEintrag.setPruefform("Klausur 180 Minuten");
+                         if(ctx.getString(R.string.klausur60).equals(response.body().get(i).getPruefform())) {
+                             pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur60_text));
 
                          }
-                        if(muendlich.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Mündliche Prüfung");
+                         if(ctx.getString(R.string.klausur180).equals(response.body().get(i).getPruefform())) {
+                             pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur180_text));
+
+                         }
+                        if(ctx.getString(R.string.projektarbeit).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.projektarbeit_text));
 
                         }
-                        if(projektarbeit.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Projektarbeit");
+                        if(ctx.getString(R.string.kombination15).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.kombination15_text));
 
                         }
-                        if(kombination15.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Kombinationsprüfung 15 Minuten");
+                        if(ctx.getString(R.string.kombination30).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.kombination30_text));
 
                         }
-                        if(kombination30.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Kombinationsprüfung 30 Minuten");
+                        if(ctx.getString(R.string.ilias60).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.ilias60_text));
 
                         }
-                        if(ilias60.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Ilias-Test 60 Minuten");
+                        if(ctx.getString(R.string.ilias90).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.ilias90_text));
 
                         }
-                        if(ilias90.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Ilias-Test 90 Minuten");
+                        if(ctx.getString(R.string.online60).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.online60_text));
 
                         }
-                        if(online60.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Onlineprüfung 60 Minuten");
-
-                        }
-                        if(online90.equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform("Onlineprüfung 90 Minuten");
+                        if(ctx.getString(R.string.online90).equals(response.body().get(i).getPruefform())) {
+                            pruefplanEintrag.setPruefform(ctx.getString(R.string.online90_text));
 
                         }
 

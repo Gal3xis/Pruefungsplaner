@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_rounded_corners"
                 android:minHeight="0dp"
-                android:text="Datum"
+                android:text="@string/date_ui"
                 android:textColor="#fffeee"
                 android:textSize="18sp" />
 
@@ -59,7 +59,6 @@
                     android:layout_width="44dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="false"
-                    android:contentDescription="TODO"
                     android:src="@android:drawable/ic_input_add"
                     tools:layout_editor_absoluteY="50dp"
                     tools:onClick="@android:drawable/btn_star" />
@@ -82,7 +81,6 @@
                         android:gravity="center_vertical"
                         android:paddingBottom="0dp"
                         android:scrollbars="horizontal|vertical"
-                        android:text="Example application"
                         android:textColor="#111111"
                         android:textSize="19sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -105,7 +103,6 @@
                         android:layout_toRightOf="@id/icon"
                         android:gravity="center_vertical"
                         android:paddingTop="0dp"
-                        android:text="Example application"
                         android:textSize="16sp"
                         android:visibility="gone"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -145,7 +142,6 @@
                 android:background="@drawable/button_rounded_corners"
                 android:baselineAligned="false"
                 android:padding="5dp"
-                android:text="Second screen \n Second screen \n  Second screen \n  Second screen \n  Second screen \n "
                 android:textColor="#eeeeee"
                 android:visibility="gone" />
 

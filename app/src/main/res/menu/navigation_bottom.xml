@@ -9,12 +9,12 @@
     <item
         android:id="@+id/navigation_medication"
         android:icon="@drawable/suche_nav"
-        android:title="@string/title_medication"/>
+        android:title="@string/title_search"/>
 
     <item
         android:id="@+id/navigation_diary"
         android:icon="@drawable/favoriten_nav"
-        android:title="@string/title_diary"/>
+        android:title="@string/title_exam"/>
 
     <item
         android:id="@+id/navigation_electiveModule"

@@ -48,8 +48,8 @@ public class WahlModulSucheFragment extends Fragment {
     AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
     List<PruefplanEintrag> ppeList = roomDaten.userDao().getAll2();
 
-    private String selectedStudiengangSpinner = "Alle Studiengänge";
-    private String modulName = "Alle";
+    private String selectedStudiengangSpinner;
+    private String modulName;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +59,9 @@ public class WahlModulSucheFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.wahlmodul, container, false);
+
+        selectedStudiengangSpinner = getContext().getString(R.string.all_cours);
+        modulName = getContext().getString(R.string.all);
 
         final Button searchBtn = v.findViewById(R.id.BtnOk);
         final AutoCompleteTextView editWahlModul = v.findViewById(R.id.wahlModulName);
@@ -78,7 +81,7 @@ public class WahlModulSucheFragment extends Fragment {
 
         // Studiengang auswahl
         List<String> studiengangArrayList = database.userDao().getStudiengangDistinct(selectedStudiengang);
-        studiengangArrayList.add(0,"Alle Studiengänge");
+        studiengangArrayList.add(0,getContext().getString(R.string.all_cours));
 
         // Design für den Spinner
         ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
@@ -141,25 +144,25 @@ public class WahlModulSucheFragment extends Fragment {
                 oder ein Studiengang ausgewählt sein
                  */
 
-                if((modulName.trim().length() > 3 && !modulName.equals("Alle"))
-                        || !selectedStudiengangSpinner.equals("Alle Studiengänge")) {
+                if((modulName.trim().length() > 3 && !modulName.equals(getContext().getString(R.string.all)))
+                        || !selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))) {
 
                     // Nur ein Modulnamen eingetragen
-                    if (selectedStudiengangSpinner.equals("Alle Studiengänge")
-                            && !modulName.equals("Alle")) {
+                    if (selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                            && !modulName.equals(getContext().getString(R.string.all))) {
 
                         ppeList = database.userDao().getModule("%" + modulName.trim() + "%");
 
                     // Alles eingegeben
-                    } else if (!selectedStudiengangSpinner.equals("Alle Studiengänge")
-                            && !modulName.equals("Alle")) {
+                    } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                            && !modulName.equals(getContext().getString(R.string.all))) {
 
                         ppeList = database.userDao().getModuleWithCourseAndModule("%" +
                                 modulName.trim() + "%", selectedStudiengangSpinner);
 
                     // Nur ein Studiengang ausgewählt
-                    } else if (!selectedStudiengangSpinner.equals("Alle Studiengänge")
-                            && modulName.equals("Alle")) {
+                    } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                            && modulName.equals(getContext().getString(R.string.all))) {
 
                         ppeList = database.userDao().getModuleWithCourse(selectedStudiengangSpinner);
 
@@ -177,8 +180,7 @@ public class WahlModulSucheFragment extends Fragment {
                     ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
                     ft.commit();
                 } else {
-                    Toast.makeText(v.getContext(),"Bitte wählen Sie einen Studiengang aus" +
-                            ", oder geben einen Modulnamen ein der länger als drei Zeichen ist.", Toast.LENGTH_LONG)
+                    Toast.makeText(v.getContext(),v.getContext().getString(R.string.elective_search), Toast.LENGTH_LONG)
                             .show();
                 }
 

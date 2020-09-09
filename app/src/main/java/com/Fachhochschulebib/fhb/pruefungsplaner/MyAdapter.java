@@ -12,7 +12,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -20,8 +19,6 @@ import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
-import android.util.Log;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +74,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         aktuelleslayout = mLayout;
     }
 
-    public void add(int position, String item, String studiengang) {
+    public void add(int position, String item) {
         uebergebeneModule.add(position, item);
         notifyItemInserted(position);
     }
@@ -239,7 +236,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
                         System.out.println(splitDatumUndUhrzeit[0]);
                         holder.txtthirdline
-                                .setText("Uhrzeit: "
+                                .setText(context.getString(R.string.time)
                                         + splitDatumUndUhrzeit[1].substring(0, 5).toString());
                         holder.button
                                 .setText(splitTagMonatJahr[2].toString() + "."
@@ -247,8 +244,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                         + splitTagMonatJahr[0].toString());
                         final String[] sa = prueferUSemster.get(position).split(" ");
                         holder.txtFooter
-                                .setText("Prüfer: " + sa[0] + ", " + sa[1]
-                                        + "  Semester: " + sa[2]);
+                                .setText(context.getString(R.string.prof) + sa[0] + ", " + sa[1]
+                                        + context.getString(R.string.semester) + sa[2]);
                         String name1 = uebergebeneModule.get(position);
                         String[] modulname1 = name1.split(" ");
                         studiengang = "";
@@ -276,7 +273,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                     }
                 }
-                Toast.makeText(v.getContext(), "Hinzugefügt", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), v.getContext().getString(R.string.add), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -296,15 +293,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //Darstellen der Werte in der Prüfitem Komponente
         String[] splitMonatJahrTage = splitTage[0].split("-");
         System.out.println(splitTage[0]);
-        holder.txtthirdline.setText("Uhrzeit: " + splitTage[1].substring(0, 5).toString());
+        holder.txtthirdline.setText(context.getString(R.string.time) + splitTage[1].substring(0, 5).toString());
         holder.button.setText(splitMonatJahrTage[2].toString() + "."
                 + splitMonatJahrTage[1].toString() + "."
                 + splitMonatJahrTage[0].toString());
         final String[] splitPrueferUndSemester = prueferUSemster.get(position).split(" ");
-        holder.txtFooter.setText("Prüfer: "
+        holder.txtFooter.setText(context.getString(R.string.prof)
                 + splitPrueferUndSemester[0] + ", "
                 + splitPrueferUndSemester[1]
-                + "  Semester: " + splitPrueferUndSemester[2]);
+                + context.getString(R.string.semester) + splitPrueferUndSemester[2]);
         //holder.txtthirdline.setText("Semester: " + Semester5.toString());
     }
 
@@ -324,17 +321,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             final String[] sa = prueferUSemster.get(position).split(" ");
 
             //String mit dem Inhalt für weitere Informationen
-            String s = ("Informationen zur Prüfung \n \n " +
-                    "Studiengang: " + modulname[modulname.length - 1]
-                    + "\n Modul: " + studiengang
-                    + "\n Erstprüfer: " + sa[0]
-                    + " \n Zweitprüfer: " + sa[1]
-                    + "\n Datum: " + aufteilung2[2].toString() + "."
+            String s = (context.getString(R.string.information) +
+                    context.getString(R.string.course) + modulname[modulname.length - 1]
+                    + context.getString(R.string.modul) + studiengang
+                    + context.getString(R.string.firstProf) + sa[0]
+                    + context.getString(R.string.secondProf) + sa[1]
+                    + context.getString(R.string.date) + aufteilung2[2].toString() + "."
                     + aufteilung2[1].toString() + "."
                     + aufteilung2[0].toString()
-                    + " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() + " Uhr"
-                    + " \n Raum: " + raum2
-                    + "\n Prüfungsform: " + pruefform.get(position) + "\n \n \n \n \n \n ");
+                    + context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
+                    context.getString(R.string.clock)
+                    + context.getString(R.string.room) + raum2
+                    + context.getString(R.string.form) + pruefform.get(position) + "\n \n \n \n \n \n ");
 
             return (s);
     }
@@ -384,7 +382,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
         event.put(CalendarContract.Events.TITLE, studiengang);
-        event.put(CalendarContract.Events.DESCRIPTION, "Fachhochschule Bielefeld");
+        event.put(CalendarContract.Events.DESCRIPTION, context.getString(R.string.fh_name));
         event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
         event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));
         event.put(CalendarContract.Events.ALL_DAY, 0);   // 0 for false, 1 for true

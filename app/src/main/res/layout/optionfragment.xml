@@ -24,7 +24,7 @@
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="   Serveradresse:"
+            android:text="@string/server"
             android:textColor="#eeeeee"
             android:textSize="12sp" />
 
@@ -59,7 +59,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_corners2"
-                android:text=" Favoriten löschen "
+                android:text="@string/settings_del_fav"
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
@@ -73,7 +73,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_corners2"
-                android:text=" Datenbank löschen "
+                android:text="@string/settings_del_db"
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
@@ -87,7 +87,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_corners2"
-                android:text="Prüfungen aktualisieren"
+                android:text="@string/settings_act_fav"
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
@@ -101,7 +101,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_corners2"
-                android:text="Kalender Einträge löschen "
+                android:text="@string/settings_del_cal"
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
@@ -115,7 +115,7 @@
                 android:layout_marginBottom="2dp"
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_corners2"
-                android:text="Kalender aktualisieren"
+                android:text="@string/settings_act_cal"
                 android:textAppearance="@style/spinnerDropDownItemStyle"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
@@ -130,7 +130,7 @@
                 android:layout_weight="1"
                 android:background="@drawable/button_rounded_corners2"
                 android:padding="10dp"
-                android:text="Synchronisation Kalender"
+                android:text="@string/settings_sync_cal"
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
 

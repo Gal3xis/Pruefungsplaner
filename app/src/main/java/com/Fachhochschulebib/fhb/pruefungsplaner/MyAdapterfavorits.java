@@ -57,7 +57,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         raumList = raumListParam;
     }
 
-    public void add(int position, String item, String studiengang) {
+    public void add(int position, String item) {
         moduleUndStudiengangsList.add(position, item);
         notifyItemInserted(position);
     }
@@ -109,7 +109,8 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                             remove(holder.getAdapterPosition());
 
                             // Start Merlin Gürtler
-                            Toast.makeText(v.getContext(), "Entfernt", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(v.getContext(),
+                                    v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
                             // Ende Merlin Gürtler
 
                         }
@@ -118,7 +119,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             }
         });
 
-        holder.txtFooter.setText("Prüfer: " + prueferUndSemesterList.get(position).toString());
+        holder.txtFooter.setText(context.getString(R.string.prof) + prueferUndSemesterList.get(position).toString());
         name = moduleUndStudiengangsList.get(position);
         String[] modulname = name.split(" ");
         studiengang = "";
@@ -158,17 +159,17 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         //darstellen der Informationen für das Prüfitem
         String[] splitDatumUndUhrzeit = datumsList.get(position).split(" ");
         String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
-        holder.txtthirdline.setText("Uhrzeit: "
+        holder.txtthirdline.setText(context.getString(R.string.clockTime2)
                                     + splitDatumUndUhrzeit[1].substring(0, 5).toString()
-                                    + " Datum: "
+                                    + context.getString(R.string.date2)
                                     + splitTagMonatJahr[2].toString() + "."
                                     + splitTagMonatJahr[1].toString() + "."
                                     + splitTagMonatJahr[0].toString());
         final String[] splitPrueferUndSemester
                 = prueferUndSemesterList.get(position).split(" ");
-        holder.txtFooter.setText("Prüfer: "
+        holder.txtFooter.setText(context.getString(R.string.prof)
                                 + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1]
-                                + "  Semester: " + splitPrueferUndSemester[2]);
+                                + context.getString(R.string.semester) + splitPrueferUndSemester[2]);
     }
 
 
@@ -195,16 +196,17 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
             final String[] sa = prueferUndSemesterList.get(position).split(" ");
             //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-            String s = ("Informationen zur Prüfung \n \n " +
-                        "Studiengang: " + modulname[modulname.length - 1] +
-                        "\n Modul: " + studiengang +
-                        "\n Erstprüfer: " + sa[0] +
-                        " \n Zweitprüfer: " + sa[1] +
-                        "\n Datum: " + aufteilung2[2].toString() + "."
+            String s = (context.getString(R.string.information) +
+                        context.getString(R.string.course) + modulname[modulname.length - 1] +
+                        context.getString(R.string.modul) + studiengang +
+                        context.getString(R.string.firstProf) + sa[0] +
+                        context.getString(R.string.secondProf) + sa[1] +
+                        context.getString(R.string.date) + aufteilung2[2].toString() + "."
                                      + aufteilung2[1].toString() + "."
                                      + aufteilung2[0].toString() +
-                        " \n Uhrzeit: " + aufteilung1[1].substring(0, 5).toString() +" Uhr" +
-                        " \n Raum: "+ raumList.get(position) +"\n "+ "\n \n \n \n \n \n ");
+                        context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
+                        context.getString(R.string.clock) +
+                        context.getString(R.string.form) + raumList.get(position) +"\n "+ "\n \n \n \n \n \n ");
 
             return (s);
         }catch(Exception e){

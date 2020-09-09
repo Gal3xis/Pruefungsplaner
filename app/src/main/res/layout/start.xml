@@ -12,7 +12,7 @@
         android:id="@+id/textView5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="PRÜFPLAN"
+        android:text="@string/plan"
         android:textColor="@android:color/background_light"
         android:textSize="30sp"
         app:fontFamily="monospace"
@@ -66,6 +66,6 @@
         app:layout_constraintStart_toStartOf="parent"
         android:textColor="#eeeeee"
         android:textSize="20sp"
-        android:text="Studiengang auswählen" />
+        android:text="@string/chose_course" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

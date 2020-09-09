@@ -47,7 +47,7 @@ public class sucheFragment extends Fragment {
     final List<Integer> rueckgabeDatumsList = new ArrayList();
     final List<Integer> rueckgabeSemModulList = new ArrayList();
     final List<String> sortedList = new ArrayList();
-    private String profName = "Alle";
+    private String profName;
     String pruefJahr, aktuellePruefphase,
             rueckgabeStudiengang, validation;
     List<PruefplanEintrag> ppeList = new ArrayList();
@@ -105,6 +105,9 @@ public class sucheFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Start Merlin Gürtler
+
+        profName = getContext().getString(R.string.all);
+
         // Nun aus Shared Preferences
         // Hole die Werte für die Validierung
         mSharedPreferencesValidation
@@ -154,7 +157,7 @@ public class sucheFragment extends Fragment {
 
 
             //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
-            spinnerModuleArrayList.add(0, "Klicken um Modul zu wählen");
+            spinnerModuleArrayList.add(0, getContext().getString(R.string.modul_search));
 
 
             //Adapter-Aufruf (LG: Sind hier alle drei Adapter notwendig?)
@@ -184,8 +187,8 @@ public class sucheFragment extends Fragment {
             acProf.setThreshold(1);//will start working from first character
             acProf.setAdapter(adapterProfAutoComplete);//setting the adapter data
             // into the AutoCompleteTextView
-            profList.add("Alle");
-            sgModulList.add("Alle");
+            profList.add(getContext().getString(R.string.all));
+            sgModulList.add(getContext().getString(R.string.all));
 
             //Initialisierung der Anfangswerte
             int i;
@@ -222,7 +225,7 @@ public class sucheFragment extends Fragment {
                     rueckgabeProfList.clear();
                     profName = acProf.getText().toString();
                     for (a = 0; a < ppeList.size(); a++) {
-                        if (acProf.getText().toString().equals("Alle")) {
+                        if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
                             rueckgabeProfList.add(a);
                         } else if (Pattern.matches("^.*("                       // Wildcard begin
                                         + acProf.getText().toString().trim().toLowerCase()    // Input Name
@@ -286,7 +289,7 @@ public class sucheFragment extends Fragment {
                     String a;
                     for (i = 0; i < (ppeList.size()); i++) {
                         if (sgModulList.get(sgModulList.size() - 1).toString()
-                                .equals("Klicken um Modul zu wählen")) {
+                                .equals(getContext().getString(R.string.modul_search))) {
                             rueckgabeSgModuleList.add(i);
                         } else {
                             if (sgModulList.get(sgModulList.size() - 1).toString()
@@ -311,8 +314,9 @@ public class sucheFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     // Start Merlin Gürtler
-                    if(profName.equals("Alle")
-                            &&  !sgModulList.get(sgModulList.size() - 1).toString().equals("Klicken um Modul zu wählen"))
+                    if(profName.equals(getContext().getString(R.string.all))
+                            &&  !sgModulList.get(sgModulList.size() - 1).toString().
+                            equals(getContext().getString(R.string.modul_search)))
                     {
                         sortedList.clear();
                         ppeList = roomDaten.userDao().getModule(sgModulList .get(sgModulList .size() - 1));
@@ -325,7 +329,7 @@ public class sucheFragment extends Fragment {
                             // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
                             database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                         }
-                    } else if(!profName.equals("Alle")) {
+                    } else if(!profName.equals(getContext().getString(R.string.all))) {
                         sortedList .clear();
                         ppeList = roomDaten.userDao().getModuleProf("%" +
                                 acProf.getText().toString().trim() + "%");
@@ -340,7 +344,7 @@ public class sucheFragment extends Fragment {
                         }
                     } else {
                         // Ende Merlin Gürtler
-                        if (acProf.getText().toString().equals("Alle")) {
+                        if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
                             int a;
                             rueckgabeProfList.clear();
                             for (a = 0; a < (ppeList.size()); a++) {

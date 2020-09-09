@@ -87,7 +87,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/nav_background"
                     android:gravity="center"
-                    android:text="Termine"
+                    android:text="@string/title_calender"
                     android:textAppearance="@style/TextAppearance.AppCompat"
                     android:textColor="#dddddd"
                     android:textSize="24sp" />
@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="26dp"
                 android:background="#50333333"
-                android:text="Kalender  öffnen"
+                android:text="@string/open_calendar"
                 android:textColor="#bbbbbb" />
 
             <CalendarView
@@ -126,7 +126,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_color_border"
-                    android:text="Termine"
+                    android:text="@string/title_calender"
                     android:textSize="10sp" />
 
                 <Button
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_color_border"
-                    android:text="Prüfungen"
+                    android:text="@string/title_exam"
                     android:textSize="10sp" />
 
                 <Button
@@ -144,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_color_border"
-                    android:text="Suche"
+                    android:text="@string/title_search"
                     android:textSize="10sp" />
 
                 <Button
@@ -153,7 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@drawable/rounded_color_border"
-                    android:text="Optionen"
+                    android:text="@string/title_settings"
                     android:textSize="10sp" />
             </LinearLayout>
 

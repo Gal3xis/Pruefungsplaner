@@ -137,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Defininition des Arrays jahreszeit
         List<String> jahresZeit = new ArrayList<String>();
-        jahresZeit.add("Sommer");
-        jahresZeit.add("Winter");
+        jahresZeit.add(context.getString(R.string.sommer));
+        jahresZeit.add(context.getString(R.string.winter));
 
         //Kalender:: aktuelles Jahr --> Bestimmung der Prüfphase (WiSe, SoSe)
         Calendar calendar = Calendar.getInstance();
@@ -147,21 +147,21 @@ public class MainActivity extends AppCompatActivity {
 
         if (kalenderMonat  <= 4)
         {
-            aktuellePruefphase = "WiSe";
+            aktuellePruefphase = context.getString(R.string.winter_short);
             int thisYear = calendar.get(Calendar.YEAR);
             pruefJahr = String.valueOf(thisYear);
         }
 
         if (kalenderMonat  > 4)
         {
-            aktuellePruefphase = "SoSe";
+            aktuellePruefphase = context.getString(R.string.sommer_short);
             int thisYear = calendar.get(Calendar.YEAR);
             pruefJahr = String.valueOf(thisYear);
         }
 
         if (kalenderMonat >= 9) {
 
-            aktuellePruefphase = "WiSe";
+            aktuellePruefphase = context.getString(R.string.winter_short);
             int thisYear = calendar.get(Calendar.YEAR);
             pruefJahr = String.valueOf(thisYear +1);
         }
@@ -228,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void KeineVerbindung(){
         new Thread(() -> Toast.makeText(getApplicationContext(),
-                "Keine Verbindung zum Server möglich",
+                getApplicationContext().getString(R.string.noConnection),
                 Toast.LENGTH_SHORT).show());
     }
 
@@ -460,7 +460,6 @@ public class MainActivity extends AppCompatActivity {
         // DONE (08/2020) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
         // Änderung Merlin Gürtler
         // Prüfe zusätzlich ob sich die PruefPeriode geändert hat, falls ja erneuere die Datenbank
-        System.out.println("TEST " + pruefPeriode + " " + datenbank.userDao().getTermin());
         if(update
                 && pruefPeriode.equals(datenbank.userDao().getTermin())
                 && datenbank.userDao().getTermin() != null) {
@@ -490,7 +489,7 @@ public class MainActivity extends AppCompatActivity {
                 R.style.ProgressStyle);
 
         // Erstelle den Fortschrittsbalken
-        progressBar.setMessage("Prüfungsdaten werden geladen");
+        progressBar.setMessage(getApplicationContext().getString(R.string.load));
         progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressBar.setCancelable(false);
         // Zeige den Fortschrittsbalken
@@ -608,10 +607,10 @@ public class MainActivity extends AppCompatActivity {
                     int month2 = calendar.get(Calendar.MONTH) + 1;
                     int day2 = calendar.get(Calendar.DAY_OF_MONTH);
                     //String Prüfperiode zum Anzeigen
-                    String pruefPeriodeDatum = "Aktuelle Prüfungsphase: \n "
+                    String pruefPeriodeDatum = getApplicationContext().getString(R.string.current)
                             +String.valueOf(day)
                             +"."+ String.valueOf(month)
-                            +"."+ String.valueOf(year) +" bis "
+                            +"."+ String.valueOf(year) +getApplicationContext().getString(R.string.bis)
                             + String.valueOf(day2)
                             +"."+ String.valueOf(month2)
                             +"."+ String.valueOf(year2) ;  // number of days to add;
@@ -673,7 +672,7 @@ public class MainActivity extends AppCompatActivity {
         if(msg.arg1==1)
         {
             Toast.makeText(getApplicationContext(),
-                    "Keine Verbindung zum Server möglich",
+                    getApplicationContext().getString(R.string.noConnection),
                     Toast.LENGTH_SHORT).show();
         }
         return false;
