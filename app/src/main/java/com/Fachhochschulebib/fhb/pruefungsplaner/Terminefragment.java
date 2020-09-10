@@ -63,12 +63,14 @@ public class Terminefragment extends Fragment {
     MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayout;
 
-    AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
+    AppDatabase datenbank;
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
     public void onCreate(Bundle savedInstanceState) {
 
         // Start Merlin Gürtler
+
+        datenbank = AppDatabase.getAppDatabase(this.getContext());
         // Nun aus Shared Preferences
 
         mSharedPreferencesValidation
@@ -94,7 +96,7 @@ public class Terminefragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             List<PruefplanEintrag> ppeList
-                    = com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.this.datenbank.userDao().getAll(validation);
+                    = Terminefragment.this.datenbank.userDao().getAll(validation);
             if(ppeList.size() < 1) {
                 for (int c = 0; c < 1000; c++) {
                     try {
