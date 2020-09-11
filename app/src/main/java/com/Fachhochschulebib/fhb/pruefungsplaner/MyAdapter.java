@@ -223,7 +223,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 }
 
                 //Hinzufügen der Prüfungen zum Google Kalender
-                com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar checkeintrag = new CheckGoogleCalendar();
+                CheckGoogleCalendar checkeintrag = new CheckGoogleCalendar();
                 checkeintrag.setCtx(context);
 
                 //Abfrage des geklickten Items

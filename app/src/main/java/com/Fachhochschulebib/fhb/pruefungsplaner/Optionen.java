@@ -188,7 +188,7 @@ public class Optionen extends Fragment {
                     List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
 
 
-                    com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar googlecal = new com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar();
+                    CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
                     googlecal.setCtx(getContext());
 
                     for(PruefplanEintrag eintrag: ppeList)
@@ -386,7 +386,7 @@ public class Optionen extends Fragment {
                 //Initialisierung: room database
                 AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                 //retrofit auruf
-                com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                 retrofit.RetrofitWebAccess(
                                 getContext(),
                                 roomdaten,
@@ -433,7 +433,7 @@ public class Optionen extends Fragment {
 
     //Google Kalender einträge löschen
     public void kalenderLöschen(){
-        com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar cal = new com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar();
+        CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.clearCal();
 
@@ -441,7 +441,7 @@ public class Optionen extends Fragment {
 
     //Google Kalender aktualisieren
     public void kalenderUpdate(){
-        com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar cal = new CheckGoogleCalendar();
+        CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.updateCal();
     }

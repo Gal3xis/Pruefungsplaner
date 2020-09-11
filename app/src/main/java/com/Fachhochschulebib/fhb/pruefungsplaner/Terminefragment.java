@@ -74,7 +74,7 @@ public class Terminefragment extends Fragment {
         // Nun aus Shared Preferences
 
         mSharedPreferencesValidation
-                = com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.
+                = Terminefragment.
                 this.getContext().getSharedPreferences("validation", 0);
 
         pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");

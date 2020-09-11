@@ -92,10 +92,10 @@ public class Favoritenfragment extends Fragment {
 
         // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-        mAdapter = new com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
+        mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
 
         recyclerView.addOnItemTouchListener(
-                new com.Fachhochschulebib.fhb.pruefungsplaner.RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick( final View view, final  int position) {
 

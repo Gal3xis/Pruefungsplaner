@@ -112,29 +112,6 @@ public class MainActivity extends AppCompatActivity {
                 Manifest.permission.READ_CALENDAR,
                 Manifest.permission.WRITE_CALENDAR);
 
-        /* OK Button, hier wird die neue activity aufgerufen -->
-            aufruf von dem layout "hauptfenster" und der Klasse Tabelle
-         */
-        /*
-        Button btngo = (Button) findViewById(R.id.btnGO);
-        btngo.setOnClickListener(v -> {
-            // Start Merlin Gürtler
-            AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
-            // Check if the Database is not empty
-            if(datenbank.userDao().getAll2().size() > 0) {
-                retroThread(true);
-                // Ende Merlin Gürtler
-            } else {
-                if (spinnerArray.size() > 1) {
-                    //auslagern von Retrofit in einen Thread
-                    retroThread(false);
-                }
-            }
-            Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-            startActivity(hauptfenster);
-        });
-        */
-
         //Defininition des Arrays jahreszeit
         List<String> jahresZeit = new ArrayList<String>();
         jahresZeit.add(context.getString(R.string.sommer));
@@ -168,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Start Merlin Gürtler
         // Schreiben der Pruefphase in eine shared preference
-
         mSharedPreferencesPruefPhase
                 = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
         SharedPreferences.Editor mEditorPruefPhaseUndJahr = mSharedPreferencesPruefPhase.edit();
@@ -235,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Übernahme der Studiengangsnamen in die Spinner-Komponente.
     public void SgNamesToSpinner(){
-        com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.this.runOnUiThread(new Runnable() {
+        MainActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 /* Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert",
                                     Toast.LENGTH_SHORT).show();
@@ -324,10 +300,8 @@ public class MainActivity extends AppCompatActivity {
                 StringBuilder result = new StringBuilder();
                 final URL url = new URL(address);
                 final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-                //Log.d("Output studiengang","test");
                 urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
                 final long startTime = System.currentTimeMillis();
-                //Log.d("Output studiengang","test");
                 urlConn.connect();
                 final long endTime = System.currentTimeMillis();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -337,7 +311,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Parsen von den  erhaltene Werte
-                //Log.d("Output studiengang","test2");
                 InputStream in = new BufferedInputStream(urlConn.getInputStream());
                 BufferedReader reader = new BufferedReader(new InputStreamReader(in));
                 String line;
@@ -346,36 +319,28 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Erstellen von JSON
-                //Log.d("Output studiengang","test3");
-                //Log.d("Output studiengang",String.valueOf(result.toString()));
                 JSONObject jsonObj = null;
                 try {
                     jsonObj = XML.toJSONObject(String.valueOf(result));
-                    //Log.d("Output studiengang",jsonObj.toString());
 
                 } catch (JSONException e) {
-                    // Log.e("JSON exception", e.getMessage());
                     e.printStackTrace();
                 }
 
                 Iterator x = jsonObj.keys();
                 JSONArray jsonArray = new JSONArray();
-                //Log.d("Output studiengang","test5");
+
                 while (x.hasNext()){
                     String key = (String) x.next();
                     jsonArray.put(jsonObj.get(key));
                 }
-
-                //Log.d("Output studiengang","test 6");
 
                 //Werte von JSONARRay in JSONObject konvertieren
                 JSONArray erhalteneStudiengaenge = new JSONArray();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    //  Log.d("Output studiengang",object.get("studiengang").toString());
                     erhalteneStudiengaenge.put(object.get("studiengang"));
-                    // Log.d("Output studiengang",String.valueOf(object2.length()));
                 }
 
                 String konvertiertZuString = erhalteneStudiengaenge.toString();
@@ -480,6 +445,18 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    // Start Merlin Gürtler
+    // Funktion um die Führende 0 hinzuzufügen
+    public String formatDate (String dateToFormat) {
+        if(dateToFormat.length() == 1) {
+            dateToFormat = "0" + dateToFormat;
+        }
+        return dateToFormat;
+    }
+
+
+    // Ende Merlin Gürtler
+
     //Methode zum Abfragen der Aktuellen Prüfperiode
     public boolean pingPruefPeriode() {
 
@@ -517,8 +494,6 @@ public class MainActivity extends AppCompatActivity {
                      */
                     final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                     urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
-                    //long startTime = System.currentTimeMillis();
-                    //Log.d("Output studiengang","test");
 
                     try {
                         urlConn.connect();
@@ -529,7 +504,6 @@ public class MainActivity extends AppCompatActivity {
                         handler.sendMessage(msg);
                     }
 
-                    // Log.d("Output studiengang","test2");
                     //Variablen zum lesen der erhaltenen werte
                     InputStream in = new BufferedInputStream(urlConn.getInputStream());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in));
@@ -539,44 +513,71 @@ public class MainActivity extends AppCompatActivity {
                         result.append(line);
                     }
 
-                    // Log.d("Output pruefperiode","test3");
-                    //Log.d("Output pruefperiode",String.valueOf(result.toString()));
 
                     JSONObject jsonObj = null;
                     try {
                         jsonObj = XML.toJSONObject(String.valueOf(result));
-                        //Log.d("Output pruefperiode",jsonObj.toString());
                     } catch (JSONException e) {
-                        //Log.e("JSON exception", e.getMessage());
                         e.printStackTrace();
                     }
 
                     //hinzufügen der erhaltenen werte JSONObject werte zum JSONArray
                     Iterator x = jsonObj.keys();
                     JSONArray jsonArray = new JSONArray();
-                    // Log.d("Output pruefperiode","test5");
                     while (x.hasNext()){
                         String key = (String) x.next();
                         jsonArray.put(jsonObj.get(key));
                     }
 
-                    //Log.d("Output pruefperiode","test 6");
                     JSONArray pruefperiodeArray = new JSONArray();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
-                        // Log.d("Output pruefperiode",object.get("pruefperioden").toString());
                         pruefperiodeArray.put(object.get("pruefperioden"));
-                        //Log.d("Output pruefperiode",String.valueOf(object2.length()));
                     }
                     String arrayZuString = pruefperiodeArray.toString();
                     String erstesUndletztesZeichenentfernen
                             = arrayZuString.substring(1,arrayZuString.length()-1);
                     JSONArray mainObject2 = new JSONArray(erstesUndletztesZeichenentfernen);
-                    JSONObject pruefperiodeTermin
-                            = mainObject2.getJSONObject(mainObject2.length()-1);
+
+                    //DONE (09/2020 LG) Aktuellen Prüftermin aus JSON-String herausfiltern!
+                    //Heutiges Datum als Vergleichsdatum ermitteln und den Formatierer festlegen.
+                    GregorianCalendar now = new GregorianCalendar();
+                    Date aktDatum = now.getTime();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                    JSONObject aktPruefperiodenTermin = null;
+                    String datum;
+                    Date ppDatum;
+                    Date lastDayPp;
+                    int ppWochen;
+
+                    //Durch-Iterieren durch alle Prüfperioden-Objekte des JSON-Ergebnisses
+                    for (int i=0;i<mainObject2.length();i++) {
+                        aktPruefperiodenTermin = mainObject2.getJSONObject(i);
+                        datum = aktPruefperiodenTermin.get("startDatum").toString();
+                        //Aus dem String das Datum herauslösen
+                        datum = datum.substring(0,10);
+                        //und in ein Date-Objekt umwandeln
+                        ppDatum = formatter.parse(datum);
+
+                        // Erhalte die Anzahl der Wochen
+                        ppWochen = Integer.parseInt(aktPruefperiodenTermin.get("PPWochen").toString());
+
+                        Calendar c = Calendar.getInstance();
+                        c.setTime(ppDatum);
+                        c.add(Calendar.DATE, 7 * ppWochen);  // Anzahl der Tage Klausurenphase
+                        lastDayPp = formatter.parse(formatter.format(c.getTime()));
+
+                        //und mit dem heutigen Datum vergleichen.
+                        //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
+                        //liegt ist die aktuelle Prüfperiode!
+                        if(aktDatum.before(lastDayPp)) break;
+                    }
+
+                    ppWochen = Integer.parseInt(aktPruefperiodenTermin.get("PPWochen").toString());
 
                     //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
-                    aktuellerTermin =  pruefperiodeTermin.get("PPNum").toString();
+                    aktuellerTermin =  aktPruefperiodenTermin.get("PPNum").toString();
                     //-------------------------------------------------------------------
                     //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
                     SharedPreferences mSharedPreferencesPruefTermin
@@ -589,7 +590,7 @@ public class MainActivity extends AppCompatActivity {
                     mEditorTermin.apply();  //Ausführen der Schreiboperation!
                     //-------------------------------------------------------------------
 
-                    String pruefPeriode = pruefperiodeTermin.get("startDatum").toString();
+                    String pruefPeriode = aktPruefperiodenTermin.get("startDatum").toString();
                     String[] arrayPruefPeriode=  pruefPeriode.split("T");
                     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                     Date inputDate = fmt.parse(arrayPruefPeriode[0]);
@@ -601,20 +602,20 @@ public class MainActivity extends AppCompatActivity {
                     //Add one to month {0 - 11}
                     int month = calendar.get(Calendar.MONTH) + 1;
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    calendar.add(Calendar.DATE, 14);
+                    calendar.add(Calendar.DATE, 7 * ppWochen);
                     int year2 = calendar.get(Calendar.YEAR);
                     //Add one to month {0 - 11}
                     int month2 = calendar.get(Calendar.MONTH) + 1;
                     int day2 = calendar.get(Calendar.DAY_OF_MONTH);
+
                     //String Prüfperiode zum Anzeigen
                     String pruefPeriodeDatum = getApplicationContext().getString(R.string.current)
-                            +String.valueOf(day)
-                            +"."+ String.valueOf(month)
-                            +"."+ String.valueOf(year) +getApplicationContext().getString(R.string.bis)
-                            + String.valueOf(day2)
-                            +"."+ String.valueOf(month2)
-                            +"."+ String.valueOf(year2) ;  // number of days to add;
-                    //Log.d("Output pruefperiode",pruefPeriodeDatum);
+                            + formatDate(String.valueOf(day))
+                            +"."+ formatDate(String.valueOf(month))
+                            +"."+ year +getApplicationContext().getString(R.string.bis)
+                            + formatDate(String.valueOf(day2))
+                            +"."+ formatDate(String.valueOf(month2))
+                            +"."+ year2;  // number of days to add;
 
                     //Prüfperiode für die Offline-Verwendung speichern
                     mEditor = mSharedPreferencesPPeriode.edit();

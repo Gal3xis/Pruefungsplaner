@@ -63,7 +63,7 @@ public class TerminefragmentSuche extends Fragment {
     // private int position2 = 0;
     private String year2;
     private RecyclerView.LayoutManager mLayout;
-    com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapter mAdapter;
+    MyAdapter mAdapter;
     List<Integer> WerteZumAnzeigenList = new ArrayList<>();
 
 
@@ -161,7 +161,7 @@ public class TerminefragmentSuche extends Fragment {
                             }
                             // define an adapter
                             //Werte an den Adapter übergeben
-                            mAdapter = new com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapter(
+                            mAdapter = new MyAdapter(
                                     modulUndStudiengangsList,
                                     prueferUndSemesterList,
                                     datumsList,
@@ -180,7 +180,7 @@ public class TerminefragmentSuche extends Fragment {
         });
 
         recyclerView.addOnItemTouchListener(
-                new com.Fachhochschulebib.fhb.pruefungsplaner.RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
                         final TextView txtSecondScreen

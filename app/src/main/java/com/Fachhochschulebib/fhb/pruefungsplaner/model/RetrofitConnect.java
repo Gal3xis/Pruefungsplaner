@@ -80,11 +80,11 @@ public class RetrofitConnect {
         builder.addConverterFactory(GsonConverterFactory.create());
         Retrofit retrofit = builder.build();
 
-        final com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface request = retrofit.create(com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface.class);
-        Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call = request.getJSON();
-        call.enqueue(new Callback<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>>() {
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<List<JsonResponse>> call = request.getJSON();
+        call.enqueue(new Callback<List<JsonResponse>>() {
             @Override
-            public void onResponse(Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call, Response<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> response) {
+            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
 
@@ -171,7 +171,7 @@ public class RetrofitConnect {
                          //Log.d("Test4", String.valueOf(userdaten2.size()));
 
                          try {
-                             for (int b = 0; b < com.Fachhochschulebib.fhb.pruefungsplaner.Optionen.idList.size(); b++) {
+                             for (int b = 0; b < Optionen.idList.size(); b++) {
                                  if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
                                      //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
                                      pruefplanEintrag.setFavorit(true);
@@ -248,7 +248,7 @@ public class RetrofitConnect {
             }
 
             @Override
-            public void onFailure(Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call, Throwable t) {
+            public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
                 Log.d("Error",t.getMessage());
 
             }
@@ -289,11 +289,11 @@ public class RetrofitConnect {
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        final com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call = request.getJSON();
-        call.enqueue(new Callback<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>>() {
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<List<JsonResponse>> call = request.getJSON();
+        call.enqueue(new Callback<List<JsonResponse>>() {
             @Override
-            public void onResponse(Call<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> call, Response<List<com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse>> response) {
+            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful() && response.body().size() > 0) {
                     for(int i = 0; response.body().size() > i; i++) {
