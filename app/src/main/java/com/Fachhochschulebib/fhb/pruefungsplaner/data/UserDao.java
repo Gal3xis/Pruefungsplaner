@@ -47,6 +47,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Favorit = :favorite")
     List<PruefplanEintrag> getFavorites(boolean favorite);
+
+    @Query("SELECT * FROM PruefplanEintrag WHERE ID = :id")
+    PruefplanEintrag getPruefung(String id);
     // Ende Merlin Gürtler
 
 

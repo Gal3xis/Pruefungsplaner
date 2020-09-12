@@ -194,7 +194,6 @@ public class CheckGoogleCalendar {
     //Google Kalender Checkverbindung Methode
     public void updateCal()
     {
-        // Hier Weitermachen
         //Creating editor to store uebergebeneModule to shared preferences
         SharedPreferences Googleeintrag
                 = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
@@ -281,6 +280,72 @@ public class CheckGoogleCalendar {
         }
     }
 
+    // Start Merlin Gürtler
+    //Methode zum entfernen eines Kalendereintrages
+    public void deleteEntry(int pruefid) {
+
+        //Variablen
+        pruefID = pruefid;
+
+        //Creating editor to store uebergebeneModule to shared preferences
+        SharedPreferences mSharedPreferences
+                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+        String stringids = mSharedPreferences.getString("IDs", "");
+
+        // step one : converting comma separate String to array of String
+        String[] elementList = stringids.split("-");
+
+        // step two : convert String array to list of String
+        List<String> fixedLenghtList = Arrays.asList(elementList);
+
+        // step three : copy fixed list to an ArrayList
+        ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+
+        //step fifth : change Stringarray to String type
+        Log.i("check_Googlekalender", String.valueOf(listOfString.size()));
+        //String idsTOstring = null;
+        for (int i = 1; i < listOfString.size(); i++) {
+            // step six : split Prüfid und GoogleID
+            String[] element = listOfString.get(i).split(",");
+            if (element[0].equals(String.valueOf(pruefID))) {
+                //output tag
+                String DEBUG_TAG = "MyActivity";
+
+                //getContentResolver wird benötigt zum zugriff auf die Kalender API
+                ContentResolver cr = context.getContentResolver();
+                Uri deleteUri = null;
+
+                long eventID = Long.valueOf(element[1]);
+
+                Uri baseUri;
+                if (Build.VERSION.SDK_INT >= 8) {
+                    baseUri = Uri.parse("content://com.android.calendar/events");
+                } else {
+                    baseUri = Uri.parse("content://calendar/events");
+                }
+
+                //wenn prüfid vorhanden lösche diese
+                Log.i("check_Checkbool", "Pid stimmt überein");
+                deleteUri = ContentUris.withAppendedId(baseUri, eventID);
+                int rows = cr.delete(deleteUri, null, null);
+                Log.i(DEBUG_TAG, "Rows deleted: 240 " + rows);
+
+            }
+        }
+
+    }
+
+    public PruefplanEintrag getFavoritePruefung(String id){
+        AppDatabase database2 = AppDatabase.getAppDatabase(context);
+        // Erhalte die Prüfung die geupdated werden soll
+        PruefplanEintrag pruefung = database2.userDao().getPruefung(id);
+        return(pruefung);
+    }
+
+
+    // Ende Merlin Gürtler
+
     public List<PruefplanEintrag> databaseConnect(){
         AppDatabase database2 = AppDatabase.getAppDatabase(context);
         // Änderun Merlin Gürtler
@@ -289,28 +354,86 @@ public class CheckGoogleCalendar {
      return(ppeList);
     }
 
-    @SuppressLint("InlinedApi")
-    public int UpdateCalendarEntry(int entryID) {
-        int iNumRowsUpdated = 0;
+    public void updateCalendarEntry(int pruefid) {
+        //Variablen
+        pruefID = pruefid;
 
-        Uri eventUri;
-        if (Build.VERSION.SDK_INT <= 7) {
-            // the old way
+        //Creating editor to store uebergebeneModule to shared preferences
+        SharedPreferences mSharedPreferences
+                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
+        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
+        String stringids = mSharedPreferences.getString("IDs", "");
 
-            eventUri = Uri.parse("content://calendar/events");
-        } else {
-            // the new way
-            eventUri = Uri.parse("content://com.android.calendar/events");
+        // step one : converting comma separate String to array of String
+        String[] elementList = stringids.split("-");
+
+        // step two : convert String array to list of String
+        List<String> fixedLenghtList = Arrays.asList(elementList);
+
+        // step three : copy fixed list to an ArrayList
+        ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+
+        //step fifth : change Stringarray to String type
+        Log.i("check_Googlekalender", String.valueOf(listOfString.size()));
+        //String idsTOstring = null;
+        for (int i = 1; i < listOfString.size(); i++) {
+            // step six : split Prüfid und GoogleID
+            String[] element = listOfString.get(i).split(",");
+            if (element[0].equals(String.valueOf(pruefID))) {
+                //output tag
+                String DEBUG_TAG = "MyActivity";
+
+                long eventID = Long.valueOf(element[1]);
+
+                Uri baseUri;
+                if (Build.VERSION.SDK_INT >= 8) {
+                    baseUri = Uri.parse("content://com.android.calendar/events");
+                } else {
+                    baseUri = Uri.parse("content://calendar/events");
+                }
+
+                ContentValues values = new ContentValues();
+
+                PruefplanEintrag favoritePruefung = getFavoritePruefung(String.valueOf(pruefID));
+
+                //Datum und Uhrzeit aufteilen.
+                // Sieht so aus wie 22-01-2019 10:00 Uhr
+                // es wird nach dem Leerzeichen getrennt
+                //trennen von datum und Uhrzeit
+                String[] s = favoritePruefung.getDatum().split(" ");
+                //print Datum
+                System.out.println(s[0]);
+                //aufteilen von tag, monat und jahr.
+                //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
+                String[] ss = s[0].split("-");
+                //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
+                int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
+                int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
+
+                // The new title for the updatet event
+                values.put(CalendarContract.Events.TITLE, favoritePruefung.getModul());
+                values.put(CalendarContract.Events.EVENT_LOCATION,
+                        "Fachhochschule Bielefeld");
+                values.put(CalendarContract.Events.DESCRIPTION, "");
+                //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
+                GregorianCalendar calDate = new GregorianCalendar(
+                        Integer.valueOf(ss[0]),
+                        Integer.valueOf(ss[1]) - 1,
+                        Integer.valueOf(ss[2]),
+                        uhrzeit1, uhrzeit2);
+                values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
+                values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
+                values.put( CalendarContract.Events.DTEND,
+                        calDate.getTimeInMillis() + (90 * 60000));
+
+                //wenn prüfid vorhanden update das event
+                Log.i("check_Checkbool", "Pid stimmt überein");
+                Uri updateUri = ContentUris.withAppendedId(baseUri, eventID);
+                int rows = context.getContentResolver().update(updateUri, values, null,
+                        null);
+                Log.i(DEBUG_TAG, "Rows updated: 240 " + rows);
+
+            }
         }
-
-        ContentValues values = new ContentValues();
-        values.put(CalendarContract.Events.TITLE, "test");
-        values.put(CalendarContract.Events.EVENT_LOCATION, "Chennai");
-
-        Uri updateUri = ContentUris.withAppendedId(eventUri, entryID);
-        iNumRowsUpdated = context.getContentResolver().update(updateUri, values, null,
-                null);
-
-        return iNumRowsUpdated;
     }
 }

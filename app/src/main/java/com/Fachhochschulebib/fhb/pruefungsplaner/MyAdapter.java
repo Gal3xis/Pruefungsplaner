@@ -288,7 +288,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
                 }
 
-                // TODO entferne aus Kalender
+                //Entferne den Eintrag aus dem Calendar falls vorhanden
+                CheckGoogleCalendar cal = new CheckGoogleCalendar();
+                cal.setCtx(v.getContext());
+                if (!cal.checkCal(Integer.valueOf(pruefplanid.get(position)))) {
+                    cal.deleteEntry(Integer.valueOf(pruefplanid.get(position)));
+                }
+
                 holder.ivicon.clearColorFilter();
                 Toast.makeText(v.getContext(), v.getContext().getString(R.string.delete_favorite), Toast.LENGTH_SHORT).show();
                 // Ende Merlin Gürtler

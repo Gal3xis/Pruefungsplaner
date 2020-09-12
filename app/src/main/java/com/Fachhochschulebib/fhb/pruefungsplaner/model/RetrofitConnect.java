@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
 import com.Fachhochschulebib.fhb.pruefungsplaner.R;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
@@ -313,6 +314,13 @@ public class RetrofitConnect {
                             datumLetzePruefungFormatiert = targetFormat.format(datumLetztePrüfung);
                             roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
                                     response.body().get(i).getID());
+
+                            //Update den Eintrag aus dem Calendar falls vorhanden
+                            CheckGoogleCalendar cal = new CheckGoogleCalendar();
+                            cal.setCtx(ctx);
+                            if (!cal.checkCal(Integer.valueOf(response.body().get(i).getID()))) {
+                                cal.updateCalendarEntry(Integer.valueOf(response.body().get(i).getID()));
+                            }
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
