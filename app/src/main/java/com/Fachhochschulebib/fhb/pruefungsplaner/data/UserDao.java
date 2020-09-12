@@ -44,6 +44,9 @@ public interface UserDao {
 
     @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
     String getTermin();
+
+    @Query("SELECT * FROM PruefplanEintrag WHERE Favorit = :favorite")
+    List<PruefplanEintrag> getFavorites(boolean favorite);
     // Ende Merlin Gürtler
 
 

@@ -40,7 +40,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     private List<String> ppIdList;
     private List<String> datumsList;
     private List<String> raumList;
-    private String studiengang;
+    private String modulname;
     private String name;
     private Context context;
 
@@ -98,22 +98,20 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             @Override
             public void onClick(View v) {
                 AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
-                List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
                 // second parameter is necessary ie.,
                 // Value to return if this preference does not exist.
                 for (PruefplanEintrag eintrag: ppeList){
-                    if(eintrag.getFavorit()){
-                        if(eintrag.getID().equals(ppIdList.get(position))){
-                            datenbank.userDao()
-                                     .update(false,Integer.valueOf(ppIdList.get(position)));
-                            remove(holder.getAdapterPosition());
+                    if(eintrag.getID().equals(ppIdList.get(position))){
+                        datenbank.userDao()
+                                 .update(false,Integer.valueOf(ppIdList.get(position)));
+                        remove(holder.getAdapterPosition());
 
-                            // Start Merlin Gürtler
-                            Toast.makeText(v.getContext(),
-                                    v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
-                            // Ende Merlin Gürtler
+                        // Start Merlin Gürtler
+                        Toast.makeText(v.getContext(),
+                                v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
+                        // Ende Merlin Gürtler
 
-                        }
                     }
                 }
             }
@@ -121,11 +119,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
         holder.txtFooter.setText(context.getString(R.string.prof) + prueferUndSemesterList.get(position).toString());
         name = moduleUndStudiengangsList.get(position);
-        String[] modulname = name.split(" ");
-        studiengang = "";
+        String[] studiengang = name.split(" ");
+        modulname = "";
         int b;
-        for (b = 0; b < (modulname.length - 1); b++) {
-            studiengang = (studiengang + " " + modulname[b]);
+        for (b = 0; b < (studiengang.length - 1); b++) {
+            modulname = (modulname + " " + studiengang[b]);
 
         }
 
@@ -138,7 +136,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
         String colorElectiveModule = "#7FFFD4";
 
-        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(modulname[modulname.length - 1]))
+        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(studiengang[studiengang.length - 1]))
         {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(
@@ -183,11 +181,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
         try {
             String name = moduleUndStudiengangsList.get(position);
-            String[] modulname = name.split(" ");
-            studiengang = "";
+            String[] studiengang = name.split(" ");
+            modulname = "";
             int b;
-            for (b = 0; b < (modulname.length - 1); b++) {
-                studiengang = (studiengang + " " + modulname[b]);
+            for (b = 0; b < (studiengang.length - 1); b++) {
+                modulname = (modulname + " " + studiengang[b]);
 
             }
 
@@ -197,8 +195,8 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             final String[] sa = prueferUndSemesterList.get(position).split(" ");
             //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
             String s = (context.getString(R.string.information) +
-                        context.getString(R.string.course) + modulname[modulname.length - 1] +
-                        context.getString(R.string.modul) + studiengang +
+                        context.getString(R.string.course) + studiengang[studiengang.length - 1] +
+                        context.getString(R.string.modul) + modulname +
                         context.getString(R.string.firstProf) + sa[0] +
                         context.getString(R.string.secondProf) + sa[1] +
                         context.getString(R.string.date) + aufteilung2[2].toString() + "."

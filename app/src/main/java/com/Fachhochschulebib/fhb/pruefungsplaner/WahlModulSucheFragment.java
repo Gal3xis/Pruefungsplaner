@@ -46,7 +46,7 @@ public class WahlModulSucheFragment extends Fragment {
 
     private AppDatabase database = AppDatabase.getAppDatabase(getContext());
     AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
-    List<PruefplanEintrag> ppeList = roomDaten.userDao().getAll2();
+    List<PruefplanEintrag> ppeList;
 
     private String selectedStudiengangSpinner;
     private String modulName;
@@ -137,8 +137,6 @@ public class WahlModulSucheFragment extends Fragment {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ppeList.clear();
-
                 /*
                 Um nicht zu viele Module zu laden muss der Name mindestens drei Zeichen lang sein,
                 oder ein Studiengang ausgewählt sein

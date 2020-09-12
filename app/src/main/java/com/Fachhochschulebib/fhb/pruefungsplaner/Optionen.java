@@ -185,7 +185,7 @@ public class Optionen extends Fragment {
                     mEditorGoogleKalender.apply();
 
                     AppDatabase datenbank =  AppDatabase.getAppDatabase(getContext());
-                    List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                    List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
 
 
                     CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
@@ -193,39 +193,36 @@ public class Optionen extends Fragment {
 
                     for(PruefplanEintrag eintrag: ppeList)
                     {
-                        //überprüfung von favorisierten Prüfungen
-                        if (eintrag.getFavorit()) {
-                            String id = eintrag.getID();
+                        String id = eintrag.getID();
 
-                            //überprüfung von ein/aus Google Kalender
-                            if(googlecal.checkCal(Integer.valueOf(id)))
-                            {
-                                //ermitteln von benötigten Variablen
-                                String[] splitDatumUndUhrzeit
-                                        = eintrag.getDatum().split(" ");
-                                System.out.println(splitDatumUndUhrzeit[0]);
-                                String[] splitTagMonatJahr
-                                        = splitDatumUndUhrzeit[0].split("-");
-                                studiengang = eintrag.getStudiengang();
-                                studiengang = studiengang + " " + eintrag.getModul();
-                                int uhrzeitStart
-                                        = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
-                                int uhrzeitEnde
-                                        = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
+                        //überprüfung von ein/aus Google Kalender
+                        if(googlecal.checkCal(Integer.valueOf(id)))
+                        {
+                            //ermitteln von benötigten Variablen
+                            String[] splitDatumUndUhrzeit
+                                    = eintrag.getDatum().split(" ");
+                            System.out.println(splitDatumUndUhrzeit[0]);
+                            String[] splitTagMonatJahr
+                                    = splitDatumUndUhrzeit[0].split("-");
+                            studiengang = eintrag.getStudiengang();
+                            studiengang = studiengang + " " + eintrag.getModul();
+                            int uhrzeitStart
+                                    = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
+                            int uhrzeitEnde
+                                    = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
 
-                                calDate = new GregorianCalendar(
-                                        Integer.valueOf(splitTagMonatJahr[0]),
-                                        Integer.valueOf(splitTagMonatJahr[1]) - 1,
-                                        Integer.valueOf(splitTagMonatJahr[2]),
-                                        uhrzeitStart, uhrzeitEnde);
+                            calDate = new GregorianCalendar(
+                                    Integer.valueOf(splitTagMonatJahr[0]),
+                                    Integer.valueOf(splitTagMonatJahr[1]) - 1,
+                                    Integer.valueOf(splitTagMonatJahr[2]),
+                                    uhrzeitStart, uhrzeitEnde);
 
-                                //Methode zum Speichern im Kalender
-                                int calendarid = calendarID(studiengang);
+                            //Methode zum Speichern im Kalender
+                            int calendarid = calendarID(studiengang);
 
-                                //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                                googlecal.insertCal(Integer.valueOf(id), calendarid);
+                            //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
+                            googlecal.insertCal(Integer.valueOf(id), calendarid);
 
-                            }
                         }
                     }
 
@@ -322,20 +319,18 @@ public class Optionen extends Fragment {
         btnFav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
-                List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
                 for (PruefplanEintrag eintrag: ppeList) {
-                        if (eintrag.getFavorit()) {
 
-                            Log.d("Test Favoriten löschen.",
-                                    String.valueOf(eintrag.getID()));
-                            datenbank.userDao()
-                                     .update(false,
-                                             Integer.valueOf(eintrag.getID()));
-                            Toast.makeText(
-                                    v.getContext(),
-                                    v.getContext().getString(R.string.delete_favorite),
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        Log.d("Test Favoriten löschen.",
+                                String.valueOf(eintrag.getID()));
+                        datenbank.userDao()
+                                 .update(false,
+                                         Integer.valueOf(eintrag.getID()));
+                        Toast.makeText(
+                                v.getContext(),
+                                v.getContext().getString(R.string.delete_favorite),
+                                Toast.LENGTH_SHORT).show();
                     }
                 // define an adapter
             }

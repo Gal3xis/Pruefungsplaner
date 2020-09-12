@@ -71,23 +71,21 @@ public class Favoritenfragment extends Fragment {
         List<String> pruefungsNr = new ArrayList<>();
         List<String> raum = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
-        List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll2();
+        List<PruefplanEintrag> ppeList = roomdaten.userDao().getFavorites(true);
 
 
         // Abfrage ob Prüfungen favorisiert wurden
         // Favorisierte Prüfungen für die Anzeige vorbereiten
         for (PruefplanEintrag eintrag: ppeList) {
-            if (eintrag.getFavorit()) {
-                studiengang.add(eintrag.getModul() + " "
-                                + eintrag.getStudiengang());
-                profnamen.add(eintrag.getErstpruefer() + " "
-                                + eintrag.getZweitpruefer() + " "
-                                + eintrag.getSemester());
-                datum.add(eintrag.getDatum());
-                pruefungsNr.add(eintrag.getID());
-                raum.add(eintrag.getRaum());
-                check.add(true);
-            }
+            studiengang.add(eintrag.getModul() + " "
+                            + eintrag.getStudiengang());
+            profnamen.add(eintrag.getErstpruefer() + " "
+                            + eintrag.getZweitpruefer() + " "
+                            + eintrag.getSemester());
+            datum.add(eintrag.getDatum());
+            pruefungsNr.add(eintrag.getID());
+            raum.add(eintrag.getRaum());
+            check.add(true);
         }
 
         // definiere adapter

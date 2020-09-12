@@ -47,7 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> raumAdapter;
     private List<String> pruefform;
     private boolean speicher;
-    private String studiengang;
+    private String modulname;
     private TextView txtSecondScreen;
     static boolean favcheck = true;
     private Context context;
@@ -104,7 +104,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         String name = uebergebeneModule.get(position);
-        String[] modulname = name.split(" ");
+        String[] studiengang = name.split(" ");
 
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
@@ -115,7 +115,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         String colorElectiveModule = "#7FFFD4";
 
-        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(modulname[modulname.length - 1]))
+        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(studiengang[studiengang.length - 1]))
         {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(
@@ -133,10 +133,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         // Ende Merlin Gürtler
 
-        studiengang = "";
+        modulname = "";
 
-        for (int b = 0; b < (modulname.length - 1); b++) {
-            studiengang = (studiengang + " " + modulname[b]);
+        for (int b = 0; b < (studiengang.length - 1); b++) {
+            modulname = (modulname + " " + studiengang[b]);
         }
 
         //Datenbank und Pruefplan laden
@@ -249,10 +249,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                         + context.getString(R.string.semester) + sa[2]);
                         String name1 = uebergebeneModule.get(position);
                         String[] modulname1 = name1.split(" ");
-                        studiengang = "";
+                        modulname = "";
                         int b;
                         for (b = 0; b < (modulname1.length - 1); b++) {
-                            studiengang = (studiengang + " " + modulname1[b]);
+                            modulname = (modulname + " " + modulname1[b]);
                         }
 
                         int uhrzeitStart
@@ -266,7 +266,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                 uhrzeitStart, uhrzeitEnde);
 
                         //Methode zum Speichern im Kalender
-                        int calendarid = calendarID(studiengang);
+                        int calendarid = calendarID(modulname);
 
                         //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
                         checkeintrag.insertCal(Integer.valueOf(pruefplanid.get(position)),
@@ -326,11 +326,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     //Methode zum Darstellen der "weiteren Informationen"
     public String giveString(int position) {
             String name = uebergebeneModule.get(position);
-            String[] modulname = name.split(" ");
-            studiengang = "";
+            String[] studiengang = name.split(" ");
+            modulname = "";
             int b;
-            for (b = 0; b < (modulname.length - 1); b++) {
-                studiengang = (studiengang + " " + modulname[b]);
+            for (b = 0; b < (studiengang.length - 1); b++) {
+                modulname = (modulname + " " + studiengang[b]);
             }
             String raum2 = raumAdapter.get(position);
             String[] aufteilung1 = Datum.get(position).split(" ");
@@ -340,8 +340,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
             //String mit dem Inhalt für weitere Informationen
             String s = (context.getString(R.string.information) +
-                    context.getString(R.string.course) + modulname[modulname.length - 1]
-                    + context.getString(R.string.modul) + studiengang
+                    context.getString(R.string.course) + studiengang[studiengang.length - 1]
+                    + context.getString(R.string.modul) + modulname
                     + context.getString(R.string.firstProf) + sa[0]
                     + context.getString(R.string.secondProf) + sa[1]
                     + context.getString(R.string.date) + aufteilung2[2].toString() + "."
@@ -399,7 +399,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
-        event.put(CalendarContract.Events.TITLE, studiengang);
+        event.put(CalendarContract.Events.TITLE, modulname);
         event.put(CalendarContract.Events.DESCRIPTION, context.getString(R.string.fh_name));
         event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
         event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));

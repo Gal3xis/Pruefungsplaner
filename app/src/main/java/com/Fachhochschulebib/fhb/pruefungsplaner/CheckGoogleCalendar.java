@@ -283,7 +283,9 @@ public class CheckGoogleCalendar {
 
     public List<PruefplanEintrag> databaseConnect(){
         AppDatabase database2 = AppDatabase.getAppDatabase(context);
-        List<PruefplanEintrag> ppeList = database2.userDao().getAll2();
+        // Änderun Merlin Gürtler
+        // Nicht alle Einträge, um Iterationen zu sparen
+        List<PruefplanEintrag> ppeList = database2.userDao().getFavorites(true);
      return(ppeList);
     }
 
