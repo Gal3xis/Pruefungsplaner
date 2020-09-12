@@ -28,6 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
@@ -146,7 +147,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
         //                  Toast.LENGTH_SHORT).show();
         speicher = false;
-        if (position > 0) {
+        if (position >= 0) {
             int pruefid = Integer.valueOf(pruefplanid.get(position));
 
             for (PruefplanEintrag eintrag: ppeList) {
@@ -274,6 +275,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
                 }
                 Toast.makeText(v.getContext(), v.getContext().getString(R.string.add), Toast.LENGTH_SHORT).show();
+            } else {
+                // Start Merlin Gürtler
+                // Entferne die Klausur von den Favoriten, wenn Sie schon hinzugefügt ist
+                for (PruefplanEintrag eintrag: ppeList1) {
+                    if ((eintrag.getID().toString()
+                            .equals(pruefplanid.get(position)) &
+                            (eintrag.getFavorit()))) {
+                        datenbank1.userDao()
+                                .update(false,
+                                        Integer.valueOf(pruefplanid.get(position)));
+                    }
+                }
+
+                // TODO entferne aus Kalender
+                holder.ivicon.clearColorFilter();
+                Toast.makeText(v.getContext(), v.getContext().getString(R.string.delete_favorite), Toast.LENGTH_SHORT).show();
+                // Ende Merlin Gürtler
             }
         });
 

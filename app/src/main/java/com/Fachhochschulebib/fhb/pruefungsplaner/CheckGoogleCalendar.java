@@ -194,6 +194,7 @@ public class CheckGoogleCalendar {
     //Google Kalender Checkverbindung Methode
     public void updateCal()
     {
+        // Hier Weitermachen
         //Creating editor to store uebergebeneModule to shared preferences
         SharedPreferences Googleeintrag
                 = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
@@ -231,7 +232,7 @@ public class CheckGoogleCalendar {
                     //Klasse für das updaten von werten
                     ContentResolver cr = context.getContentResolver();
                     ContentValues values = new ContentValues();
-                    Uri updateUri = null;
+                    Uri updateUri;
                     //Datum und Uhrzeit aufteilen.
                     // Sieht so aus wie 22-01-2019 10:00 Uhr
                     // es wird nach dem Leerzeichen getrennt
