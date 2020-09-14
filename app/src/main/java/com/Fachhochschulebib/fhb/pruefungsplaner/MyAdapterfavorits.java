@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,30 +99,39 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
-                List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
-                // second parameter is necessary ie.,
-                // Value to return if this preference does not exist.
-                for (PruefplanEintrag eintrag: ppeList){
-                    if(eintrag.getID().equals(ppIdList.get(position))){
-                        datenbank.userDao()
-                                 .update(false,Integer.valueOf(ppIdList.get(position)));
-                        remove(holder.getAdapterPosition());
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
+                        List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
+                        // second parameter is necessary ie.,
+                        // Value to return if this preference does not exist.
+                        for (PruefplanEintrag eintrag: ppeList){
+                            if(eintrag.getID().equals(ppIdList.get(position))){
+                                datenbank.userDao()
+                                        .update(false,Integer.valueOf(ppIdList.get(position)));
+                                remove(holder.getAdapterPosition());
 
-                        // Start Merlin Gürtler
-                        Toast.makeText(v.getContext(),
-                                v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
-                        // Ende Merlin Gürtler
+                                //Entferne den Eintrag aus dem Calendar falls vorhanden
+                                CheckGoogleCalendar cal = new CheckGoogleCalendar();
+                                cal.setCtx(v.getContext());
+                                if (!cal.checkCal(Integer.valueOf(ppIdList.get(position)))) {
+                                    cal.deleteEntry(Integer.valueOf(ppIdList.get(position)));
+                                }
 
-                        //Entferne den Eintrag aus dem Calendar falls vorhanden
-                        CheckGoogleCalendar cal = new CheckGoogleCalendar();
-                        cal.setCtx(v.getContext());
-                        if (!cal.checkCal(Integer.valueOf(ppIdList.get(position)))) {
-                            cal.deleteEntry(Integer.valueOf(ppIdList.get(position)));
+                            }
                         }
-
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Start Merlin Gürtler
+                                Toast.makeText(v.getContext(),
+                                        v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
+                                // Ende Merlin Gürtler
+                            }
+                        });
                     }
-                }
+                }).start();
             }
         });
 

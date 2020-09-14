@@ -473,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar.show();
         // Ende Merlin Gürtler
 
-        Thread retrothread = new Thread(new Runnable() {
+        Thread retrothreadMain = new Thread(new Runnable() {
 
             //Shared Pref. für die Pruefperiode
             SharedPreferences.Editor mEditor;
@@ -662,7 +662,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        retrothread.start();
+        retrothreadMain.start();
 
         // Start Merlin Gürtler
         new Thread(new Runnable() {
@@ -673,8 +673,8 @@ public class MainActivity extends AppCompatActivity {
                     Thread.sleep(3000);
 
                     // Beendet den Thread
-                    if(retrothread.isAlive()) {
-                        retrothread.interrupt();
+                    if(retrothreadMain.isAlive()) {
+                        retrothreadMain.interrupt();
                         progressBar.dismiss();
                         Log.d("Thread Interrupted","interrupted");
                     }

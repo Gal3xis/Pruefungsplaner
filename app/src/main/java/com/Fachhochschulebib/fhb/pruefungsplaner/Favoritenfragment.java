@@ -71,22 +71,28 @@ public class Favoritenfragment extends Fragment {
         List<String> pruefungsNr = new ArrayList<>();
         List<String> raum = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
-        List<PruefplanEintrag> ppeList = roomdaten.userDao().getFavorites(true);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<PruefplanEintrag> ppeList = roomdaten.userDao().getFavorites(true);
 
 
-        // Abfrage ob Prüfungen favorisiert wurden
-        // Favorisierte Prüfungen für die Anzeige vorbereiten
-        for (PruefplanEintrag eintrag: ppeList) {
-            studiengang.add(eintrag.getModul() + " "
+                // Abfrage ob Prüfungen favorisiert wurden
+                // Favorisierte Prüfungen für die Anzeige vorbereiten
+                for (PruefplanEintrag eintrag: ppeList) {
+                    studiengang.add(eintrag.getModul() + " "
                             + eintrag.getStudiengang());
-            profnamen.add(eintrag.getErstpruefer() + " "
+                    profnamen.add(eintrag.getErstpruefer() + " "
                             + eintrag.getZweitpruefer() + " "
                             + eintrag.getSemester());
-            datum.add(eintrag.getDatum());
-            pruefungsNr.add(eintrag.getID());
-            raum.add(eintrag.getRaum());
-            check.add(true);
-        }
+                    datum.add(eintrag.getDatum());
+                    pruefungsNr.add(eintrag.getID());
+                    raum.add(eintrag.getRaum());
+                    check.add(true);
+                }
+            }
+        }).start();
 
         // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung

@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -74,20 +76,33 @@ public class WahlModulSucheFragment extends Fragment {
         String selectedStudiengang  = sharedPrefSelectedStudiengang.
                 getString("selectedStudiengang","0");
 
-        List<String> modulNameArrayList = database.userDao().getModuleOrdered();
-        ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
-                (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
-        editWahlModul.setAdapter(adapterModuleAutoComplete);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<String> modulNameArrayList = database.userDao().getModuleOrdered();
+                ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
+                        (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
 
-        // Studiengang auswahl
-        List<String> studiengangArrayList = database.userDao().getStudiengangOrdered();
-        studiengangArrayList.add(0,getContext().getString(R.string.all_cours));
+                // Studiengang auswahl
+                List<String> studiengangArrayList = database.userDao().getStudiengangOrdered();
+                studiengangArrayList.add(0,getContext().getString(R.string.all_cours));
 
-        // Design für den Spinner
-        ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
-                v.getContext(), R.layout.simple_spinner_item, studiengangArrayList);
-        adapterStudiengang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spStudiengang.setAdapter(adapterStudiengang);
+                // Design für den Spinner
+                ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
+                        v.getContext(), R.layout.simple_spinner_item, studiengangArrayList);
+                adapterStudiengang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        editWahlModul.setAdapter(adapterModuleAutoComplete);
+                        spStudiengang.setAdapter(adapterStudiengang);
+                    }
+                });
+
+            }
+        }).start();
 
         editWahlModul.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
@@ -142,47 +157,59 @@ public class WahlModulSucheFragment extends Fragment {
                 oder ein Studiengang ausgewählt sein
                  */
 
-                if((modulName.trim().length() > 3 && !modulName.equals(getContext().getString(R.string.all)))
-                        || !selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if((modulName.trim().length() > 3 && !modulName.equals(getContext().getString(R.string.all)))
+                                || !selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))) {
 
-                    // Nur ein Modulnamen eingetragen
-                    if (selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
-                            && !modulName.equals(getContext().getString(R.string.all))) {
+                            // Nur ein Modulnamen eingetragen
+                            if (selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                                    && !modulName.equals(getContext().getString(R.string.all))) {
 
-                        ppeList = database.userDao().getModule("%" + modulName.trim() + "%");
+                                ppeList = database.userDao().getModule("%" + modulName.trim() + "%");
 
-                    // Alles eingegeben
-                    } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
-                            && !modulName.equals(getContext().getString(R.string.all))) {
+                                // Alles eingegeben
+                            } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                                    && !modulName.equals(getContext().getString(R.string.all))) {
 
-                        ppeList = database.userDao().getModuleWithCourseAndModule("%" +
-                                modulName.trim() + "%", selectedStudiengangSpinner);
+                                ppeList = database.userDao().getModuleWithCourseAndModule("%" +
+                                        modulName.trim() + "%", selectedStudiengangSpinner);
 
-                    // Nur ein Studiengang ausgewählt
-                    } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
-                            && modulName.equals(getContext().getString(R.string.all))) {
+                                // Nur ein Studiengang ausgewählt
+                            } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                                    && modulName.equals(getContext().getString(R.string.all))) {
 
-                        ppeList = database.userDao().getModuleWithCourseOrdered(selectedStudiengangSpinner);
+                                ppeList = database.userDao().getModuleWithCourseOrdered(selectedStudiengangSpinner);
 
+                            }
+
+
+                            // Setze die gewählten Daten in der DB
+                            database.userDao().sucheUndZurueckSetzen(false);
+                            for (PruefplanEintrag eintrag: ppeList) {
+                                database.userDao().update2(true,
+                                        Integer.valueOf(eintrag.getID()));
+                            }
+
+                            ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
+                            ft.commit();
+                        }
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!((modulName.trim().length() > 3 && !modulName.equals(v.getContext().getString(R.string.all)))
+                                        || !selectedStudiengangSpinner.equals(v.getContext().getString(R.string.all_cours)))) {
+
+                                    Toast.makeText(v.getContext(),v.getContext().getString(R.string.elective_search), Toast.LENGTH_LONG)
+                                            .show();
+                                }
+                            }
+                        });
                     }
-
-
-                    // Setze die gewählten Daten in der DB
-                    database.userDao().sucheUndZurueckSetzen(false);
-                    for (PruefplanEintrag eintrag: ppeList) {
-                        database.userDao().update2(true,
-                                Integer.valueOf(eintrag.getID()));
-                    }
-
-                    ft = getActivity().getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
-                    ft.commit();
-                } else {
-                    Toast.makeText(v.getContext(),v.getContext().getString(R.string.elective_search), Toast.LENGTH_LONG)
-                            .show();
-                }
-
-
+                }).start();
             }
         });
 

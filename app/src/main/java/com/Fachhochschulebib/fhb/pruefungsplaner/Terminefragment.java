@@ -16,6 +16,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -239,60 +241,66 @@ public class Terminefragment extends Fragment {
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view,
                                                         int year, int month, int dayOfMonth) {
-                            //Datenbank
-                            List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
-                            //unnötige Werte entfernen
-                            if (month < 9) {
-                                month2 = "0" + String.valueOf(month + 1);
-                            } else {
-                                month2 = String.valueOf(month+1);
-                            }
-                            if (dayOfMonth < 10) {
-                                day2 = "0" + String.valueOf(dayOfMonth);
-                            } else {
-                                day2 = String.valueOf(dayOfMonth);
-                            }
-                            year2 = String.valueOf(year);
-                            date = year2 + "-" + month2 + "-" + day2;
-                            System.out.println(date);
-                            checkList.clear();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    //Datenbank
+                                    List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
-                            ClearLists();
-                            for(PruefplanEintrag eintrag: ppeList) {
-                                String[] date2 = eintrag.getDatum().split(" ");
-                                System.out.println(date2[0]);
+                                    //unnötige Werte entfernen
+                                    if (month < 9) {
+                                        month2 = "0" + String.valueOf(month + 1);
+                                    } else {
+                                        month2 = String.valueOf(month+1);
+                                    }
+                                    if (dayOfMonth < 10) {
+                                        day2 = "0" + String.valueOf(dayOfMonth);
+                                    } else {
+                                        day2 = String.valueOf(dayOfMonth);
+                                    }
+                                    year2 = String.valueOf(year);
+                                    date = year2 + "-" + month2 + "-" + day2;
+                                    System.out.println(date);
+                                    checkList.clear();
+
+                                    ClearLists();
+                                    for(PruefplanEintrag eintrag: ppeList) {
+                                        String[] date2 = eintrag.getDatum().split(" ");
+                                        System.out.println(date2[0]);
 
                                 /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
                                     Kalender datum übereinstimmt
                                  */
-                                if (date2[0].equals(date)) {
-                                    modulUndStudiengangsList.add(
-                                            eintrag.getModul()
-                                            + "\n " + eintrag.getStudiengang());
-                                    prueferUndSemesterList.add(
-                                            eintrag.getErstpruefer()
-                                            + " " + eintrag.getZweitpruefer()
-                                            + " " + eintrag.getSemester() + " ");
-                                    datumsList.add(eintrag.getDatum());
-                                    modulList.add(eintrag.getModul());
-                                    idList.add(eintrag.getID());
-                                    pruefFormList.add(eintrag.getPruefform());
-                                    raumList.add(eintrag.getRaum());
-                                    checkList.add(true);
-                                }
-                            }// define an adapter
+                                        if (date2[0].equals(date)) {
+                                            modulUndStudiengangsList.add(
+                                                    eintrag.getModul()
+                                                            + "\n " + eintrag.getStudiengang());
+                                            prueferUndSemesterList.add(
+                                                    eintrag.getErstpruefer()
+                                                            + " " + eintrag.getZweitpruefer()
+                                                            + " " + eintrag.getSemester() + " ");
+                                            datumsList.add(eintrag.getDatum());
+                                            modulList.add(eintrag.getModul());
+                                            idList.add(eintrag.getID());
+                                            pruefFormList.add(eintrag.getPruefform());
+                                            raumList.add(eintrag.getRaum());
+                                            checkList.add(true);
+                                        }
+                                    }// define an adapter
 
-                            //Adapter mit Werten füllen
-                            mAdapter = new MyAdapter(   modulUndStudiengangsList,
-                                                        prueferUndSemesterList,
-                                                        datumsList,
-                                                        modulList,
-                                                        idList,
-                                                        pruefFormList,mLayout,
-                                                        raumList);
-                            //Anzeigen
-                            recyclerView.setAdapter(mAdapter);
+                                    //Adapter mit Werten füllen
+                                    mAdapter = new MyAdapter(   modulUndStudiengangsList,
+                                            prueferUndSemesterList,
+                                            datumsList,
+                                            modulList,
+                                            idList,
+                                            pruefFormList,mLayout,
+                                            raumList);
+                                    //Anzeigen
+                                    recyclerView.setAdapter(mAdapter);
+                                }
+                            }).start();
                         }
                     });
                     speicher = false;
@@ -304,38 +312,49 @@ public class Terminefragment extends Fragment {
 
     public void AdapterUebergabe()
     {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+
+                checkList.clear();
+                ClearLists();
+
+                for (PruefplanEintrag eintrag: ppeList) {
+                    modulUndStudiengangsList.add(
+                            eintrag.getModul() + "\n "
+                                    + eintrag.getStudiengang());
+                    prueferUndSemesterList.add(
+                            eintrag.getErstpruefer()
+                                    + " " + eintrag.getZweitpruefer()
+                                    + " " + eintrag.getSemester() + " ");
+                    datumsList.add(eintrag.getDatum());
+                    modulList.add(eintrag.getModul());
+                    idList.add(eintrag.getID());
+                    pruefFormList.add(eintrag.getPruefform());
+                    raumList.add(eintrag.getRaum());
+                    checkList.add(true);
+                }// define an adapter
+
+                mAdapter = new MyAdapter(   modulUndStudiengangsList,
+                        prueferUndSemesterList,
+                        datumsList,
+                        modulList,
+                        idList,
+                        pruefFormList,
+                        mLayout,
+                        raumList);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(mAdapter);
+                    }
+                });
+                // System.out.println(String.valueOf(userdaten.size()));
+            }
+        }).start();
         //Datenbankaufruf
-        final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
-
-        checkList.clear();
-        ClearLists();
-
-        for (PruefplanEintrag eintrag: ppeList) {
-            modulUndStudiengangsList.add(
-                    eintrag.getModul() + "\n "
-                    + eintrag.getStudiengang());
-            prueferUndSemesterList.add(
-                    eintrag.getErstpruefer()
-                    + " " + eintrag.getZweitpruefer()
-                    + " " + eintrag.getSemester() + " ");
-            datumsList.add(eintrag.getDatum());
-            modulList.add(eintrag.getModul());
-            idList.add(eintrag.getID());
-            pruefFormList.add(eintrag.getPruefform());
-            raumList.add(eintrag.getRaum());
-            checkList.add(true);
-        }// define an adapter
-
-        mAdapter = new MyAdapter(   modulUndStudiengangsList,
-                                    prueferUndSemesterList,
-                                    datumsList,
-                                    modulList,
-                                    idList,
-                                    pruefFormList,
-                                    mLayout,
-                                    raumList);
-        recyclerView.setAdapter(mAdapter);
-        // System.out.println(String.valueOf(userdaten.size()));
     }
 
     public void ClearLists()

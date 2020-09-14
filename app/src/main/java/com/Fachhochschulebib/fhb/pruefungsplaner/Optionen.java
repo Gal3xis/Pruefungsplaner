@@ -23,6 +23,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.CalendarContract;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -35,6 +37,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
@@ -102,8 +105,6 @@ public class Optionen extends Fragment {
             }
 
 
-
-
         });
 
         //layout Komponenten
@@ -137,8 +138,8 @@ public class Optionen extends Fragment {
 
         //----------------------------------------------------------------------------------------
         mSharedPreferencesPruefTermin
-                =  v.getContext()
-                    .getSharedPreferences("PruefTermin", 0);
+                = v.getContext()
+                .getSharedPreferences("PruefTermin", 0);
 
         SharedPreferences.Editor mEditorTermin = mSharedPreferencesPruefTermin.edit();
         aktuellerTermin
@@ -175,68 +176,75 @@ public class Optionen extends Fragment {
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         SWgooglecalender.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // do something, the isChecked will be
-                // true if the switch is in the On position
-                if (isChecked) {
-                    mEditorGoogleKalender.clear();
-                    mEditorGoogleKalender.apply();
-                    response.put("1");
-                    mEditorGoogleKalender.putString("jsondata2", response.toString());
-                    mEditorGoogleKalender.apply();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // do something, the isChecked will be
+                        // true if the switch is in the On position
+                        if (isChecked) {
+                            mEditorGoogleKalender.clear();
+                            mEditorGoogleKalender.apply();
+                            response.put("1");
+                            mEditorGoogleKalender.putString("jsondata2", response.toString());
+                            mEditorGoogleKalender.apply();
 
-                    AppDatabase datenbank =  AppDatabase.getAppDatabase(getContext());
-                    List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
+                            AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
+                            List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
 
 
-                    CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
-                    googlecal.setCtx(getContext());
+                            CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
+                            googlecal.setCtx(getContext());
 
-                    for(PruefplanEintrag eintrag: ppeList)
-                    {
-                        String id = eintrag.getID();
+                            for (PruefplanEintrag eintrag : ppeList) {
+                                String id = eintrag.getID();
 
-                        //überprüfung von ein/aus Google Kalender
-                        if(googlecal.checkCal(Integer.valueOf(id)))
-                        {
-                            //ermitteln von benötigten Variablen
-                            String[] splitDatumUndUhrzeit
-                                    = eintrag.getDatum().split(" ");
-                            System.out.println(splitDatumUndUhrzeit[0]);
-                            String[] splitTagMonatJahr
-                                    = splitDatumUndUhrzeit[0].split("-");
-                            studiengang = eintrag.getStudiengang();
-                            studiengang = studiengang + " " + eintrag.getModul();
-                            int uhrzeitStart
-                                    = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
-                            int uhrzeitEnde
-                                    = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
+                                //überprüfung von ein/aus Google Kalender
+                                if (googlecal.checkCal(Integer.valueOf(id))) {
+                                    //ermitteln von benötigten Variablen
+                                    String[] splitDatumUndUhrzeit
+                                            = eintrag.getDatum().split(" ");
+                                    System.out.println(splitDatumUndUhrzeit[0]);
+                                    String[] splitTagMonatJahr
+                                            = splitDatumUndUhrzeit[0].split("-");
+                                    studiengang = eintrag.getStudiengang();
+                                    studiengang = studiengang + " " + eintrag.getModul();
+                                    int uhrzeitStart
+                                            = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
+                                    int uhrzeitEnde
+                                            = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
 
-                            calDate = new GregorianCalendar(
-                                    Integer.valueOf(splitTagMonatJahr[0]),
-                                    Integer.valueOf(splitTagMonatJahr[1]) - 1,
-                                    Integer.valueOf(splitTagMonatJahr[2]),
-                                    uhrzeitStart, uhrzeitEnde);
+                                    calDate = new GregorianCalendar(
+                                            Integer.valueOf(splitTagMonatJahr[0]),
+                                            Integer.valueOf(splitTagMonatJahr[1]) - 1,
+                                            Integer.valueOf(splitTagMonatJahr[2]),
+                                            uhrzeitStart, uhrzeitEnde);
 
-                            //Methode zum Speichern im Kalender
-                            int calendarid = calendarID(studiengang);
+                                    //Methode zum Speichern im Kalender
+                                    int calendarid = calendarID(studiengang);
 
-                            //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                            googlecal.insertCal(Integer.valueOf(id), calendarid);
+                                    //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
+                                    googlecal.insertCal(Integer.valueOf(id), calendarid);
 
+                                }
+                            }
+
+                            if (!isChecked) {
+                                mEditorGoogleKalender.clear().apply();
+                                mEditorGoogleKalender.remove("jsondata2").apply();
+                            }
+
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(
+                                            v.getContext(),
+                                            v.getContext().getString(R.string.add_calendar),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }
-
-                    Toast.makeText(
-                            v.getContext(),
-                            v.getContext().getString(R.string.add_calendar),
-                            Toast.LENGTH_SHORT).show();
-                }
-
-                if (!isChecked) {
-                    mEditorGoogleKalender.clear().apply();
-                    mEditorGoogleKalender.remove("jsondata2").apply();
-                }
-
+                }).start();
             }
         });
 
@@ -244,28 +252,30 @@ public class Optionen extends Fragment {
         //speichert den neu eingegebenen Wert
         txtServerAddress.addTextChangedListener(new TextWatcher() {
             boolean validate = false;
+
             @Override
             public void afterTextChanged(Editable s) {
 
-                    String splitAdresse = txtServerAddress.getText().subSequence(0,7).toString();
-                    String splitAdresseEnde
-                            = String.valueOf(txtServerAddress
-                                                .getText()
-                                                .charAt(txtServerAddress.getText().length()-1));
+                String splitAdresse = txtServerAddress.getText().subSequence(0, 7).toString();
+                String splitAdresseEnde
+                        = String.valueOf(txtServerAddress
+                        .getText()
+                        .charAt(txtServerAddress.getText().length() - 1));
 
-                    //System.out.println(splitAdresseEnde);
+                //System.out.println(splitAdresseEnde);
 
-                    if(splitAdresse.equals("http://")) {
-                        if(splitAdresseEnde.equals("/")) {
-                            if(android.util.Patterns.WEB_URL.matcher(
-                                    txtServerAddress.getText().toString()).matches()){
-                                mEditorAdresse.clear();
-                                mEditorAdresse.apply();
-                                mEditorAdresse.putString(
-                                        "ServerIPAddress", txtServerAddress.getText().toString());
-                                mEditorAdresse.apply();
-                            }
-                    }}
+                if (splitAdresse.equals("http://")) {
+                    if (splitAdresseEnde.equals("/")) {
+                        if (android.util.Patterns.WEB_URL.matcher(
+                                txtServerAddress.getText().toString()).matches()) {
+                            mEditorAdresse.clear();
+                            mEditorAdresse.apply();
+                            mEditorAdresse.putString(
+                                    "ServerIPAddress", txtServerAddress.getText().toString());
+                            mEditorAdresse.apply();
+                        }
+                    }
+                }
             }
 
             @Override
@@ -282,34 +292,44 @@ public class Optionen extends Fragment {
         //interne DB löschen
         btnDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
-                Log.d("Test", "Lokale DB löschen.");
-                datenbank.clearAllTables();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
+                        Log.d("Test", "Lokale DB löschen.");
+                        datenbank.clearAllTables();
 
-                // Start Merlin Gürtler
+                        // Start Merlin Gürtler
 
-                // Update nachdem löschen
-                RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-                retrofit.RetrofitWebAccess(
-                        getContext(),
-                        datenbank,
-                        pruefJahr,
-                        aktuellePruefphase,
-                        aktuellerTermin,
-                        serverAddress);
-                // Ende Merlin Gürtler
+                        // Update nachdem löschen
+                        RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                        retrofit.RetrofitWebAccess(
+                                getContext(),
+                                datenbank,
+                                pruefJahr,
+                                aktuellePruefphase,
+                                aktuellerTermin,
+                                serverAddress);
+                        // Ende Merlin Gürtler
 
-                Toast.makeText(
-                        v.getContext(),
-                        v.getContext().getString(R.string.delete_db),
-                        Toast.LENGTH_SHORT).show();
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(
+                                        v.getContext(),
+                                        v.getContext().getString(R.string.delete_db),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }).start();
             }
         });
 
         //Google Kalender einträge löschen
         btnGoogleloeschen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-               kalenderLöschen();
+                kalenderLöschen();
                 Toast.makeText(
                         v.getContext(),
                         v.getContext().getString(R.string.delete_calendar),
@@ -320,45 +340,67 @@ public class Optionen extends Fragment {
         //Google Kalender einträge updaten
         btnGoogleupdate.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                kalenderUpdate();
-                Toast.makeText(
-                        v.getContext(),
-                        v.getContext().getString(R.string.actualisation_calendar),
-                        Toast.LENGTH_SHORT).show();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        kalenderUpdate();
+                    }
+                }).start();
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(
+                                v.getContext(),
+                                v.getContext().getString(R.string.actualisation_calendar),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
 
         //Favoriten Löschen
         btnFav.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
-                List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
-                for (PruefplanEintrag eintrag: ppeList) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
+                        List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
+                        for (PruefplanEintrag eintrag : ppeList) {
 
-                        Log.d("Test Favoriten löschen.",
-                                String.valueOf(eintrag.getID()));
-                        datenbank.userDao()
-                                 .update(false,
-                                         Integer.valueOf(eintrag.getID()));
-                        Toast.makeText(
-                                v.getContext(),
-                                v.getContext().getString(R.string.delete_favorite),
-                                Toast.LENGTH_SHORT).show();
+                            Log.d("Test Favoriten löschen.",
+                                    String.valueOf(eintrag.getID()));
+                            datenbank.userDao()
+                                    .update(false,
+                                            Integer.valueOf(eintrag.getID()));
+                        }
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(
+                                        v.getContext(),
+                                        v.getContext().getString(R.string.delete_favorite),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        // define an adapter
                     }
-                // define an adapter
+                }).start();
             }
         });
 
         return v;
     }
 
-    public void updatePruefplan(String validation){
+    public void updatePruefplan(String validation) {
 
         boolean a = PingUrl(serverAddress);
     }
 
     //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
-    public void keineVerbindung(){
+    public void keineVerbindung() {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(
@@ -375,14 +417,10 @@ public class Optionen extends Fragment {
     // Die Prüfungen werden erneut vom Webserver geladen und mit
     // den gespeicherten IDs favorisiert
 
-    public void pruefplanAktualisieren(){
-        getActivity().runOnUiThread(new Runnable() {
+    public void pruefplanAktualisieren() {
+        new Thread(new Runnable() {
+            @Override
             public void run() {
-                Toast.makeText(
-                        getContext(),
-                        getContext().getString(R.string.add_favorite),
-                        Toast.LENGTH_SHORT).show();
-
                 AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
 
@@ -394,16 +432,25 @@ public class Optionen extends Fragment {
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                 retrofit.RetrofitWebAccess(
-                                getContext(),
+                        getContext(),
                         database,
-                                pruefJahr,
-                                aktuellePruefphase,
-                                aktuellerTermin,
-                                serverAddress);
+                        pruefJahr,
+                        aktuellePruefphase,
+                        aktuellerTermin,
+                        serverAddress);
 
                 // Log.d("Test3",String.valueOf(stringaufteilung[5]));
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(
+                                getContext(),
+                                getContext().getString(R.string.add_favorite),
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
-        });
+        }).start();
     }
 
 
@@ -425,9 +472,7 @@ public class Optionen extends Fragment {
                         System.out.println("Ping to " + address + " successful.");
                         pruefplanAktualisieren();
                     }
-                }
-                catch (final Exception e)
-                {
+                } catch (final Exception e) {
                     keineVerbindung();
                 }
 
@@ -438,7 +483,7 @@ public class Optionen extends Fragment {
     }
 
     //Google Kalender einträge löschen
-    public void kalenderLöschen(){
+    public void kalenderLöschen() {
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.clearCal();
@@ -446,13 +491,13 @@ public class Optionen extends Fragment {
     }
 
     //Google Kalender aktualisieren
-    public void kalenderUpdate(){
+    public void kalenderUpdate() {
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.updateCal();
     }
 
-    public int calendarID(String eventtitle){
+    public int calendarID(String eventtitle) {
 
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
@@ -477,10 +522,10 @@ public class Optionen extends Fragment {
 
 
         int result = 0;
-        String projection[] = { "_id", "title" };
+        String projection[] = {"_id", "title"};
         Cursor cursor = getContext().getContentResolver()
-                                    .query(baseUri, null,
-                                           null, null, null);
+                .query(baseUri, null,
+                        null, null, null);
 
         if (cursor.moveToFirst()) {
 

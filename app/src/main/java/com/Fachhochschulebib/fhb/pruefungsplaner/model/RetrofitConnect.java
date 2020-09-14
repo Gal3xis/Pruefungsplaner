@@ -238,7 +238,13 @@ public class RetrofitConnect {
                          pruefplanEintrag.setValidation(jahr + response.body().get(i).getStudiengangId() + pruefungsphase);
 
                          // Ende Merlin Gürtler
-                         addUser(roomdaten, pruefplanEintrag);
+                        // Extra Thread da sonst die Db nicht aktualisiert werden kann.
+                        new Thread((new Runnable() {
+                            @Override
+                            public void run() {
+                                addUser(roomdaten, pruefplanEintrag);
+                            }
+                        })).start();
 
                         // }
                     }
@@ -338,7 +344,6 @@ public class RetrofitConnect {
             }
         });
     }
-
     // Ende Merlin Gürtler
 
     //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!

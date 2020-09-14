@@ -18,6 +18,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,54 +126,66 @@ public class TerminefragmentSuche extends Fragment {
                     calendar.setVisibility(View.VISIBLE);
                     calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                         public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                            AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-                            List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll(validation);
 
-                            ClearLists();
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
+                                    List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll(validation);
 
-                            //Creating editor to store uebergebeneModule to shared preferences
-                            if (month < 10) {
-                                month2 = "0" + String.valueOf(month + 1);
-                            } else {
-                                month2 = String.valueOf(month);
-                            }
-                            if (dayOfMonth < 10) {
-                                day2 = "0" + String.valueOf(dayOfMonth);
-                            } else {
-                                day2 = String.valueOf(dayOfMonth);
-                            }
-                            year2 = String.valueOf(year);
-                            date = year2 + "-" + month2 + "-" + day2;
-                            for (PruefplanEintrag eintrag: ppeList) {
-                                String[] date2 = eintrag.getDatum().split(" ");
-                                if (date2[0].equals(date)) {
-                                    modulUndStudiengangsList.add(
-                                            eintrag.getModul() + "\n "
-                                                    + eintrag.getStudiengang());
-                                    prueferUndSemesterList.add(
-                                            eintrag.getErstpruefer()
-                                                    + " " + eintrag.getZweitpruefer()
-                                                    + " " + eintrag.getSemester() + " ");
-                                    datumsList.add(eintrag.getDatum());
-                                    modulList.add(eintrag.getModul());
-                                    idList.add(eintrag.getID());
-                                    pruefFormList.add(eintrag.getPruefform());
-                                    raumList.add(eintrag.getRaum());
+                                    ClearLists();
+
+                                    //Creating editor to store uebergebeneModule to shared preferences
+                                    if (month < 10) {
+                                        month2 = "0" + String.valueOf(month + 1);
+                                    } else {
+                                        month2 = String.valueOf(month);
+                                    }
+                                    if (dayOfMonth < 10) {
+                                        day2 = "0" + String.valueOf(dayOfMonth);
+                                    } else {
+                                        day2 = String.valueOf(dayOfMonth);
+                                    }
+                                    year2 = String.valueOf(year);
+                                    date = year2 + "-" + month2 + "-" + day2;
+                                    for (PruefplanEintrag eintrag: ppeList) {
+                                        String[] date2 = eintrag.getDatum().split(" ");
+                                        if (date2[0].equals(date)) {
+                                            modulUndStudiengangsList.add(
+                                                    eintrag.getModul() + "\n "
+                                                            + eintrag.getStudiengang());
+                                            prueferUndSemesterList.add(
+                                                    eintrag.getErstpruefer()
+                                                            + " " + eintrag.getZweitpruefer()
+                                                            + " " + eintrag.getSemester() + " ");
+                                            datumsList.add(eintrag.getDatum());
+                                            modulList.add(eintrag.getModul());
+                                            idList.add(eintrag.getID());
+                                            pruefFormList.add(eintrag.getPruefform());
+                                            raumList.add(eintrag.getRaum());
+                                        }
+                                    }
+                                    // define an adapter
+                                    //Werte an den Adapter übergeben
+                                    mAdapter = new MyAdapter(
+                                            modulUndStudiengangsList,
+                                            prueferUndSemesterList,
+                                            datumsList,
+                                            modulList,
+                                            idList,
+                                            pruefFormList,
+                                            mLayout,
+                                            raumList);
+
+                                    //Anzeigen von recyclerview
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerView.setAdapter(mAdapter);
+                                        }
+                                    });
                                 }
-                            }
-                            // define an adapter
-                            //Werte an den Adapter übergeben
-                            mAdapter = new MyAdapter(
-                                    modulUndStudiengangsList,
-                                    prueferUndSemesterList,
-                                    datumsList,
-                                    modulList,
-                                    idList,
-                                    pruefFormList,
-                                    mLayout,
-                                    raumList);
-                            //Anzeigen von recyclerview
-                            recyclerView.setAdapter(mAdapter);
+                            }).start();
                         }
                     });
                     speicher = false;
@@ -233,47 +247,58 @@ public class TerminefragmentSuche extends Fragment {
     public void Adapteruebergabe()
     {
 
-        //Datenbank initialisieren
-        AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //Datenbank initialisieren
+                AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
 
-        // Änderung Merlin Gürtler
-        // List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
-        // Für die Suche von Modulen
-        List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
-        // Ende Änderung Merlin Gürtler
+                // Änderung Merlin Gürtler
+                // List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
+                // Für die Suche von Modulen
+                List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                // Ende Änderung Merlin Gürtler
 
-        ClearLists();
+                ClearLists();
 
-        for (int i =0;i<ppeList.size();i++) {
-            System.out.println(ppeList.get(i).getAusgewaehlt());
-            if(ppeList.get(i).getAusgewaehlt()) {
-                WerteZumAnzeigenList.add(i);
+                for (int i =0;i<ppeList.size();i++) {
+                    System.out.println(ppeList.get(i).getAusgewaehlt());
+                    if(ppeList.get(i).getAusgewaehlt()) {
+                        WerteZumAnzeigenList.add(i);
+                    }
+                }
+
+                //Variablen mit Werten aus der lokalen Datenbank füllen
+                for (int i = 0; i < WerteZumAnzeigenList.size(); i++) {
+                    modulUndStudiengangsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul() + "\n " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStudiengang());
+                    prueferUndSemesterList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getErstpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getZweitpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getSemester() + " ");
+                    datumsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getDatum());
+                    modulList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul());
+                    idList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getID());
+                    pruefFormList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getPruefform());
+                    raumList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getRaum());
+                    checkList.add(true);
+                }
+
+                // define an adapter
+                mAdapter = new MyAdapter(
+                        modulUndStudiengangsList,
+                        prueferUndSemesterList,
+                        datumsList,
+                        modulList,
+                        idList,
+                        pruefFormList,
+                        mLayout,
+                        raumList);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(mAdapter);
+                    }
+                });
             }
-        }
-
-        //Variablen mit Werten aus der lokalen Datenbank füllen
-        for (int i = 0; i < WerteZumAnzeigenList.size(); i++) {
-            modulUndStudiengangsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul() + "\n " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStudiengang());
-            prueferUndSemesterList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getErstpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getZweitpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getSemester() + " ");
-            datumsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getDatum());
-            modulList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul());
-            idList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getID());
-            pruefFormList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getPruefform());
-            raumList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getRaum());
-            checkList.add(true);
-        }
-
-        // define an adapter
-        mAdapter = new MyAdapter(
-                modulUndStudiengangsList,
-                prueferUndSemesterList,
-                datumsList,
-                modulList,
-                idList,
-                pruefFormList,
-                mLayout,
-                raumList);
-        recyclerView.setAdapter(mAdapter);
+        }).start();
     }
 
     public void ClearLists()
