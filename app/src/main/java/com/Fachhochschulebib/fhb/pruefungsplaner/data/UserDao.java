@@ -21,25 +21,25 @@ public interface UserDao {
     @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
     List<PruefplanEintrag> getModuleProf(String prof);
 
-    @Query("SELECT DISTINCT Studiengang FROM PruefplanEintrag WHERE Studiengang != :selectedStudiengang")
-    List<String> getStudiengangDistinct(String selectedStudiengang);
+    @Query("SELECT DISTINCT Studiengang FROM PruefplanEintrag ORDER BY Studiengang")
+    List<String> getStudiengangOrdered();
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul AND Studiengang = :studiengang")
     List<PruefplanEintrag>
     getModuleWithCourseAndModule(String modul, String studiengang);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang")
+    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang ORDER BY Modul")
     List<PruefplanEintrag>
-    getModuleWithCourse(String studiengang);
+    getModuleWithCourseOrdered(String studiengang);
 
-    @Query("SELECT DISTINCT Modul FROM PruefplanEintrag WHERE Studiengang != :selectedStudiengang")
+    @Query("SELECT Modul FROM PruefplanEintrag ORDER BY Modul")
     List<String>
-    getModuleExceptCourse(String selectedStudiengang);
+    getModuleOrdered();
 
     @Query("SELECT DISTINCT Erstpruefer FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang")
     List<String> getErstprueferDistinct(String selectedStudiengang);
 
-    @Query("SELECT DISTINCT Modul FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang")
+    @Query("SELECT Modul FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang ORDER BY Modul")
     List<String> getModuleWithCourseDistinct(String selectedStudiengang);
 
     @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")

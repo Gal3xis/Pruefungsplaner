@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferencesPPServerAdress
                 = getApplicationContext().getSharedPreferences("Server_Address", MODE_PRIVATE);
         SharedPreferences.Editor mEditorPPServerAdress = mSharedPreferencesPPServerAdress.edit();
-        mEditorPPServerAdress.putString("ServerIPAddress", "http://192.168.2.104:8080/");
+        mEditorPPServerAdress.putString("ServerIPAddress", context.getString(R.string.server_adress));
         //mEditorPPServerAdress.putString("ServerIPAddress", "http://192.168.178.39:8080/");
         //alternativ in FH: "http://thor.ad.fh-bielefeld.de:8080/"
         mEditorPPServerAdress.apply(); //Schreiben der Präferenz!
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
                 = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
 
         SharedPreferences.Editor mEditorRelUrlPath = mSharedPreferencesPPServerAdress.edit();
-        mEditorRelUrlPath.putString("ServerRelUrlPath", "PruefplanverwaltungRestIF/webresources/");
+        mEditorRelUrlPath.putString("ServerRelUrlPath", context.getString(R.string.server_url));
         mEditorRelUrlPath.apply(); //Schreiben der Präferenz!
         //Auslesen zur allgemeinen Verwendung in der aktuellen Activity
         relativePPlanURL
@@ -473,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
         progressBar.show();
         // Ende Merlin Gürtler
 
-        new Thread(new Runnable() {
+        Thread retrothread = new Thread(new Runnable() {
 
             //Shared Pref. für die Pruefperiode
             SharedPreferences.Editor mEditor;
@@ -565,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Calendar c = Calendar.getInstance();
                         c.setTime(ppDatum);
-                        c.add(Calendar.DATE, 7 * ppWochen);  // Anzahl der Tage Klausurenphase
+                        c.add(Calendar.DATE, 7 * ppWochen - 2);  // Anzahl der Tage Klausurenphase
                         lastDayPp = formatter.parse(formatter.format(c.getTime()));
 
                         //und mit dem heutigen Datum vergleichen.
@@ -602,7 +602,7 @@ public class MainActivity extends AppCompatActivity {
                     //Add one to month {0 - 11}
                     int month = calendar.get(Calendar.MONTH) + 1;
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    calendar.add(Calendar.DATE, 7 * ppWochen);
+                    calendar.add(Calendar.DATE, 7 * ppWochen - 2);
                     int year2 = calendar.get(Calendar.YEAR);
                     //Add one to month {0 - 11}
                     int month2 = calendar.get(Calendar.MONTH) + 1;
@@ -660,7 +660,30 @@ public class MainActivity extends AppCompatActivity {
                     //Keineverbindung();
                 }
             }
+        });
+
+        retrothread.start();
+
+        // Start Merlin Gürtler
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Drei Sekunden warten
+                    Thread.sleep(3000);
+
+                    // Beendet den Thread
+                    if(retrothread.isAlive()) {
+                        retrothread.interrupt();
+                        progressBar.dismiss();
+                        Log.d("Thread Interrupted","interrupted");
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }).start();
+        // Ende Merlin Gürtler
 
         if (checkReturn) {
             return true;

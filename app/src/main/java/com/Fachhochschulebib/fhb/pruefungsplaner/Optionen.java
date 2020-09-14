@@ -286,6 +286,19 @@ public class Optionen extends Fragment {
                 Log.d("Test", "Lokale DB löschen.");
                 datenbank.clearAllTables();
 
+                // Start Merlin Gürtler
+
+                // Update nachdem löschen
+                RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                retrofit.RetrofitWebAccess(
+                        getContext(),
+                        datenbank,
+                        pruefJahr,
+                        aktuellePruefphase,
+                        aktuellerTermin,
+                        serverAddress);
+                // Ende Merlin Gürtler
+
                 Toast.makeText(
                         v.getContext(),
                         v.getContext().getString(R.string.delete_db),
@@ -378,13 +391,11 @@ public class Optionen extends Fragment {
 
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
-                //Initialisierung: room database
-                AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                 retrofit.RetrofitWebAccess(
                                 getContext(),
-                                roomdaten,
+                        database,
                                 pruefJahr,
                                 aktuellePruefphase,
                                 aktuellerTermin,

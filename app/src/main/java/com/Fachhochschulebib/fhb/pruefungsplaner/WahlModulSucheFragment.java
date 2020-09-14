@@ -74,13 +74,13 @@ public class WahlModulSucheFragment extends Fragment {
         String selectedStudiengang  = sharedPrefSelectedStudiengang.
                 getString("selectedStudiengang","0");
 
-        List<String> modulNameArrayList = database.userDao().getModuleExceptCourse(selectedStudiengang);
+        List<String> modulNameArrayList = database.userDao().getModuleOrdered();
         ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
                 (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
         editWahlModul.setAdapter(adapterModuleAutoComplete);
 
         // Studiengang auswahl
-        List<String> studiengangArrayList = database.userDao().getStudiengangDistinct(selectedStudiengang);
+        List<String> studiengangArrayList = database.userDao().getStudiengangOrdered();
         studiengangArrayList.add(0,getContext().getString(R.string.all_cours));
 
         // Design für den Spinner
@@ -162,7 +162,7 @@ public class WahlModulSucheFragment extends Fragment {
                     } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
                             && modulName.equals(getContext().getString(R.string.all))) {
 
-                        ppeList = database.userDao().getModuleWithCourse(selectedStudiengangSpinner);
+                        ppeList = database.userDao().getModuleWithCourseOrdered(selectedStudiengangSpinner);
 
                     }
 

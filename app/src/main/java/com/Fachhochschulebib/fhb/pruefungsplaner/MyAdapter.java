@@ -296,7 +296,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 }
 
                 holder.ivicon.clearColorFilter();
-                Toast.makeText(v.getContext(), v.getContext().getString(R.string.delete_favorite), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
                 // Ende Merlin Gürtler
             }
         });

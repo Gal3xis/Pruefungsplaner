@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Pruefungsplaner</string>
+    <string name="server_adress">http://192.168.2.104:8080/</string>
+    <string name="server_url">PruefplanverwaltungRestIF/webresources/</string>
 
     <!-- Ui -->
     <string name="chose_module">Modulauswahl (aktueller Prüftermin):</string>
