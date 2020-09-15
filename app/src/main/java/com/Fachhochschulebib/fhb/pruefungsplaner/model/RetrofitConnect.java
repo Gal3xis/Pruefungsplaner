@@ -116,14 +116,14 @@ public class RetrofitConnect {
 
                     //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
                     //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-                    for (int i = response.body().size()-1 ; i >= 0; --i) {
+                    for (JsonResponse eintragDB: response.body()) {
 
                         //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
                         PruefplanEintrag pruefplanEintrag = new PruefplanEintrag();
 
                         //Festlegen vom Dateformat
                         String datumZeitzone;
-                        String datumDerPruefung = response.body().get(i).getDatum();
+                        String datumDerPruefung = eintragDB.getDatum();
                         datumZeitzone = datumDerPruefung.replaceFirst("CET", "");
                         datumZeitzone = datumZeitzone.replaceFirst("CEST","");
                         String datumLetzePruefungFormatiert = null;
@@ -154,16 +154,16 @@ public class RetrofitConnect {
                          */
                          // if(!checkvalidate){
                              //erhaltene Werte zur Datenbank hinzufügen
-                        pruefplanEintrag.setErstpruefer(response.body().get(i).getErstpruefer());
-                        pruefplanEintrag.setZweitpruefer(response.body().get(i).getZweitpruefer());
+                        pruefplanEintrag.setErstpruefer(eintragDB.getErstpruefer());
+                        pruefplanEintrag.setZweitpruefer(eintragDB.getZweitpruefer());
                         pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
-                        pruefplanEintrag.setID(response.body().get(i).getID());
-                        pruefplanEintrag.setStudiengang(response.body().get(i).getStudiengang());
-                        pruefplanEintrag.setModul(response.body().get(i).getModul());
-                        pruefplanEintrag.setSemester(response.body().get(i).getSemester());
-                        pruefplanEintrag.setTermin(response.body().get(i).getTermin());
-                        pruefplanEintrag.setRaum(response.body().get(i).getRaum());
-                        pruefplanEintrag.setPruefform(response.body().get(i).getPruefform());
+                        pruefplanEintrag.setID(eintragDB.getID());
+                        pruefplanEintrag.setStudiengang(eintragDB.getStudiengang());
+                        pruefplanEintrag.setModul(eintragDB.getModul());
+                        pruefplanEintrag.setSemester(eintragDB.getSemester());
+                        pruefplanEintrag.setTermin(eintragDB.getTermin());
+                        pruefplanEintrag.setRaum(eintragDB.getRaum());
+                        pruefplanEintrag.setPruefform(eintragDB.getPruefform());
 
                         //lokale datenbank initialiseren
                          //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -186,7 +186,7 @@ public class RetrofitConnect {
                          }
 
                          //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                         pruefplanEintrag.setValidation(jahr + response.body().get(i).getStudiengangId() + pruefungsphase);
+                         pruefplanEintrag.setValidation(jahr + eintragDB.getStudiengangId() + pruefungsphase);
 
                         // Start Merlin Gürtler
                         // Extra Thread da sonst die Db nicht aktualisiert werden kann.

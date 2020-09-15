@@ -83,10 +83,12 @@ public class Tabelle extends AppCompatActivity  {
         });
 
         nv = findViewById(R.id.nav_view);
+        /*
         if (!nv.isFocused())
         {
             dl.setVisibility(View.GONE);
         }
+
 
         dl.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
@@ -115,6 +117,7 @@ public class Tabelle extends AppCompatActivity  {
                 // The new state will be one of STATE_IDLE, STATE_DRAGGING or STATE_SETTLING.
             }
         });
+         */
 
 
         //Bottom Navigation Menü mit den Menüpunkten
