@@ -50,6 +50,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM PruefplanEintrag WHERE ID = :id")
     PruefplanEintrag getPruefung(String id);
+
+    @Query ("UPDATE PruefplanEintrag SET Pruefform = :pruefform WHERE ID = :id")
+    void updatePruefform(String pruefform, int id);
     // Ende Merlin Gürtler
 
 

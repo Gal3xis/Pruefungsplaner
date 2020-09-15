@@ -16,7 +16,6 @@ import android.util.Log;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
-import com.Fachhochschulebib.fhb.pruefungsplaner.R;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
@@ -164,6 +163,7 @@ public class RetrofitConnect {
                         pruefplanEintrag.setSemester(response.body().get(i).getSemester());
                         pruefplanEintrag.setTermin(response.body().get(i).getTermin());
                         pruefplanEintrag.setRaum(response.body().get(i).getRaum());
+                        pruefplanEintrag.setPruefform(response.body().get(i).getPruefform());
 
                         //lokale datenbank initialiseren
                          //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -185,59 +185,10 @@ public class RetrofitConnect {
                                   "Fehler beim Ermitteln der favorisierten Prüfungen");
                          }
 
-                         //Überprüfung von Klausur oder Mündliche Prüfung
-                         pruefplanEintrag.setPruefform(ctx.getString(R.string.mundHaus_text));
-
-                         if(ctx.getString(R.string.klausur).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur_text));
-
-                         }
-                         if(ctx.getString(R.string.klausur120).equals(response.body().get(i).getPruefform())) {
-                             pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur120_text));
-
-                         }
-                         if(ctx.getString(R.string.klausur60).equals(response.body().get(i).getPruefform())) {
-                             pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur60_text));
-
-                         }
-                         if(ctx.getString(R.string.klausur180).equals(response.body().get(i).getPruefform())) {
-                             pruefplanEintrag.setPruefform(ctx.getString(R.string.klausur180_text));
-
-                         }
-                        if(ctx.getString(R.string.projektarbeit).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.projektarbeit_text));
-
-                        }
-                        if(ctx.getString(R.string.kombination15).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.kombination15_text));
-
-                        }
-                        if(ctx.getString(R.string.kombination30).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.kombination30_text));
-
-                        }
-                        if(ctx.getString(R.string.ilias60).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.ilias60_text));
-
-                        }
-                        if(ctx.getString(R.string.ilias90).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.ilias90_text));
-
-                        }
-                        if(ctx.getString(R.string.online60).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.online60_text));
-
-                        }
-                        if(ctx.getString(R.string.online90).equals(response.body().get(i).getPruefform())) {
-                            pruefplanEintrag.setPruefform(ctx.getString(R.string.online90_text));
-
-                        }
-
-                         //Start Änderungen vorgenommen Merlin Gürtler
                          //Schlüssel für die Erkennung bzw unterscheidung Festlegen
                          pruefplanEintrag.setValidation(jahr + response.body().get(i).getStudiengangId() + pruefungsphase);
 
-                         // Ende Merlin Gürtler
+                        // Start Merlin Gürtler
                         // Extra Thread da sonst die Db nicht aktualisiert werden kann.
                         new Thread((new Runnable() {
                             @Override
@@ -245,10 +196,57 @@ public class RetrofitConnect {
                                 addUser(roomdaten, pruefplanEintrag);
                             }
                         })).start();
-
-                        // }
+                        // Ende Merlin Gürtler
                     }
+
+                    // Start Merlin Gürtler
+                    // Der Neue Pfad für die pruefungsform
+                    String relPathWithParametersPForm = relativePPlanUrl
+                            + "entity.pruefungsform/";
+
+                    String URL = urlfhb + relPathWithParametersPForm;
+
+                    Retrofit.Builder builder = new Retrofit.Builder();
+                    builder.baseUrl(URL);
+                    builder.addConverterFactory(GsonConverterFactory.create());
+                    Retrofit retrofit = builder.build();
+
+                    final RequestInterface request = retrofit.create(RequestInterface.class);
+                    Call<List<JsonPruefungsform>> secondCall = request.getJSONPruefForm();
+                    secondCall.enqueue(new Callback<List<JsonPruefungsform>>() {
+                        @Override
+                        public void onResponse(Call<List<JsonPruefungsform>> call, Response<List<JsonPruefungsform>> response) {
+                            // Neuer Thread da DB Abfragen immer ein einem neuen Thread sein müssen
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll2();
+                                    // Erhalte die Prüfform aus der DB
+                                    if (response.isSuccessful()) {
+                                        for(PruefplanEintrag eintrag: ppeList) {
+                                            for (JsonPruefungsform pruefung: response.body()) {
+                                                if (eintrag.getPruefform().equals(pruefung.getPForm())) {
+                                                    // Update die Prüfform in der DB
+                                                    roomdaten.userDao().updatePruefform(pruefung.getPFBez(),
+                                                            Integer.valueOf(eintrag.getID()));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }).start();
+                        }
+
+                        @Override
+                        public void onFailure(Call<List<JsonPruefungsform>> call, Throwable t) {
+                            Log.d("Error",t.getMessage());
+                        }
+                    });
+
                     checkuebertragung = true;
+
+                    // Ende Merlin Gürtler
 
                 }//if(response.isSuccessful())
                 else { System.out.println(" :::. NO Retrofit RESPONSE .::: "); }
