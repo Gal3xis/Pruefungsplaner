@@ -170,22 +170,24 @@ public class sucheFragment extends Fragment {
         registerButton(btnSemester6,6);
         // Ende Merlin Gürtler
 
+        //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
+        List<String> spinnerModuleArrayList = new ArrayList<String>();
+        spinnerModuleArrayList.add(0, getContext().getString(R.string.modul_search));
+
+        //Adapter-Aufruf (LG: Sind hier alle drei Adapter notwendig?)
+        // Auswahl Module
+        // Hier schon setzen für ein besseres UI
+        ArrayAdapter<String> adapterModule = new ArrayAdapter<String>(
+                v.getContext(), R.layout.simple_spinner_item, spinnerModuleArrayList);
+        spSGModule.setAdapter(adapterModule);
+
         try {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     //Spinner-Aufruf und Spinner mit Werten füllen
-                    List<String> spinnerModuleArrayList = roomDaten.userDao().getModuleWithCourseDistinct(selectedStudiengang);
+                    spinnerModuleArrayList.addAll(roomDaten.userDao().getModuleWithCourseDistinct(selectedStudiengang));
                     List<String> spinnerProfArrayList = roomDaten.userDao().getErstprueferDistinct(selectedStudiengang);
-
-                    //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
-                    spinnerModuleArrayList.add(0, getContext().getString(R.string.modul_search));
-
-
-                    //Adapter-Aufruf (LG: Sind hier alle drei Adapter notwendig?)
-                    // Auswahl Module
-                    ArrayAdapter<String> adapterModule = new ArrayAdapter<String>(
-                            v.getContext(), R.layout.simple_spinner_item, spinnerModuleArrayList);
 
 
                     // Für das AutoComplete
@@ -198,10 +200,6 @@ public class sucheFragment extends Fragment {
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
-                            //Grafische Ausgabe
-                            //DONE (08/2020) LG unused Code?
-
-                            spSGModule.setAdapter(adapterModule);
                             //Spinner spProf = (Spinner) v.findViewById(R.id.spProf);
                             //spProf.setAdapter(adapterProf);
 

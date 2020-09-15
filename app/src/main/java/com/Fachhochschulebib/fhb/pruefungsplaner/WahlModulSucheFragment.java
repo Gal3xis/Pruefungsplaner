@@ -40,6 +40,7 @@ import androidx.fragment.app.Fragment;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
@@ -47,7 +48,6 @@ import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
 public class WahlModulSucheFragment extends Fragment {
 
     private AppDatabase database = AppDatabase.getAppDatabase(getContext());
-    AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
     List<PruefplanEintrag> ppeList;
 
     private String selectedStudiengangSpinner;
@@ -62,13 +62,24 @@ public class WahlModulSucheFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.wahlmodul, container, false);
 
-        selectedStudiengangSpinner = getContext().getString(R.string.all_cours);
-        modulName = getContext().getString(R.string.all);
-
+        final Spinner spStudiengang = v.findViewById(R.id.spStudiengang);
         final Button searchBtn = v.findViewById(R.id.BtnOk);
         final AutoCompleteTextView editWahlModul = v.findViewById(R.id.wahlModulName);
-        final Spinner spStudiengang = v.findViewById(R.id.spStudiengang);
 
+        // Studiengang auswahl
+        List<String> studiengangArrayList = new ArrayList<String>();
+        studiengangArrayList.add(0,v.getContext().getString(R.string.all_cours));
+
+        // Design für den Spinner
+        // Hier schon setzen für ein besseres UI
+        ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
+                v.getContext(), R.layout.simple_spinner_item, studiengangArrayList);
+
+        adapterStudiengang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spStudiengang.setAdapter(adapterStudiengang);
+
+        selectedStudiengangSpinner = getContext().getString(R.string.all_cours);
+        modulName = getContext().getString(R.string.all);
 
         // Damit keine Module des gewählten Studienganges angezeigt werden
         SharedPreferences sharedPrefSelectedStudiengang = getContext().
@@ -83,21 +94,14 @@ public class WahlModulSucheFragment extends Fragment {
                 ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
                         (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
 
-                // Studiengang auswahl
-                List<String> studiengangArrayList = database.userDao().getStudiengangOrdered();
-                studiengangArrayList.add(0,getContext().getString(R.string.all_cours));
-
-                // Design für den Spinner
-                ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
-                        v.getContext(), R.layout.simple_spinner_item, studiengangArrayList);
-                adapterStudiengang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                studiengangArrayList.addAll(database.userDao().getStudiengangOrdered());
 
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         editWahlModul.setAdapter(adapterModuleAutoComplete);
-                        spStudiengang.setAdapter(adapterStudiengang);
+                        // spStudiengang.setAdapter(adapterStudiengang);
                     }
                 });
 
