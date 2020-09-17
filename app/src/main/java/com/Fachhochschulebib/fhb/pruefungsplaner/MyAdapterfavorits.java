@@ -1,5 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -95,43 +96,40 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // - replace the contents of the view with that element
         name = moduleUndStudiengangsList.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
+
+
+        // Start Merlin Gürtler
+        holder.layout2.setOnTouchListener(new onSwipeTouchListener(context) {
+            public void onSwipeRight() {
+                // Bewege das Element nach rechts
+                ObjectAnimator animation = ObjectAnimator.ofFloat(holder.layout, "translationX", 100f);
+                animation.setDuration(500);
+                animation.start();
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        // warte 500 milisekunden
+                        try {
+                            Thread.sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        // lösche das Element
+                        deleteItemThread(position, holder);
+                    }
+                }).start();
+            }
+        });
+        // Ende Merlin Gürtler
+
+
         //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        AppDatabase datenbank =  AppDatabase.getAppDatabase(v.getContext());
-                        List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
-                        // second parameter is necessary ie.,
-                        // Value to return if this preference does not exist.
-                        for (PruefplanEintrag eintrag: ppeList){
-                            if(eintrag.getID().equals(ppIdList.get(position))){
-                                datenbank.userDao()
-                                        .update(false,Integer.valueOf(ppIdList.get(position)));
-                                remove(holder.getAdapterPosition());
-
-                                //Entferne den Eintrag aus dem Calendar falls vorhanden
-                                CheckGoogleCalendar cal = new CheckGoogleCalendar();
-                                cal.setCtx(v.getContext());
-                                if (!cal.checkCal(Integer.valueOf(ppIdList.get(position)))) {
-                                    cal.deleteEntry(Integer.valueOf(ppIdList.get(position)));
-                                }
-
-                            }
-                        }
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Start Merlin Gürtler
-                                Toast.makeText(v.getContext(),
-                                        v.getContext().getString(R.string.delete), Toast.LENGTH_SHORT).show();
-                                // Ende Merlin Gürtler
-                            }
-                        });
-                    }
-                }).start();
+                deleteItemThread(position, holder);
             }
         });
 
@@ -148,22 +146,21 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
         SharedPreferences sharedPrefSelectedStudiengang = context.
-                getSharedPreferences("validation",Context.MODE_PRIVATE);
-        String selectedStudiengang [] = sharedPrefSelectedStudiengang.
-                getString("selectedStudiengang","0").split(" ");
+                getSharedPreferences("validation", Context.MODE_PRIVATE);
+        String selectedStudiengang[] = sharedPrefSelectedStudiengang.
+                getString("selectedStudiengang", "0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
 
-        if(!selectedStudiengang[selectedStudiengang.length - 1].equals(studiengang[studiengang.length - 1]))
-        {
+        if (!selectedStudiengang[selectedStudiengang.length - 1].equals(studiengang[studiengang.length - 1])) {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[] {Color.parseColor(colorElectiveModule),
+                    new int[]{Color.parseColor(colorElectiveModule),
                             Color.parseColor(colorElectiveModule)});
             backGroundGradient.setCornerRadius(40);
             final int sdk = android.os.Build.VERSION.SDK_INT;
-            if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+            if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
                 holder.layout.setBackgroundDrawable(backGroundGradient);
             } else {
                 holder.layout.setBackground(backGroundGradient);
@@ -176,16 +173,16 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         String[] splitDatumUndUhrzeit = datumsList.get(position).split(" ");
         String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
         holder.txtthirdline.setText(context.getString(R.string.clockTime2)
-                                    + splitDatumUndUhrzeit[1].substring(0, 5).toString()
-                                    + context.getString(R.string.date2)
-                                    + splitTagMonatJahr[2].toString() + "."
-                                    + splitTagMonatJahr[1].toString() + "."
-                                    + splitTagMonatJahr[0].toString());
+                + splitDatumUndUhrzeit[1].substring(0, 5).toString()
+                + context.getString(R.string.date2)
+                + splitTagMonatJahr[2].toString() + "."
+                + splitTagMonatJahr[1].toString() + "."
+                + splitTagMonatJahr[0].toString());
         final String[] splitPrueferUndSemester
                 = prueferUndSemesterList.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
-                                + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1]
-                                + context.getString(R.string.semester) + splitPrueferUndSemester[2]);
+                + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1]
+                + context.getString(R.string.semester) + splitPrueferUndSemester[2]);
     }
 
 
@@ -213,25 +210,62 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             final String[] sa = prueferUndSemesterList.get(position).split(" ");
             //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
             String s = (context.getString(R.string.information) +
-                        context.getString(R.string.course) + studiengang[studiengang.length - 1] +
-                        context.getString(R.string.modul) + modulname +
-                        context.getString(R.string.firstProf) + sa[0] +
-                        context.getString(R.string.secondProf) + sa[1] +
-                        context.getString(R.string.date) + aufteilung2[2].toString() + "."
-                                     + aufteilung2[1].toString() + "."
-                                     + aufteilung2[0].toString() +
-                        context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
-                        context.getString(R.string.clock) +
-                        context.getString(R.string.form) + raumList.get(position) +"\n "+ "\n \n \n \n \n \n ");
+                    context.getString(R.string.course) + studiengang[studiengang.length - 1] +
+                    context.getString(R.string.modul) + modulname +
+                    context.getString(R.string.firstProf) + sa[0] +
+                    context.getString(R.string.secondProf) + sa[1] +
+                    context.getString(R.string.date) + aufteilung2[2].toString() + "."
+                    + aufteilung2[1].toString() + "."
+                    + aufteilung2[0].toString() +
+                    context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
+                    context.getString(R.string.clock) +
+                    context.getString(R.string.form) + raumList.get(position) + "\n " + "\n \n \n \n \n \n ");
 
             return (s);
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("Fehler Adapterfavorits",
                     "Fehler bei ermittlung der weiteren Informationen");
 
         }
         return ("0"); //????
     }
+
+    // Start Merlin Gürtler
+    // da die Funktion mehrmals genutzt wird ausglagern in Funktion
+    private void deleteItemThread(int position, ViewHolder holder) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppDatabase datenbank = AppDatabase.getAppDatabase(context);
+                List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
+                // second parameter is necessary ie.,
+                // Value to return if this preference does not exist.
+                for (PruefplanEintrag eintrag : ppeList) {
+                    if (eintrag.getID().equals(ppIdList.get(position))) {
+                        datenbank.userDao()
+                                .update(false, Integer.valueOf(ppIdList.get(position)));
+                        remove(holder.getAdapterPosition());
+
+                        //Entferne den Eintrag aus dem Calendar falls vorhanden
+                        CheckGoogleCalendar cal = new CheckGoogleCalendar();
+                        cal.setCtx(context);
+                        if (!cal.checkCal(Integer.valueOf(ppIdList.get(position)))) {
+                            cal.deleteEntry(Integer.valueOf(ppIdList.get(position)));
+                        }
+
+                    }
+                }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(context,
+                                context.getString(R.string.delete), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        }).start();
+    }
+    // Ende Merlin Gürtler
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
