@@ -152,18 +152,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
                 //                  Toast.LENGTH_SHORT).show();
                 speicher = false;
-                if (position >= 0) {
-                    int pruefid = Integer.valueOf(pruefplanid.get(position));
 
-                    for (PruefplanEintrag eintrag : ppeList) {
-                        if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
-                            if (eintrag.getFavorit()) {
-                                holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
-                                // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                            }
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (position >= 0) {
+                            int pruefid = Integer.valueOf(pruefplanid.get(position));
+
+                            for (PruefplanEintrag eintrag : ppeList) {
+                                if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
+                                    if (eintrag.getFavorit()) {
+                                        holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
+                                        // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            }//for
                         }
-                    }//for
-                }
+                    }
+                });
             }
         }).start();
 
