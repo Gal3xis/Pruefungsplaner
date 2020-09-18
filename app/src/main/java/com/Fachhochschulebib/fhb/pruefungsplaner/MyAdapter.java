@@ -194,39 +194,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         boolean isFavorite = checkFavorite(position);
                         if(isFavorite) {
                             deleteFromFavorites(position, holder);
-                        }
-
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Bewege das Element wieder zurück
-                                ObjectAnimator animation = ObjectAnimator.ofFloat(holder.bigLayout, "translationX", 0);
-                                animation.setDuration(500);
-                                animation.start();
-                            }
-                        });
-                    }
-                }).start();
-            }
-
-            public void onSwipeLeft() {
-                // Bewege das Element nach links
-                ObjectAnimator animation = ObjectAnimator.ofFloat(holder.bigLayout, "translationX", -100f);
-                animation.setDuration(500);
-                animation.start();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // warte 500 milisekunden
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        // füge das Element zu Favoriten hinzu
-                        boolean isFavorite = checkFavorite(position);
-                        if(!isFavorite) {
+                        } else {
                             addToFavorites(position, holder);
                         }
 
