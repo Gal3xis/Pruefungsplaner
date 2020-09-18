@@ -384,7 +384,7 @@ public class sucheFragment extends Fragment {
                             }
 
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            // ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
+                            ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
                             ft.commit();
                         }
                     }).start();
