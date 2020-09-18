@@ -12,6 +12,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,11 +20,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentTransaction;
@@ -45,7 +45,7 @@ public class Tabelle extends AppCompatActivity  {
     private Button btnsuche;
     private DrawerLayout dl;
     private NavigationView nv;
-    private TextView txtAnzeigeMenu;
+    private Toolbar header;
 
     SharedPreferences mSharedPreferencesValidation;
     String pruefJahr,
@@ -57,25 +57,15 @@ public class Tabelle extends AppCompatActivity  {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Start Merlin Gürtler
-        // Nun aus Shared Preferences
-        mSharedPreferencesValidation
-                = Tabelle.this.getSharedPreferences("validation", 0);
-
-        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
-        // Ende Merlin Gürtler
-
-
         setContentView(R.layout.hauptfenster);
-        txtAnzeigeMenu = findViewById(R.id.txtAnzeige);
 
-        dl = findViewById(R.id.drawer_layout);
+        // Start Merlin Gürtler
+        // registriert die Toolbar
+        header = (Toolbar) findViewById(R.id.header);
+        setSupportActionBar(header);
+        header.setTitleTextColor(Color.WHITE);
 
-        ImageView btnOpen = (ImageView) findViewById(R.id.btnopen);
-
-        btnOpen.setOnClickListener(new View.OnClickListener() {
+        header.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 System.out.println("button pressed");
@@ -88,6 +78,18 @@ public class Tabelle extends AppCompatActivity  {
                 }
             }
         });
+
+
+        // Nun aus Shared Preferences
+        mSharedPreferencesValidation
+                = Tabelle.this.getSharedPreferences("validation", 0);
+
+        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        // Ende Merlin Gürtler
+
+        dl = findViewById(R.id.drawer_layout);
 
         nv = findViewById(R.id.nav_view);
         /*
@@ -127,7 +129,7 @@ public class Tabelle extends AppCompatActivity  {
          */
 
 
-        //Bottom Navigation Menü mit den Menüpunkten
+        //Drawer Navigation Menü mit den Menüpunkten
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -138,7 +140,7 @@ public class Tabelle extends AppCompatActivity  {
                 {
                     case R.id.navigation_calender:
                         //Menüpunkt termine
-                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_calender));
+                        header.setTitle(getApplicationContext().getString(R.string.title_calender));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -150,9 +152,6 @@ public class Tabelle extends AppCompatActivity  {
 
                     case R.id.navigation_medication:
                         //Menüpunkt Suche
-                        calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
@@ -166,7 +165,7 @@ public class Tabelle extends AppCompatActivity  {
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_search));
+                                        header.setTitle(getApplicationContext().getString(R.string.title_search));
                                         recyclerView.setVisibility(View.INVISIBLE);
                                         calendar.setVisibility(View.GONE);
                                         btnsuche.setVisibility(View.GONE);
@@ -186,7 +185,7 @@ public class Tabelle extends AppCompatActivity  {
 
                         return true;
                     case R.id.navigation_diary:
-                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_exam));
+                        header.setTitle(getApplicationContext().getString(R.string.title_exam));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -197,7 +196,7 @@ public class Tabelle extends AppCompatActivity  {
                         return true;
 
                     case R.id.navigation_settings:
-                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_settings));
+                        header.setTitle(getApplicationContext().getString(R.string.title_settings));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -209,7 +208,7 @@ public class Tabelle extends AppCompatActivity  {
 
                     // Start Merlin Gürtler
                     case R.id.navigation_electiveModule:
-                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_electiveModule));
+                        header.setTitle(getApplicationContext().getString(R.string.title_electiveModule));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -221,7 +220,7 @@ public class Tabelle extends AppCompatActivity  {
 
 
                     case R.id.navigation_changeCourse:
-                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_changeCourse));
+                        header.setTitle(getApplicationContext().getString(R.string.title_changeCourse));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
@@ -257,7 +256,7 @@ public class Tabelle extends AppCompatActivity  {
 
     }
 
-    //navigation mit den menuepunkten
+    //navigation mit den menuepunkten Bottom
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -267,7 +266,7 @@ public class Tabelle extends AppCompatActivity  {
             switch (item.getItemId()) {
                 case R.id.navigation_calender:
                     //fragment fuer das "terminefragment" layout
-                    txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_calender));
+                    header.setTitle(getApplicationContext().getString(R.string.title_calender));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -278,7 +277,7 @@ public class Tabelle extends AppCompatActivity  {
 
                 case R.id.navigation_medication:
                     //fragment fuer das "activity_suche" layout
-                    txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_search));
+                    header.setTitle(getApplicationContext().getString(R.string.title_search));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -289,7 +288,7 @@ public class Tabelle extends AppCompatActivity  {
 
                 case R.id.navigation_diary:
                     //fragment fuer das "favoriten" layout
-                    txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_exam));
+                    header.setTitle(getApplicationContext().getString(R.string.title_exam));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -300,7 +299,7 @@ public class Tabelle extends AppCompatActivity  {
 
                 case R.id.navigation_settings:
                     //fragment fuer das "Optionen" layout
-                    txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_settings));
+                    header.setTitle(getApplicationContext().getString(R.string.title_settings));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
@@ -310,7 +309,7 @@ public class Tabelle extends AppCompatActivity  {
                     return true;
                 // Start Merlin Gürtler
                 case R.id.navigation_electiveModule:
-                    txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_electiveModule));
+                    header.setTitle(getApplicationContext().getString(R.string.title_electiveModule));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
                     btnsuche.setVisibility(View.GONE);
