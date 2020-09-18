@@ -13,6 +13,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -148,25 +150,39 @@ public class Tabelle extends AppCompatActivity  {
 
                     case R.id.navigation_medication:
                         //Menüpunkt Suche
-                        String validation
-                                = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
-                        AppDatabase roomdaten
-                                = AppDatabase.getAppDatabase(getApplicationContext());
-                        List<PruefplanEintrag> ppeList
-                                = roomdaten.userDao().getAll(validation);
-                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_search));
-                        recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                String validation
+                                        = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
+                                AppDatabase roomdaten
+                                        = AppDatabase.getAppDatabase(getApplicationContext());
+                                List<PruefplanEintrag> ppeList
+                                        = roomdaten.userDao().getAll(validation);
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        txtAnzeigeMenu.setText(getApplicationContext().getString(R.string.title_search));
+                                        recyclerView.setVisibility(View.INVISIBLE);
+                                        calendar.setVisibility(View.GONE);
+                                        btnsuche.setVisibility(View.GONE);
+                                        dl.closeDrawer(GravityCompat.START);
 
 
-                        //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
-                        if (ppeList.size() < 2) {
-                        }else{
-                            ft.replace(R.id.frame_placeholder, new sucheFragment());
-                            ft.commit();
-                        }
+                                        //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
+                                        if (ppeList.size() < 2) {
+                                        }else{
+                                            ft.replace(R.id.frame_placeholder, new sucheFragment());
+                                            ft.commit();
+                                        }
+                                    }
+                                });
+                            }
+                        }).start();
 
                         return true;
                     case R.id.navigation_diary:
