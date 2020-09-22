@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 // Erweitere die Callback Funktion
-public class swipeListenerTermin extends ItemTouchHelper.Callback {
+public class swipeListener extends ItemTouchHelper.Callback {
 
     Context mContext;
     private Paint mClearPaint;
@@ -27,13 +27,22 @@ public class swipeListenerTermin extends ItemTouchHelper.Callback {
     private int intrinsicHeight;
 
 
-    swipeListenerTermin(Context context) {
+    swipeListener(Context context, Boolean delete) {
         mContext = context;
         mBackground = new ColorDrawable();
-        backgroundColor = Color.parseColor("#CC3333");
+        if(delete) {
+            // Farbe und Icon fürs löschen
+            backgroundColor = Color.parseColor("#CC3333");
+            deleteDrawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_menu_delete);
+        } else {
+            // Farbe und Icon fürs hinzufügen
+            backgroundColor = Color.parseColor("#088A08");
+            deleteDrawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_menu_add);
+        }
+
         mClearPaint = new Paint();
         mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        deleteDrawable = ContextCompat.getDrawable(mContext, android.R.drawable.ic_menu_delete);
+
         intrinsicWidth = deleteDrawable.getIntrinsicWidth();
         intrinsicHeight = deleteDrawable.getIntrinsicHeight();
     }

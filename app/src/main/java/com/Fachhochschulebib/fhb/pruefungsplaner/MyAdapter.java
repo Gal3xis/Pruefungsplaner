@@ -10,7 +10,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
-import android.animation.ObjectAnimator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -172,46 +171,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 });
             }
         }).start();
-
-        // Start Merlin Gürtler
-        holder.bigLayout.setOnTouchListener(new onSwipeTouchListener(context) {
-            public void onSwipeRight() {
-                // Bewege das Element nach rechts
-                ObjectAnimator animation = ObjectAnimator.ofFloat(holder.bigLayout, "translationX", 100f);
-                animation.setDuration(500);
-                animation.start();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        // warte 500 milisekunden
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        // lösche das Element von Favoriten
-                        boolean isFavorite = checkFavorite(position);
-                        if(isFavorite) {
-                            deleteFromFavorites(position, holder);
-                        } else {
-                            addToFavorites(position, holder);
-                        }
-
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                // Bewege das Element wieder zurück
-                                ObjectAnimator animation = ObjectAnimator.ofFloat(holder.bigLayout, "translationX", 0);
-                                animation.setDuration(500);
-                                animation.start();
-                            }
-                        });
-                    }
-                }).start();
-            }
-        });
-        // Ende Merlin Gürtler
 
         holder.txtHeader.setText(name);
         holder.ivicon.setOnClickListener(v -> {

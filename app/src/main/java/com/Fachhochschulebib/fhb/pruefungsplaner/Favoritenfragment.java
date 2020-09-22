@@ -174,7 +174,7 @@ public class Favoritenfragment extends Fragment {
     // Start Merlin Gürtler
     private void enableSwipeToDelete() {
         // Definiert den Listener
-        swipeListenerFavorit swipeToDeleteCallback = new swipeListenerFavorit(getContext()) {
+        swipeListener swipeToDeleteCallback = new swipeListener(getContext(), true) {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();

@@ -14,6 +14,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,8 +27,11 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -99,7 +103,7 @@ public class Terminefragment extends Fragment {
         protected String doInBackground(String... params) {
             List<PruefplanEintrag> ppeList
                     = Terminefragment.this.datenbank.userDao().getAll(validation);
-            if(ppeList.size() < 1) {
+            if (ppeList.size() < 1) {
                 for (int c = 0; c < 1000; c++) {
                     try {
                         Thread.sleep(3000);
@@ -124,7 +128,8 @@ public class Terminefragment extends Fragment {
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {}
+        protected void onProgressUpdate(Void... values) {
+        }
     }
 
     @Override
@@ -160,12 +165,12 @@ public class Terminefragment extends Fragment {
                             = recyclerView.getLayoutManager().findViewByPosition(position);
 
                     LinearLayout layout1
-                            =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                            = (LinearLayout) viewItem.findViewById(R.id.linearLayout);
                     layout1.setOnClickListener(v1 -> {
                         Log.e("@@@@@", "" + position);
                         if (txtSecondScreen.getVisibility() == v1.VISIBLE) {
                             txtSecondScreen.setVisibility(v1.GONE);
-                            checkList.set(position,false);
+                            checkList.set(position, false);
                         } else {
                             // Start Merlin Gürtler
                             for (int i = 0; i < recyclerView.getChildCount(); i++) {
@@ -178,8 +183,8 @@ public class Terminefragment extends Fragment {
                                     if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
                                         txtSecondScreen2.setVisibility(v.GONE);
                                     }
-                                }catch (Exception e) {
-                                    Log.d("ERROR","NOT IN VIEW PORT " + e);
+                                } catch (Exception e) {
+                                    Log.d("ERROR", "NOT IN VIEW PORT " + e);
                                 }
                             }
                             // Ende Merlin Gürtler
@@ -224,6 +229,7 @@ public class Terminefragment extends Fragment {
         //Es wird überprüft, welches Datum ausgewählt wurde.
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
+
             @Override
             public void onClick(View v) {
                 if (!speicher) {
@@ -252,7 +258,7 @@ public class Terminefragment extends Fragment {
                                     if (month < 9) {
                                         month2 = "0" + String.valueOf(month + 1);
                                     } else {
-                                        month2 = String.valueOf(month+1);
+                                        month2 = String.valueOf(month + 1);
                                     }
                                     if (dayOfMonth < 10) {
                                         day2 = "0" + String.valueOf(dayOfMonth);
@@ -265,7 +271,7 @@ public class Terminefragment extends Fragment {
                                     checkList.clear();
 
                                     ClearLists();
-                                    for(PruefplanEintrag eintrag: ppeList) {
+                                    for (PruefplanEintrag eintrag : ppeList) {
                                         String[] date2 = eintrag.getDatum().split(" ");
                                         System.out.println(date2[0]);
 
@@ -290,12 +296,12 @@ public class Terminefragment extends Fragment {
                                     }// define an adapter
 
                                     //Adapter mit Werten füllen
-                                    mAdapter = new MyAdapter(   modulUndStudiengangsList,
+                                    mAdapter = new MyAdapter(modulUndStudiengangsList,
                                             prueferUndSemesterList,
                                             datumsList,
                                             modulList,
                                             idList,
-                                            pruefFormList,mLayout,
+                                            pruefFormList, mLayout,
                                             raumList);
                                     //Anzeigen
                                     recyclerView.setAdapter(mAdapter);
@@ -310,8 +316,7 @@ public class Terminefragment extends Fragment {
         return v;
     }
 
-    public void AdapterUebergabe()
-    {
+    public void AdapterUebergabe() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -320,7 +325,7 @@ public class Terminefragment extends Fragment {
                 checkList.clear();
                 ClearLists();
 
-                for (PruefplanEintrag eintrag: ppeList) {
+                for (PruefplanEintrag eintrag : ppeList) {
                     modulUndStudiengangsList.add(
                             eintrag.getModul() + "\n "
                                     + eintrag.getStudiengang());
@@ -336,7 +341,7 @@ public class Terminefragment extends Fragment {
                     checkList.add(true);
                 }// define an adapter
 
-                mAdapter = new MyAdapter(   modulUndStudiengangsList,
+                mAdapter = new MyAdapter(modulUndStudiengangsList,
                         prueferUndSemesterList,
                         datumsList,
                         modulList,
@@ -349,6 +354,9 @@ public class Terminefragment extends Fragment {
                     @Override
                     public void run() {
                         recyclerView.setAdapter(mAdapter);
+                        // Merlin Gürtler
+                        // Aktiviert den swipe listener
+                        enableSwipeToDelete();
                     }
                 });
                 // System.out.println(String.valueOf(userdaten.size()));
@@ -357,8 +365,7 @@ public class Terminefragment extends Fragment {
         //Datenbankaufruf
     }
 
-    public void ClearLists()
-    {
+    public void ClearLists() {
         modulUndStudiengangsList.clear();
         prueferUndSemesterList.clear();
         datumsList.clear();
@@ -367,4 +374,37 @@ public class Terminefragment extends Fragment {
         pruefFormList.clear();
         raumList.clear();
     }
+
+    // Start Merlin Gürtler
+    private void enableSwipeToDelete() {
+        // Definiert den Listener
+        swipeListener swipeToDeleteCallback = new swipeListener(getContext(), false) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        boolean isFavorite = mAdapter.checkFavorite(viewHolder.getAdapterPosition());
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(isFavorite) {
+                                    mAdapter.deleteFromFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+                                } else {
+                                    mAdapter.addToFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+                                }
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                }).start();
+            }
+        };
+
+        // Setzt den Listener
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+    }
+    // Ende Merlin Gürtler
 }
