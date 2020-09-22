@@ -53,6 +53,12 @@ public interface UserDao {
 
     @Query ("UPDATE PruefplanEintrag SET Pruefform = :pruefform WHERE ID = :id")
     void updatePruefform(String pruefform, int id);
+
+    @Query("INSERT INTO Uuid VALUES (:uuid)")
+    void insertUuid(String uuid);
+
+    @Query("SELECT * FROM Uuid")
+    Uuid getUuid();
     // Ende Merlin Gürtler
 
 

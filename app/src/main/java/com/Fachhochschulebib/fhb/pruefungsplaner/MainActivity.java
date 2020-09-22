@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -198,6 +199,30 @@ public class MainActivity extends AppCompatActivity {
 
         if (!aktuelleurl) {
             KeineVerbindung();
+        } else {
+            // Start Merlin Gürtler
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //retrofit auruf
+                    RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+
+                    // Überprüfe ob die App schonmal gestartet wurde
+                    AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+                    Uuid uuid = datenbank.userDao().getUuid();
+                    System.out.println("TEST" + uuid);
+                    if(uuid != null) {
+                        System.out.println("TEST 1");
+                        retrofit.anotherStart(getApplicationContext(), datenbank,
+                                serverAddress);
+                    } else {
+                        System.out.println("TEST 2");
+                        retrofit.firstStart(getApplicationContext(), datenbank,
+                                serverAddress);
+                    }
+                }
+            }).start();
+            // Ende Merlin Gürtler
         }
 
     }

@@ -20,8 +20,11 @@ import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonPruefungsform;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse;
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUuid;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.PUT;
 
 
 public interface RequestInterface {
@@ -31,5 +34,11 @@ public interface RequestInterface {
     //Start Merlin Gürtler
     @GET(" ")
     Call<List<JsonPruefungsform>> getJSONPruefForm();
+
+    @GET(" ")
+    Call<JsonUuid> getJsonUuid();
+
+    @PUT(" ")
+    Call<Void> sendUuid();
     //Ende Merlin Gürtler
 }

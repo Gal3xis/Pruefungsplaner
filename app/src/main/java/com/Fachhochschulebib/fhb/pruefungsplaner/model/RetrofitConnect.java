@@ -19,6 +19,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -216,7 +217,7 @@ public class RetrofitConnect {
                     secondCall.enqueue(new Callback<List<JsonPruefungsform>>() {
                         @Override
                         public void onResponse(Call<List<JsonPruefungsform>> call, Response<List<JsonPruefungsform>> response) {
-                            // Neuer Thread da DB Abfragen immer ein einem neuen Thread sein müssen
+                            // Neuer Thread da DB Abfragen immer in einem neuen Thread sein müssen
                             new Thread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -338,9 +339,89 @@ public class RetrofitConnect {
             @Override
             public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
                 Log.d("Error",t.getMessage());
-
             }
         });
+    }
+
+    public void firstStart(Context ctx, final AppDatabase roomdaten,
+                            final String serverAdress) {
+        //Serveradresse
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+        ctx2 = ctx;
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
+
+        //uebergabe der parameter an die Adresse
+        String adresse = relativePPlanUrl + "entity.startlog/firstStart/";
+
+        String URL = urlfhb+adresse;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<JsonUuid> call = request.getJsonUuid();
+        call.enqueue(new Callback<JsonUuid>() {
+            @Override
+            public void onResponse(Call<JsonUuid> call, Response<JsonUuid> response) {
+                if (response.isSuccessful()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // Speichere die erhaltene Uuid
+                            roomdaten.userDao().insertUuid(response.body().getUuid());
+                        }
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonUuid> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
+
+
+    }
+
+    public void anotherStart(Context ctx, final AppDatabase roomdaten,
+                           final String serverAdress) {
+        //Serveradresse
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+        ctx2 = ctx;
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
+
+        Uuid uuid = roomdaten.userDao().getUuid();
+
+        //uebergabe der parameter an die Adresse
+        String adresse = relativePPlanUrl + "entity.startlog/anotherStart/" + uuid.getUuid() + "/";
+
+        String URL = urlfhb+adresse;
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<Void> call = request.sendUuid();
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Success","Success");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
+
+
     }
     // Ende Merlin Gürtler
 
