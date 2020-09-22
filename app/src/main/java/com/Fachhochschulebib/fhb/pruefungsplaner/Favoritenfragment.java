@@ -22,7 +22,9 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,13 +34,12 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity.mAdapter;
-
 
 public class Favoritenfragment extends Fragment {
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private  Button btnsuche;
+    MyAdapterfavorits mAdapter;
     List<Boolean> check = new ArrayList<>();
 
     // Datenbank initialisierung
@@ -71,6 +72,10 @@ public class Favoritenfragment extends Fragment {
         List<String> pruefungsNr = new ArrayList<>();
         List<String> raum = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
+
+        // Merlin Gürtler
+        // Aktiviert den swipe listener
+        enableSwipeToDelete();
 
         new Thread(new Runnable() {
             @Override
@@ -165,4 +170,21 @@ public class Favoritenfragment extends Fragment {
         recyclerView.setAdapter(mAdapter);
         return v;
     }
+
+    // Start Merlin Gürtler
+    private void enableSwipeToDelete() {
+        // Definiert den Listener
+        swipeListenerFavorit swipeToDeleteCallback = new swipeListenerFavorit(getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                mAdapter.remove(position);
+            }
+        };
+
+        // Setzt den Listener
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(recyclerView);
+    }
+    // Ende Merlin Gürtler
 }

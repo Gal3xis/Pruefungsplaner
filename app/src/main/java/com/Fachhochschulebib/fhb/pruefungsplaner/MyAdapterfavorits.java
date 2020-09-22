@@ -1,6 +1,5 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner;
 
-import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -68,6 +67,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     public void remove(int position) {
         moduleUndStudiengangsList.remove(position);
         notifyItemRemoved(position);
+        deleteItemThread(position);
     }
 
     // Create new views (invoked by the layout manager)
@@ -97,39 +97,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         name = moduleUndStudiengangsList.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
 
-
-        // Start Merlin Gürtler
-        holder.layout2.setOnTouchListener(new onSwipeTouchListener(context) {
-            public void onSwipeRight() {
-                // Bewege das Element nach rechts
-                ObjectAnimator animation = ObjectAnimator.ofFloat(holder.layout, "translationX", 100f);
-                animation.setDuration(500);
-                animation.start();
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        // warte 500 milisekunden
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        // lösche das Element
-                        deleteItemThread(position, holder);
-                    }
-                }).start();
-            }
-        });
-        // Ende Merlin Gürtler
-
-
         //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                deleteItemThread(position, holder);
+                remove(position);
             }
         });
 
@@ -232,7 +204,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
 
     // Start Merlin Gürtler
     // da die Funktion mehrmals genutzt wird ausglagern in Funktion
-    private void deleteItemThread(int position, ViewHolder holder) {
+    private void deleteItemThread(int position) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -244,7 +216,6 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                     if (eintrag.getID().equals(ppIdList.get(position))) {
                         datenbank.userDao()
                                 .update(false, Integer.valueOf(ppIdList.get(position)));
-                        remove(holder.getAdapterPosition());
 
                         //Entferne den Eintrag aus dem Calendar falls vorhanden
                         CheckGoogleCalendar cal = new CheckGoogleCalendar();
