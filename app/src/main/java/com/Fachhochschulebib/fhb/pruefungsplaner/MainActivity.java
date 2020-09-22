@@ -210,13 +210,10 @@ public class MainActivity extends AppCompatActivity {
                     // Überprüfe ob die App schonmal gestartet wurde
                     AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
                     Uuid uuid = datenbank.userDao().getUuid();
-                    System.out.println("TEST" + uuid);
                     if(uuid != null) {
-                        System.out.println("TEST 1");
                         retrofit.anotherStart(getApplicationContext(), datenbank,
                                 serverAddress);
                     } else {
-                        System.out.println("TEST 2");
                         retrofit.firstStart(getApplicationContext(), datenbank,
                                 serverAddress);
                     }
