@@ -29,6 +29,7 @@
     <string name="title_settings">Optionen</string>
     <string name="title_electiveModule">Wahlmodule</string>
     <string name="title_changeCourse">Studiengang ändern</string>
+    <string name="title_feedback">Feedback geben</string>
 
     <!-- Klausur Typen -->
     <string name="klausur">K_90</string>
@@ -105,4 +106,11 @@
     <string name="modul_search">Klicken um Modul zu wählen</string>
 
     <string name="title_activity_recycleview_tabelle">RecycleviewTabelle</string>
+
+    <!-- Feedback Form -->
+    <string name="feedback_send">Senden</string>
+    <string name="feedback_usability">Bedienbarkeit</string>
+    <string name="feedback_stability">Fehlerfrei</string>
+    <string name="feedback_functions">Funktionsumfang</string>
+    <string name="feedback_text">Folgendes fand ich gut/schlecht:</string>
 </resources>

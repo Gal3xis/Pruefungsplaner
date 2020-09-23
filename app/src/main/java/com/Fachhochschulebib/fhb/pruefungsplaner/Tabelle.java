@@ -218,6 +218,17 @@ public class Tabelle extends AppCompatActivity  {
 
                         return true;
 
+                    // Start Merlin Gürtler
+                    case R.id.navigation_feedback:
+                        header.setTitle(getApplicationContext().getString(R.string.title_feedback));
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.closeDrawer(GravityCompat.START);
+                        ft.replace(R.id.frame_placeholder, new FeedbackFragment());
+                        ft.commit();
+
+                        return true;
 
                     case R.id.navigation_changeCourse:
                         header.setTitle(getApplicationContext().getString(R.string.title_changeCourse));

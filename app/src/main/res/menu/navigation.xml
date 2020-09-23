@@ -27,6 +27,11 @@
         android:title="@string/title_changeCourse"/>
 
     <item
+        android:id="@+id/navigation_feedback"
+        android:icon="@drawable/ic_baseline_feedback"
+        android:title="@string/title_feedback"/>
+
+    <item
         android:id="@+id/navigation_settings"
         android:icon="@drawable/optionen_nav"
         android:title="@string/title_settings"/>

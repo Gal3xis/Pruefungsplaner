@@ -377,34 +377,41 @@ public class Terminefragment extends Fragment {
 
     // Start Merlin Gürtler
     private void enableSwipeToDelete() {
-        // Definiert den Listener
-        swipeListener swipeToDeleteCallback = new swipeListener(getContext(), false) {
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAdapterPosition();
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        boolean isFavorite = mAdapter.checkFavorite(viewHolder.getAdapterPosition());
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
-                                if(isFavorite) {
-                                    mAdapter.deleteFromFavorites(position, (MyAdapter.ViewHolder) viewHolder);
-                                } else {
-                                    mAdapter.addToFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+        // try and catch, da es bei einer
+        // Orientierungsänderung sonst zu
+        // einer NullPointerException kommt
+        try {
+            // Definiert den Listener
+            swipeListener swipeToDeleteCallback = new swipeListener(getContext(), false) {
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                    final int position = viewHolder.getAdapterPosition();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean isFavorite = mAdapter.checkFavorite(viewHolder.getAdapterPosition());
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(isFavorite) {
+                                        mAdapter.deleteFromFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+                                    } else {
+                                        mAdapter.addToFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
                                 }
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
-                    }
-                }).start();
-            }
-        };
+                            });
+                        }
+                    }).start();
+                }
+            };
 
-        // Setzt den Listener
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
+            // Setzt den Listener
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+            itemTouchhelper.attachToRecyclerView(recyclerView);
+        } catch (Exception e) {
+            Log.d("Error", "Orientation error" + e);
+        }
     }
     // Ende Merlin Gürtler
 }

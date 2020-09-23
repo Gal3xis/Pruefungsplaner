@@ -173,18 +173,25 @@ public class Favoritenfragment extends Fragment {
 
     // Start Merlin Gürtler
     private void enableSwipeToDelete() {
-        // Definiert den Listener
-        swipeListener swipeToDeleteCallback = new swipeListener(getContext(), true) {
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                final int position = viewHolder.getAdapterPosition();
-                mAdapter.remove(position);
-            }
-        };
+        // try and catch, da es bei einer
+        // Orientierungsänderung sonst zu
+        // einer NullPointerException kommt
+        try {
+            // Definiert den Listener
+            swipeListener swipeToDeleteCallback = new swipeListener(getContext(), true) {
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                    final int position = viewHolder.getAdapterPosition();
+                    mAdapter.remove(position);
+                }
+            };
 
-        // Setzt den Listener
-        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
-        itemTouchhelper.attachToRecyclerView(recyclerView);
+            // Setzt den Listener
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+            itemTouchhelper.attachToRecyclerView(recyclerView);
+        } catch (Exception e) {
+            Log.d("Error", "Orientation error" + e);
+        }
     }
     // Ende Merlin Gürtler
 }
