@@ -423,6 +423,51 @@ public class RetrofitConnect {
 
 
     }
+
+    public void sendFeedBack(Context ctx, final AppDatabase roomdaten,
+                             final String serverAdress, float usability,
+                             float functions, float stability, String text) {
+        //Serveradresse
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+        ctx2 = ctx;
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
+
+        Uuid uuid = roomdaten.userDao().getUuid();
+
+        // Falls kein Text eingegeben wurde
+        if(text.length() < 1) {
+            text = "Platzhalter";
+        }
+
+        //uebergabe der parameter an die Adresse
+        String adresse = relativePPlanUrl + "entity.feedback/sendFeedback/" + uuid.getUuid()
+                + "/" + usability + "/" + functions + "/" + stability + "/" + text + "/";
+
+        String URL = urlfhb+adresse;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<Void> call = request.sendFeedBack();
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Success","Success");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
+
+    }
     // Ende Merlin Gürtler
 
     //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!

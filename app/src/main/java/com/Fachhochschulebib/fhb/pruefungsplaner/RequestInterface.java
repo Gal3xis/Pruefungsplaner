@@ -24,6 +24,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUuid;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 
 
@@ -40,5 +41,8 @@ public interface RequestInterface {
 
     @PUT(" ")
     Call<Void> sendUuid();
+
+    @POST(" ")
+    Call<Void> sendFeedBack();
     //Ende Merlin Gürtler
 }

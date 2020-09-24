@@ -55,7 +55,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
 
