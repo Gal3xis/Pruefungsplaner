@@ -210,8 +210,15 @@ public class MainActivity extends AppCompatActivity {
                     AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
                     Uuid uuid = datenbank.userDao().getUuid();
                     if(uuid != null) {
-                        retrofit.anotherStart(getApplicationContext(), datenbank,
-                                serverAddress);
+                        final StartClass globalVariable = (StartClass) getApplicationContext();
+                        // Sende nur ans Backend wenn die App wirklich zum ersten mal
+                        // gestartet wurde
+                        if(!globalVariable.getAppStarted()) {
+                            globalVariable.setAppStarted(true);
+                            retrofit.anotherStart(getApplicationContext(), datenbank,
+                                    serverAddress);
+                        }
+
                     } else {
                         retrofit.firstStart(getApplicationContext(), datenbank,
                                 serverAddress);
