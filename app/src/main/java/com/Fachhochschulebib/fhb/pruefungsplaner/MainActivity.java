@@ -460,7 +460,11 @@ public class MainActivity extends AppCompatActivity {
             retrofit.retroUpdate(getApplicationContext(), datenbank,
                     serverAddress);
         } else {
+            Uuid uuid = datenbank.userDao().getUuid();
+
             datenbank.clearAllTables();
+
+            datenbank.userDao().insertUuid(uuid.getUuid());
             retrofit.RetrofitWebAccess(
                 getApplicationContext(),
                 datenbank,

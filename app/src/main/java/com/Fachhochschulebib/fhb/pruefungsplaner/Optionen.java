@@ -42,6 +42,7 @@ import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
@@ -297,7 +298,12 @@ public class Optionen extends Fragment {
                     public void run() {
                         AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
                         Log.d("Test", "Lokale DB löschen.");
+
+                        Uuid uuid = datenbank.userDao().getUuid();
+
                         datenbank.clearAllTables();
+
+                        datenbank.userDao().insertUuid(uuid.getUuid());
 
                         // Start Merlin Gürtler
 
@@ -425,8 +431,12 @@ public class Optionen extends Fragment {
 
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
+                Uuid uuid = database.userDao().getUuid();
+
                 database.clearAllTables();
 
+                // Merlin Gürtler Speichere die UUID wieder in der Datenbank
+                database.userDao().insertUuid(uuid.getUuid());
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
                 //retrofit auruf
