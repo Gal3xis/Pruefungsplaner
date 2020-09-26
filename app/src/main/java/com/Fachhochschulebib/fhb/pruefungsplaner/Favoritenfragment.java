@@ -167,6 +167,26 @@ public class Favoritenfragment extends Fragment {
                     }
                 })
         );
+
+        // Start Merlin Gürtler
+        recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+            }
+
+            // Wenn ein Element den Viewport verlässt, wird
+            // der zweite Screen zu geklappt
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                final TextView txtSecondScreen
+                        = (TextView) view.findViewById(R.id.txtSecondscreen);
+                if (txtSecondScreen.getVisibility() == view.VISIBLE) {
+                    txtSecondScreen.setVisibility(view.GONE);
+                }
+            }
+        });
+        // Ende Merlin Gürtler
+
         recyclerView.setAdapter(mAdapter);
         return v;
     }

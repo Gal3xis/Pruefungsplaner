@@ -14,7 +14,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -212,6 +211,25 @@ public class Terminefragment extends Fragment {
                     positionAlt = position;
                 })
         );
+
+        // Start Merlin Gürtler
+        recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+            }
+
+            // Wenn ein Element den Viewport verlässt, wird
+            // der zweite Screen zu geklappt
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                final TextView txtSecondScreen
+                        = (TextView) view.findViewById(R.id.txtSecondscreen);
+                if (txtSecondScreen.getVisibility() == view.VISIBLE) {
+                    txtSecondScreen.setVisibility(view.GONE);
+                }
+            }
+        });
+        // Ende Merlin Gürtler
 
         //Touchhelper für die Recyclerview-Komponente, zum Überprüfen, ob gescrollt wurde
         //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
