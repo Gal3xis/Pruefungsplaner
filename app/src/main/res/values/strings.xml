@@ -12,6 +12,7 @@
     <string name="ok">Ok</string>
     <string name="plan">PRÜFPLAN</string>
     <string name="search">Suche</string>
+    <string name="search_date">Hier klicken um einen Tag zu wählen</string>
     <string name="open_calendar">Kalender öffnen</string>
     <string name="date_ui">Datum</string>
     <string name="server">&#160;&#160;&#160;Serveradresse:</string>

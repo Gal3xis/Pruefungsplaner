@@ -255,14 +255,15 @@ public class MainActivity extends AppCompatActivity {
                         // Erstelle das Dialog Feld für die Auswahl
                         AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
+
                         String[] courses = new String [spinnerArray.size()];
 
                         for(int i = 0; i < spinnerArray.size(); i++) {
                             courses[i] = spinnerArray.get(i);
                         }
+
                         // Der Listener für die Item Auswahl
                         chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
-
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 studiengangsList.add(courses[which]); // das ausgewählte Item
@@ -485,8 +486,6 @@ public class MainActivity extends AppCompatActivity {
         }
         return dateToFormat;
     }
-
-
     // Ende Merlin Gürtler
 
     //Methode zum Abfragen der Aktuellen Prüfperiode
@@ -651,6 +650,14 @@ public class MainActivity extends AppCompatActivity {
 
                     //Prüfperiode für die Offline-Verwendung speichern
                     mEditor = mSharedPreferencesPPeriode.edit();
+
+                    // Start Merlin Gürtler
+                    // Speichere das Start und Enddatum der Prüfperiode
+                    mEditor.putString("startDatum", day + "/" + month + "/" + year);
+                    mEditor.putString("endDatum", day2 + "/" + month2 + "/" + year2);
+                    mEditor.apply();
+                    // Ende Merlin Gürtler
+
                     String strJson
                             = mSharedPreferencesPPeriode.getString("aktPruefPeriode", "0");
                     if (strJson != null) {

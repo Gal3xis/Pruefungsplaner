@@ -353,7 +353,7 @@ public class RetrofitConnect {
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.startlog/firstStart/";
+        String adresse = relativePPlanUrl + "entity.user/firstStart/1/";
 
         String URL = urlfhb+adresse;
 
@@ -398,7 +398,7 @@ public class RetrofitConnect {
         Uuid uuid = roomdaten.userDao().getUuid();
 
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.startlog/anotherStart/" + uuid.getUuid() + "/";
+        String adresse = relativePPlanUrl + "entity.user/anotherStart/" + uuid.getUuid() + "/";
 
         String URL = urlfhb+adresse;
         Retrofit retrofit = new Retrofit.Builder()

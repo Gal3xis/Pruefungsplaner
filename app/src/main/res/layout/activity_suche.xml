@@ -81,6 +81,15 @@
             tools:layout_editor_absoluteY="101dp" />
 
         <TextView
+            android:id="@+id/daySearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/search_date"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="5sp"
+            android:textSize="20sp"/>
+
+        <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -203,7 +212,7 @@
         android:id="@+id/BtnOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="272dp"
+        android:layout_marginBottom="240dp"
         android:background="@drawable/button_rounded_corners"
         android:text="@string/ok"
         android:textColor="#eeeeee"

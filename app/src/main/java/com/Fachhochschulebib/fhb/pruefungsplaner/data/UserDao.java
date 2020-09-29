@@ -59,6 +59,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM Uuid")
     Uuid getUuid();
+
+    @Query("SELECT * FROM PruefplanEintrag WHERE Datum LIKE :date")
+    List<PruefplanEintrag> getByDate(String date);
     // Ende Merlin Gürtler
 
 

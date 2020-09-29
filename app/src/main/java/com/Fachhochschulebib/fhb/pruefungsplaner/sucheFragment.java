@@ -11,6 +11,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,14 +28,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -50,6 +56,7 @@ public class sucheFragment extends Fragment {
     final List<Integer> rueckgabeSemModulList = new ArrayList();
     final List<String> sortedList = new ArrayList();
     private String profName;
+    private String dateForSearch = null;
     String pruefJahr, aktuellePruefphase,
             rueckgabeStudiengang, validation;
     List<PruefplanEintrag> ppeList = new ArrayList();
@@ -57,6 +64,16 @@ public class sucheFragment extends Fragment {
     private AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
     AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
+
+    // Start Merlin Gürtler
+    // Funktion um die Führende 0 hinzuzufügen
+    public String formatDate (String dateToFormat) {
+        if(dateToFormat.length() == 1) {
+            dateToFormat = "0" + dateToFormat;
+        }
+        return dateToFormat;
+    }
+    // Ende Merlin Gürtler
 
     // Start Merlin Gürtler
     public void registerButton(Button btn, int value) {
@@ -215,6 +232,66 @@ public class sucheFragment extends Fragment {
 
 
             // Start Merlin Gürtler
+            final TextView searchDate = v.findViewById(R.id.daySearch);
+
+            searchDate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    SharedPreferences sharedPrefPruefPeriode
+                            = getContext().getSharedPreferences("PruefPeriode", Context.MODE_PRIVATE);
+                    String startDate = sharedPrefPruefPeriode.getString("startDatum", "0");
+                    String endDate = sharedPrefPruefPeriode.getString("endDatum", "0");
+
+                    // Daten des Startdatums
+                    int day = Integer.parseInt(startDate.substring(0,2));
+                    int month = Integer.parseInt(startDate.substring(3,5));
+                    int year = Integer.parseInt(startDate.substring(6,10));
+
+                    Calendar startDateForPicker = Calendar.getInstance();
+                    startDateForPicker.set(Calendar.YEAR, year);
+                    startDateForPicker.set(Calendar.MONTH, month - 1);
+                    startDateForPicker.set(Calendar.DAY_OF_MONTH, day);
+
+                    // Daten des Enddatums
+                    int day2 = Integer.parseInt(endDate.substring(0,2));
+                    int month2 = Integer.parseInt(endDate.substring(3,5));
+                    int year2 = Integer.parseInt(endDate.substring(6,10));
+
+                    Calendar endDateForPicker = Calendar.getInstance();
+                    endDateForPicker.set(Calendar.YEAR, year2);
+                    endDateForPicker.set(Calendar.MONTH, month2 - 1);
+                    endDateForPicker.set(Calendar.DAY_OF_MONTH, day2);
+
+                    DatePickerDialog picker = new DatePickerDialog(getContext(),
+                            R.style.ProgressStyle,
+                            new DatePickerDialog.OnDateSetListener() {
+                                @Override
+                                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                    searchDate.setText(formatDate(String.valueOf(dayOfMonth))
+                                            + "." + formatDate(String.valueOf(monthOfYear))
+                                            + "." + formatDate(String.valueOf(year)));
+
+                                    // Das Datum für die Abfrage
+                                    Calendar selectedDate = Calendar.getInstance();
+                                    selectedDate.set(Calendar.YEAR, year);
+                                    selectedDate.set(Calendar.MONTH, monthOfYear);
+                                    selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                                    SimpleDateFormat targetFormat
+                                            = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+                                    dateForSearch = targetFormat.format(selectedDate.getTime());
+                                }
+                            }, year, month, day);
+                    // Setze das Start- und Enddatum
+                    picker.getDatePicker().setMinDate(startDateForPicker.getTimeInMillis());
+                    picker.getDatePicker().setMaxDate(endDateForPicker.getTimeInMillis());
+                    picker.show();
+
+                }
+            });
+
             // The TextChanged Listener is listening
             // on the input events of the AutoCompleteTextView acProf
             // this is necessary because the rueckgabe before
@@ -333,12 +410,10 @@ public class sucheFragment extends Fragment {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            if(profName.equals(getContext().getString(R.string.all))
-                                    &&  !sgModulList.get(sgModulList.size() - 1).toString().
-                                    equals(getContext().getString(R.string.modul_search)))
-                            {
+                            if(dateForSearch != null) {
                                 sortedList.clear();
-                                ppeList = roomDaten.userDao().getModule(sgModulList .get(sgModulList .size() - 1));
+                                ppeList = roomDaten.userDao().getByDate(dateForSearch.substring(0,10) + "%");
+
                                 for(PruefplanEintrag eintrag: ppeList) {
                                     sortedList.add(String.valueOf(eintrag.getID()));
                                 }
@@ -348,38 +423,56 @@ public class sucheFragment extends Fragment {
                                     // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
                                     database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                                 }
-                            } else if(!profName.equals(getContext().getString(R.string.all))) {
-                                sortedList .clear();
-                                ppeList = roomDaten.userDao().getModuleProf("%" +
-                                        acProf.getText().toString().trim() + "%");
-                                for(int m = 0; m < ppeList.size(); m++) {
-                                    sortedList.add(String.valueOf(ppeList.get(m).getID()));
-                                }
-
-                                database.userDao().sucheUndZurueckSetzen(false);
-                                for (int i =0; i< sortedList.size();i++) {
-                                    // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
-                                    database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
-                                }
-                            } else {
-                                // Ende Merlin Gürtler
-                                if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
-                                    int a;
-                                    rueckgabeProfList.clear();
-                                    for (a = 0; a < (ppeList.size()); a++) {
-                                        rueckgabeProfList.add(a);
+                            }
+                            else {
+                                if(profName.equals(getContext().getString(R.string.all))
+                                        &&  !sgModulList.get(sgModulList.size() - 1).toString().
+                                        equals(getContext().getString(R.string.modul_search)))
+                                {
+                                    sortedList.clear();
+                                    ppeList = roomDaten.userDao().getModule(sgModulList.get(sgModulList .size() - 1));
+                                    for(PruefplanEintrag eintrag: ppeList) {
+                                        sortedList.add(String.valueOf(eintrag.getID()));
                                     }
-                                }
 
-                                database.userDao().sucheUndZurueckSetzen(false);
-                                List<PruefplanEintrag> ppeList = AppDatabase.getAppDatabase(v.getContext())
-                                        .userDao().getAll(validation);
-                                for (int i = 0; i < Tabellenrueckgabe().size(); i++) {
-                                    // Toast.makeText(getContext(),Tabellenrueckgabe().get(i),
-                                    // Toast.LENGTH_SHORT).show();
-                                    database.userDao().update2(true,
-                                            Integer.valueOf(ppeList.get(
-                                                    Integer.valueOf(Tabellenrueckgabe().get(i))).getID()));
+                                    database.userDao().sucheUndZurueckSetzen(false);
+                                    for (int i =0; i< sortedList.size();i++) {
+                                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                                        database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                                    }
+                                } else if(!profName.equals(getContext().getString(R.string.all))) {
+                                    sortedList .clear();
+                                    ppeList = roomDaten.userDao().getModuleProf("%" +
+                                            acProf.getText().toString().trim() + "%");
+                                    for(int m = 0; m < ppeList.size(); m++) {
+                                        sortedList.add(String.valueOf(ppeList.get(m).getID()));
+                                    }
+
+                                    database.userDao().sucheUndZurueckSetzen(false);
+                                    for (int i =0; i< sortedList.size();i++) {
+                                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                                        database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                                    }
+                                } else {
+                                    // Ende Merlin Gürtler
+                                    if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
+                                        int a;
+                                        rueckgabeProfList.clear();
+                                        for (a = 0; a < (ppeList.size()); a++) {
+                                            rueckgabeProfList.add(a);
+                                        }
+                                    }
+
+                                    database.userDao().sucheUndZurueckSetzen(false);
+                                    List<PruefplanEintrag> ppeList = AppDatabase.getAppDatabase(v.getContext())
+                                            .userDao().getAll(validation);
+                                    for (int i = 0; i < Tabellenrueckgabe().size(); i++) {
+                                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i),
+                                        // Toast.LENGTH_SHORT).show();
+                                        database.userDao().update2(true,
+                                                Integer.valueOf(ppeList.get(
+                                                        Integer.valueOf(Tabellenrueckgabe().get(i))).getID()));
+                                    }
                                 }
                             }
 
