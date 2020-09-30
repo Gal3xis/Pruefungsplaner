@@ -17,6 +17,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -39,17 +40,14 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 import java.util.ArrayList;
 import java.util.List;
 
-
-import static com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment.validation;
-
-
 public class TerminefragmentSuche extends Fragment {
-
+    SharedPreferences mSharedPreferencesValidation;
 
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
     private String date;
+    String pruefJahr, aktuellePruefphase, rueckgabeStudiengang, validation;
 
     List<Boolean> checkList = new ArrayList<>();
     List<String> modulUndStudiengangsList = new ArrayList<>();
@@ -71,6 +69,19 @@ public class TerminefragmentSuche extends Fragment {
 
 
     public void onCreate(Bundle savedInstanceState) {
+        // Start Merlin Gürtler
+        // Nun aus Shared Preferences
+
+        mSharedPreferencesValidation
+                = TerminefragmentSuche.
+                this.getContext().getSharedPreferences("validation", 0);
+
+        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+
+        validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
+        // Ende Merlin Gürtler
 
         super.onCreate(savedInstanceState);
 
