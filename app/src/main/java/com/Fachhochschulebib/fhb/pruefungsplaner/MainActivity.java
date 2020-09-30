@@ -57,6 +57,7 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MainActivity extends AppCompatActivity {
     static public RecyclerView.Adapter mAdapter;
+    ProgressDialog progressBar;
 
     public static String pruefJahr = null;
     public static String aktuellePruefphase = null;
@@ -234,6 +235,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> Toast.makeText(getApplicationContext(),
                 getApplicationContext().getString(R.string.noConnection),
                 Toast.LENGTH_SHORT).show());
+        progressBar.dismiss();
     }
 
 
@@ -465,7 +467,10 @@ public class MainActivity extends AppCompatActivity {
 
             datenbank.clearAllTables();
 
-            datenbank.userDao().insertUuid(uuid.getUuid());
+            if(uuid != null) {
+                datenbank.userDao().insertUuid(uuid.getUuid());
+            }
+
             retrofit.RetrofitWebAccess(
                 getApplicationContext(),
                 datenbank,
@@ -490,9 +495,8 @@ public class MainActivity extends AppCompatActivity {
 
     //Methode zum Abfragen der Aktuellen Prüfperiode
     public boolean pingPruefPeriode() {
-
         // Start Merlin Gürtler
-        final ProgressDialog progressBar;
+
         progressBar = new ProgressDialog(MainActivity.this,
                 R.style.ProgressStyle);
 
@@ -683,6 +687,7 @@ public class MainActivity extends AppCompatActivity {
                     // Start Merlin Gürtler
                     AppDatabase datenbank =  AppDatabase.getAppDatabase(getBaseContext());
                     // Check if the Database is not empty
+
                     if(datenbank.userDao().getAll2().size() > 0) {
                         retroThread(true);
                     } else {
