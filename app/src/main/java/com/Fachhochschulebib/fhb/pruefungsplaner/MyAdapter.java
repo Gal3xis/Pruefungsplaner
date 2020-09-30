@@ -160,6 +160,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                             for (PruefplanEintrag eintrag : ppeList) {
                                 if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
+                                    // Start Merlin Gürtler
+                                    // Setze die Farbe des Icons
+                                    if (eintrag.getStatus().equals("pending")) {
+                                        holder.statusIcon.setColorFilter(Color.parseColor("#F0E68C"));
+                                    }
+
+                                    if (eintrag.getStatus().equals("unsure")) {
+                                        holder.statusIcon.setColorFilter(Color.parseColor("#CD5C5C"));
+                                    }
+
+                                    if (eintrag.getStatus().equals("final")) {
+                                        holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
+                                    }
+                                    // Ende Merlin Gürtler
+
                                     if (eintrag.getFavorit()) {
                                         holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
                                         // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
@@ -456,11 +471,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         public LinearLayout layout;
         public LinearLayout bigLayout;
         private ImageView ivicon;
+        private ImageView statusIcon;
         private Button button;
 
         private ViewHolder(View v) {
             super(v);
             ivicon = (ImageView) v.findViewById(R.id.icon);
+            statusIcon = (ImageView) v.findViewById(R.id.icon2);
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
             txtSecondScreen = (TextView) v.findViewById(R.id.txtSecondscreen);

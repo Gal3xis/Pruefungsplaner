@@ -73,10 +73,22 @@ public class JsonResponse {
         @SerializedName("StudiengangId")
         @Expose
         private String StudiengangId;
+
+        @SerializedName("Status")
+        @Expose
+        private String Status;
         // Ende Merlin Gürtler
 
 
-        public String getErstpruefer() {
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+
+    public String getErstpruefer() {
             return Erstpruefer;
         }
 

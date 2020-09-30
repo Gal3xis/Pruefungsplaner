@@ -456,6 +456,7 @@ public class MainActivity extends AppCompatActivity {
         // DONE (08/2020) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
         // Änderung Merlin Gürtler
         // Prüfe zusätzlich ob sich die PruefPeriode geändert hat, falls ja erneuere die Datenbank
+
         if(update
                 && pruefPeriode.equals(datenbank.userDao().getTermin())
                 && datenbank.userDao().getTermin() != null) {
@@ -470,7 +471,6 @@ public class MainActivity extends AppCompatActivity {
             if(uuid != null) {
                 datenbank.userDao().insertUuid(uuid.getUuid());
             }
-
             retrofit.RetrofitWebAccess(
                 getApplicationContext(),
                 datenbank,

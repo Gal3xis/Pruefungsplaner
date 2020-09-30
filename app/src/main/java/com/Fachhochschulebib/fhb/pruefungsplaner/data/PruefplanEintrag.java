@@ -50,6 +50,17 @@ public class PruefplanEintrag {
     @ColumnInfo(name = "Raum")
     private String Raum;
 
+    @ColumnInfo(name = "Status")
+    private String Status;
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+
     public String getErstpruefer() {
         return Erstpruefer;
     }

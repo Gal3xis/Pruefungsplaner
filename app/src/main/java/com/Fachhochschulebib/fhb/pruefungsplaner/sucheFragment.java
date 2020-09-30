@@ -223,7 +223,13 @@ public class sucheFragment extends Fragment {
                             acProf.setThreshold(1);//will start working from first character
                             acProf.setAdapter(adapterProfAutoComplete);//setting the adapter data
                             // into the AutoCompleteTextView
-                            profList.add(getContext().getString(R.string.all));
+                            // beim ändern der Orientierung crasht die app wegen Problemen mit dem Context
+                            try {
+                                profList.add(getContext().getString(R.string.all));
+                            } catch (Exception e) {
+                                Log.d("ERROR", "ERROR " + e);
+                            }
+
                             sgModulList.add(getContext().getString(R.string.all));
                         }
                     });

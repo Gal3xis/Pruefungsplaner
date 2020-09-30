@@ -165,6 +165,7 @@ public class RetrofitConnect {
                         pruefplanEintrag.setTermin(eintragDB.getTermin());
                         pruefplanEintrag.setRaum(eintragDB.getRaum());
                         pruefplanEintrag.setPruefform(eintragDB.getPruefform());
+                        pruefplanEintrag.setStatus(eintragDB.getStatus());
 
                         //lokale datenbank initialiseren
                          //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -271,26 +272,27 @@ public class RetrofitConnect {
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
-        JSONArray knownExamsJson = new JSONArray();
-        List<PruefplanEintrag> knownExams = roomdaten.userDao().getAll2();
+        JSONArray knownExamsJsonArray = new JSONArray();
+        List<PruefplanEintrag> knownExamsList = roomdaten.userDao().getAll2();
         // Create the JSON Array
-        for(int i = 0; i < knownExams.size(); i++) {
-            JSONObject knownExam = new JSONObject();
+        for(PruefplanEintrag knownExam: knownExamsList) {
+            JSONObject knownExamJson = new JSONObject();
             try {
-                knownExam.put("Datum", knownExams.get(i).getDatum());
-                knownExam.put("ID", knownExams.get(i).getID());
+                knownExamJson.put("Datum", knownExam.getDatum());
+                knownExamJson.put("ID", knownExam.getID());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            knownExamsJson.put(knownExam);
+            knownExamsJsonArray.put(knownExamJson);
 
         }
         // Stringify for the Request
-        String sendExams = knownExamsJson.toString();
+        String sendExams = knownExamsJsonArray.toString();
         //uebergabe der parameter an die Adresse
         String adresse = relativePPlanUrl + "entity.pruefplaneintrag/update/" + sendExams + "/";
 
         String URL = urlfhb+adresse;
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
