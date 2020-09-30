@@ -264,6 +264,9 @@ public class RetrofitConnect {
 
     // Start Merlin Gürtler
     public void retroUpdate(Context ctx, final AppDatabase roomdaten,
+                            final String jahr,
+                            final String pruefungsphase,
+                            final String termin,
                             final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
@@ -271,67 +274,61 @@ public class RetrofitConnect {
         ctx2 = ctx;
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
-
-        JSONArray knownExamsJsonArray = new JSONArray();
-        List<PruefplanEintrag> knownExamsList = roomdaten.userDao().getAll2();
-        // Create the JSON Array
-        for(PruefplanEintrag knownExam: knownExamsList) {
-            JSONObject knownExamJson = new JSONObject();
-            try {
-                knownExamJson.put("Datum", knownExam.getDatum());
-                knownExamJson.put("ID", knownExam.getID());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            knownExamsJsonArray.put(knownExamJson);
-
-        }
-        // Stringify for the Request
-        String sendExams = knownExamsJsonArray.toString();
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.pruefplaneintrag/update/" + sendExams + "/";
+        String relPathWithParameters = relativePPlanUrl
+                + "entity.pruefplaneintrag/update/"
+                + pruefungsphase +"/"
+                + termin +"/"
+                + jahr +"/";
 
-        String URL = urlfhb+adresse;
+        String URL = urlfhb+ relPathWithParameters;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<List<JsonResponse>> call = request.getJSON();
-        call.enqueue(new Callback<List<JsonResponse>>() {
+        Call<List<JsonUpdate>> call = request.getJSONUpdate();
+        call.enqueue(new Callback<List<JsonUpdate>>() {
             @Override
-            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
+            public void onResponse(Call<List<JsonUpdate>> call, Response<List<JsonUpdate>> response) {
                 response.body();
                 if (response.isSuccessful() && response.body().size() > 0) {
-                    for(int i = 0; response.body().size() > i; i++) {
-                        try {
-                            String datumZeitzone;
-                            String datumDerPrüfung = response.body().get(i).getDatum();
-                            String datumLetzePruefungFormatiert = null;
-                            datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
-                            datumZeitzone = datumZeitzone.replaceFirst("CEST","");
-                            DateFormat dateFormat = new SimpleDateFormat(
-                                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                            Date datumLetztePrüfung = null;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(JsonUpdate updateExam: response.body()) {
+                                try {
+                                    String datumZeitzone;
+                                    String datumDerPrüfung = updateExam.getDatum();
+                                    String datumLetzePruefungFormatiert = null;
+                                    datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
+                                    datumZeitzone = datumZeitzone.replaceFirst("CEST","");
+                                    DateFormat dateFormat = new SimpleDateFormat(
+                                            "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+                                    Date datumLetztePrüfung = null;
 
-                            datumLetztePrüfung = dateFormat.parse(datumZeitzone);
+                                    datumLetztePrüfung = dateFormat.parse(datumZeitzone);
 
-                            SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            datumLetzePruefungFormatiert = targetFormat.format(datumLetztePrüfung);
-                            roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
-                                    response.body().get(i).getID());
+                                    SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                    datumLetzePruefungFormatiert = targetFormat.format(datumLetztePrüfung);
 
-                            //Update den Eintrag aus dem Calendar falls vorhanden
-                            CheckGoogleCalendar cal = new CheckGoogleCalendar();
-                            cal.setCtx(ctx);
-                            if (!cal.checkCal(Integer.valueOf(response.body().get(i).getID()))) {
-                                cal.updateCalendarEntry(Integer.valueOf(response.body().get(i).getID()));
+                                    roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
+                                            updateExam.getStatus(),
+                                            updateExam.getID());
+
+                                    //Update den Eintrag aus dem Calendar falls vorhanden
+                                    CheckGoogleCalendar cal = new CheckGoogleCalendar();
+                                    cal.setCtx(ctx);
+                                    if (!cal.checkCal(Integer.valueOf(updateExam.getID()))) {
+                                        cal.updateCalendarEntry(Integer.valueOf(updateExam.getID()));
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
-                        } catch (ParseException e) {
-                            e.printStackTrace();
                         }
-                    }
+                    }).start();
                 }
                 else { System.out.println(" :::. NO RESPONSE .::: "); }
             }
@@ -339,7 +336,7 @@ public class RetrofitConnect {
 
 
             @Override
-            public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
+            public void onFailure(Call<List<JsonUpdate>> call, Throwable t) {
                 Log.d("Error",t.getMessage());
             }
         });

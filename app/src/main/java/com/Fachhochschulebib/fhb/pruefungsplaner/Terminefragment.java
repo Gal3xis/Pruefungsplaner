@@ -61,6 +61,7 @@ public class Terminefragment extends Fragment {
     List<String> idList = new ArrayList<>();
     List<String> pruefFormList = new ArrayList<>();
     List<String> raumList = new ArrayList<>();
+    List<String> status = new ArrayList<>();
     String pruefJahr, aktuellePruefphase, rueckgabeStudiengang;
 
     public static String validation;
@@ -296,6 +297,7 @@ public class Terminefragment extends Fragment {
                                     Kalender datum übereinstimmt
                                  */
                                         if (date2[0].equals(date)) {
+                                            status.add(eintrag.getStatus());
                                             modulUndStudiengangsList.add(
                                                     eintrag.getModul()
                                                             + "\n " + eintrag.getStudiengang());
@@ -319,7 +321,8 @@ public class Terminefragment extends Fragment {
                                             modulList,
                                             idList,
                                             pruefFormList, mLayout,
-                                            raumList);
+                                            raumList,
+                                            status);
                                     //Anzeigen
                                     recyclerView.setAdapter(mAdapter);
                                 }
@@ -343,6 +346,7 @@ public class Terminefragment extends Fragment {
                 ClearLists();
 
                 for (PruefplanEintrag eintrag : ppeList) {
+                    status.add(eintrag.getStatus());
                     modulUndStudiengangsList.add(
                             eintrag.getModul() + "\n "
                                     + eintrag.getStudiengang());
@@ -365,7 +369,8 @@ public class Terminefragment extends Fragment {
                         idList,
                         pruefFormList,
                         mLayout,
-                        raumList);
+                        raumList,
+                        status);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -390,6 +395,7 @@ public class Terminefragment extends Fragment {
         idList.clear();
         pruefFormList.clear();
         raumList.clear();
+        status.clear();
     }
 
     // Start Merlin Gürtler

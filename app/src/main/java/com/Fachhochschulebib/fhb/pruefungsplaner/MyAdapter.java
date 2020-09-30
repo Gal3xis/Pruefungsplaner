@@ -47,6 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> Datum;
     private List<String> raumAdapter;
     private List<String> pruefform;
+    private List<String> statusList;
     private boolean speicher;
     private String modulname;
     private TextView txtSecondScreen;
@@ -65,7 +66,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                      List<String> ppid,
                      List<String> pruefformList,
                      RecyclerView.LayoutManager mLayout,
-                     List<String> raum) {
+                     List<String> raum,
+                     List<String> status) {
         uebergebeneModule = module;
         Datum = datum;
         prueferUSemster = prueferUndSemester;
@@ -74,6 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         raumAdapter = raum;
         pruefform = pruefformList;
         aktuelleslayout = mLayout;
+        statusList = status;
     }
 
     public void add(int position, String item) {
@@ -170,9 +173,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                         holder.statusIcon.setColorFilter(Color.parseColor("#CD5C5C"));
                                     }
 
-                                    if (eintrag.getStatus().equals("final")) {
-                                        holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
-                                    }
+                                    //if (eintrag.getStatus().equals("final")) {
+                                    //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
+                                    //}
                                     // Ende Merlin Gürtler
 
                                     if (eintrag.getFavorit()) {
@@ -188,6 +191,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }).start();
 
         holder.txtHeader.setText(name);
+
+        // Start Merlin Gürtler
+
+        // Gibt die Statusmeldung aus
+        holder.statusIcon.setOnClickListener(v -> {
+            if (statusList.get(position).equals("pending")) {
+                Toast.makeText(v.getContext(),
+                        v.getContext().getString(R.string.status_pending),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            if (statusList.get(position).equals("unsure")) {
+                Toast.makeText(v.getContext(),
+                        v.getContext().getString(R.string.status_unsure),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            if (statusList.get(position).equals("final")) {
+                Toast.makeText(v.getContext(),
+                        v.getContext().getString(R.string.status_final),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        // Ende Merlin Gürtler
+
         holder.ivicon.setOnClickListener(v -> {
             new Thread(new Runnable() {
                 @Override

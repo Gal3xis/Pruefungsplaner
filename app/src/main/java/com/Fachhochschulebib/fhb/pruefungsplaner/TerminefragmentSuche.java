@@ -57,6 +57,7 @@ public class TerminefragmentSuche extends Fragment {
     List<String> idList = new ArrayList<>();
     List<String> pruefFormList = new ArrayList<>();
     List<String> raumList = new ArrayList<>();
+    List<String> status = new ArrayList<>();
 
     private String month2;
     private String day2;
@@ -174,6 +175,7 @@ public class TerminefragmentSuche extends Fragment {
                                             idList.add(eintrag.getID());
                                             pruefFormList.add(eintrag.getPruefform());
                                             raumList.add(eintrag.getRaum());
+                                            status.add(eintrag.getStatus());
                                         }
                                     }
                                     // define an adapter
@@ -186,7 +188,8 @@ public class TerminefragmentSuche extends Fragment {
                                             idList,
                                             pruefFormList,
                                             mLayout,
-                                            raumList);
+                                            raumList,
+                                            status);
 
                                     //Anzeigen von recyclerview
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -288,6 +291,7 @@ public class TerminefragmentSuche extends Fragment {
                     idList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getID());
                     pruefFormList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getPruefform());
                     raumList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getRaum());
+                    status.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStatus());
                     checkList.add(true);
                 }
 
@@ -300,7 +304,8 @@ public class TerminefragmentSuche extends Fragment {
                         idList,
                         pruefFormList,
                         mLayout,
-                        raumList);
+                        raumList,
+                        status);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override

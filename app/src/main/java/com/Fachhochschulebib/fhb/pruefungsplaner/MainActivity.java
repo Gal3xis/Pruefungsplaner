@@ -462,6 +462,9 @@ public class MainActivity extends AppCompatActivity {
                 && datenbank.userDao().getTermin() != null) {
 
             retrofit.retroUpdate(getApplicationContext(), datenbank,
+                    pruefJahr,
+                    aktuellePruefphase,
+                    aktuellerTermin,
                     serverAddress);
         } else {
             Uuid uuid = datenbank.userDao().getUuid();

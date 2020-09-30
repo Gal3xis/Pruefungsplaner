@@ -15,8 +15,8 @@ public interface UserDao {
     @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul")
     List<PruefplanEintrag> getModule(String modul);
 
-    @Query("UPDATE PruefplanEintrag SET Datum = :datum where ID = :id")
-    void updateExam(String datum, String id);
+    @Query("UPDATE PruefplanEintrag SET Datum = :datum, Status = :status where ID = :id")
+    void updateExam(String datum, String status, String id);
 
     @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
     List<PruefplanEintrag> getModuleProf(String prof);
