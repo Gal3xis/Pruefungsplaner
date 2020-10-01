@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
@@ -56,7 +57,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class MainActivity extends AppCompatActivity {
-    static public RecyclerView.Adapter mAdapter;
+    CheckListAdapter mAdapter;
+    private RecyclerView recyclerView;
     ProgressDialog progressBar;
 
     public static String pruefJahr = null;
@@ -66,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
     public static String aktuellerTermin;
     //KlassenVariablen
     private JSONArray jsonArrayStudiengaenge;
-    final List<String> spinnerArray = new ArrayList<String>();
+    final List<Boolean> studiengangGewaehlt = new ArrayList<Boolean>();
+    final List<String> studiengangName = new ArrayList<String>();
     // private Spinner spStudiengangMain;
     //List<String> idList = new ArrayList<String>();
     private Message msg = new Message();
@@ -83,6 +86,14 @@ public class MainActivity extends AppCompatActivity {
 
         //aufrufen des startlayouts
         setContentView(R.layout.start);
+
+        // Start Merlin Gürtler
+        //Komponenten  initialisieren für die Verwendung
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerViewChecklist);
+        //linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        // Ende Merlin Gürtler
 
         mSharedPreferencesPPServerAdress
                 = getApplicationContext().getSharedPreferences("Server_Address", MODE_PRIVATE);
@@ -178,9 +189,11 @@ public class MainActivity extends AppCompatActivity {
 
                     for (int i = 0; i < jsonArrayStudiengaenge.length(); i++) {
                         JSONObject json = jsonArrayStudiengaenge.getJSONObject(i);
-                        spinnerArray.add(json.get("SGName").toString());
+                        studiengangName.add(json.get("SGName").toString());
+                        studiengangGewaehlt.add(false);
                         SgNamesToSpinner();
                     }
+
                 } catch (Exception b) {
                     Log.d("Datenbankfehler","Keine Daten in der Datenbank vorhanden!");
                 }
@@ -259,10 +272,10 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
 
-                        String[] courses = new String [spinnerArray.size()];
+                        String[] courses = new String [studiengangName.size()];
 
-                        for(int i = 0; i < spinnerArray.size(); i++) {
-                            courses[i] = spinnerArray.get(i);
+                        for(int i = 0; i < studiengangName.size(); i++) {
+                            courses[i] = studiengangName.get(i);
                         }
 
                         // Der Listener für die Item Auswahl
@@ -270,10 +283,10 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 studiengangsList.add(courses[which]); // das ausgewählte Item
-                                for (int i = 0 ; i < spinnerArray.size(); i++)
+                                for (int i = 0 ; i < studiengangName.size(); i++)
                                 {
                                     if (courses[which]
-                                            .equals(spinnerArray.get(i))) {
+                                            .equals(studiengangName.get(i))) {
                                         try{
                                             JSONObject object = jsonArrayStudiengaenge.getJSONObject(i);
                                             rueckgabeStudiengang = object.get("sgid").toString();
@@ -383,7 +396,8 @@ public class MainActivity extends AppCompatActivity {
 
                 for(int i = 0; i< jsonArrayStudiengaenge.length(); i++) {
                     JSONObject json = jsonArrayStudiengaenge.getJSONObject(i);
-                    spinnerArray.add(json.get("SGName").toString());
+                    studiengangName.add(json.get("SGName").toString());
+                    studiengangGewaehlt.add(false);
                 }
 
                 // Werte Speichern für die offline Verwendung
@@ -416,9 +430,11 @@ public class MainActivity extends AppCompatActivity {
                         jsonArrayStudiengaenge = new JSONArray(strStudiengang);
                         for(int i = 0; i< jsonArrayStudiengaenge.length(); i++) {
                             JSONObject json = jsonArrayStudiengaenge.getJSONObject(i);
-                            spinnerArray.add(json.get("SGName").toString());
+                            studiengangName.add(json.get("SGName").toString());
+                            studiengangGewaehlt.add(false);
                             SgNamesToSpinner();
                         }
+
                     }catch (Exception b)
                     {
                         Log.d("uebergabeAnSpinner",
