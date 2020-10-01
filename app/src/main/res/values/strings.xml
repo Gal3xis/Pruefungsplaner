@@ -4,10 +4,11 @@
     <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
 
     <!-- Ui -->
-    <string name="chose_module">Modulauswahl (aktueller Prüftermin):</string>
-    <string name="chose_course">Studiengang auswählen</string>
-    <string name="chose_course2">Studiengang auswählen:</string>
-    <string name="chose_prof">Prüferauswahl:</string>
+    <string name="choose_module">Modulauswahl (aktueller Prüftermin):</string>
+    <string name="choose_faculty">Fachbereich auswählen</string>
+    <string name="choose_course">Wählen Sie Ihre Studiengänge:</string>
+    <string name="choose_course2">Studiengang auswählen:</string>
+    <string name="choose_prof">Prüferauswahl:</string>
     <string name="semester_ui">Semester:</string>
     <string name="ok">Ok</string>
     <string name="plan">PRÜFPLAN</string>

@@ -26,7 +26,7 @@
             android:layout_width="385dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5sp"
-            android:text="@string/chose_course2"
+            android:text="@string/choose_course2"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             tools:layout_editor_absoluteX="6dp"

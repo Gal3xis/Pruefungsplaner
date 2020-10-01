@@ -13,6 +13,12 @@ public class Studiengang {
     private String Studiengangname;
 
     @ColumnInfo(name = "fachbereichId")
-    private String fachbereichId;
+    private String FachbereichId;
+
+    @ColumnInfo(name = "gewaehlt")
+    private Boolean Gewaehlt;
+
+    @ColumnInfo(name = "hauptStudiengang")
+    private Boolean HauptStudiengang;
 
 }
