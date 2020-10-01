@@ -137,7 +137,8 @@ public class MainActivity extends AppCompatActivity {
             pruefJahr = String.valueOf(thisYear);
         }
 
-        if (kalenderMonat >= 9) {
+        // TODO Absprechen ob dies nur wegen Corona ein Sonderfall ist !!!
+        if (kalenderMonat > 9) {
 
             aktuellePruefphase = context.getString(R.string.winter_short);
             int thisYear = calendar.get(Calendar.YEAR);
