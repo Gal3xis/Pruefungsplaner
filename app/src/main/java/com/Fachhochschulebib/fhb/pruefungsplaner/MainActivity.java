@@ -64,14 +64,17 @@ public class MainActivity extends AppCompatActivity {
     public static String pruefJahr = null;
     public static String aktuellePruefphase = null;
     public static String rueckgabeStudiengang = null;
+    public static String rueckgabeFakultaet = null;
     private Boolean checkReturn = true;
     public static String aktuellerTermin;
     //KlassenVariablen
     private JSONArray jsonArrayStudiengaenge;
+    private JSONArray jsonArrayFakultaten;
     final List<Boolean> studiengangGewaehlt = new ArrayList<Boolean>();
     final List<String> studiengangName = new ArrayList<String>();
+    final List<String> fakultaetName = new ArrayList<String>();
     // private Spinner spStudiengangMain;
-    //List<String> idList = new ArrayList<String>();
+    // List<String> idList = new ArrayList<String>();
     private Message msg = new Message();
 
     SharedPreferences mSharedPreferencesPPServerAdress;
@@ -185,13 +188,12 @@ public class MainActivity extends AppCompatActivity {
         catch(Exception e) {
             if (strJson != null) {
                 try {
-                    jsonArrayStudiengaenge = new JSONArray(strJson);
+                    jsonArrayFakultaten = new JSONArray(strJson);
 
-                    for (int i = 0; i < jsonArrayStudiengaenge.length(); i++) {
-                        JSONObject json = jsonArrayStudiengaenge.getJSONObject(i);
-                        studiengangName.add(json.get("SGName").toString());
-                        studiengangGewaehlt.add(false);
-                        SgNamesToSpinner();
+                    for (int i = 0; i < jsonArrayFakultaten.length(); i++) {
+                        JSONObject json = jsonArrayFakultaten.getJSONObject(i);
+                        fakultaetName.add(json.get("facName").toString());
+                        FacNamesToSpinner();
                     }
 
                 } catch (Exception b) {
@@ -209,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
     //Aufruf in onCreate()
     public void Checkverbindung(){
         boolean aktuelleurl
-                = PingUrl(serverAddress + relativePPlanURL + "entity.studiengang");
+                = PingUrl(serverAddress + relativePPlanURL + "entity.faculty");
 
         if (!aktuelleurl) {
             KeineVerbindung();
@@ -253,16 +255,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //Übernahme der Studiengangsnamen in die Spinner-Komponente.
-    public void SgNamesToSpinner(){
+    //Übernahme der Fakultätsnamen in die Spinner-Komponente.
+    public void FacNamesToSpinner(){
         MainActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 /* Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert",
                                     Toast.LENGTH_SHORT).show();
                  */
-                //spinnerarray für die studiengänge
+                //spinnerarray für die fakultaeten
                 //adapter aufruf
-                final List<String> studiengangsList = new ArrayList();
+                final List<String> fakultaetenList = new ArrayList();
 
                 // Start Merlin Gürtler
                 findViewById(R.id.buttonForSpinner).setOnClickListener(new View.OnClickListener() {
@@ -272,37 +274,39 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
 
-                        String[] courses = new String [studiengangName.size()];
+                        String[] facultys = new String [fakultaetName.size()];
 
-                        for(int i = 0; i < studiengangName.size(); i++) {
-                            courses[i] = studiengangName.get(i);
+                        for(int i = 0; i < fakultaetName.size(); i++) {
+                            facultys[i] = fakultaetName.get(i);
                         }
 
                         // Der Listener für die Item Auswahl
-                        chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
+                        chooseCourse.setItems(facultys, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                studiengangsList.add(courses[which]); // das ausgewählte Item
-                                for (int i = 0 ; i < studiengangName.size(); i++)
+                                fakultaetenList.add(facultys[which]); // das ausgewählte Item
+                                for (int i = 0 ; i < fakultaetName.size(); i++)
                                 {
-                                    if (courses[which]
-                                            .equals(studiengangName.get(i))) {
+                                    if (facultys[which]
+                                            .equals(fakultaetName.get(i))) {
                                         try{
-                                            JSONObject object = jsonArrayStudiengaenge.getJSONObject(i);
-                                            rueckgabeStudiengang = object.get("sgid").toString();
-                                            Log.d("Output Studiengang",
-                                                    rueckgabeStudiengang.toString());
+                                            JSONObject object = jsonArrayFakultaten.getJSONObject(i);
+                                            rueckgabeFakultaet = object.get("fbid").toString();
+                                            Log.d("Output Fakultaet",
+                                                    rueckgabeFakultaet);
                                             // Erstelle Shared Pref für die anderen Fragmente
-                                            SharedPreferences sharedPrefStudiengangValidation =
+                                            SharedPreferences sharedPrefFakultaetValidation =
                                                     getApplicationContext().
                                                             getSharedPreferences("validation",0);
 
-                                            SharedPreferences.Editor editorStudiengangValidation =
-                                                    sharedPrefStudiengangValidation.edit();
+                                            SharedPreferences.Editor editorFakultaetValidation =
+                                                    sharedPrefFakultaetValidation.edit();
 
-                                            editorStudiengangValidation.putString("selectedStudiengang", courses[which]);
-                                            editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
-                                            editorStudiengangValidation.apply();
+                                            editorFakultaetValidation.putString("selectedFakultaet", facultys[which]);
+                                            editorFakultaetValidation.putString("rueckgabeFakultaet", rueckgabeFakultaet);
+                                            editorFakultaetValidation.apply();
+
+                                            // HIER WEITERMACHEN
                                         }
                                         catch (Exception e)
                                         {
@@ -313,8 +317,8 @@ public class MainActivity extends AppCompatActivity {
                                 }//for
 
                                 dialog.dismiss();
-                                Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                                startActivity(hauptfenster);
+                                // Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                                // startActivity(hauptfenster);
                             }
 
                         });
@@ -328,17 +332,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    //Methode zum Überprüfen der studiengänge
+    //Methode zum Überprüfen der fakultaeten
     //Aufruf in checkVerbindung()
     public boolean PingUrl(final String address) {
         //eigenständiger Thread, weil die Abfrage Asynchron ist
         new Thread(() -> {
-            // Die Studiengänge werden in einer Shared Preferences Variable gespeichert.
-            // Creating editor to store Studiengänge to shared preferences
-            SharedPreferences.Editor studiengangEditor;
-            SharedPreferences sharedPrefsStudiengaenge
+            // Die Fakultaeten werden in einer Shared Preferences Variable gespeichert.
+            // Creating editor to store Fakultaeten to shared preferences
+            SharedPreferences.Editor fakultaetEditor;
+            SharedPreferences sharedPrefsFakultaet
                     = getApplicationContext()
-                    .getSharedPreferences("Studiengaenge", 0);
+                    .getSharedPreferences("fakultaeten", 0);
 
             //Verbindungsaufbau zum Webserver
             try {
@@ -381,40 +385,39 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Werte von JSONARRay in JSONObject konvertieren
-                JSONArray erhalteneStudiengaenge = new JSONArray();
+                JSONArray erhaltenteFakultaeten = new JSONArray();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    erhalteneStudiengaenge.put(object.get("studiengang"));
+                    erhaltenteFakultaeten.put(object.get("faculty"));
                 }
 
-                String konvertiertZuString = erhalteneStudiengaenge.toString();
+                String konvertiertZuString = erhaltenteFakultaeten.toString();
                 String klammernEntfernen
                         = konvertiertZuString.substring(1,konvertiertZuString.length()-1);
                 //konvertieren zu JSONArray
-                jsonArrayStudiengaenge = new JSONArray(klammernEntfernen);
+                jsonArrayFakultaten = new JSONArray(klammernEntfernen);
 
-                for(int i = 0; i< jsonArrayStudiengaenge.length(); i++) {
-                    JSONObject json = jsonArrayStudiengaenge.getJSONObject(i);
-                    studiengangName.add(json.get("SGName").toString());
-                    studiengangGewaehlt.add(false);
+                for(int i = 0; i< jsonArrayFakultaten.length(); i++) {
+                    JSONObject json = jsonArrayFakultaten.getJSONObject(i);
+                    fakultaetName.add(json.get("facName").toString());
                 }
 
                 // Werte Speichern für die offline Verwendung
-                //Log.d("Output studiengang", jsonArrayStudiengaenge.get(0).toString());
-                studiengangEditor = sharedPrefsStudiengaenge.edit();
+                //Log.d("Output fakultaet", jsonArrayFakultaeten.get(0).toString());
+                fakultaetEditor = sharedPrefsFakultaet.edit();
                 try {
-                    studiengangEditor.clear();
-                    studiengangEditor.apply();
-                    studiengangEditor.putString("studiengaenge", klammernEntfernen);
-                    studiengangEditor.apply();
+                    fakultaetEditor.clear();
+                    fakultaetEditor.apply();
+                    fakultaetEditor.putString("fakultaeten", klammernEntfernen);
+                    fakultaetEditor.apply();
                 } catch (Exception e) {
-                    Log.d("Output checkStudiengang",
-                            "Fehler: Parsen von Studiengang");
+                    Log.d("Output checkFakultaet",
+                            "Fehler: Parsen von Fakultaet");
                 }
 
-                SgNamesToSpinner();
-                Log.d("Output checkStudiengang","abgeschlossen");
+                FacNamesToSpinner();
+                Log.d("Output checkFakultaet","abgeschlossen");
 
             }
             /*  Wenn keine Verbindung zum Server dann catch Zweig und Daten
@@ -422,23 +425,22 @@ public class MainActivity extends AppCompatActivity {
              */
             catch (final Exception e)
             {
-                String strStudiengang
-                        = sharedPrefsStudiengaenge.getString("studiengaenge","0");
-                //Log.d("Output 426",strStudiengang);
-                if (strStudiengang != null) {
+                String strFakultaet
+                        = sharedPrefsFakultaet.getString("fakultaeten","0");
+                //Log.d("Output 426",strFakultaet);
+                if (strFakultaet != null) {
                     try{
-                        jsonArrayStudiengaenge = new JSONArray(strStudiengang);
-                        for(int i = 0; i< jsonArrayStudiengaenge.length(); i++) {
-                            JSONObject json = jsonArrayStudiengaenge.getJSONObject(i);
-                            studiengangName.add(json.get("SGName").toString());
-                            studiengangGewaehlt.add(false);
-                            SgNamesToSpinner();
+                        jsonArrayFakultaten = new JSONArray(strFakultaet);
+                        for(int i = 0; i< jsonArrayFakultaten.length(); i++) {
+                            JSONObject json = jsonArrayFakultaten.getJSONObject(i);
+                            fakultaetName.add(json.get("facName").toString());
+                            FacNamesToSpinner();
                         }
 
                     }catch (Exception b)
                     {
                         Log.d("uebergabeAnSpinner",
-                                "Fehler beim Parsen des Studiengangsnamen.");
+                                "Fehler beim Parsen des Fakultätsnamen.");
                     }
                 }
                 KeineVerbindung();
