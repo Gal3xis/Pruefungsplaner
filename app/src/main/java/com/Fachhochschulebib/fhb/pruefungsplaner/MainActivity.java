@@ -18,9 +18,11 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +53,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
@@ -61,6 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     ProgressDialog progressBar;
 
+    private Button buttonSpinner;
+    private Button buttonOk;
     public static String pruefJahr = null;
     public static String aktuellePruefphase = null;
     public static String rueckgabeStudiengang = null;
@@ -90,11 +96,15 @@ public class MainActivity extends AppCompatActivity {
         //aufrufen des startlayouts
         setContentView(R.layout.start);
 
+        buttonSpinner = findViewById(R.id.buttonForSpinner);
+        buttonOk = findViewById(R.id.buttonOk);
+
         // Start Merlin Gürtler
         //Komponenten  initialisieren für die Verwendung
         recyclerView = (RecyclerView) findViewById(R.id.recyclerViewChecklist);
+        recyclerView.setHasFixedSize(true);
         //linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         // Ende Merlin Gürtler
 
@@ -217,14 +227,25 @@ public class MainActivity extends AppCompatActivity {
             KeineVerbindung();
         } else {
             // Start Merlin Gürtler
+            RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+
+            // initialisierung db
+            AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+
+            // Thread für die Studiengänge
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    retrofit.getStudiengaenge(getApplication(), datenbank, serverAddress);
+                }
+            }).start();
+
+            // Thread für die Uuid
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     //retrofit auruf
-                    RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-
                     // Überprüfe ob die App schonmal gestartet wurde
-                    AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
                     Uuid uuid = datenbank.userDao().getUuid();
                     if(uuid != null) {
                         final StartClass globalVariable = (StartClass) getApplicationContext();
@@ -264,14 +285,13 @@ public class MainActivity extends AppCompatActivity {
                  */
                 //spinnerarray für die fakultaeten
                 //adapter aufruf
-                final List<String> fakultaetenList = new ArrayList();
 
                 // Start Merlin Gürtler
-                findViewById(R.id.buttonForSpinner).setOnClickListener(new View.OnClickListener() {
+                buttonSpinner.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         // Erstelle das Dialog Feld für die Auswahl
-                        AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this,
+                        AlertDialog.Builder chooseFaculty = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
 
                         String[] facultys = new String [fakultaetName.size()];
@@ -281,10 +301,9 @@ public class MainActivity extends AppCompatActivity {
                         }
 
                         // Der Listener für die Item Auswahl
-                        chooseCourse.setItems(facultys, new DialogInterface.OnClickListener() {
+                        chooseFaculty.setItems(facultys, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                fakultaetenList.add(facultys[which]); // das ausgewählte Item
                                 for (int i = 0 ; i < fakultaetName.size(); i++)
                                 {
                                     if (facultys[which]
@@ -306,7 +325,41 @@ public class MainActivity extends AppCompatActivity {
                                             editorFakultaetValidation.putString("rueckgabeFakultaet", rueckgabeFakultaet);
                                             editorFakultaetValidation.apply();
 
-                                            // HIER WEITERMACHEN
+                                            // füllt die Liste mit Studiengängena
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+                                                    List<Studiengang> studienganenge =
+                                                            datenbank.userDao().getStudiengaenge(rueckgabeFakultaet);
+
+                                                    studiengangGewaehlt.clear();
+                                                    studiengangName.clear();
+
+                                                    for(Studiengang studie: studienganenge) {
+                                                        studiengangName.add(studie.getStudiengangName());
+                                                        studiengangGewaehlt.add(false);
+                                                    }
+
+                                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            // schneidet ab dem Leerzeichen ab, da sonst nicht genug platz ist
+                                                            buttonSpinner.setText(facultys[which].substring
+                                                                    (0, facultys[which].indexOf(' ')));
+
+                                                            // füge den Adapter der Recyclerview hinzu
+                                                            mAdapter = new CheckListAdapter(studiengangName,
+                                                                    studiengangGewaehlt);
+                                                            recyclerView.setAdapter(mAdapter);
+
+                                                            if(buttonOk.getVisibility() != View.VISIBLE) {
+                                                                buttonOk.setVisibility(View.VISIBLE);
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            }).start();
                                         }
                                         catch (Exception e)
                                         {
@@ -323,7 +376,97 @@ public class MainActivity extends AppCompatActivity {
 
                         });
 
-                        chooseCourse.show();
+                        chooseFaculty.show();
+                    }
+                });
+
+
+                buttonOk.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // Erstele einen Dialog um den Hauptstudiengang zu wählen
+                        AlertDialog.Builder chooseCourse = new AlertDialog.Builder(MainActivity.this,
+                                R.style.customAlertDialog);
+
+                        final boolean[] oneFavorite = {false};
+
+                        AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+
+                        List<String> favorisierteStudiengaenge = new ArrayList<>();
+
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                // prüfe ob mindesten ein Studiengang favorisiert wurde
+                                for(Boolean gewaehlt: studiengangGewaehlt) {
+                                    if(gewaehlt) {
+                                        oneFavorite[0] = true;
+                                        break;
+                                    }
+                                }
+                                if(oneFavorite[0]) {
+                                    // aktualisiere die db
+
+                                    for(int i = 0; i < studiengangGewaehlt.size(); i++) {
+                                        datenbank.userDao().updateStudiengang(studiengangName.get(i),
+                                                studiengangGewaehlt.get(i));
+                                        if(studiengangGewaehlt.get(i)) {
+                                            favorisierteStudiengaenge.add(studiengangName.get(i));
+                                        }
+                                    }
+                                }
+
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(oneFavorite[0]) {
+                                            String[] courses = new String [favorisierteStudiengaenge.size()];
+
+                                            for(int i = 0; i < favorisierteStudiengaenge.size(); i++) {
+                                                courses[i] = favorisierteStudiengaenge.get(i);
+                                            }
+
+                                            chooseCourse.setTitle(R.string.choose_main);
+
+                                            chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    new Thread(new Runnable() {
+                                                        @Override
+                                                        public void run() {
+                                                            // hole die Studiengang ID aus der DB
+                                                            rueckgabeStudiengang = datenbank.userDao().getIdStudiengang(courses[which]);
+
+                                                            // Erstelle Shared Pref für die anderen Fragmente
+                                                            SharedPreferences sharedPrefStudiengangValidation =
+                                                                    getApplicationContext().
+                                                                            getSharedPreferences("validation",0);
+
+                                                            SharedPreferences.Editor editorStudiengangValidation =
+                                                                    sharedPrefStudiengangValidation.edit();
+
+                                                            editorStudiengangValidation.putString("selectedStudiengang", courses[which]);
+                                                            editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
+                                                            editorStudiengangValidation.apply();
+
+                                                            Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                                                            startActivity(hauptfenster);
+                                                        }
+                                                    }).start();
+
+                                                }
+                                            });
+
+                                            chooseCourse.show();
+                                        } else {
+                                            Toast.makeText(v.getContext(),v.getContext().getString(R.string.favorite_one_course), Toast.LENGTH_SHORT)
+                                                    .show();
+                                        }
+
+                                    }
+                                });
+                            }
+                        }).start();
                     }
                 });
                 // Ende Merlin Gürtler

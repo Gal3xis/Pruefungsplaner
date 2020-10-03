@@ -467,6 +467,57 @@ public class RetrofitConnect {
         });
 
     }
+
+    public void getStudiengaenge(Context ctx, final AppDatabase roomdaten,
+                             final String serverAdress) {
+        //Serveradresse
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+        ctx2 = ctx;
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
+
+        //uebergabe der parameter an die Adresse
+        String adresse = relativePPlanUrl + "entity.studiengang/";
+
+        String URL = urlfhb+adresse;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<List<JsonStudiengang>> call = request.getStudiengaenge();
+        call.enqueue(new Callback<List<JsonStudiengang>>() {
+            @Override
+            public void onResponse(Call<List<JsonStudiengang>> call, Response<List<JsonStudiengang>> response) {
+                if (response.isSuccessful()) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            // lösche die Tabelle
+                            roomdaten.userDao().deleteStudiengang();
+                            // füge die Einträge der db hinzu
+                            for(JsonStudiengang studiengang: response.body()) {
+                                roomdaten.userDao().insertStudiengang(
+                                        studiengang.getSGID(),
+                                        studiengang.getSGName(),
+                                        studiengang.getFFBID(),
+                                        false
+                                );
+                            }
+                        }
+                    }).start();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<JsonStudiengang>> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
+
+    }
     // Ende Merlin Gürtler
 
     //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!

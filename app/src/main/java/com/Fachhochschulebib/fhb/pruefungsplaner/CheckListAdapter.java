@@ -52,6 +52,15 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.nameStudiengang.setText(studiengangList.get(position));
 
+        holder.checkBoxStudiengang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Speichere die auswahl in der Liste
+                auswahlList.set(position,
+                        !auswahlList.get(position));
+            }
+        });
+
     }
 
     //Item anzahl

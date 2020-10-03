@@ -20,6 +20,7 @@ import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonPruefungsform;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse;
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonStudiengang;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUpdate;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUuid;
 
@@ -48,5 +49,8 @@ public interface RequestInterface {
 
     @GET(" ")
     Call<List<JsonUpdate>> getJSONUpdate();
+
+    @GET(" ")
+    Call<List<JsonStudiengang>> getStudiengaenge();
     //Ende Merlin Gürtler
 }

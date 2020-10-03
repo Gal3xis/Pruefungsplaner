@@ -21,9 +21,6 @@ public interface UserDao {
     @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
     List<PruefplanEintrag> getModuleProf(String prof);
 
-    @Query("SELECT DISTINCT Studiengang FROM PruefplanEintrag ORDER BY Studiengang")
-    List<String> getStudiengangOrdered();
-
     @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul AND Studiengang = :studiengang")
     List<PruefplanEintrag>
     getModuleWithCourseAndModule(String modul, String studiengang);
@@ -62,6 +59,29 @@ public interface UserDao {
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Datum LIKE :date")
     List<PruefplanEintrag> getByDate(String date);
+
+    @Query("INSERT INTO Studiengang VALUES (:sgid, :StudiengangName, :FachbereichId, :Gewaehlt)")
+    void insertStudiengang(
+            String sgid,
+            String StudiengangName,
+            String FachbereichId,
+            Boolean Gewaehlt
+    );
+
+    @Query("DELETE FROM Studiengang")
+    void deleteStudiengang();
+
+    @Query("SELECT * FROM Studiengang WHERE FachbereichId = :fachbereichId")
+    List<Studiengang> getStudiengaenge(String fachbereichId);
+
+    @Query("UPDATE Studiengang SET gewaehlt = :gewaehlt WHERE studiengangName = :studiengangName")
+    void updateStudiengang(String studiengangName, boolean gewaehlt);
+
+    @Query("SELECT sgid from Studiengang WHERE studiengangName = :studiengangName")
+    String getIdStudiengang(String studiengangName);
+
+    @Query("SELECT studiengangName FROM Studiengang WHERE gewaehlt = :gewaehlt ORDER BY studiengangName")
+    List<String> getChoosenStudiengang(Boolean gewaehlt);
     // Ende Merlin Gürtler
 
 

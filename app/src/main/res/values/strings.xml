@@ -4,6 +4,8 @@
     <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
 
     <!-- Ui -->
+    <string name="favorite_one_course">Bitte favorisieren Sie mindestens einen Studiengang</string>
+    <string name="choose_main">Wählen Sie Ihren Hauptstudiengang</string>
     <string name="choose_module">Modulauswahl (aktueller Prüftermin):</string>
     <string name="choose_faculty">Fachbereich auswählen</string>
     <string name="choose_course">Wählen Sie Ihre Studiengänge:</string>

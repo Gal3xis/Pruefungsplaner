@@ -94,7 +94,7 @@ public class WahlModulSucheFragment extends Fragment {
                 ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
                         (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
 
-                studiengangArrayList.addAll(database.userDao().getStudiengangOrdered());
+                studiengangArrayList.addAll(database.userDao().getChoosenStudiengang(true));
 
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
