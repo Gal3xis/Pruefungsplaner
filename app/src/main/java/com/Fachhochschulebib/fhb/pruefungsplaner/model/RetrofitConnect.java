@@ -67,12 +67,26 @@ public class RetrofitConnect {
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
+        List <String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
+        JSONArray studiengangIds = new JSONArray();
+
+        for(String id: Ids) {
+            try {
+                JSONObject idJson = new JSONObject();
+                idJson.put("ID", id);
+                studiengangIds.put(idJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
                             + "entity.pruefplaneintrag/"
                             + pruefungsphase +"/"
                             + termin +"/"
-                            + jahr +"/";
+                            + jahr +"/"
+                            + studiengangIds.toString() + "/";
 
         String URL = urlfhb + relPathWithParameters;
 
@@ -271,6 +285,19 @@ public class RetrofitConnect {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
+        List <String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
+        JSONArray studiengangIds = new JSONArray();
+
+        for(String id: Ids) {
+            try {
+                JSONObject idJson = new JSONObject();
+                idJson.put("ID", id);
+                studiengangIds.put(idJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         ctx2 = ctx;
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
@@ -279,7 +306,8 @@ public class RetrofitConnect {
                 + "entity.pruefplaneintrag/update/"
                 + pruefungsphase +"/"
                 + termin +"/"
-                + jahr +"/";
+                + jahr +"/"
+                + studiengangIds.toString() + "/";
 
         String URL = urlfhb+ relPathWithParameters;
 

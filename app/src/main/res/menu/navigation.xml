@@ -24,7 +24,7 @@
     <item
         android:id="@+id/navigation_changeCourse"
         android:icon="@drawable/ic_change_course"
-        android:title="@string/title_changeCourse"/>
+        android:title="@string/title_changeFaculty"/>
 
     <item
         android:id="@+id/navigation_feedback"

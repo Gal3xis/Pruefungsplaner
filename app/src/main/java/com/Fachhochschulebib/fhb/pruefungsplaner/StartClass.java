@@ -5,6 +5,24 @@ import android.app.Application;
 // Globale Variable um den ersten App Start zu detektieren
 public class StartClass extends Application {
     private boolean appStarted;
+    private boolean showNoProgressBar;
+    private boolean changeFaculty;
+
+    public boolean isShowNoProgressBar() {
+        return showNoProgressBar;
+    }
+
+    public void setShowNoProgressBar(boolean showNoProgressBar) {
+        this.showNoProgressBar = showNoProgressBar;
+    }
+
+    public boolean isChangeFaculty() {
+        return changeFaculty;
+    }
+
+    public void setChangeFaculty(boolean changeFaculty) {
+        this.changeFaculty = changeFaculty;
+    }
 
     public boolean getAppStarted() {
 

@@ -13,6 +13,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -38,12 +40,16 @@ import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
+
+import static android.content.Context.MODE_PRIVATE;
 
 
 public class Terminefragment extends Fragment {
 
     SharedPreferences mSharedPreferencesValidation;
+    ProgressDialog progressBar;
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private Button btnsuche;
@@ -74,10 +80,108 @@ public class Terminefragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         // Start Merlin Gürtler
-
         datenbank = AppDatabase.getAppDatabase(this.getContext());
-        // Nun aus Shared Preferences
 
+        final StartClass globalVariable = (StartClass) this.getContext().getApplicationContext();
+        if(!globalVariable.isShowNoProgressBar()) {
+            globalVariable.setShowNoProgressBar(true);
+
+            progressBar = new ProgressDialog(Terminefragment.this.getContext(),
+                    R.style.ProgressStyle);
+
+            // Erstelle den Fortschrittsbalken
+            progressBar.setMessage(Terminefragment.this.getContext().getString(R.string.load));
+            progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressBar.setCancelable(false);
+            // Zeige den Fortschrittsbalken
+            progressBar.show();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // Die Daten für update aus den Shared Preferences
+                    SharedPreferences mSharedPreferencesPPServerAdress
+                            = Terminefragment.this.getContext().getSharedPreferences("Server_Address", MODE_PRIVATE);
+
+                    String relativePPlanURL
+                            = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0");
+
+                    String serverAddress
+                            = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
+
+                    SharedPreferences mSharedPreferencesPruefTermin
+                            = Terminefragment.this.getContext()
+                            .getSharedPreferences("PruefTermin", 0);
+
+                    String aktuellerTermin
+                            = mSharedPreferencesPruefTermin.getString("aktPruefTermin", "0");
+
+                    RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+
+                    if(datenbank.userDao().getAll2().size() == 0) {
+
+                        retrofit.RetrofitWebAccess(
+                                Terminefragment.this.getContext(),
+                                datenbank,
+                                pruefJahr,
+                                aktuellePruefphase,
+                                aktuellerTermin,
+                                serverAddress);
+                    } else {
+                        retrofit.retroUpdate(Terminefragment.this.getContext(), datenbank,
+                                pruefJahr,
+                                aktuellePruefphase,
+                                aktuellerTermin,
+                                serverAddress);
+                    }
+
+                    final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+
+                    checkList.clear();
+                    ClearLists();
+
+                    for (PruefplanEintrag eintrag : ppeList) {
+                        status.add(eintrag.getStatus());
+                        modulUndStudiengangsList.add(
+                                eintrag.getModul() + "\n "
+                                        + eintrag.getStudiengang());
+                        prueferUndSemesterList.add(
+                                eintrag.getErstpruefer()
+                                        + " " + eintrag.getZweitpruefer()
+                                        + " " + eintrag.getSemester() + " ");
+                        datumsList.add(eintrag.getDatum());
+                        modulList.add(eintrag.getModul());
+                        idList.add(eintrag.getID());
+                        pruefFormList.add(eintrag.getPruefform());
+                        raumList.add(eintrag.getRaum());
+                        checkList.add(true);
+                    }// define an adapter
+
+                    mAdapter = new MyAdapter(modulUndStudiengangsList,
+                            prueferUndSemesterList,
+                            datumsList,
+                            modulList,
+                            idList,
+                            pruefFormList,
+                            mLayout,
+                            raumList,
+                            status);
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.setAdapter(mAdapter);
+                            new Thread(() -> Toast.makeText(Terminefragment.this.getContext(),
+                                    Terminefragment.this.getContext().getString(R.string.noConnection),
+                                    Toast.LENGTH_SHORT).show());
+                            progressBar.dismiss();
+                        }
+                    });
+                }
+            }).start();
+        }
+
+        // Nun aus Shared Preferences
         mSharedPreferencesValidation
                 = Terminefragment.
                 this.getContext().getSharedPreferences("validation", 0);

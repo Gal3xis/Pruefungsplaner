@@ -32,7 +32,8 @@
     <string name="title_exam">Prüfungen</string>
     <string name="title_settings">Optionen</string>
     <string name="title_electiveModule">Wahlmodule</string>
-    <string name="title_changeCourse">Studiengang ändern</string>
+    <string name="title_changeCourse">Studiengänge hinzufügen</string>
+    <string name="title_changeFaculty">Fachbereich ändern</string>
     <string name="title_feedback">Feedback geben</string>
 
     <!-- Status Message -->

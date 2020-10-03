@@ -10,7 +10,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -53,7 +52,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
@@ -63,7 +61,6 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public class MainActivity extends AppCompatActivity {
     CheckListAdapter mAdapter;
     private RecyclerView recyclerView;
-    ProgressDialog progressBar;
 
     private Button buttonSpinner;
     private Button buttonOk;
@@ -74,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     private Boolean checkReturn = true;
     public static String aktuellerTermin;
     //KlassenVariablen
-    private JSONArray jsonArrayStudiengaenge;
+    private String studiengangMain;
     private JSONArray jsonArrayFakultaten;
     final List<Boolean> studiengangGewaehlt = new ArrayList<Boolean>();
     final List<String> studiengangName = new ArrayList<String>();
@@ -86,6 +83,17 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences mSharedPreferencesPPServerAdress;
     SharedPreferences mSharedPreferencesPruefPhase;
     String serverAddress, relativePPlanURL;
+
+    // Start Merlin Gürtler
+    // Schließt die App beim BackButton
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == 0) {
+            finish();
+        }
+    }
+    // Ende Merlin Gürtler
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -106,6 +114,11 @@ public class MainActivity extends AppCompatActivity {
         //linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        SharedPreferences mSharedPreferencesValidation
+                = getApplication().getSharedPreferences("validation", 0);
+
+        studiengangMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
         // Ende Merlin Gürtler
 
         mSharedPreferencesPPServerAdress
@@ -227,6 +240,7 @@ public class MainActivity extends AppCompatActivity {
             KeineVerbindung();
         } else {
             // Start Merlin Gürtler
+            final StartClass globalVariable = (StartClass) getApplicationContext();
             RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
             // initialisierung db
@@ -248,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
                     // Überprüfe ob die App schonmal gestartet wurde
                     Uuid uuid = datenbank.userDao().getUuid();
                     if(uuid != null) {
-                        final StartClass globalVariable = (StartClass) getApplicationContext();
                         // Sende nur ans Backend wenn die App wirklich zum ersten mal
                         // gestartet wurde
                         if(!globalVariable.getAppStarted()) {
@@ -263,6 +276,20 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }).start();
+
+            // Thread für die Navigation
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    // Skippe die erstauswahl, wenn schon ein Studiengang gewählt wurde
+                    if(!studiengangMain.equals("0") && !globalVariable.isChangeFaculty()) {
+                        Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                        startActivityForResult(hauptfenster, 0);
+                    }
+
+                }
+            }).start();
             // Ende Merlin Gürtler
         }
 
@@ -272,7 +299,6 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> Toast.makeText(getApplicationContext(),
                 getApplicationContext().getString(R.string.noConnection),
                 Toast.LENGTH_SHORT).show());
-        progressBar.dismiss();
     }
 
 
@@ -592,62 +618,6 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-    public boolean retroThread(boolean update) {
-        //eigenständiger Thread, weil die Abfrage asynchron ist
-
-        //initialisierung room database
-        AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
-
-        //retrofit auruf
-        RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-
-        //DONE (8/2020 LG): s. Prüfperiodenabfrage etwa Zeile: 529
-        //aktuellerTermin = "2";
-
-        // Start Merlin Gürtler
-
-        SharedPreferences sharedPrefSPruefTermin = getApplicationContext().
-                getSharedPreferences("PruefTermin",Context.MODE_PRIVATE);
-        String pruefPeriode  = sharedPrefSPruefTermin.
-                getString("aktPruefTermin","0");
-
-        // Ende Merlin Gürtler
-
-        // Datei: RetrofitConnect.java
-        // DONE (08/2020) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
-        // Änderung Merlin Gürtler
-        // Prüfe zusätzlich ob sich die PruefPeriode geändert hat, falls ja erneuere die Datenbank
-
-        if(update
-                && pruefPeriode.equals(datenbank.userDao().getTermin())
-                && datenbank.userDao().getTermin() != null) {
-
-            retrofit.retroUpdate(getApplicationContext(), datenbank,
-                    pruefJahr,
-                    aktuellePruefphase,
-                    aktuellerTermin,
-                    serverAddress);
-        } else {
-            Uuid uuid = datenbank.userDao().getUuid();
-
-            datenbank.clearAllTables();
-
-            if(uuid != null) {
-                datenbank.userDao().insertUuid(uuid.getUuid());
-            }
-            retrofit.RetrofitWebAccess(
-                getApplicationContext(),
-                datenbank,
-                pruefJahr,
-                aktuellePruefphase,
-                aktuellerTermin,
-                serverAddress);
-        }
-
-        return true;
-    }
-
     // Start Merlin Gürtler
     // Funktion um die Führende 0 hinzuzufügen
     public String formatDate (String dateToFormat) {
@@ -660,18 +630,6 @@ public class MainActivity extends AppCompatActivity {
 
     //Methode zum Abfragen der Aktuellen Prüfperiode
     public boolean pingPruefPeriode() {
-        // Start Merlin Gürtler
-
-        progressBar = new ProgressDialog(MainActivity.this,
-                R.style.ProgressStyle);
-
-        // Erstelle den Fortschrittsbalken
-        progressBar.setMessage(getApplicationContext().getString(R.string.load));
-        progressBar.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressBar.setCancelable(false);
-        // Zeige den Fortschrittsbalken
-        progressBar.show();
-        // Ende Merlin Gürtler
 
         Thread retrothreadMain = new Thread(new Runnable() {
 
@@ -847,52 +805,17 @@ public class MainActivity extends AppCompatActivity {
                             // Ende Merlin Gürtler
                         }
                     }
-                    Log.d("Output PruefPeriode","abgeschlossen");
-
-                    // Start Merlin Gürtler
-                    AppDatabase datenbank =  AppDatabase.getAppDatabase(getBaseContext());
-                    // Check if the Database is not empty
-
-                    if(datenbank.userDao().getAll2().size() > 0) {
-                        retroThread(true);
-                    } else {
-                        //auslagern von Retrofit in einen Thread
-                        retroThread(false);
-                    }
-                    progressBar.dismiss();
                     // Ende Merlin Gürtler
                 }
                 catch (final Exception e)
                 {
                     checkReturn = false;
-                    progressBar.dismiss();
                     //Keineverbindung();
                 }
             }
         });
 
         retrothreadMain.start();
-
-        // Start Merlin Gürtler
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // Drei Sekunden warten
-                    Thread.sleep(3000);
-
-                    // Beendet den Thread
-                    if(retrothreadMain.isAlive()) {
-                        retrothreadMain.interrupt();
-                        progressBar.dismiss();
-                        Log.d("Thread Interrupted","interrupted");
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-        // Ende Merlin Gürtler
 
         if (checkReturn) {
             return true;

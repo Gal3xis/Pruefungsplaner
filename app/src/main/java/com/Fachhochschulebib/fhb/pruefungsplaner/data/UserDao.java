@@ -82,6 +82,9 @@ public interface UserDao {
 
     @Query("SELECT studiengangName FROM Studiengang WHERE gewaehlt = :gewaehlt ORDER BY studiengangName")
     List<String> getChoosenStudiengang(Boolean gewaehlt);
+
+    @Query("SELECT sgid FROM Studiengang WHERE gewaehlt = :gewaehlt")
+    List<String> getChoosenStudiengangId(Boolean gewaehlt);
     // Ende Merlin Gürtler
 
 

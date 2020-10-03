@@ -53,6 +53,7 @@ public class Tabelle extends AppCompatActivity  {
     //Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -231,11 +232,14 @@ public class Tabelle extends AppCompatActivity  {
                         return true;
 
                     case R.id.navigation_changeCourse:
-                        header.setTitle(getApplicationContext().getString(R.string.title_changeCourse));
+                        header.setTitle(getApplicationContext().getString(R.string.title_changeFaculty));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
                         btnsuche.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
+                        // globale Variable, damit die Fakultät gewechselt werden kann
+                        final StartClass globalVariable = (StartClass) getApplicationContext();
+                        globalVariable.setChangeFaculty(true);
                         Intent myIntent = new Intent(recyclerView.getContext(), MainActivity.class);
                         recyclerView.getContext().startActivity(myIntent);
 
@@ -338,11 +342,11 @@ public class Tabelle extends AppCompatActivity  {
     @Override
     public void onBackPressed() {
         if (getFragmentManager().getBackStackEntryCount() > 0) {
-
             getFragmentManager().popBackStack();
 
         } else {
-            super.onBackPressed();
+            setResult(0);
+            finish();
         }
     }
 }

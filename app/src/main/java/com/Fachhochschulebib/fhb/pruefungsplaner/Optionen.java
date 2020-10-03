@@ -316,6 +316,8 @@ public class Optionen extends Fragment {
                                 aktuellePruefphase,
                                 aktuellerTermin,
                                 serverAddress);
+
+                        retrofit.getStudiengaenge(getContext(), datenbank, serverAddress);
                         // Ende Merlin Gürtler
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -448,6 +450,8 @@ public class Optionen extends Fragment {
                         aktuellePruefphase,
                         aktuellerTermin,
                         serverAddress);
+
+                retrofit.getStudiengaenge(getContext(), database, serverAddress);
 
                 // Log.d("Test3",String.valueOf(stringaufteilung[5]));
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
