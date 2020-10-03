@@ -77,6 +77,7 @@ public class Terminefragment extends Fragment {
     AppDatabase datenbank;
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
+
     public void onCreate(Bundle savedInstanceState) {
 
         // Start Merlin Gürtler
@@ -167,6 +168,14 @@ public class Terminefragment extends Fragment {
                             raumList,
                             status);
 
+                    recyclerView.setAdapter(mAdapter);
+
+                    try {
+                        // Timeout für die Progressbar
+                        Thread.sleep(3000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     progressBar.dismiss();
                 }
             }).start();
