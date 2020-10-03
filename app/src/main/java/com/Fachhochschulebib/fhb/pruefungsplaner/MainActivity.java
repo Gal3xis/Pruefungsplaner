@@ -250,7 +250,9 @@ public class MainActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    retrofit.getStudiengaenge(getApplication(), datenbank, serverAddress);
+                    if(datenbank.userDao().getStudiengang().size() == 0) {
+                        retrofit.getStudiengaenge(getApplication(), datenbank, serverAddress);
+                    }
                 }
             }).start();
 
@@ -476,7 +478,7 @@ public class MainActivity extends AppCompatActivity {
                                                             editorStudiengangValidation.apply();
 
                                                             Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                                                            startActivity(hauptfenster);
+                                                            startActivityForResult(hauptfenster, 0);
                                                         }
                                                     }).start();
 

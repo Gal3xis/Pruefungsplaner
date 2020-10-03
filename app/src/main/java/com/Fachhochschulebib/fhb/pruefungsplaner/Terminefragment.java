@@ -167,16 +167,7 @@ public class Terminefragment extends Fragment {
                             raumList,
                             status);
 
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.setAdapter(mAdapter);
-                            new Thread(() -> Toast.makeText(Terminefragment.this.getContext(),
-                                    Terminefragment.this.getContext().getString(R.string.noConnection),
-                                    Toast.LENGTH_SHORT).show());
-                            progressBar.dismiss();
-                        }
-                    });
+                    progressBar.dismiss();
                 }
             }).start();
         }

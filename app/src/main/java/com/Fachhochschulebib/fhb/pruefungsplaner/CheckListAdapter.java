@@ -47,6 +47,11 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
         return vh;
     }
 
+    private void addFavorite(int position) {
+        auswahlList.set(position,
+                !auswahlList.get(position));
+    }
+
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
@@ -56,8 +61,15 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
             @Override
             public void onClick(View v) {
                 // Speichere die auswahl in der Liste
-                auswahlList.set(position,
-                        !auswahlList.get(position));
+                addFavorite(position);
+            }
+        });
+
+        holder.nameStudiengang.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Speichere die auswahl in der Liste
+                addFavorite(position);
             }
         });
 
