@@ -381,6 +381,12 @@ public class MainActivity extends AppCompatActivity {
                                                                     studiengangGewaehlt);
                                                             recyclerView.setAdapter(mAdapter);
 
+                                                            TextView chooseCourse = findViewById(R.id.chooseCourseId);
+
+                                                            if(chooseCourse.getVisibility() != View.VISIBLE) {
+                                                                chooseCourse.setVisibility(View.VISIBLE);
+                                                            }
+
                                                             if(buttonOk.getVisibility() != View.VISIBLE) {
                                                                 buttonOk.setVisibility(View.VISIBLE);
                                                             }

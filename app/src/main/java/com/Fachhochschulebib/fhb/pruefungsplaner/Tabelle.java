@@ -69,7 +69,6 @@ public class Tabelle extends AppCompatActivity  {
         header.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("button pressed");
                 // Änderung Merlin Gürtler
                 // Toggelt die Sichtbarkeit des Drawers
                 if(dl.isDrawerOpen(GravityCompat.START)) {
@@ -231,7 +230,7 @@ public class Tabelle extends AppCompatActivity  {
 
                         return true;
 
-                    case R.id.navigation_changeCourse:
+                    case R.id.navigation_changeFaculty:
                         header.setTitle(getApplicationContext().getString(R.string.title_changeFaculty));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
@@ -242,6 +241,17 @@ public class Tabelle extends AppCompatActivity  {
                         globalVariable.setChangeFaculty(true);
                         Intent myIntent = new Intent(recyclerView.getContext(), MainActivity.class);
                         recyclerView.getContext().startActivity(myIntent);
+
+                        return true;
+
+                    case R.id.navigation_addCourse:
+                        header.setTitle(getApplicationContext().getString(R.string.title_changeCourse));
+                        recyclerView.setVisibility(View.INVISIBLE);
+                        calendar.setVisibility(View.GONE);
+                        btnsuche.setVisibility(View.GONE);
+                        dl.closeDrawer(GravityCompat.START);
+                        ft.replace(R.id.frame_placeholder, new AddCourseFragment());
+                        ft.commit();
 
                         return true;
                     // Ende Merlin Gürtler

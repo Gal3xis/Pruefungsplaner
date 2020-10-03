@@ -81,10 +81,15 @@ public class Terminefragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         // Start Merlin Gürtler
+        SharedPreferences mSharedPreferencesValidation
+                = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
+
+        String studiengangMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
+
         datenbank = AppDatabase.getAppDatabase(this.getContext());
 
         final StartClass globalVariable = (StartClass) this.getContext().getApplicationContext();
-        if(!globalVariable.isShowNoProgressBar()) {
+        if(!globalVariable.isShowNoProgressBar() || globalVariable.isChangeFaculty()) {
             globalVariable.setShowNoProgressBar(true);
 
             progressBar = new ProgressDialog(Terminefragment.this.getContext(),
@@ -119,7 +124,7 @@ public class Terminefragment extends Fragment {
 
                     RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
-                    if(datenbank.userDao().getAll2().size() == 0) {
+                    if(datenbank.userDao().getByName(studiengangMain).size() == 0) {
 
                         retrofit.RetrofitWebAccess(
                                 Terminefragment.this.getContext(),

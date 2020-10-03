@@ -39,9 +39,6 @@ public interface UserDao {
     @Query("SELECT Modul FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang ORDER BY Modul")
     List<String> getModuleWithCourseDistinct(String selectedStudiengang);
 
-    @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
-    String getTermin();
-
     @Query("SELECT * FROM PruefplanEintrag WHERE Favorit = :favorite")
     List<PruefplanEintrag> getFavorites(boolean favorite);
 
@@ -60,6 +57,9 @@ public interface UserDao {
     @Query("SELECT * FROM PruefplanEintrag WHERE Datum LIKE :date")
     List<PruefplanEintrag> getByDate(String date);
 
+    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang")
+    List<PruefplanEintrag> getByName(String studiengang);
+
     @Query("INSERT INTO Studiengang VALUES (:sgid, :StudiengangName, :FachbereichId, :Gewaehlt)")
     void insertStudiengang(
             String sgid,
@@ -70,6 +70,9 @@ public interface UserDao {
 
     @Query("DELETE FROM Studiengang")
     void deleteStudiengang();
+
+    @Query("DELETE FROM pruefplanEintrag")
+    void deletePruefplanEintrag();
 
     @Query("SELECT * FROM Studiengang WHERE FachbereichId = :fachbereichId")
     List<Studiengang> getStudiengaenge(String fachbereichId);

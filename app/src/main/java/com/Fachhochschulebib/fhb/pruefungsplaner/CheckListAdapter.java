@@ -57,7 +57,9 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
+        // Initialisierung der Komponenten
         holder.nameStudiengang.setText(studiengangList.get(position));
+        holder.checkBoxStudiengang.setChecked(auswahlList.get(position));
 
         holder.checkBoxStudiengang.setOnClickListener(new View.OnClickListener() {
             @Override
