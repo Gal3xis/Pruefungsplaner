@@ -256,24 +256,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }).start();
 
-            // Thread für die Uuid
+            // Thread für die UUid
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    //retrofit auruf
-                    // Überprüfe ob die App schonmal gestartet wurde
                     Uuid uuid = datenbank.userDao().getUuid();
-                    if(uuid != null) {
-                        // Sende nur ans Backend wenn die App wirklich zum ersten mal
-                        // gestartet wurde
-                        if(!globalVariable.getAppStarted()) {
-                            globalVariable.setAppStarted(true);
-                            retrofit.anotherStart(getApplicationContext(), datenbank,
-                                    serverAddress);
-                        }
-
-                    } else {
-                        retrofit.firstStart(getApplicationContext(), datenbank,
+                    if(!globalVariable.getAppStarted() && uuid != null) {
+                        globalVariable.setAppStarted(true);
+                        retrofit.anotherStart(getApplicationContext(), datenbank,
                                 serverAddress);
                     }
                 }
@@ -482,6 +472,20 @@ public class MainActivity extends AppCompatActivity {
                                                             editorStudiengangValidation.putString("selectedStudiengang", courses[which]);
                                                             editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
                                                             editorStudiengangValidation.apply();
+
+                                                            // Thread für die Uuid
+                                                            new Thread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    // Überprüfe ob die App schonmal gestartet wurde
+                                                                    RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+
+                                                                    // Sende nur ans Backend wenn die App wirklich zum ersten mal
+                                                                    // gestartet wurde
+                                                                    retrofit.firstStart(getApplicationContext(), datenbank,
+                                                                            serverAddress);
+                                                                }
+                                                            }).start();
 
                                                             Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
                                                             startActivityForResult(hauptfenster, 0);

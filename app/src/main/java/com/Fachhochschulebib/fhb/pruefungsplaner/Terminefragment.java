@@ -68,6 +68,7 @@ public class Terminefragment extends Fragment {
     List<String> pruefFormList = new ArrayList<>();
     List<String> raumList = new ArrayList<>();
     List<String> status = new ArrayList<>();
+    int sleeptime;
     String pruefJahr, aktuellePruefphase, rueckgabeStudiengang;
 
     public static String validation;
@@ -133,12 +134,16 @@ public class Terminefragment extends Fragment {
                                 aktuellePruefphase,
                                 aktuellerTermin,
                                 serverAddress);
+
+                        sleeptime = 5000;
                     } else {
                         retrofit.retroUpdate(Terminefragment.this.getContext(), datenbank,
                                 pruefJahr,
                                 aktuellePruefphase,
                                 aktuellerTermin,
                                 serverAddress);
+
+                        sleeptime = 2000;
                     }
 
                     final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
@@ -177,7 +182,7 @@ public class Terminefragment extends Fragment {
 
                     try {
                         // Timeout für die Progressbar
-                        Thread.sleep(3000);
+                        Thread.sleep(sleeptime);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

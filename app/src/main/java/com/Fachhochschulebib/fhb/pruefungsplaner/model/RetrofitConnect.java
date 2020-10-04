@@ -379,8 +379,16 @@ public class RetrofitConnect {
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
+        // Erhalte die gewählte Fakultät aus den Shared Preferences
+        SharedPreferences sharedPrefFakultaetValidation =
+                ctx2.
+                        getSharedPreferences("validation",0);
+
+        String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
+
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.user/firstStart/1/";
+        String adresse = relativePPlanUrl + "entity.user/firstStart/" +
+                faculty + "/";
 
         String URL = urlfhb+adresse;
 
