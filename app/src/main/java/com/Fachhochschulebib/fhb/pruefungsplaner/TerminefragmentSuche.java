@@ -144,7 +144,7 @@ public class TerminefragmentSuche extends Fragment {
                                 @Override
                                 public void run() {
                                     AppDatabase roomdaten = AppDatabase.getAppDatabase(getContext());
-                                    List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll(validation);
+                                    List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll2();
 
                                     ClearLists();
 
@@ -165,7 +165,7 @@ public class TerminefragmentSuche extends Fragment {
                                     for (PruefplanEintrag eintrag : ppeList) {
                                         String[] date2 = eintrag.getDatum().split(" ");
 
-                                        if (date2[0].equals(date)) {
+                                        if (date2[0].equals(date) && eintrag.getAusgewaehlt()) {
                                             modulUndStudiengangsList.add(
                                                     eintrag.getModul() + "\n "
                                                             + eintrag.getStudiengang());
@@ -304,15 +304,15 @@ public class TerminefragmentSuche extends Fragment {
 
                 //Variablen mit Werten aus der lokalen Datenbank füllen
                 for (int i = 0; i < WerteZumAnzeigenList.size(); i++) {
-                    modulUndStudiengangsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul() + "\n " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStudiengang());
-                    prueferUndSemesterList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getErstpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getZweitpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getSemester() + " ");
-                    datumsList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getDatum());
-                    modulList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getModul());
-                    idList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getID());
-                    pruefFormList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getPruefform());
-                    raumList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getRaum());
-                    status.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStatus());
-                    statusList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getHint());
+                    modulUndStudiengangsList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getModul() + "\n " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStudiengang());
+                    prueferUndSemesterList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getErstpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getZweitpruefer() + " " + ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getSemester() + " ");
+                    datumsList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getDatum());
+                    modulList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getModul());
+                    idList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getID());
+                    pruefFormList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getPruefform());
+                    raumList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getRaum());
+                    status.add(ppeList.get(WerteZumAnzeigenList.get(i)).getStatus());
+                    statusList.add(ppeList.get(WerteZumAnzeigenList.get(i)).getHint());
                     checkList.add(true);
                 }
 

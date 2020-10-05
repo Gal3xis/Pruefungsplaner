@@ -97,7 +97,7 @@ public interface UserDao {
     @Query("SELECT * FROM PruefplanEintrag WHERE Validation = :validation")
     List<PruefplanEintrag> getAll(String validation);
 
-    @Query("SELECT * FROM PruefplanEintrag")
+    @Query("SELECT * FROM PruefplanEintrag ORDER BY Datum, Termin, Modul")
     List<PruefplanEintrag> getAll2();
 
     @Query("SELECT Studiengang FROM PruefplanEintrag")

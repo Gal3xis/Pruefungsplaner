@@ -36,9 +36,6 @@ public interface RequestInterface {
 
     //Start Merlin Gürtler
     @GET(" ")
-    Call<List<JsonPruefungsform>> getJSONPruefForm();
-
-    @GET(" ")
     Call<JsonUuid> getJsonUuid();
 
     @PUT(" ")

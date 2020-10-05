@@ -450,6 +450,7 @@ public class sucheFragment extends Fragment {
                                     sortedList .clear();
                                     ppeList = roomDaten.userDao().getModuleProf("%" +
                                             acProf.getText().toString().trim() + "%");
+
                                     for(int m = 0; m < ppeList.size(); m++) {
                                         sortedList.add(String.valueOf(ppeList.get(m).getID()));
                                     }
