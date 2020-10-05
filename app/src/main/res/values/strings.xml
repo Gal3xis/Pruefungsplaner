@@ -9,6 +9,7 @@
     <string name="choose_module">Modulauswahl (aktueller Prüftermin):</string>
     <string name="choose_faculty">Fachbereich auswählen</string>
     <string name="choose_course">Wählen Sie Ihre Studiengänge:</string>
+    <string name="no_course">Keine Studiengänge vorhanden</string>
     <string name="choose_course2">Studiengang auswählen:</string>
     <string name="choose_prof">Prüferauswahl:</string>
     <string name="semester_ui">Semester:</string>
@@ -35,11 +36,6 @@
     <string name="title_changeCourse">Studiengänge hinzufügen</string>
     <string name="title_changeFaculty">Fachbereich ändern</string>
     <string name="title_feedback">Feedback geben</string>
-
-    <!-- Status Message -->
-    <string name="status_final">Sicher</string>
-    <string name="status_pending">Kann noch geändert werden</string>
-    <string name="status_unsure">Unsicher</string>
 
     <!-- Klausur Typen -->
     <string name="klausur">K_90</string>

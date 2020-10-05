@@ -52,5 +52,8 @@ public interface RequestInterface {
 
     @GET(" ")
     Call<List<JsonStudiengang>> getStudiengaenge();
+
+    @POST(" ")
+    Call<Void> sendCourses();
     //Ende Merlin Gürtler
 }

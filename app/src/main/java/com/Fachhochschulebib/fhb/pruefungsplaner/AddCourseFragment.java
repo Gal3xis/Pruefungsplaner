@@ -16,6 +16,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -38,6 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
 
 
 public class AddCourseFragment extends Fragment {
@@ -130,6 +132,7 @@ public class AddCourseFragment extends Fragment {
                         String aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
 
                         // aktualsiere die db Einträge
+                        datenbank.userDao().deletePruefplanEintrag();
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         retrofit.RetrofitWebAccess(
                                 getContext(),
@@ -139,6 +142,9 @@ public class AddCourseFragment extends Fragment {
                                 aktuellerTermin,
                                 serverAddress);
 
+                        retrofit.setUserCourses(getContext(), datenbank,
+                                serverAddress);
+
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
@@ -146,6 +152,12 @@ public class AddCourseFragment extends Fragment {
                                 Toast.makeText(v.getContext(),
                                         v.getContext().getString(R.string.courseActualisation),
                                         Toast.LENGTH_SHORT).show();
+
+                                final StartClass globalVariable = (StartClass) v.getContext().getApplicationContext();
+                                globalVariable.setShowNoProgressBar(false);
+
+                                Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
+                                startActivity(hauptfenster);
                             }
                         });
                     }

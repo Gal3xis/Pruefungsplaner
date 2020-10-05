@@ -27,7 +27,6 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -40,7 +39,6 @@ import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -48,7 +46,6 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class Terminefragment extends Fragment {
 
-    SharedPreferences mSharedPreferencesValidation;
     ProgressDialog progressBar;
     private RecyclerView recyclerView;
     private CalendarView calendar;
@@ -68,6 +65,7 @@ public class Terminefragment extends Fragment {
     List<String> pruefFormList = new ArrayList<>();
     List<String> raumList = new ArrayList<>();
     List<String> status = new ArrayList<>();
+    List<String> statusMessage = new ArrayList<>();
     int sleeptime;
     String pruefJahr, aktuellePruefphase, rueckgabeStudiengang;
 
@@ -77,7 +75,45 @@ public class Terminefragment extends Fragment {
 
     AppDatabase datenbank;
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+    // Start Merlin Gürtler
+    private void createAdapter() {
+        final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
+        checkList.clear();
+        ClearLists();
+
+        for (PruefplanEintrag eintrag : ppeList) {
+            status.add(eintrag.getStatus());
+            modulUndStudiengangsList.add(
+                    eintrag.getModul() + "\n "
+                            + eintrag.getStudiengang());
+            prueferUndSemesterList.add(
+                    eintrag.getErstpruefer()
+                            + " " + eintrag.getZweitpruefer()
+                            + " " + eintrag.getSemester() + " ");
+            datumsList.add(eintrag.getDatum());
+            modulList.add(eintrag.getModul());
+            idList.add(eintrag.getID());
+            pruefFormList.add(eintrag.getPruefform());
+            raumList.add(eintrag.getRaum());
+            statusMessage.add(eintrag.getHint());
+            checkList.add(true);
+        }// define an adapter
+
+        mAdapter = new MyAdapter(modulUndStudiengangsList,
+                prueferUndSemesterList,
+                datumsList,
+                modulList,
+                idList,
+                pruefFormList,
+                mLayout,
+                raumList,
+                status,
+                statusMessage);
+    }
+
+
+    // Ende Merlin Gürtler
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -127,6 +163,8 @@ public class Terminefragment extends Fragment {
 
                     if(datenbank.userDao().getByName(studiengangMain).size() == 0) {
 
+                        datenbank.userDao().deletePruefplanEintrag();
+
                         retrofit.RetrofitWebAccess(
                                 Terminefragment.this.getContext(),
                                 datenbank,
@@ -146,39 +184,7 @@ public class Terminefragment extends Fragment {
                         sleeptime = 2000;
                     }
 
-                    final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
-
-                    checkList.clear();
-                    ClearLists();
-
-                    for (PruefplanEintrag eintrag : ppeList) {
-                        status.add(eintrag.getStatus());
-                        modulUndStudiengangsList.add(
-                                eintrag.getModul() + "\n "
-                                        + eintrag.getStudiengang());
-                        prueferUndSemesterList.add(
-                                eintrag.getErstpruefer()
-                                        + " " + eintrag.getZweitpruefer()
-                                        + " " + eintrag.getSemester() + " ");
-                        datumsList.add(eintrag.getDatum());
-                        modulList.add(eintrag.getModul());
-                        idList.add(eintrag.getID());
-                        pruefFormList.add(eintrag.getPruefform());
-                        raumList.add(eintrag.getRaum());
-                        checkList.add(true);
-                    }// define an adapter
-
-                    mAdapter = new MyAdapter(modulUndStudiengangsList,
-                            prueferUndSemesterList,
-                            datumsList,
-                            modulList,
-                            idList,
-                            pruefFormList,
-                            mLayout,
-                            raumList,
-                            status);
-
-                    recyclerView.setAdapter(mAdapter);
+                    createAdapter();
 
                     try {
                         // Timeout für die Progressbar
@@ -187,6 +193,13 @@ public class Terminefragment extends Fragment {
                         e.printStackTrace();
                     }
                     progressBar.dismiss();
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.setAdapter(mAdapter);
+                        }
+                    });
                 }
             }).start();
         }
@@ -424,6 +437,7 @@ public class Terminefragment extends Fragment {
                                             idList.add(eintrag.getID());
                                             pruefFormList.add(eintrag.getPruefform());
                                             raumList.add(eintrag.getRaum());
+                                            statusMessage.add(eintrag.getHint());
                                             checkList.add(true);
                                         }
                                     }// define an adapter
@@ -436,7 +450,8 @@ public class Terminefragment extends Fragment {
                                             idList,
                                             pruefFormList, mLayout,
                                             raumList,
-                                            status);
+                                            status,
+                                            statusMessage);
                                     //Anzeigen
                                     recyclerView.setAdapter(mAdapter);
                                 }
@@ -454,37 +469,8 @@ public class Terminefragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
 
-                checkList.clear();
-                ClearLists();
-
-                for (PruefplanEintrag eintrag : ppeList) {
-                    status.add(eintrag.getStatus());
-                    modulUndStudiengangsList.add(
-                            eintrag.getModul() + "\n "
-                                    + eintrag.getStudiengang());
-                    prueferUndSemesterList.add(
-                            eintrag.getErstpruefer()
-                                    + " " + eintrag.getZweitpruefer()
-                                    + " " + eintrag.getSemester() + " ");
-                    datumsList.add(eintrag.getDatum());
-                    modulList.add(eintrag.getModul());
-                    idList.add(eintrag.getID());
-                    pruefFormList.add(eintrag.getPruefform());
-                    raumList.add(eintrag.getRaum());
-                    checkList.add(true);
-                }// define an adapter
-
-                mAdapter = new MyAdapter(modulUndStudiengangsList,
-                        prueferUndSemesterList,
-                        datumsList,
-                        modulList,
-                        idList,
-                        pruefFormList,
-                        mLayout,
-                        raumList,
-                        status);
+                createAdapter();
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override

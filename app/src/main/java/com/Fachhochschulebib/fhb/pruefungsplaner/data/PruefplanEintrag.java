@@ -53,6 +53,17 @@ public class PruefplanEintrag {
     @ColumnInfo(name = "Status")
     private String Status;
 
+    @ColumnInfo(name = "Hint")
+    private String Hint;
+
+    public String getHint() {
+        return Hint;
+    }
+
+    public void setHint(String hint) {
+        Hint = hint;
+    }
+
     public String getStatus() {
         return Status;
     }

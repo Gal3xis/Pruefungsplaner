@@ -15,6 +15,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -85,6 +86,48 @@ public class MainActivity extends AppCompatActivity {
     String serverAddress, relativePPlanURL;
 
     // Start Merlin Gürtler
+    // Fügt den Hauptstudiengang zu den Shared Preferences hinzu
+    private void addMainCourse(String choosenCourse) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // hole die Studiengang ID aus der DB
+                AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+                rueckgabeStudiengang = datenbank.userDao().getIdStudiengang(choosenCourse);
+
+                // Erstelle Shared Pref für die anderen Fragmente
+                SharedPreferences sharedPrefStudiengangValidation =
+                        getApplicationContext().
+                                getSharedPreferences("validation",0);
+
+                SharedPreferences.Editor editorStudiengangValidation =
+                        sharedPrefStudiengangValidation.edit();
+
+                editorStudiengangValidation.putString("selectedStudiengang", choosenCourse);
+                editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
+                editorStudiengangValidation.apply();
+
+                // Thread für die Uuid
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Überprüfe ob die App schonmal gestartet wurde
+                        if(datenbank.userDao().getUuid() == null) {
+                            RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                            // Sende nur ans Backend wenn die App wirklich zum ersten mal
+                            // gestartet wurde
+                            retrofit.firstStart(getApplicationContext(), datenbank,
+                                    serverAddress);
+                        }
+                    }
+                }).start();
+
+                Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
+                startActivityForResult(hauptfenster, 0);
+            }
+        }).start();
+    }
+
     // Schließt die App beim BackButton
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -261,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
                     Uuid uuid = datenbank.userDao().getUuid();
-                    if(!globalVariable.getAppStarted() && uuid != null) {
+                    if(!globalVariable.getAppStarted() && uuid != null && !globalVariable.isChangeFaculty()) {
                         globalVariable.setAppStarted(true);
                         retrofit.anotherStart(getApplicationContext(), datenbank,
                                 serverAddress);
@@ -356,7 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
                                                     for(Studiengang studie: studienganenge) {
                                                         studiengangName.add(studie.getStudiengangName());
-                                                        studiengangGewaehlt.add(false);
+                                                        studiengangGewaehlt.add(studie.getGewaehlt());
                                                     }
 
                                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -377,10 +420,20 @@ public class MainActivity extends AppCompatActivity {
                                                                 chooseCourse.setVisibility(View.VISIBLE);
                                                             }
 
-                                                            if(buttonOk.getVisibility() != View.VISIBLE) {
-                                                                buttonOk.setVisibility(View.VISIBLE);
-                                                            }
-                                                        }
+                                                            if(studiengangName.size() == 0) {
+                                                                if(buttonOk.getVisibility() == View.VISIBLE) {
+                                                                    buttonOk.setVisibility(View.INVISIBLE);
+                                                                }
+                                                                chooseCourse.setText(R.string.no_course);
+                                                                chooseCourse.setTextColor(Color.parseColor("#ffa500"));
+                                                            } else {
+                                                                if(buttonOk.getVisibility() != View.VISIBLE) {
+                                                                    buttonOk.setVisibility(View.VISIBLE);
+                                                                }
+                                                                chooseCourse.setText(R.string.choose_course);
+                                                                chooseCourse.setTextColor(Color.parseColor("#eeeeee"));
+                                                            } }
+
                                                     });
                                                 }
                                             }).start();
@@ -444,58 +497,35 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         if(oneFavorite[0]) {
-                                            String[] courses = new String [favorisierteStudiengaenge.size()];
+                                            if(favorisierteStudiengaenge.size() == 1) {
+                                                addMainCourse(favorisierteStudiengaenge.get(0));
+                                            } else {
 
-                                            for(int i = 0; i < favorisierteStudiengaenge.size(); i++) {
-                                                courses[i] = favorisierteStudiengaenge.get(i);
+                                                String[] courses = new String [favorisierteStudiengaenge.size()];
+
+                                                for(int i = 0; i < favorisierteStudiengaenge.size(); i++) {
+                                                    courses[i] = favorisierteStudiengaenge.get(i);
+                                                }
+
+                                                chooseCourse.setTitle(R.string.choose_main);
+
+                                                chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        new Thread(new Runnable() {
+                                                            @Override
+                                                            public void run() {
+                                                                addMainCourse(courses[which]);
+                                                            }
+                                                        }).start();
+
+                                                    }
+                                                });
+
+                                                chooseCourse.show();
+
                                             }
 
-                                            chooseCourse.setTitle(R.string.choose_main);
-
-                                            chooseCourse.setItems(courses, new DialogInterface.OnClickListener() {
-                                                @Override
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    new Thread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            // hole die Studiengang ID aus der DB
-                                                            rueckgabeStudiengang = datenbank.userDao().getIdStudiengang(courses[which]);
-
-                                                            // Erstelle Shared Pref für die anderen Fragmente
-                                                            SharedPreferences sharedPrefStudiengangValidation =
-                                                                    getApplicationContext().
-                                                                            getSharedPreferences("validation",0);
-
-                                                            SharedPreferences.Editor editorStudiengangValidation =
-                                                                    sharedPrefStudiengangValidation.edit();
-
-                                                            editorStudiengangValidation.putString("selectedStudiengang", courses[which]);
-                                                            editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
-                                                            editorStudiengangValidation.apply();
-
-                                                            // Thread für die Uuid
-                                                            new Thread(new Runnable() {
-                                                                @Override
-                                                                public void run() {
-                                                                    // Überprüfe ob die App schonmal gestartet wurde
-                                                                    RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-
-                                                                    // Sende nur ans Backend wenn die App wirklich zum ersten mal
-                                                                    // gestartet wurde
-                                                                    retrofit.firstStart(getApplicationContext(), datenbank,
-                                                                            serverAddress);
-                                                                }
-                                                            }).start();
-
-                                                            Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                                                            startActivityForResult(hauptfenster, 0);
-                                                        }
-                                                    }).start();
-
-                                                }
-                                            });
-
-                                            chooseCourse.show();
                                         } else {
                                             Toast.makeText(v.getContext(),v.getContext().getString(R.string.favorite_one_course), Toast.LENGTH_SHORT)
                                                     .show();

@@ -77,16 +77,28 @@ public class JsonResponse {
         @SerializedName("Status")
         @Expose
         private String Status;
+
+        @SerializedName("Hint")
+        @Expose
+        private String Hint;
         // Ende Merlin Gürtler
 
 
-    public String getStatus() {
-        return Status;
-    }
+        public String getHint() {
+            return Hint;
+        }
 
-    public void setStatus(String status) {
-        Status = status;
-    }
+        public void setHint(String hint) {
+            Hint = hint;
+        }
+
+    public String getStatus() {
+            return Status;
+        }
+
+        public void setStatus(String status) {
+            Status = status;
+        }
 
     public String getErstpruefer() {
             return Erstpruefer;

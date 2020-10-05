@@ -299,11 +299,7 @@ public class Optionen extends Fragment {
                         AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
                         Log.d("Test", "Lokale DB löschen.");
 
-                        Uuid uuid = datenbank.userDao().getUuid();
-
-                        datenbank.clearAllTables();
-
-                        datenbank.userDao().insertUuid(uuid.getUuid());
+                        datenbank.userDao().deletePruefplanEintrag();
 
                         // Start Merlin Gürtler
 
@@ -316,8 +312,6 @@ public class Optionen extends Fragment {
                                 aktuellePruefphase,
                                 aktuellerTermin,
                                 serverAddress);
-
-                        retrofit.getStudiengaenge(getContext(), datenbank, serverAddress);
                         // Ende Merlin Gürtler
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -433,12 +427,7 @@ public class Optionen extends Fragment {
 
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
-                Uuid uuid = database.userDao().getUuid();
-
-                database.clearAllTables();
-
-                // Merlin Gürtler Speichere die UUID wieder in der Datenbank
-                database.userDao().insertUuid(uuid.getUuid());
+                database.userDao().deletePruefplanEintrag();
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
                 //retrofit auruf
@@ -450,8 +439,6 @@ public class Optionen extends Fragment {
                         aktuellePruefphase,
                         aktuellerTermin,
                         serverAddress);
-
-                retrofit.getStudiengaenge(getContext(), database, serverAddress);
 
                 // Log.d("Test3",String.valueOf(stringaufteilung[5]));
                 new Handler(Looper.getMainLooper()).post(new Runnable() {

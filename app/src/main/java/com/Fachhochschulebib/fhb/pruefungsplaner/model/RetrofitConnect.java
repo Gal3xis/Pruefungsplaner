@@ -180,6 +180,7 @@ public class RetrofitConnect {
                         pruefplanEintrag.setRaum(eintragDB.getRaum());
                         pruefplanEintrag.setPruefform(eintragDB.getPruefform());
                         pruefplanEintrag.setStatus(eintragDB.getStatus());
+                        pruefplanEintrag.setHint(eintragDB.getHint());
 
                         //lokale datenbank initialiseren
                          //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -343,7 +344,8 @@ public class RetrofitConnect {
 
                                     roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
                                             updateExam.getStatus(),
-                                            updateExam.getID());
+                                            updateExam.getID(),
+                                            updateExam.getHint());
 
                                     //Update den Eintrag aus dem Calendar falls vorhanden
                                     CheckGoogleCalendar cal = new CheckGoogleCalendar();
@@ -407,6 +409,9 @@ public class RetrofitConnect {
                         public void run() {
                             // Speichere die erhaltene Uuid
                             roomdaten.userDao().insertUuid(response.body().getUuid());
+
+                            // sende die gewählten Kurse
+                            setUserCourses(ctx, roomdaten, serverAdress);
                         }
                     }).start();
                 }
@@ -538,7 +543,7 @@ public class RetrofitConnect {
                                 roomdaten.userDao().insertStudiengang(
                                         studiengang.getSGID(),
                                         studiengang.getSGName(),
-                                        studiengang.getFFBID(),
+                                        studiengang.getFKFBID(),
                                         false
                                 );
                             }
@@ -552,6 +557,61 @@ public class RetrofitConnect {
                 Log.d("Error",t.getMessage());
             }
         });
+
+    }
+
+    public void setUserCourses(Context ctx, final AppDatabase roomdaten,
+                             final String serverAdress) {
+        //Serveradresse
+        SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
+
+        ctx2 = ctx;
+
+        // erhalte die gewählten Studiengänge
+        List <String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
+        JSONArray studiengangIds = new JSONArray();
+
+        for(String id: Ids) {
+            try {
+                JSONObject idJson = new JSONObject();
+                idJson.put("ID", id);
+                studiengangIds.put(idJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Uuid uuid = roomdaten.userDao().getUuid();
+
+        //Creating editor to store uebergebeneModule to shared preferences
+        String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
+
+        //uebergabe der parameter an die Adresse
+        String adresse = relativePPlanUrl + "entity.usercourses/" +
+                studiengangIds.toString() + "/" + uuid.getUuid() + "/" ;
+
+        String URL = urlfhb+adresse;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        final RequestInterface request = retrofit.create(RequestInterface.class);
+        Call<Void> call = request.sendCourses();
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Log.d("Success","Success");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.d("Error",t.getMessage());
+            }
+        });
+
 
     }
     // Ende Merlin Gürtler

@@ -19,16 +19,16 @@ public class JsonStudiengang {
     @Expose
     private String SGID;
 
-    @SerializedName("FFBID")
+    @SerializedName("FKFBID")
     @Expose
-    private String FFBID;
+    private String FKFBID;
 
-    public String getFFBID() {
-        return FFBID;
+    public String getFKFBID() {
+        return FKFBID;
     }
 
-    public void setFFBID(String FFBID) {
-        this.FFBID = FFBID;
+    public void setFKFBID(String FKFBID) {
+        this.FKFBID = FKFBID;
     }
 
     public String getSGName() {

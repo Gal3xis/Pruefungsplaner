@@ -58,6 +58,7 @@ public class TerminefragmentSuche extends Fragment {
     List<String> pruefFormList = new ArrayList<>();
     List<String> raumList = new ArrayList<>();
     List<String> status = new ArrayList<>();
+    List<String> statusList = new ArrayList<>();
 
     private String month2;
     private String day2;
@@ -176,6 +177,7 @@ public class TerminefragmentSuche extends Fragment {
                                             pruefFormList.add(eintrag.getPruefform());
                                             raumList.add(eintrag.getRaum());
                                             status.add(eintrag.getStatus());
+                                            statusList.add(eintrag.getHint());
                                         }
                                     }
                                     // define an adapter
@@ -189,7 +191,8 @@ public class TerminefragmentSuche extends Fragment {
                                             pruefFormList,
                                             mLayout,
                                             raumList,
-                                            status);
+                                            status,
+                                            statusList);
 
                                     //Anzeigen von recyclerview
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -292,6 +295,7 @@ public class TerminefragmentSuche extends Fragment {
                     pruefFormList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getPruefform());
                     raumList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getRaum());
                     status.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getStatus());
+                    statusList.add(ppeList.get(Integer.valueOf(WerteZumAnzeigenList.get(i))).getHint());
                     checkList.add(true);
                 }
 
@@ -305,7 +309,8 @@ public class TerminefragmentSuche extends Fragment {
                         pruefFormList,
                         mLayout,
                         raumList,
-                        status);
+                        status,
+                        statusList);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override

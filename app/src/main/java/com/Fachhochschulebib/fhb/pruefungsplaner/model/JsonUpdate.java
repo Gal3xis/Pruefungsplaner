@@ -19,6 +19,18 @@ public class JsonUpdate {
     @Expose
     private String Status;
 
+    @SerializedName("Hint")
+    @Expose
+    private String hint;
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
     public String getID() {
         return ID;
     }

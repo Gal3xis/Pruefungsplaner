@@ -48,6 +48,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> raumAdapter;
     private List<String> pruefform;
     private List<String> statusList;
+    private List<String> statusHintList;
     private boolean speicher;
     private String modulname;
     private TextView txtSecondScreen;
@@ -67,7 +68,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                      List<String> pruefformList,
                      RecyclerView.LayoutManager mLayout,
                      List<String> raum,
-                     List<String> status) {
+                     List<String> status,
+                     List<String> statusHint) {
         uebergebeneModule = module;
         Datum = datum;
         prueferUSemster = prueferUndSemester;
@@ -77,6 +79,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         pruefform = pruefformList;
         aktuelleslayout = mLayout;
         statusList = status;
+        statusHintList = statusHint;
     }
 
     public void add(int position, String item) {
@@ -165,11 +168,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                 if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
                                     // Start Merlin Gürtler
                                     // Setze die Farbe des Icons
-                                    if (eintrag.getStatus().equals("pending")) {
+                                    if (eintrag.getStatus().equals("discussion")) {
                                         holder.statusIcon.setColorFilter(Color.parseColor("#F0E68C"));
                                     }
 
-                                    if (eintrag.getStatus().equals("unsure")) {
+                                    if (eintrag.getStatus().equals("proposal")) {
                                         holder.statusIcon.setColorFilter(Color.parseColor("#CD5C5C"));
                                     }
 
@@ -196,21 +199,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         // Gibt die Statusmeldung aus
         holder.statusIcon.setOnClickListener(v -> {
-            if (statusList.get(position).equals("pending")) {
+            if (statusList.get(position).equals("discussion")) {
                 Toast.makeText(v.getContext(),
-                        v.getContext().getString(R.string.status_pending),
+                        statusHintList.get(position),
                         Toast.LENGTH_SHORT).show();
             }
 
-            if (statusList.get(position).equals("unsure")) {
+            if (statusList.get(position).equals("proposal")) {
                 Toast.makeText(v.getContext(),
-                        v.getContext().getString(R.string.status_unsure),
+                        statusHintList.get(position),
                         Toast.LENGTH_SHORT).show();
             }
 
-            if (statusList.get(position).equals("final")) {
+            if (statusList.get(position).equals("public")) {
                 Toast.makeText(v.getContext(),
-                        v.getContext().getString(R.string.status_final),
+                        statusHintList.get(position),
                         Toast.LENGTH_SHORT).show();
             }
         });

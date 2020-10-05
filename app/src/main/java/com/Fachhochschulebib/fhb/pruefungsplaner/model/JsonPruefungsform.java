@@ -24,6 +24,18 @@ public class JsonPruefungsform {
     @Expose
     private String pfid;
 
+    @SerializedName("Hint")
+    @Expose
+    private String hint;
+
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
+    }
+
     public String getPFBez() {
         return PFBez;
     }
