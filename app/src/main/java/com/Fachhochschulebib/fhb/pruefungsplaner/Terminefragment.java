@@ -13,6 +13,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -29,6 +30,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +45,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 
 public class Terminefragment extends Fragment {
@@ -119,6 +123,16 @@ public class Terminefragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
 
         // Start Merlin Gürtler
+        //Zugriffrechte für den GoogleKalender
+        //Id für den Google Kalender
+        final int callbackId = 42;
+
+        //Wert1: ID Google Kalender, Wert2: Rechte fürs Lesen, Wert3: Rechte fürs schreiben)
+        checkPermission(callbackId,
+                Manifest.permission.READ_CALENDAR,
+                Manifest.permission.WRITE_CALENDAR);
+
+
         SharedPreferences mSharedPreferencesValidation
                 = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
 
@@ -548,6 +562,17 @@ public class Terminefragment extends Fragment {
         } catch (Exception e) {
             Log.d("Error", "Orientation error" + e);
         }
+    }
+
+    private void checkPermission(int callbackId, String... permissionsId) {
+        boolean permissions = true;
+        for (String p : permissionsId) {
+            permissions = permissions
+                    && ContextCompat
+                    .checkSelfPermission(this.getContext(), p) == PERMISSION_GRANTED;
+        }
+        if (!permissions)
+            ActivityCompat.requestPermissions(Terminefragment.this.getActivity(), permissionsId, callbackId);
     }
     // Ende Merlin Gürtler
 }

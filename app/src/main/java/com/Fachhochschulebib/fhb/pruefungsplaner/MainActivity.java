@@ -185,15 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
         pingPruefPeriode();
 
-        //Zugriffrechte für den GoogleKalender
-        //Id für den Google Kalender
-        final int callbackId = 42;
-
-        //Wert1: ID Google Kalender, Wert2: Rechte fürs Lesen, Wert3: Rechte fürs schreiben)
-        checkPermission(callbackId,
-                Manifest.permission.READ_CALENDAR,
-                Manifest.permission.WRITE_CALENDAR);
-
         //Defininition des Arrays jahreszeit
         List<String> jahresZeit = new ArrayList<String>();
         jahresZeit.add(context.getString(R.string.sommer));
@@ -883,14 +874,4 @@ public class MainActivity extends AppCompatActivity {
         return false;
     });
 
-    private void checkPermission(int callbackId, String... permissionsId) {
-        boolean permissions = true;
-        for (String p : permissionsId) {
-            permissions = permissions
-                    && ContextCompat
-                    .checkSelfPermission(this, p) == PERMISSION_GRANTED;
-        }
-        if (!permissions)
-            ActivityCompat.requestPermissions(this, permissionsId, callbackId);
-    }
 }
