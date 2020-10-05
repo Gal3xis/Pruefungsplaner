@@ -16,6 +16,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -134,8 +135,14 @@ public class AddCourseFragment extends Fragment {
                         String pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
                         String aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
 
+                        SharedPreferences sharedPrefSelectedStudiengang = getContext().
+                                getSharedPreferences("validation", Context.MODE_PRIVATE);
+                        String selectedStudiengang  = sharedPrefSelectedStudiengang.
+                                getString("selectedStudiengang","0");
+
                         // aktualsiere die db Einträge
-                        datenbank.userDao().deletePruefplanEintrag(false);
+                        // lösche nicht die Einträge des Hauptstudienganges
+                        datenbank.userDao().deletePruefplanEintragExceptMainCourse(selectedStudiengang, false);
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         retrofit.RetrofitWebAccess(
                                 getContext(),
@@ -148,6 +155,9 @@ public class AddCourseFragment extends Fragment {
                         retrofit.setUserCourses(getContext(), datenbank,
                                 serverAddress);
 
+                        final StartClass globalVariable = (StartClass) v.getContext().getApplicationContext();
+                        globalVariable.setShowNoProgressBar(false);
+
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
@@ -155,9 +165,6 @@ public class AddCourseFragment extends Fragment {
                                 Toast.makeText(v.getContext(),
                                         v.getContext().getString(R.string.courseActualisation),
                                         Toast.LENGTH_SHORT).show();
-
-                                final StartClass globalVariable = (StartClass) v.getContext().getApplicationContext();
-                                globalVariable.setShowNoProgressBar(false);
 
                                 Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
                                 startActivity(hauptfenster);

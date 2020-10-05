@@ -59,8 +59,6 @@ public class Favoritenfragment extends Fragment {
 
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
-        System.out.println("TEST START");
-
         //Komponenten  initialisieren für die Verwendung
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);

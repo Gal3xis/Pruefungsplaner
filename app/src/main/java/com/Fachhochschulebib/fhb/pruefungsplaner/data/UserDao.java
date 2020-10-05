@@ -68,8 +68,8 @@ public interface UserDao {
     @Query("DELETE FROM Studiengang")
     void deleteStudiengang();
 
-    @Query("DELETE FROM pruefplanEintrag WHERE Favorit = :favorit")
-    void deletePruefplanEintrag(boolean favorit);
+    @Query("DELETE FROM pruefplanEintrag WHERE Studiengang != :mainCourse AND Ausgewaehlt = :gewaehlt")
+    void deletePruefplanEintragExceptMainCourse(String mainCourse, boolean gewaehlt);
 
     @Query("DELETE FROM pruefplanEintrag ")
     void deletePruefplanEintragAll();

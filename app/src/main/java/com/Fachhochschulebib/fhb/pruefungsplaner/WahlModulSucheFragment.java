@@ -81,12 +81,6 @@ public class WahlModulSucheFragment extends Fragment {
         selectedStudiengangSpinner = getContext().getString(R.string.all_cours);
         modulName = getContext().getString(R.string.all);
 
-        // Damit keine Module des gewählten Studienganges angezeigt werden
-        SharedPreferences sharedPrefSelectedStudiengang = getContext().
-                getSharedPreferences("validation",Context.MODE_PRIVATE);
-        String selectedStudiengang  = sharedPrefSelectedStudiengang.
-                getString("selectedStudiengang","0");
-
         new Thread(new Runnable() {
             @Override
             public void run() {
