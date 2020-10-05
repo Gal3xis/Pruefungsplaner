@@ -13,6 +13,8 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -56,6 +59,8 @@ public class Favoritenfragment extends Fragment {
 
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
+        System.out.println("TEST START");
+
         //Komponenten  initialisieren für die Verwendung
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setHasFixedSize(true);
@@ -81,8 +86,7 @@ public class Favoritenfragment extends Fragment {
             @Override
             public void run() {
                 List<PruefplanEintrag> ppeList = roomdaten.userDao().getFavorites(true);
-
-
+                
                 // Abfrage ob Prüfungen favorisiert wurden
                 // Favorisierte Prüfungen für die Anzeige vorbereiten
                 for (PruefplanEintrag eintrag: ppeList) {
@@ -96,12 +100,19 @@ public class Favoritenfragment extends Fragment {
                     raum.add(eintrag.getRaum());
                     check.add(true);
                 }
+
+                // definiere adapter
+                // übergabe der variablen an den Recyclerview Adapter, für die darstellung
+                mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(mAdapter);
+                    }
+                });
             }
         }).start();
-
-        // definiere adapter
-        // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-        mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
@@ -186,8 +197,6 @@ public class Favoritenfragment extends Fragment {
             }
         });
         // Ende Merlin Gürtler
-
-        recyclerView.setAdapter(mAdapter);
         return v;
     }
 
