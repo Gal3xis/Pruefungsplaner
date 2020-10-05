@@ -88,6 +88,9 @@ public interface UserDao {
 
     @Query("SELECT sgid FROM Studiengang WHERE gewaehlt = :gewaehlt")
     List<String> getChoosenStudiengangId(Boolean gewaehlt);
+
+    @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
+    String getTermin();
     // Ende Merlin Gürtler
 
 

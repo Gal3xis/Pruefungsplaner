@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -217,8 +218,10 @@ public class MainActivity extends AppCompatActivity {
             pruefJahr = String.valueOf(thisYear);
         }
 
-        // TODO Absprechen ob dies nur wegen Corona ein Sonderfall ist !!!
-        if (kalenderMonat > 9) {
+        // TODO Nach Corona muss der Wert in der strings.xml wieder auf 9 geändert werden
+        if (kalenderMonat >= Integer.parseInt(
+                getApplicationContext().getString(R.string.month_wise)
+        )) {
 
             aktuellePruefphase = context.getString(R.string.winter_short);
             int thisYear = calendar.get(Calendar.YEAR);

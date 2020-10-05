@@ -162,8 +162,17 @@ public class Terminefragment extends Fragment {
 
                     RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
-                    if (datenbank.userDao().getByName(studiengangMain).size() == 0) {
-                        datenbank.userDao().deletePruefplanEintrag(false);
+
+                        SharedPreferences sharedPrefSPruefTermin = Terminefragment.this.getContext().
+                                getSharedPreferences("PruefTermin",Terminefragment.this.getContext().MODE_PRIVATE);
+                        String pruefPeriode  = sharedPrefSPruefTermin.
+                                getString("aktPruefTermin","0");
+
+                    // Prüft zusätzlich nioch ob sich die Prüfungsphase geändert hat
+                    if (datenbank.userDao().getByName(studiengangMain).size() == 0
+                    || !pruefPeriode.equals(datenbank.userDao().getTermin())) {
+
+                        datenbank.userDao().deletePruefplanEintragAll();
 
                         retrofit.RetrofitWebAccess(
                                 Terminefragment.this.getContext(),
@@ -175,6 +184,7 @@ public class Terminefragment extends Fragment {
 
                         sleeptime = 3000;
                     } else {
+
                         retrofit.retroUpdate(Terminefragment.this.getContext(), datenbank,
                                 pruefJahr,
                                 aktuellePruefphase,

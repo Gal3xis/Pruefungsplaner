@@ -3,6 +3,9 @@
     <string name="server_adress">http://192.168.2.104:8080/</string>
     <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
 
+    <!-- Prüfungsphase Corona -->
+   <string name="month_wise">10</string>
+
     <!-- Ui -->
     <string name="favorite_one_course">Bitte favorisieren Sie mindestens einen Studiengang</string>
     <string name="choose_main">Wählen Sie Ihren Hauptstudiengang</string>
