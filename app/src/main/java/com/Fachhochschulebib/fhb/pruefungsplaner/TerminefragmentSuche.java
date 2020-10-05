@@ -30,7 +30,9 @@ import android.widget.CalendarView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -69,7 +71,6 @@ public class TerminefragmentSuche extends Fragment {
     List<Integer> WerteZumAnzeigenList = new ArrayList<>();
 
 
-
     public void onCreate(Bundle savedInstanceState) {
         // Start Merlin Gürtler
         // Nun aus Shared Preferences
@@ -96,7 +97,6 @@ public class TerminefragmentSuche extends Fragment {
         final View v = inflater.inflate(R.layout.terminefragment, container, false);
 
 
-
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         recyclerView.setVisibility(View.VISIBLE);
@@ -110,7 +110,6 @@ public class TerminefragmentSuche extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
         mLayout = recyclerView.getLayoutManager();
-
 
 
         //Userinterface Komponenten Initialiseren
@@ -128,6 +127,7 @@ public class TerminefragmentSuche extends Fragment {
          */
         btnsuche.setOnClickListener(new View.OnClickListener() {
             boolean speicher = true;
+
             @Override
             public void onClick(View v) {
                 if (!speicher) {
@@ -149,10 +149,10 @@ public class TerminefragmentSuche extends Fragment {
                                     ClearLists();
 
                                     //Creating editor to store uebergebeneModule to shared preferences
-                                    if (month < 10) {
+                                    if (month < 9) {
                                         month2 = "0" + String.valueOf(month + 1);
                                     } else {
-                                        month2 = String.valueOf(month);
+                                        month2 = String.valueOf(month + 1);
                                     }
                                     if (dayOfMonth < 10) {
                                         day2 = "0" + String.valueOf(dayOfMonth);
@@ -161,8 +161,10 @@ public class TerminefragmentSuche extends Fragment {
                                     }
                                     year2 = String.valueOf(year);
                                     date = year2 + "-" + month2 + "-" + day2;
-                                    for (PruefplanEintrag eintrag: ppeList) {
+
+                                    for (PruefplanEintrag eintrag : ppeList) {
                                         String[] date2 = eintrag.getDatum().split(" ");
+
                                         if (date2[0].equals(date)) {
                                             modulUndStudiengangsList.add(
                                                     eintrag.getModul() + "\n "
@@ -178,6 +180,7 @@ public class TerminefragmentSuche extends Fragment {
                                             raumList.add(eintrag.getRaum());
                                             status.add(eintrag.getStatus());
                                             statusList.add(eintrag.getHint());
+                                            checkList.add(true);
                                         }
                                     }
                                     // define an adapter
@@ -211,7 +214,7 @@ public class TerminefragmentSuche extends Fragment {
         });
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), new   RecyclerItemClickListener.OnItemClickListener() {
+                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, final int position) {
                         final TextView txtSecondScreen
@@ -219,15 +222,15 @@ public class TerminefragmentSuche extends Fragment {
                         View viewItem
                                 = recyclerView.getLayoutManager().findViewByPosition(position);
                         LinearLayout layout1
-                                =(LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                                = (LinearLayout) viewItem.findViewById(R.id.linearLayout);
 
-                        layout1.setOnClickListener(new  View.OnClickListener() {
+                        layout1.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 Log.e("@@@@@", "" + position);
                                 if (txtSecondScreen.getVisibility() == v.VISIBLE) {
                                     txtSecondScreen.setVisibility(v.GONE);
-                                    checkList.set(position,false);
+                                    checkList.set(position, false);
                                 } else {
                                     // Start Merlin Gürtler
                                     for (int i = 0; i < recyclerView.getChildCount(); i++) {
@@ -240,8 +243,8 @@ public class TerminefragmentSuche extends Fragment {
                                             if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
                                                 txtSecondScreen2.setVisibility(v.GONE);
                                             }
-                                        }catch (Exception e) {
-                                            Log.d("ERROR","NOT IN VIEW PORT " + e);
+                                        } catch (Exception e) {
+                                            Log.d("ERROR", "NOT IN VIEW PORT " + e);
                                         }
                                     }
                                     // Ende Merlin Gürtler
@@ -250,19 +253,34 @@ public class TerminefragmentSuche extends Fragment {
                                 }
                             }
                         });
-
-                        if(checkList.get(position)) {
-                            txtSecondScreen.setVisibility(v.VISIBLE);
-                            txtSecondScreen.setText(mAdapter.giveString(position));
-                        }
                     }
                 })
         );
+
+        // Start Merlin Gürtler
+        recyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(View view) {
+            }
+
+            // Wenn ein Element den Viewport verlässt, wird
+            // der zweite Screen zu geklappt
+            @Override
+            public void onChildViewDetachedFromWindow(View view) {
+                final TextView txtSecondScreen
+                        = (TextView) view.findViewById(R.id.txtSecondscreen);
+                if (txtSecondScreen.getVisibility() == view.VISIBLE) {
+                    txtSecondScreen.setVisibility(view.GONE);
+                }
+            }
+        });
+        // Ende Merlin Gürtler
+
+
         return v;
     }
 
-    public void Adapteruebergabe()
-    {
+    public void Adapteruebergabe() {
 
         new Thread(new Runnable() {
             @Override
@@ -278,9 +296,8 @@ public class TerminefragmentSuche extends Fragment {
 
                 ClearLists();
 
-                for (int i =0;i<ppeList.size();i++) {
-                    System.out.println(ppeList.get(i).getAusgewaehlt());
-                    if(ppeList.get(i).getAusgewaehlt()) {
+                for (int i = 0; i < ppeList.size(); i++) {
+                    if (ppeList.get(i).getAusgewaehlt()) {
                         WerteZumAnzeigenList.add(i);
                     }
                 }
@@ -316,14 +333,14 @@ public class TerminefragmentSuche extends Fragment {
                     @Override
                     public void run() {
                         recyclerView.setAdapter(mAdapter);
+                        enableSwipeToDelete();
                     }
                 });
             }
         }).start();
     }
 
-    public void ClearLists()
-    {
+    public void ClearLists() {
         modulUndStudiengangsList.clear();
         prueferUndSemesterList.clear();
         datumsList.clear();
@@ -332,6 +349,47 @@ public class TerminefragmentSuche extends Fragment {
         pruefFormList.clear();
         raumList.clear();
     }
+
+
+    // Start Merlin Gürtler
+    private void enableSwipeToDelete() {
+        // try and catch, da es bei einer
+        // Orientierungsänderung sonst zu
+        // einer NullPointerException kommt
+        try {
+            // Definiert den Listener
+            swipeListener swipeToDeleteCallback = new swipeListener(getContext(), false) {
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                    final int position = viewHolder.getAdapterPosition();
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            boolean isFavorite = mAdapter.checkFavorite(viewHolder.getAdapterPosition());
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isFavorite) {
+                                        mAdapter.deleteFromFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+                                    } else {
+                                        mAdapter.addToFavorites(position, (MyAdapter.ViewHolder) viewHolder);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            });
+                        }
+                    }).start();
+                }
+            };
+
+            // Setzt den Listener
+            ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+            itemTouchhelper.attachToRecyclerView(recyclerView);
+        } catch (Exception e) {
+            Log.d("Error", "Orientation error" + e);
+        }
+    }
+    // Ende Merlin Gürtler
 
 }
 

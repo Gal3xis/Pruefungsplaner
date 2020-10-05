@@ -216,57 +216,11 @@ public class RetrofitConnect {
                         // Ende Merlin Gürtler
                     }
 
-                    // Start Merlin Gürtler
-                    // Der Neue Pfad für die pruefungsform
-                    String relPathWithParametersPForm = relativePPlanUrl
-                            + "entity.pruefungsform/";
-
-                    String URL = urlfhb + relPathWithParametersPForm;
-
-                    Retrofit.Builder builder = new Retrofit.Builder();
-                    builder.baseUrl(URL);
-                    builder.addConverterFactory(GsonConverterFactory.create());
-                    Retrofit retrofit = builder.build();
-
-                    final RequestInterface request = retrofit.create(RequestInterface.class);
-                    Call<List<JsonPruefungsform>> secondCall = request.getJSONPruefForm();
-                    secondCall.enqueue(new Callback<List<JsonPruefungsform>>() {
-                        @Override
-                        public void onResponse(Call<List<JsonPruefungsform>> call, Response<List<JsonPruefungsform>> response) {
-                            // Neuer Thread da DB Abfragen immer in einem neuen Thread sein müssen
-                            new Thread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    List<PruefplanEintrag> ppeList = roomdaten.userDao().getAll2();
-                                    // Erhalte die Prüfform aus der DB
-                                    if (response.isSuccessful()) {
-                                        for(PruefplanEintrag eintrag: ppeList) {
-                                            for (JsonPruefungsform pruefung: response.body()) {
-                                                if (eintrag.getPruefform().equals(pruefung.getPForm())) {
-                                                    // Update die Prüfform in der DB
-                                                    roomdaten.userDao().updatePruefform(pruefung.getPFBez(),
-                                                            Integer.valueOf(eintrag.getID()));
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }).start();
-                        }
-
-                        @Override
-                        public void onFailure(Call<List<JsonPruefungsform>> call, Throwable t) {
-                            Log.d("Error",t.getMessage());
-                        }
-                    });
-
                     checkuebertragung = true;
 
-                    // Ende Merlin Gürtler
 
                 }//if(response.isSuccessful())
-                else { System.out.println(" :::. NO Retrofit RESPONSE .::: "); }
+                else { Log.d("RESPONSE", ":::NO RESPONSE:::"); }
             }
 
             @Override
@@ -360,7 +314,7 @@ public class RetrofitConnect {
                         }
                     }).start();
                 }
-                else { System.out.println(" :::. NO RESPONSE .::: "); }
+                else { Log.d("RESPONSE", ":::NO RESPONSE:::"); }
             }
 
 
@@ -618,6 +572,11 @@ public class RetrofitConnect {
 
     //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!
     public static void addUser(final AppDatabase db, PruefplanEintrag pruefplanEintrag) {
-        db.userDao().insertAll(pruefplanEintrag);
+        PruefplanEintrag existingEntry = db.userDao().getPruefung(pruefplanEintrag.getID());
+        // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist
+        // dies wird verwendet, da die Favoriten behalten werden sollen
+        if(existingEntry == null) {
+            db.userDao().insertAll(pruefplanEintrag);
+        }
     }
 }

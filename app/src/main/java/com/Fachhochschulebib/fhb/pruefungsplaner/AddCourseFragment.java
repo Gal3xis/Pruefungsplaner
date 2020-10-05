@@ -86,7 +86,13 @@ public class AddCourseFragment extends Fragment {
 
                 mAdapter = new CheckListAdapter(studiengangName,
                         studiengangGewaehlt);
-                recyclerView.setAdapter(mAdapter);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView.setAdapter(mAdapter);
+                    }
+                });
             }
         }).start();
 
@@ -102,9 +108,6 @@ public class AddCourseFragment extends Fragment {
                             datenbank.userDao().updateStudiengang(studiengangName.get(i),
                                     studiengangGewaehlt.get(i));
                         }
-
-
-                        datenbank.userDao().deletePruefplanEintrag();
 
                         // die Retrofitdaten aus den Shared Preferences
                         SharedPreferences mSharedPreferencesPPServerAdress
@@ -132,7 +135,7 @@ public class AddCourseFragment extends Fragment {
                         String aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
 
                         // aktualsiere die db Einträge
-                        datenbank.userDao().deletePruefplanEintrag();
+                        datenbank.userDao().deletePruefplanEintrag(false);
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         retrofit.RetrofitWebAccess(
                                 getContext(),

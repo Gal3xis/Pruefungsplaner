@@ -238,7 +238,6 @@ public class CheckGoogleCalendar {
                     //trennen von datum und Uhrzeit
                     String[] s = eintrag.getDatum().split(" ");
                     //print Datum
-                    System.out.println(s[0]);
                     //aufteilen von tag, monat und jahr.
                     //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
                     String[] ss = s[0].split("-");
@@ -402,7 +401,6 @@ public class CheckGoogleCalendar {
                 //trennen von datum und Uhrzeit
                 String[] s = favoritePruefung.getDatum().split(" ");
                 //print Datum
-                System.out.println(s[0]);
                 //aufteilen von tag, monat und jahr.
                 //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
                 String[] ss = s[0].split("-");

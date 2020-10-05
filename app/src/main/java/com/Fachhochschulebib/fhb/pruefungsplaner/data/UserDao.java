@@ -18,7 +18,7 @@ public interface UserDao {
     @Query("UPDATE PruefplanEintrag SET Datum = :datum, Status = :status, Hint = :hint where ID = :id")
     void updateExam(String datum, String status, String id, String hint);
 
-    @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof")
+    @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof ORDER BY Datum")
     List<PruefplanEintrag> getModuleProf(String prof);
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul AND Studiengang = :studiengang")
@@ -29,7 +29,7 @@ public interface UserDao {
     List<PruefplanEintrag>
     getModuleWithCourseOrdered(String studiengang);
 
-    @Query("SELECT Modul FROM PruefplanEintrag ORDER BY Modul")
+    @Query("SELECT DISTINCT Modul FROM PruefplanEintrag ORDER BY Modul")
     List<String>
     getModuleOrdered();
 
@@ -39,14 +39,11 @@ public interface UserDao {
     @Query("SELECT Modul FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang ORDER BY Modul")
     List<String> getModuleWithCourseDistinct(String selectedStudiengang);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Favorit = :favorite")
+    @Query("SELECT * FROM PruefplanEintrag WHERE Favorit = :favorite ORDER BY Datum, Termin, Modul")
     List<PruefplanEintrag> getFavorites(boolean favorite);
 
     @Query("SELECT * FROM PruefplanEintrag WHERE ID = :id")
     PruefplanEintrag getPruefung(String id);
-
-    @Query ("UPDATE PruefplanEintrag SET Pruefform = :pruefform WHERE ID = :id")
-    void updatePruefform(String pruefform, int id);
 
     @Query("INSERT INTO Uuid VALUES (:uuid)")
     void insertUuid(String uuid);
@@ -54,7 +51,7 @@ public interface UserDao {
     @Query("SELECT * FROM Uuid")
     Uuid getUuid();
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Datum LIKE :date")
+    @Query("SELECT * FROM PruefplanEintrag WHERE Datum LIKE :date ORDER BY Termin")
     List<PruefplanEintrag> getByDate(String date);
 
     @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang")
@@ -71,8 +68,11 @@ public interface UserDao {
     @Query("DELETE FROM Studiengang")
     void deleteStudiengang();
 
-    @Query("DELETE FROM pruefplanEintrag")
-    void deletePruefplanEintrag();
+    @Query("DELETE FROM pruefplanEintrag WHERE Favorit = :favorit")
+    void deletePruefplanEintrag(boolean favorit);
+
+    @Query("DELETE FROM pruefplanEintrag ")
+    void deletePruefplanEintragAll();
 
     @Query("SELECT * FROM Studiengang WHERE FachbereichId = :fachbereichId")
     List<Studiengang> getStudiengaenge(String fachbereichId);

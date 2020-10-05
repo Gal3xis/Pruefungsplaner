@@ -38,9 +38,9 @@
             android:background="@drawable/button_rounded_corners2"
             android:baselineAligned="false"
             android:ems="10"
-            android:inputType="textPersonName"
+            android:inputType="none"
             android:paddingLeft="10dp"
-            android:text="http://thor.ad.fh-bielefeld.de:8080/"
+            android:text="@string/server"
             android:textColor="#eeeeee"
             app:layout_constraintBottom_toTopOf="parent"
             tools:layout_editor_absoluteX="8dp" />

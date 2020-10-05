@@ -236,7 +236,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         //Aufteilung nach verschiedenen Tagen
         String[] splitTage = Datum.get(position).split(" ");
-        System.out.println(splitTage[0]);
         if (position > 0) {
             String[] splitTagePositionVorher = Datum.get(position - 1).split(" ");
 
@@ -249,7 +248,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         //Darstellen der Werte in der Prüfitem Komponente
         String[] splitMonatJahrTage = splitTage[0].split("-");
-        System.out.println(splitTage[0]);
         holder.txtthirdline.setText(context.getString(R.string.time) + splitTage[1].substring(0, 5).toString());
         holder.button.setText(splitMonatJahrTage[2].toString() + "."
                 + splitMonatJahrTage[1].toString() + "."
@@ -406,9 +404,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                                     //Ermitteln benötigter Variablen
                                     String[] splitDatumUndUhrzeit = Datum.get(position).split(" ");
-                                    System.out.println(splitDatumUndUhrzeit[0]);
+
                                     String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
-                                    System.out.println(splitDatumUndUhrzeit[0]);
+
                                     holder.txtthirdline
                                             .setText(context.getString(R.string.time)
                                                     + splitDatumUndUhrzeit[1].substring(0, 5).toString());

@@ -74,6 +74,7 @@ public class Terminefragment extends Fragment {
     private RecyclerView.LayoutManager mLayout;
 
     AppDatabase datenbank;
+
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
     // Start Merlin Gürtler
     private void createAdapter() {
@@ -126,7 +127,7 @@ public class Terminefragment extends Fragment {
         datenbank = AppDatabase.getAppDatabase(this.getContext());
 
         final StartClass globalVariable = (StartClass) this.getContext().getApplicationContext();
-        if(!globalVariable.isShowNoProgressBar() || globalVariable.isChangeFaculty()) {
+        if (!globalVariable.isShowNoProgressBar() || globalVariable.isChangeFaculty()) {
             globalVariable.setShowNoProgressBar(true);
 
             progressBar = new ProgressDialog(Terminefragment.this.getContext(),
@@ -161,9 +162,8 @@ public class Terminefragment extends Fragment {
 
                     RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
-                    if(datenbank.userDao().getByName(studiengangMain).size() == 0) {
-
-                        datenbank.userDao().deletePruefplanEintrag();
+                    if (datenbank.userDao().getByName(studiengangMain).size() == 0) {
+                        datenbank.userDao().deletePruefplanEintrag(false);
 
                         retrofit.RetrofitWebAccess(
                                 Terminefragment.this.getContext(),
@@ -173,7 +173,7 @@ public class Terminefragment extends Fragment {
                                 aktuellerTermin,
                                 serverAddress);
 
-                        sleeptime = 5000;
+                        sleeptime = 3000;
                     } else {
                         retrofit.retroUpdate(Terminefragment.this.getContext(), datenbank,
                                 pruefJahr,
@@ -283,41 +283,42 @@ public class Terminefragment extends Fragment {
         AdapterUebergabe();
 
         recyclerView.addOnItemTouchListener(
-                new RecyclerItemClickListener(getActivity(), (RecyclerItemClickListener.OnItemClickListener) (view, position) -> {
-                    //LinearLayout layout1 =( LinearLayout) view.findViewById(R.id.linearLayout);
-                    final TextView txtSecondScreen
-                            = (TextView) view.findViewById(R.id.txtSecondscreen);
-                    View viewItem
-                            = recyclerView.getLayoutManager().findViewByPosition(position);
+                new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, final int position) {
+                        final TextView txtSecondScreen
+                                = (TextView) view.findViewById(R.id.txtSecondscreen);
+                        View viewItem
+                                = recyclerView.getLayoutManager().findViewByPosition(position);
 
-                    LinearLayout layout1
-                            = (LinearLayout) viewItem.findViewById(R.id.linearLayout);
-                    layout1.setOnClickListener(v1 -> {
-                        Log.e("@@@@@", "" + position);
-                        if (txtSecondScreen.getVisibility() == v1.VISIBLE) {
-                            txtSecondScreen.setVisibility(v1.GONE);
-                            checkList.set(position, false);
-                        } else {
-                            // Start Merlin Gürtler
-                            for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                                View holder = recyclerView.getLayoutManager().findViewByPosition(i);
-                                // Try and Catch, da die App crasht
-                                // wenn das Element nicht im View Port ist
-                                try {
-                                    final TextView txtSecondScreen2
-                                            = (TextView) holder.findViewById(R.id.txtSecondscreen);
-                                    if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
-                                        txtSecondScreen2.setVisibility(v.GONE);
+                        LinearLayout layout1
+                                = (LinearLayout) viewItem.findViewById(R.id.linearLayout);
+                        layout1.setOnClickListener(v1 -> {
+                            Log.e("@@@@@", "" + position);
+                            if (txtSecondScreen.getVisibility() == v1.VISIBLE) {
+                                txtSecondScreen.setVisibility(v1.GONE);
+                                checkList.set(position, false);
+                            } else {
+                                // Start Merlin Gürtler
+                                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                                    View holder = recyclerView.getLayoutManager().findViewByPosition(i);
+                                    // Try and Catch, da die App crasht
+                                    // wenn das Element nicht im View Port ist
+                                    try {
+                                        final TextView txtSecondScreen2
+                                                = (TextView) holder.findViewById(R.id.txtSecondscreen);
+                                        if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
+                                            txtSecondScreen2.setVisibility(v.GONE);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d("ERROR", "NOT IN VIEW PORT " + e);
                                     }
-                                } catch (Exception e) {
-                                    Log.d("ERROR", "NOT IN VIEW PORT " + e);
                                 }
+                                // Ende Merlin Gürtler
+                                txtSecondScreen.setVisibility(v1.VISIBLE);
+                                txtSecondScreen.setText(mAdapter.giveString(position));
                             }
-                            // Ende Merlin Gürtler
-                            txtSecondScreen.setVisibility(v1.VISIBLE);
-                            txtSecondScreen.setText(mAdapter.giveString(position));
-                        }
-                    });
+                        });
 
                     /* Merlin Gürtler
                     Dieser Code scheint nichts zu tun
@@ -336,7 +337,8 @@ public class Terminefragment extends Fragment {
                                 "Fehler weitere Informationen");
                     }
                     */
-                    positionAlt = position;
+                        positionAlt = position;
+                    }
                 })
         );
 
@@ -364,8 +366,6 @@ public class Terminefragment extends Fragment {
         //itemTouchhelper.attachToRecyclerView(recyclerView);
 
         //initialisieren der UI-Komponenten
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
-        recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnsuche = (Button) v.findViewById(R.id.btnDatum);
         calendar.setVisibility(View.GONE);
@@ -412,13 +412,11 @@ public class Terminefragment extends Fragment {
                                     }
                                     year2 = String.valueOf(year);
                                     date = year2 + "-" + month2 + "-" + day2;
-                                    System.out.println(date);
                                     checkList.clear();
 
                                     ClearLists();
                                     for (PruefplanEintrag eintrag : ppeList) {
                                         String[] date2 = eintrag.getDatum().split(" ");
-                                        System.out.println(date2[0]);
 
                                 /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
                                     Kalender datum übereinstimmt
@@ -453,7 +451,12 @@ public class Terminefragment extends Fragment {
                                             status,
                                             statusMessage);
                                     //Anzeigen
-                                    recyclerView.setAdapter(mAdapter);
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerView.setAdapter(mAdapter);
+                                        }
+                                    });
                                 }
                             }).start();
                         }
@@ -516,7 +519,7 @@ public class Terminefragment extends Fragment {
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if(isFavorite) {
+                                    if (isFavorite) {
                                         mAdapter.deleteFromFavorites(position, (MyAdapter.ViewHolder) viewHolder);
                                     } else {
                                         mAdapter.addToFavorites(position, (MyAdapter.ViewHolder) viewHolder);

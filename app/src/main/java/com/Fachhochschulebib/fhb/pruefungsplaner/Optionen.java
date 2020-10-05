@@ -204,7 +204,7 @@ public class Optionen extends Fragment {
                                     //ermitteln von benötigten Variablen
                                     String[] splitDatumUndUhrzeit
                                             = eintrag.getDatum().split(" ");
-                                    System.out.println(splitDatumUndUhrzeit[0]);
+
                                     String[] splitTagMonatJahr
                                             = splitDatumUndUhrzeit[0].split("-");
                                     studiengang = eintrag.getStudiengang();
@@ -299,7 +299,7 @@ public class Optionen extends Fragment {
                         AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
                         Log.d("Test", "Lokale DB löschen.");
 
-                        datenbank.userDao().deletePruefplanEintrag();
+                        datenbank.userDao().deletePruefplanEintragAll();
 
                         // Start Merlin Gürtler
 
@@ -427,13 +427,11 @@ public class Optionen extends Fragment {
 
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
-                database.userDao().deletePruefplanEintrag();
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
                 //retrofit auruf
                 RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-                retrofit.RetrofitWebAccess(
-                        getContext(),
+                retrofit.retroUpdate(getContext(),
                         database,
                         pruefJahr,
                         aktuellePruefphase,
@@ -469,8 +467,8 @@ public class Optionen extends Fragment {
                     urlConn.connect();
                     final long endTime = System.currentTimeMillis();
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        System.out.println("Time (ms) : " + (endTime - startTime));
-                        System.out.println("Ping to " + address + " successful.");
+                        // System.out.println("Time (ms) : " + (endTime - startTime));
+                        // System.out.println("Ping to " + address + " successful.");
                         pruefplanAktualisieren();
                     }
                 } catch (final Exception e) {

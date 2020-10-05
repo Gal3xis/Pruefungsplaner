@@ -28,13 +28,13 @@ public class addOnScrollListener extends RecyclerView.OnScrollListener {
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
         switch (newState) {
             case RecyclerView.SCROLL_STATE_IDLE:
-                System.out.println("The RecyclerView is not scrolling");
+                // System.out.println("The RecyclerView is not scrolling");
                 break;
             case RecyclerView.SCROLL_STATE_DRAGGING:
-                System.out.println("Scrolling now");
+                // System.out.println("Scrolling now");
                 break;
             case RecyclerView.SCROLL_STATE_SETTLING:
-                System.out.println("Scroll Settling");
+                // System.out.println("Scroll Settling");
                 break;
 
         }
@@ -43,19 +43,19 @@ public class addOnScrollListener extends RecyclerView.OnScrollListener {
 
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         if (dx > 0) {
-            System.out.println("Scrolled Right");
+            // System.out.println("Scrolled Right");
         } else if (dx < 0) {
-            System.out.println("Scrolled Left");
+            // System.out.println("Scrolled Left");
         } else {
-            System.out.println("No Horizontal Scrolled");
+            // System.out.println("No Horizontal Scrolled");
         }
 
         if (dy > 0) {
-            System.out.println("Scrolled Downwards");
+            // System.out.println("Scrolled Downwards");
         } else if (dy < 0) {
-            System.out.println("Scrolled Upwards");
+            // System.out.println("Scrolled Upwards");
         } else {
-            System.out.println("No Vertical Scrolled");
+            // System.out.println("No Vertical Scrolled");
         }
     }
 }

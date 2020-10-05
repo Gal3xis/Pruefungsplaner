@@ -406,8 +406,12 @@ public class MainActivity extends AppCompatActivity {
                                                         @Override
                                                         public void run() {
                                                             // schneidet ab dem Leerzeichen ab, da sonst nicht genug platz ist
-                                                            buttonSpinner.setText(facultys[which].substring
-                                                                    (0, facultys[which].indexOf(' ')));
+                                                            if(facultys[which].contains(" ")) {
+                                                                buttonSpinner.setText(facultys[which].substring
+                                                                        (0, facultys[which].indexOf(' ')));
+                                                            } else {
+                                                                buttonSpinner.setText(facultys[which]);
+                                                            }
 
                                                             // füge den Adapter der Recyclerview hinzu
                                                             mAdapter = new CheckListAdapter(studiengangName,
@@ -565,8 +569,8 @@ public class MainActivity extends AppCompatActivity {
                 urlConn.connect();
                 final long endTime = System.currentTimeMillis();
                 if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    System.out.println("Time (ms) : " + (endTime - startTime));
-                    System.out.println("Ping to " + address + " was success");
+                    // System.out.println("Time (ms) : " + (endTime - startTime));
+                    // System.out.println("Ping to " + address + " was success");
                     //uebergabeAnSpinner();
                 }
 

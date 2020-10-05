@@ -50,20 +50,6 @@
     <string name="online60">0_60</string>
     <string name="online90">0_90</string>
 
-    <!-- Klausur Name -->
-    <string name="klausur_text">Klausur 90 Minuten</string>
-    <string name="klausur60_text">Klausur 60 Minuten</string>
-    <string name="klausur120_text">Klausur 120 Minuten</string>
-    <string name="klausur180_text">Klausur 180 Minuten</string>
-    <string name="projektarbeit_text">Projektarbeit</string>
-    <string name="kombination15_text">Kombinationsprüfung 15 Minuten</string>
-    <string name="kombination30_text">Kombinationsprüfung 35 Minuten</string>
-    <string name="ilias60_text">Ilias-Test 60 Minuten</string>
-    <string name="ilias90_text">Ilias-Test 90 Minuten</string>
-    <string name="online60_text">Onlineprüfung 60 Minuten</string>
-    <string name="online90_text">Onlineprüfung 90 Minuten</string>
-    <string name="mundHaus_text">Mündliche Prüfung / Hausarbeit</string>
-
     <!-- Jahreszeiten -->
     <string name="sommer">Sommer</string>
     <string name="sommer_short">SoSe</string>
