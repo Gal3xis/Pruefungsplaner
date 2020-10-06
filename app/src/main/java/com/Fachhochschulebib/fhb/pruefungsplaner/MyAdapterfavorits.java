@@ -42,6 +42,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
     private List<String> ppIdList;
     private List<String> datumsList;
     private List<String> raumList;
+    private List<String> formList;
     private String modulname;
     private String name;
     private Context context;
@@ -51,12 +52,14 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                              List<String> studiengangListParam,
                              List<String> datumsListParam,
                              List<String> pruefPlanIdListParam,
-                             List<String> raumListParam) {
+                             List<String> raumListParam,
+                             List <String> formListParam) {
         moduleUndStudiengangsList = moduleListParam;
         datumsList = datumsListParam;
         prueferUndSemesterList = studiengangListParam;
         ppIdList = pruefPlanIdListParam;
         raumList = raumListParam;
+        formList = formListParam;
     }
 
     public void add(int position, String item) {
@@ -191,7 +194,8 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                     + aufteilung2[0].toString() +
                     context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
                     context.getString(R.string.clock) +
-                    context.getString(R.string.form) + raumList.get(position) + "\n " + "\n \n \n \n \n \n ");
+                    context.getString(R.string.room) + raumList.get(position) +
+                    context.getString(R.string.form) + formList.get(position) + "\n " + "\n \n \n \n \n \n ");
 
             return (s);
         } catch (Exception e) {

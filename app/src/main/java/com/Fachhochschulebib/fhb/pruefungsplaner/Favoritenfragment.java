@@ -74,6 +74,7 @@ public class Favoritenfragment extends Fragment {
         List<String> datum = new ArrayList<>();
         List<String> pruefungsNr = new ArrayList<>();
         List<String> raum = new ArrayList<>();
+        List<String> form = new ArrayList<>();
         btnsuche.setVisibility(View.INVISIBLE);
 
         // Merlin Gürtler
@@ -96,12 +97,13 @@ public class Favoritenfragment extends Fragment {
                     datum.add(eintrag.getDatum());
                     pruefungsNr.add(eintrag.getID());
                     raum.add(eintrag.getRaum());
+                    form.add(eintrag.getPruefform());
                     check.add(true);
                 }
 
                 // definiere adapter
                 // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-                mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum);
+                mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum, form);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
