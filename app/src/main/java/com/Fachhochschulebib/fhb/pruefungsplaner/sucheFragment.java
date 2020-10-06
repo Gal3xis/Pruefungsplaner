@@ -226,11 +226,11 @@ public class sucheFragment extends Fragment {
                             // beim ändern der Orientierung crasht die app wegen Problemen mit dem Context
                             try {
                                 profList.add(getContext().getString(R.string.all));
+                                sgModulList.add(getContext().getString(R.string.all));
                             } catch (Exception e) {
                                 Log.d("ERROR", "ERROR " + e);
                             }
 
-                            sgModulList.add(getContext().getString(R.string.all));
                         }
                     });
                 }

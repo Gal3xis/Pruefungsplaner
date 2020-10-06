@@ -39,6 +39,7 @@
             android:baselineAligned="false"
             android:ems="10"
             android:inputType="none"
+            android:focusable="false"
             android:paddingLeft="10dp"
             android:text="@string/server"
             android:textColor="#eeeeee"

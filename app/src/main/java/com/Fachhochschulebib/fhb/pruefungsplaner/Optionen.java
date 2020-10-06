@@ -47,6 +47,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.w3c.dom.Text;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -251,6 +252,7 @@ public class Optionen extends Fragment {
 
         //Change Listener für die Serveradresse
         //speichert den neu eingegebenen Wert
+        /*
         txtServerAddress.addTextChangedListener(new TextWatcher() {
             boolean validate = false;
 
@@ -289,6 +291,7 @@ public class Optionen extends Fragment {
                                       int before, int count) {
             }
         });
+         */
 
         //interne DB löschen
         btnDb.setOnClickListener(new View.OnClickListener() {
