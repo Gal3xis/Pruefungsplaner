@@ -102,6 +102,7 @@
                         android:layout_marginRight="0dp"
                         android:layout_marginBottom="0dp"
                         android:layout_toRightOf="@id/icon"
+                        android:textColor="#111111"
                         android:gravity="center_vertical"
                         android:paddingTop="0dp"
                         android:textSize="16sp"
@@ -118,13 +119,12 @@
                         android:layout_above="@id/secondLine"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
+                        android:textColor="#111111"
                         android:layout_marginTop="0dp"
-
                         android:layout_marginEnd="6dp"
                         android:layout_marginRight="0dp"
                         android:layout_marginBottom="0dp"
                         android:layout_toRightOf="@id/icon"
-
                         android:gravity="center_vertical"
                         android:paddingTop="0dp"
                         android:textSize="16sp"

@@ -68,8 +68,8 @@ public interface UserDao {
     @Query("DELETE FROM Studiengang")
     void deleteStudiengang();
 
-    @Query("DELETE FROM pruefplanEintrag WHERE Studiengang != :mainCourse AND Ausgewaehlt = :gewaehlt")
-    void deletePruefplanEintragExceptMainCourse(String mainCourse, boolean gewaehlt);
+    @Query("DELETE FROM pruefplanEintrag WHERE Studiengang = :sgName AND Ausgewaehlt = :gewaehlt")
+    void deletePruefplanEintragExceptChoosen(String sgName, boolean gewaehlt);
 
     @Query("DELETE FROM pruefplanEintrag ")
     void deletePruefplanEintragAll();
@@ -91,6 +91,12 @@ public interface UserDao {
 
     @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
     String getTermin();
+
+    @Query("SELECT * FROM Studiengang")
+    List<Studiengang> getStudiengaenge();
+
+    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengangName LIMIT 1")
+    PruefplanEintrag getOneEntryByName(String studiengangName);
     // Ende Merlin Gürtler
 
 

@@ -16,7 +16,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,46 +35,36 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
-import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
 
 
 public class AddCourseFragment extends Fragment {
     private RecyclerView recyclerView;
     CheckListAdapter mAdapter;
-    final List<Boolean> studiengangGewaehlt = new ArrayList<Boolean>();
+    final List<Boolean> studiengangGewaehlt = new ArrayList<>();
     final List<String> studiengangName = new ArrayList<String>();
+    AppDatabase datenbank;
 
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.choose_courses, container, false);
-
-        //Komponenten  initialisieren für die Verwendung
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewChecklist);
-        recyclerView.setHasFixedSize(true);
-        //linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        // Erhalte die gewählte Fakultät aus den Shared Preferences
-        SharedPreferences sharedPrefFakultaetValidation =
-                getContext().
-                        getSharedPreferences("validation",0);
-
-        String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
-        AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
+        datenbank = AppDatabase.getAppDatabase(getContext());
 
         new Thread(new Runnable() {
             @Override
             public void run() {
+                // Erhalte die gewählte Fakultät aus den Shared Preferences
+                SharedPreferences sharedPrefFakultaetValidation =
+                        getContext().
+                                getSharedPreferences("validation",0);
+
+                String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
+
                 // Fülle die Recylcerview
                 List<Studiengang> studienganenge =
                         datenbank.userDao().getStudiengaenge(faculty);
@@ -96,6 +85,21 @@ public class AddCourseFragment extends Fragment {
                 });
             }
         }).start();
+
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        final View v = inflater.inflate(R.layout.choose_courses, container, false);
+
+        //Komponenten  initialisieren für die Verwendung
+        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewChecklist);
+        recyclerView.setHasFixedSize(true);
+        //linear layout manager
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
 
         v.findViewById(R.id.buttonOk).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,28 +139,46 @@ public class AddCourseFragment extends Fragment {
                         String pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
                         String aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
 
-                        SharedPreferences sharedPrefSelectedStudiengang = getContext().
-                                getSharedPreferences("validation", Context.MODE_PRIVATE);
-                        String selectedStudiengang  = sharedPrefSelectedStudiengang.
-                                getString("selectedStudiengang","0");
+                        List <Studiengang> studiengaenge = datenbank.userDao().getStudiengaenge();
 
                         // aktualsiere die db Einträge
-                        // lösche nicht die Einträge des Hauptstudienganges
-                        datenbank.userDao().deletePruefplanEintragExceptMainCourse(selectedStudiengang, false);
+
+                        JSONArray studiengangIds = new JSONArray();
+
+                        String studienganName;
+
+                        for(Studiengang studiengang: studiengaenge) {
+                            try {
+                                studienganName = studiengang.getStudiengangName();
+                                if(!studiengang.getGewaehlt()) {
+                                    // lösche nicht die Einträge der gewählten Studiengänge und favorit
+                                    datenbank.userDao().deletePruefplanEintragExceptChoosen(studienganName, false);
+                                }
+                                if(datenbank.userDao().getOneEntryByName(studienganName) == null && studiengang.getGewaehlt()) {
+                                    JSONObject idJson = new JSONObject();
+                                    idJson.put("ID", studiengang.getSgid());
+                                    studiengangIds.put(idJson);
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
-                        retrofit.RetrofitWebAccess(
-                                getContext(),
-                                datenbank,
-                                pruefJahr,
-                                aktuellePruefphase,
-                                aktuellerTermin,
-                                serverAddress);
+                        // > 2 da auch bei einem leeren Json Array [] gesetzt werden
+                        if(studiengangIds.toString().length() > 2) {
+                            retrofit.UpdateUnkownCourses(
+                                    getContext(),
+                                    datenbank,
+                                    pruefJahr,
+                                    aktuellePruefphase,
+                                    aktuellerTermin,
+                                    serverAddress,
+                                    studiengangIds.toString());
+                        }
 
                         retrofit.setUserCourses(getContext(), datenbank,
                                 serverAddress);
-
-                        final StartClass globalVariable = (StartClass) v.getContext().getApplicationContext();
-                        globalVariable.setShowNoProgressBar(false);
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override

@@ -42,7 +42,12 @@ import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -143,6 +148,7 @@ public class Terminefragment extends Fragment {
         final StartClass globalVariable = (StartClass) this.getContext().getApplicationContext();
         if (!globalVariable.isShowNoProgressBar() || globalVariable.isChangeFaculty()) {
             globalVariable.setShowNoProgressBar(true);
+            globalVariable.setChangeFaculty(false);
 
             progressBar = new ProgressDialog(Terminefragment.this.getContext(),
                     R.style.ProgressStyle);
@@ -154,28 +160,71 @@ public class Terminefragment extends Fragment {
             // Zeige den Fortschrittsbalken
             progressBar.show();
 
+            // Die Daten für update aus den Shared Preferences
+            SharedPreferences mSharedPreferencesPPServerAdress
+                    = Terminefragment.this.getContext().getSharedPreferences("Server_Address", MODE_PRIVATE);
+
+            String relativePPlanURL
+                    = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0");
+
+            String serverAddress
+                    = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
+
+            SharedPreferences mSharedPreferencesPruefTermin
+                    = Terminefragment.this.getContext()
+                    .getSharedPreferences("PruefTermin", 0);
+
+            String aktuellerTermin
+                    = mSharedPreferencesPruefTermin.getString("aktPruefTermin", "0");
+
+            RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+
+            // prüft ob auch alle ausgewählten Studiengänge vorhanden sind
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    // Die Daten für update aus den Shared Preferences
-                    SharedPreferences mSharedPreferencesPPServerAdress
-                            = Terminefragment.this.getContext().getSharedPreferences("Server_Address", MODE_PRIVATE);
+                    List <Studiengang> studiengaenge = datenbank.userDao().getStudiengaenge();
 
-                    String relativePPlanURL
-                            = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0");
+                    // aktualsiere die db Einträge
 
-                    String serverAddress
-                            = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
+                    JSONArray studiengangIds = new JSONArray();
 
-                    SharedPreferences mSharedPreferencesPruefTermin
-                            = Terminefragment.this.getContext()
-                            .getSharedPreferences("PruefTermin", 0);
+                    String studienganName;
 
-                    String aktuellerTermin
-                            = mSharedPreferencesPruefTermin.getString("aktPruefTermin", "0");
+                    for(Studiengang studiengang: studiengaenge) {
+                        try {
+                            studienganName = studiengang.getStudiengangName();
+                            if(!studiengang.getGewaehlt()) {
+                                // lösche nicht die Einträge der gewählten Studiengänge und favorit
+                                datenbank.userDao().deletePruefplanEintragExceptChoosen(studienganName, false);
+                            }
+                            if(datenbank.userDao().getOneEntryByName(studienganName) == null && studiengang.getGewaehlt()) {
+                                JSONObject idJson = new JSONObject();
+                                idJson.put("ID", studiengang.getSgid());
+                                studiengangIds.put(idJson);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
 
-                    RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                    // > 2 da auch bei einem leeren Json Array [] gesetzt werden
+                    if(studiengangIds.toString().length() > 2) {
+                        retrofit.UpdateUnkownCourses(
+                                getContext(),
+                                datenbank,
+                                pruefJahr,
+                                aktuellePruefphase,
+                                aktuellerTermin,
+                                serverAddress,
+                                studiengangIds.toString());
+                    }
+                }
+            }).start();
 
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
 
                         SharedPreferences sharedPrefSPruefTermin = Terminefragment.this.getContext().
                                 getSharedPreferences("PruefTermin",Terminefragment.this.getContext().MODE_PRIVATE);

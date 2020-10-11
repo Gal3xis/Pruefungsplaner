@@ -11,20 +11,26 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.ViewHolder> {
     public List<String> studiengangList;
     public List<Boolean> auswahlList;
+    String selectedStudiengang;
+    private Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public CheckListAdapter(List<String> studiengaenge,
@@ -44,12 +50,24 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
                 inflater.inflate(R.layout.checkliste, parent, false);
         ViewHolder vh = new ViewHolder(v);
 
+        context = v.getContext();
+
+        SharedPreferences sharedPrefSelectedStudiengang = context.
+                getSharedPreferences("validation", MODE_PRIVATE);
+        selectedStudiengang  = sharedPrefSelectedStudiengang.
+                getString("selectedStudiengang","0");
+
         return vh;
     }
 
     private boolean addFavorite(int position) {
-        auswahlList.set(position,
-                !auswahlList.get(position));
+        if(!studiengangList.get(position).equals(selectedStudiengang)) {
+            auswahlList.set(position,
+                    !auswahlList.get(position));
+        } else {
+            Toast.makeText(context, context.getString(R.string.favorite_main_course),
+                    Toast.LENGTH_SHORT).show();
+        }
 
         return auswahlList.get(position);
     }
@@ -65,7 +83,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
             @Override
             public void onClick(View v) {
                 // Speichere die auswahl in der Liste
-                addFavorite(position);
+                holder.checkBoxStudiengang.setChecked(addFavorite(position));
             }
         });
 

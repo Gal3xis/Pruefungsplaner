@@ -8,6 +8,7 @@
 
     <!-- Ui -->
     <string name="favorite_one_course">Bitte favorisieren Sie mindestens einen Studiengang</string>
+    <string name="favorite_main_course">Sie können Ihren Hauptstudiengang nicht abwählen</string>
     <string name="choose_main">Wählen Sie Ihren Hauptstudiengang</string>
     <string name="choose_module">Modulauswahl (aktueller Prüftermin):</string>
     <string name="choose_faculty">Fachbereich auswählen</string>
