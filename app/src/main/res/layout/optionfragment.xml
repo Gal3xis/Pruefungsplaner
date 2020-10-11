@@ -37,6 +37,7 @@
             android:layout_marginBottom="2dp"
             android:background="@drawable/button_rounded_corners2"
             android:baselineAligned="false"
+            android:gravity="center"
             android:ems="10"
             android:inputType="none"
             android:focusable="false"
