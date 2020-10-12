@@ -16,8 +16,11 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,19 +84,20 @@ public class FeedbackFragment extends Fragment {
                                 ratingBarUsability.getRating(),ratingBarFuntions.getRating(),
                                 ratingBarStability.getRating(),feedBackInput.getText().toString());
 
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Sende eine Nachricht nachdem senden des Feedbacks
+                                Toast.makeText(v.getContext(),
+                                        v.getContext().getString(R.string.sendedFeedBack),
+                                        Toast.LENGTH_SHORT).show();
+
+                                Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
+                                startActivity(hauptfenster);
+                            }
+                        });
                     }
                 }).start();
-
-                // Sende eine Nachricht nachdem senden des Feedbacks
-                Toast.makeText(v.getContext(),
-                        v.getContext().getString(R.string.sendedFeedBack),
-                        Toast.LENGTH_SHORT).show();
-
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.frame_placeholder, new Terminefragment());
-                ft.commit();
-
-
             }
         });
         return v;
