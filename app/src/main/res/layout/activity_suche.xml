@@ -76,7 +76,7 @@
             android:textColor="@android:color/white"
             android:textColorLink="@color/colorPrimary"
             android:textSize="20sp"
-            android:theme="@style/Base.Theme.MaterialComponents.Light"
+            android:theme="@style/AutoCompleteStyle"
             tools:layout_editor_absoluteX="4dp"
             tools:layout_editor_absoluteY="101dp" />
 

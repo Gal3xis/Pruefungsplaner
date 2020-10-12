@@ -48,8 +48,8 @@ import static android.content.Context.MODE_PRIVATE;
 public class AddCourseFragment extends Fragment {
     private RecyclerView recyclerView;
     CheckListAdapter mAdapter;
-    final List<Boolean> studiengangGewaehlt = new ArrayList<>();
-    final List<String> studiengangName = new ArrayList<String>();
+    List<Boolean> studiengangGewaehlt = new ArrayList<>();
+    List<String> studiengangName = new ArrayList<String>();
     AppDatabase datenbank;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +75,8 @@ public class AddCourseFragment extends Fragment {
                 }
 
                 mAdapter = new CheckListAdapter(studiengangName,
-                        studiengangGewaehlt);
+                        studiengangGewaehlt,
+                        getActivity().getApplicationContext());
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override

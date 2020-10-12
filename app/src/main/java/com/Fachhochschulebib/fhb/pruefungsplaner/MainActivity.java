@@ -409,7 +409,8 @@ public class MainActivity extends AppCompatActivity {
 
                                                             // füge den Adapter der Recyclerview hinzu
                                                             mAdapter = new CheckListAdapter(studiengangName,
-                                                                    studiengangGewaehlt);
+                                                                    studiengangGewaehlt,
+                                                                    getApplicationContext());
                                                             recyclerView.setAdapter(mAdapter);
 
                                                             TextView chooseCourse = findViewById(R.id.chooseCourseId);

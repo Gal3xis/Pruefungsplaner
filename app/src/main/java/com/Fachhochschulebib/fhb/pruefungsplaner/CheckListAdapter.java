@@ -27,16 +27,19 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.ViewHolder> {
-    public List<String> studiengangList;
-    public List<Boolean> auswahlList;
+    private List<String> studiengangList;
+    private List<Boolean> auswahlList;
     String selectedStudiengang;
     private Context context;
+    private StartClass globalVariable;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public CheckListAdapter(List<String> studiengaenge,
-                     List<Boolean> ausgewaehlt) {
+                     List<Boolean> ausgewaehlt,
+                            Context ApplicationContext) {
         studiengangList = studiengaenge;
         auswahlList = ausgewaehlt;
+        context = ApplicationContext;
     }
 
     // Create new views (invoked by the layout manager)
@@ -50,7 +53,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
                 inflater.inflate(R.layout.checkliste, parent, false);
         ViewHolder vh = new ViewHolder(v);
 
-        context = v.getContext();
+        globalVariable = (StartClass) context;
 
         SharedPreferences sharedPrefSelectedStudiengang = context.
                 getSharedPreferences("validation", MODE_PRIVATE);
@@ -61,7 +64,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     }
 
     private boolean addFavorite(int position) {
-        if(!studiengangList.get(position).equals(selectedStudiengang)) {
+        if(!studiengangList.get(position).equals(selectedStudiengang) || globalVariable.isChangeFaculty()) {
             auswahlList.set(position,
                     !auswahlList.get(position));
         } else {
