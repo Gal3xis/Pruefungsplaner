@@ -483,6 +483,14 @@ public class sucheFragment extends Fragment {
                                 }
                             }
 
+                            // Merlin Gürtler
+                            // Schließe das Keyboard falls offen
+                            InputMethodManager inputMethodManager =
+                                    (InputMethodManager) getActivity().getSystemService(
+                                            Activity.INPUT_METHOD_SERVICE);
+                            inputMethodManager.hideSoftInputFromWindow(
+                                    getActivity().getCurrentFocus().getWindowToken(), 0);
+
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
                             ft.commit();

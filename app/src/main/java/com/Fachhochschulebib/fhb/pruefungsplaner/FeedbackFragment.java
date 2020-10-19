@@ -16,6 +16,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -91,6 +93,13 @@ public class FeedbackFragment extends Fragment {
                                 Toast.makeText(v.getContext(),
                                         v.getContext().getString(R.string.sendedFeedBack),
                                         Toast.LENGTH_SHORT).show();
+
+                                // Schließe das Keyboard falls offen
+                                InputMethodManager inputMethodManager =
+                                        (InputMethodManager) getActivity().getSystemService(
+                                                Activity.INPUT_METHOD_SERVICE);
+                                inputMethodManager.hideSoftInputFromWindow(
+                                        getActivity().getCurrentFocus().getWindowToken(), 0);
 
                                 Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
                                 startActivity(hauptfenster);

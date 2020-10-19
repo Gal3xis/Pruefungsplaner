@@ -337,8 +337,7 @@ public class RetrofitConnect {
 
         // Erhalte die gewählte Fakultät aus den Shared Preferences
         SharedPreferences sharedPrefFakultaetValidation =
-                ctx2.
-                        getSharedPreferences("validation",0);
+                ctx2.getSharedPreferences("validation",0);
 
         String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
 
@@ -395,6 +394,7 @@ public class RetrofitConnect {
         String adresse = relativePPlanUrl + "entity.user/anotherStart/" + uuid.getUuid() + "/";
 
         String URL = urlfhb+adresse;
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
