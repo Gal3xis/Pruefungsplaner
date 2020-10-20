@@ -24,6 +24,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,8 +111,12 @@ public class WahlModulSucheFragment extends Fragment {
                 InputMethodManager inputMethodManager =
                         (InputMethodManager) getActivity().getSystemService(
                                 Activity.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(
-                        getActivity().getCurrentFocus().getWindowToken(), 0);
+                try {
+                    inputMethodManager.hideSoftInputFromWindow(
+                            getActivity().getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Log.d("Exception", "Keyboard not open");
+                }
             }
 
         });
@@ -195,8 +200,13 @@ public class WahlModulSucheFragment extends Fragment {
                             InputMethodManager inputMethodManager =
                                     (InputMethodManager) getActivity().getSystemService(
                                             Activity.INPUT_METHOD_SERVICE);
-                            inputMethodManager.hideSoftInputFromWindow(
-                                    getActivity().getCurrentFocus().getWindowToken(), 0);
+
+                            try {
+                                inputMethodManager.hideSoftInputFromWindow(
+                                        getActivity().getCurrentFocus().getWindowToken(), 0);
+                            } catch (Exception e) {
+                                Log.d("Exception", "Keyboard not open");
+                            }
 
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());

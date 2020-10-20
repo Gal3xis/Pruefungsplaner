@@ -349,8 +349,12 @@ public class sucheFragment extends Fragment {
                     InputMethodManager inputMethodManager =
                             (InputMethodManager) getActivity().getSystemService(
                                     Activity.INPUT_METHOD_SERVICE);
-                    inputMethodManager.hideSoftInputFromWindow(
-                            getActivity().getCurrentFocus().getWindowToken(), 0);
+                    try {
+                        inputMethodManager.hideSoftInputFromWindow(
+                                getActivity().getCurrentFocus().getWindowToken(), 0);
+                    } catch (Exception e) {
+                        Log.d("Exception", "Keyboard not open");
+                    }
                     // This part is unecessary the Text changed Listener is the better
                     // solution because now the user can write an professor on his own,
                     // so he must not choose the Item
@@ -488,8 +492,12 @@ public class sucheFragment extends Fragment {
                             InputMethodManager inputMethodManager =
                                     (InputMethodManager) getActivity().getSystemService(
                                             Activity.INPUT_METHOD_SERVICE);
-                            inputMethodManager.hideSoftInputFromWindow(
-                                    getActivity().getCurrentFocus().getWindowToken(), 0);
+                            try {
+                                inputMethodManager.hideSoftInputFromWindow(
+                                        getActivity().getCurrentFocus().getWindowToken(), 0);
+                            } catch (Exception e) {
+                                Log.d("Exception", "Keyboard not open");
+                            }
 
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
