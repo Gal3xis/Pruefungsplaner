@@ -40,7 +40,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 import static android.content.Context.MODE_PRIVATE;
 
 public class FeedbackFragment extends Fragment {
-    static public FragmentTransaction ft ;
     SharedPreferences mSharedPreferencesPPServerAdress;
     String serverAddress, relativePPlanURL;
 
@@ -93,13 +92,6 @@ public class FeedbackFragment extends Fragment {
                                 Toast.makeText(v.getContext(),
                                         v.getContext().getString(R.string.sendedFeedBack),
                                         Toast.LENGTH_SHORT).show();
-
-                                // Schließe das Keyboard falls offen
-                                InputMethodManager inputMethodManager =
-                                        (InputMethodManager) getActivity().getSystemService(
-                                                Activity.INPUT_METHOD_SERVICE);
-                                inputMethodManager.hideSoftInputFromWindow(
-                                        getActivity().getCurrentFocus().getWindowToken(), 0);
 
                                 Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
                                 startActivity(hauptfenster);
