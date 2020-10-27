@@ -181,6 +181,7 @@ public class RetrofitConnect {
                         pruefplanEintrag.setPruefform(eintragDB.getPruefform());
                         pruefplanEintrag.setStatus(eintragDB.getStatus());
                         pruefplanEintrag.setHint(eintragDB.getHint());
+                        pruefplanEintrag.setColor(eintragDB.getColor());
 
                         //lokale datenbank initialiseren
                          //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -299,7 +300,8 @@ public class RetrofitConnect {
                                     roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
                                             updateExam.getStatus(),
                                             updateExam.getID(),
-                                            updateExam.getHint());
+                                            updateExam.getHint(),
+                                            updateExam.getColor());
 
                                     //Update den Eintrag aus dem Calendar falls vorhanden
                                     CheckGoogleCalendar cal = new CheckGoogleCalendar();
@@ -686,6 +688,7 @@ public class RetrofitConnect {
                         pruefplanEintrag.setPruefform(eintragDB.getPruefform());
                         pruefplanEintrag.setStatus(eintragDB.getStatus());
                         pruefplanEintrag.setHint(eintragDB.getHint());
+                        pruefplanEintrag.setColor(eintragDB.getColor());
 
                         //lokale datenbank initialiseren
                         //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs

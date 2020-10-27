@@ -28,6 +28,18 @@ public class JsonPruefungsform {
     @Expose
     private String hint;
 
+    @SerializedName("Form")
+    @Expose
+    private String form;
+
+    public String getForm() {
+        return form;
+    }
+
+    public void setForm(String form) {
+        this.form = form;
+    }
+
     public String getHint() {
         return hint;
     }

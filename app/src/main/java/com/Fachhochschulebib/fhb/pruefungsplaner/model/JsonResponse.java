@@ -21,171 +21,183 @@ import com.google.gson.annotations.SerializedName;
 
 public class JsonResponse {
 
-        @SerializedName("Erstpruefer")
-        @Expose
-        private String Erstpruefer;
+    @SerializedName("Erstpruefer")
+    @Expose
+    private String Erstpruefer;
 
 
-        @SerializedName("Zweitpruefer")
-        @Expose
-        private String Zweitpruefer;
+    @SerializedName("Zweitpruefer")
+    @Expose
+    private String Zweitpruefer;
 
 
-        @SerializedName("Pruefform")
-        @Expose
-        private String Pruefform;
+    @SerializedName("Pruefform")
+    @Expose
+    private String Pruefform;
 
 
-        @SerializedName("Semester")
-        @Expose
-        private String Semester;
+    @SerializedName("Semester")
+    @Expose
+    private String Semester;
 
 
-        @SerializedName("Datum")
-        @Expose
-        private String Datum;
+    @SerializedName("Datum")
+    @Expose
+    private String Datum;
 
 
-        @SerializedName("Modul")
-        @Expose
-        private String Modul;
+    @SerializedName("Modul")
+    @Expose
+    private String Modul;
 
 
-        @SerializedName("Studiengang")
-        @Expose
-        private String Studiengang;
+    @SerializedName("Studiengang")
+    @Expose
+    private String Studiengang;
 
 
-        @SerializedName("Termin")
-        @Expose
-        private String Termin;
+    @SerializedName("Termin")
+    @Expose
+    private String Termin;
 
 
-        @SerializedName("ID")
-        @Expose
-        private String ID;
+    @SerializedName("ID")
+    @Expose
+    private String ID;
 
-        @SerializedName("Raum")
-        @Expose
-        private String Raum;
+    @SerializedName("Raum")
+    @Expose
+    private String Raum;
 
-        // Start Merlin Gürtler
-        @SerializedName("StudiengangId")
-        @Expose
-        private String StudiengangId;
+    // Start Merlin Gürtler
+    @SerializedName("StudiengangId")
+    @Expose
+    private String StudiengangId;
 
-        @SerializedName("Status")
-        @Expose
-        private String Status;
+    @SerializedName("Status")
+    @Expose
+    private String Status;
 
-        @SerializedName("Hint")
-        @Expose
-        private String Hint;
-        // Ende Merlin Gürtler
+    @SerializedName("Hint")
+    @Expose
+    private String Hint;
+
+    @SerializedName("Color")
+    @Expose
+    private String Color;
+    // Ende Merlin Gürtler
 
 
-        public String getHint() {
-            return Hint;
-        }
+    public String getColor() {
+        return Color;
+    }
 
-        public void setHint(String hint) {
-            Hint = hint;
-        }
+    public void setColor(String color) {
+        Color = color;
+    }
+
+    public String getHint() {
+        return Hint;
+    }
+
+    public void setHint(String hint) {
+        Hint = hint;
+    }
 
     public String getStatus() {
-            return Status;
-        }
+        return Status;
+    }
 
-        public void setStatus(String status) {
-            Status = status;
-        }
+    public void setStatus(String status) {
+        Status = status;
+    }
 
     public String getErstpruefer() {
-            return Erstpruefer;
-        }
+        return Erstpruefer;
+    }
 
-        public void setErstpruefer(String erstpruefer) {
-            this.Erstpruefer = erstpruefer;
-        }
+    public void setErstpruefer(String erstpruefer) {
+        this.Erstpruefer = erstpruefer;
+    }
 
-        public String getRaum() {
+    public String getRaum() {
         return Raum;
     }
 
-        public void setRaum(String raum) {
+    public void setRaum(String raum) {
         this.Raum = raum;
     }
 
-        public String getDatum() {
-            return Datum;
-        }
+    public String getDatum() {
+        return Datum;
+    }
 
-        public void setDatum(String datum) {
-            this.Datum = datum;
-        }
+    public void setDatum(String datum) {
+        this.Datum = datum;
+    }
 
-        public String getZweitpruefer() {
+    public String getZweitpruefer() {
         return Zweitpruefer;
     }
 
-        public void setZweitpruefer(String zweitpruefer) {
+    public void setZweitpruefer(String zweitpruefer) {
         Zweitpruefer = zweitpruefer;
     }
 
-        public String getPruefform() {
+    public String getPruefform() {
         return Pruefform;
     }
 
-        public void setPruefform(String pruefform) {
+    public void setPruefform(String pruefform) {
         Pruefform = pruefform;
     }
 
-        public String getSemester() {
+    public String getSemester() {
         return Semester;
     }
 
-        public void setSemester(String semester) {
+    public void setSemester(String semester) {
         Semester = semester;
     }
 
-        public String getModul() {
+    public String getModul() {
         return Modul;
     }
 
-        public void setModul(String modul) {
+    public void setModul(String modul) {
         Modul = modul;
     }
 
-        public String getStudiengang() {
+    public String getStudiengang() {
         return Studiengang;
     }
 
-        public void setStudiengang(String studiengang) {
+    public void setStudiengang(String studiengang) {
         Studiengang = studiengang;
     }
 
-        public String getTermin() {
+    public String getTermin() {
         return Termin;
     }
 
-        public void setTermin(String termin) {
+    public void setTermin(String termin) {
         Termin = termin;
     }
 
-        public String getID() {
+    public String getID() {
         return ID;
     }
 
-        public void setID(String ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 
-        public String getStudiengangId() {
-            return StudiengangId;
-        }
+    public String getStudiengangId() {
+        return StudiengangId;
+    }
 
-        public void setStudiengangId(String studiengangId) {
-            StudiengangId = studiengangId;
+    public void setStudiengangId(String studiengangId) {
+        StudiengangId = studiengangId;
     }
 
 }

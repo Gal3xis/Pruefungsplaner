@@ -168,13 +168,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                 if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
                                     // Start Merlin Gürtler
                                     // Setze die Farbe des Icons
-                                    if (eintrag.getStatus().equals("discussion")) {
-                                        holder.statusIcon.setColorFilter(Color.parseColor("#F0E68C"));
-                                    }
-
-                                    if (eintrag.getStatus().equals("proposal")) {
-                                        holder.statusIcon.setColorFilter(Color.parseColor("#CD5C5C"));
-                                    }
+                                    holder.statusIcon.setColorFilter(Color.parseColor(eintrag.getColor()));
 
                                     //if (eintrag.getStatus().equals("final")) {
                                     //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));

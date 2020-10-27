@@ -56,6 +56,17 @@ public class PruefplanEintrag {
     @ColumnInfo(name = "Hint")
     private String Hint;
 
+    @ColumnInfo(name = "Color")
+    private String Color;
+
+    public String getColor() {
+        return Color;
+    }
+
+    public void setColor(String color) {
+        Color = color;
+    }
+
     public String getHint() {
         return Hint;
     }

@@ -23,6 +23,18 @@ public class JsonUpdate {
     @Expose
     private String hint;
 
+    @SerializedName("Color")
+    @Expose
+    private String color;
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
     public String getHint() {
         return hint;
     }
