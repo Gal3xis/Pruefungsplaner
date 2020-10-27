@@ -16,7 +16,6 @@
 
 
 package com.Fachhochschulebib.fhb.pruefungsplaner;
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;

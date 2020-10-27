@@ -199,23 +199,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         // Gibt die Statusmeldung aus
         holder.statusIcon.setOnClickListener(v -> {
-            if (statusList.get(position).equals("discussion")) {
-                Toast.makeText(v.getContext(),
-                        statusHintList.get(position),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            if (statusList.get(position).equals("proposal")) {
-                Toast.makeText(v.getContext(),
-                        statusHintList.get(position),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            if (statusList.get(position).equals("public")) {
-                Toast.makeText(v.getContext(),
-                        statusHintList.get(position),
-                        Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(v.getContext(),
+                    statusHintList.get(position),
+                    Toast.LENGTH_SHORT).show();
         });
         // Ende Merlin Gürtler
 

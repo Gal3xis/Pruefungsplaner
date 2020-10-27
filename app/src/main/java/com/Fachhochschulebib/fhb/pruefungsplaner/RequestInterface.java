@@ -18,7 +18,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import java.util.List;
 
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonPruefungsform;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonStudiengang;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUpdate;

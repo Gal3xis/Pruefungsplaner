@@ -86,7 +86,7 @@ public class swipeListener extends ItemTouchHelper.Callback {
         int deleteIconRight = itemView.getRight() - deleteIconMargin;
         int deleteIconBottom = deleteIconTop + intrinsicHeight;
 
-        // Setzt die Position und zeichene den Hintrgrund
+        // Setzt die Position und zeichene den Hintergrund
         deleteDrawable.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom);
         deleteDrawable.draw(c);
 
