@@ -19,8 +19,6 @@ public abstract class AppDatabase extends RoomDatabase {
                     Room.databaseBuilder(
                             context.getApplicationContext(),
                             AppDatabase.class, "pruefplandaten")
-                            // allow queries on the main thread.
-                            // Don't do this on a real app! See PersistenceBasicSample for an example.
                             .build();
         }
         return INSTANCE;

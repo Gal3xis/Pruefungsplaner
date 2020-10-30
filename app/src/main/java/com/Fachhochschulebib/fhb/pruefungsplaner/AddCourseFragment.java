@@ -48,12 +48,12 @@ import static android.content.Context.MODE_PRIVATE;
 public class AddCourseFragment extends Fragment {
     private RecyclerView recyclerView;
     CheckListAdapter mAdapter;
-    List<Boolean> studiengangGewaehlt = new ArrayList<>();
-    List<String> studiengangName = new ArrayList<String>();
-    AppDatabase datenbank;
+    List<Boolean> courseChosen = new ArrayList<>();
+    List<String> courseName = new ArrayList<String>();
+    AppDatabase database;
 
     public void onCreate(Bundle savedInstanceState) {
-        datenbank = AppDatabase.getAppDatabase(getContext());
+        database = AppDatabase.getAppDatabase(getContext());
 
         new Thread(new Runnable() {
             @Override
@@ -67,15 +67,15 @@ public class AddCourseFragment extends Fragment {
 
                 // Fülle die Recylcerview
                 List<Studiengang> studienganenge =
-                        datenbank.userDao().getStudiengaenge(faculty);
+                        database.userDao().getStudiengaenge(faculty);
 
                 for(Studiengang studie: studienganenge) {
-                    studiengangName.add(studie.getStudiengangName());
-                    studiengangGewaehlt.add(studie.getGewaehlt());
+                    courseName.add(studie.getStudiengangName());
+                    courseChosen.add(studie.getGewaehlt());
                 }
 
-                mAdapter = new CheckListAdapter(studiengangName,
-                        studiengangGewaehlt,
+                mAdapter = new CheckListAdapter(courseName,
+                        courseChosen,
                         getActivity().getApplicationContext());
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -110,9 +110,9 @@ public class AddCourseFragment extends Fragment {
                     @Override
                     public void run() {
                         // Aktualisiere die Studiengänge
-                        for(int i = 0; i < studiengangGewaehlt.size(); i++) {
-                            datenbank.userDao().updateStudiengang(studiengangName.get(i),
-                                    studiengangGewaehlt.get(i));
+                        for(int i = 0; i < courseChosen.size(); i++) {
+                            database.userDao().updateStudiengang(courseName.get(i),
+                                    courseChosen.get(i));
                         }
 
                         // die Retrofitdaten aus den Shared Preferences
@@ -140,7 +140,7 @@ public class AddCourseFragment extends Fragment {
                         String pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
                         String aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
 
-                        List <Studiengang> studiengaenge = datenbank.userDao().getStudiengaenge();
+                        List <Studiengang> studiengaenge = database.userDao().getStudiengaenge();
 
                         // aktualsiere die db Einträge
 
@@ -153,9 +153,9 @@ public class AddCourseFragment extends Fragment {
                                 studienganName = studiengang.getStudiengangName();
                                 if(!studiengang.getGewaehlt()) {
                                     // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                    datenbank.userDao().deletePruefplanEintragExceptChoosen(studienganName, false);
+                                    database.userDao().deletePruefplanEintragExceptChoosen(studienganName, false);
                                 }
-                                if(datenbank.userDao().getOneEntryByName(studienganName) == null && studiengang.getGewaehlt()) {
+                                if(database.userDao().getOneEntryByName(studienganName) == null && studiengang.getGewaehlt()) {
                                     JSONObject idJson = new JSONObject();
                                     idJson.put("ID", studiengang.getSgid());
                                     studiengangIds.put(idJson);
@@ -170,7 +170,7 @@ public class AddCourseFragment extends Fragment {
                         if(studiengangIds.toString().length() > 2) {
                             retrofit.UpdateUnkownCourses(
                                     getContext(),
-                                    datenbank,
+                                    database,
                                     pruefJahr,
                                     aktuellePruefphase,
                                     aktuellerTermin,
@@ -178,7 +178,7 @@ public class AddCourseFragment extends Fragment {
                                     studiengangIds.toString());
                         }
 
-                        retrofit.setUserCourses(getContext(), datenbank,
+                        retrofit.setUserCourses(getContext(), database,
                                 serverAddress);
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {

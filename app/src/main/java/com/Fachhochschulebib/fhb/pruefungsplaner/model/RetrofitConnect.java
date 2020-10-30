@@ -50,6 +50,126 @@ public class RetrofitConnect {
         this.relativePPlanUrl = relativePPlanUrl;
     }
 
+    // Start Merlin Gürtler
+    // Refactoring
+    private void insertCoursesToDatabase(final AppDatabase roomdaten,
+                                   final String jahr,
+                                   final String pruefungsphase,
+                                   List<JsonResponse> body) {
+        //Hole alle Einträge aus der lokalen Room-DB
+        List<PruefplanEintrag> dataListFromLocalDB = null;
+        try { //DONE (08/2020) LG
+            dataListFromLocalDB = roomdaten.userDao().getAll2();
+            //roomdaten.clearAllTables();
+        } catch (Exception e) {
+            Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!");
+        }
+
+        // String validation = jahr+studiengang+pruefungsphase;
+        //String checkTermin = "0";
+
+        //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
+                    /*
+                    Merlin Gürtler
+                    Es Funktioniert auch ohne checkvalidate
+                    if(dataListFromLocalDB!=null) { //DONE (08/2020) LG
+                        for (int j = 0; j < dataListFromLocalDB.size(); j++) {
+                            if (dataListFromLocalDB.get(j).getValidation().equals(validation)) {
+                                //checkTermin = dataListFromLocalDB.get(j).getTermin();
+                                checkvalidate = true;
+                            }
+                        }
+                    }//if
+                    */
+
+        //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
+        //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
+        for (JsonResponse eintragDB : body) {
+
+            //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
+            PruefplanEintrag pruefplanEintrag = new PruefplanEintrag();
+
+            //Festlegen vom Dateformat
+            String datumZeitzone;
+            String datumDerPruefung = eintragDB.getDatum();
+            datumZeitzone = datumDerPruefung.replaceFirst("CET", "");
+            datumZeitzone = datumZeitzone.replaceFirst("CEST", "");
+            String datumLetzePruefungFormatiert = null;
+
+            try {
+                DateFormat dateFormat = new SimpleDateFormat(
+                        "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+                Date datumLetztePruefung = dateFormat.parse(datumZeitzone);
+                SimpleDateFormat targetFormat
+                        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                datumLetzePruefungFormatiert = targetFormat.format(datumLetztePruefung);
+                Date datumAktuell = Calendar.getInstance().getTime();
+                SimpleDateFormat df
+                        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String datumAktuellFormatiert = df.format(datumAktuell);
+
+
+                Log.d("Datum letzte Prüfung", datumLetzePruefungFormatiert);
+                Log.d("Datum aktuell", datumAktuellFormatiert);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+                        /*
+                            DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
+                            jetzt hinzugefügt.
+                         */
+            // if(!checkvalidate){
+            //erhaltene Werte zur Datenbank hinzufügen
+            pruefplanEintrag.setErstpruefer(eintragDB.getErstpruefer());
+            pruefplanEintrag.setZweitpruefer(eintragDB.getZweitpruefer());
+            pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
+            pruefplanEintrag.setID(eintragDB.getID());
+            pruefplanEintrag.setStudiengang(eintragDB.getStudiengang());
+            pruefplanEintrag.setModul(eintragDB.getModul());
+            pruefplanEintrag.setSemester(eintragDB.getSemester());
+            pruefplanEintrag.setTermin(eintragDB.getTermin());
+            pruefplanEintrag.setRaum(eintragDB.getRaum());
+            pruefplanEintrag.setPruefform(eintragDB.getPruefform());
+            pruefplanEintrag.setStatus(eintragDB.getStatus());
+            pruefplanEintrag.setHint(eintragDB.getHint());
+            pruefplanEintrag.setColor(eintragDB.getColor());
+
+            //lokale datenbank initialiseren
+            //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
+            //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
+            //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
+            //Log.d("Test4", String.valueOf(userdaten2.size()));
+
+            try {
+                for (int b = 0; b < Optionen.idList.size(); b++) {
+                    if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
+                        //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
+                        pruefplanEintrag.setFavorit(true);
+                    }
+                }
+            } catch (Exception e) {
+                Log.d("Fehler RetrofitConnect",
+                        "Fehler beim Ermitteln der favorisierten Prüfungen");
+            }
+
+            //Schlüssel für die Erkennung bzw unterscheidung Festlegen
+            pruefplanEintrag.setValidation(jahr + eintragDB.getStudiengangId() + pruefungsphase);
+
+            // Start Merlin Gürtler
+            // Extra Thread da sonst die Db nicht aktualisiert werden kann.
+            new Thread((new Runnable() {
+                @Override
+                public void run() {
+                    addUser(roomdaten, pruefplanEintrag);
+                }
+            })).start();
+            // Ende Merlin Gürtler
+        }
+
+        checkuebertragung = true;
+    };
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
     public <serverAdress> void RetrofitWebAccess(Context ctx,
@@ -57,7 +177,7 @@ public class RetrofitConnect {
                                                  final String jahr,
                                                  final String pruefungsphase,
                                                  final String termin,
-                                                 final String serverAdress){
+                                                 final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse
                 = ctx.getSharedPreferences("Server_Address", 0);
@@ -67,10 +187,10 @@ public class RetrofitConnect {
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
-        List <String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
+        List<String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
         JSONArray studiengangIds = new JSONArray();
 
-        for(String id: Ids) {
+        for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
                 idJson.put("ID", id);
@@ -82,11 +202,11 @@ public class RetrofitConnect {
 
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
-                            + "entity.pruefplaneintrag/"
-                            + pruefungsphase +"/"
-                            + termin +"/"
-                            + jahr +"/"
-                            + studiengangIds.toString() + "/";
+                + "entity.pruefplaneintrag/"
+                + pruefungsphase + "/"
+                + termin + "/"
+                + jahr + "/"
+                + studiengangIds.toString() + "/";
 
         String URL = urlfhb + relPathWithParameters;
 
@@ -102,131 +222,17 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-
-                    //Hole alle Einträge aus der lokalen Room-DB
-                    List<PruefplanEintrag> dataListFromLocalDB = null;
-                    try { //DONE (08/2020) LG
-                        dataListFromLocalDB = roomdaten.userDao().getAll2();
-                        //roomdaten.clearAllTables();
-                    } catch (Exception e) {
-                        Log.d("Fehler: ","Kein Zugriff auf die Datenbank!");
-                    }
-
-                    // String validation = jahr+studiengang+pruefungsphase;
-                    //String checkTermin = "0";
-
-                    //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
-                    /*
-                    Merlin Gürtler
-                    Es Funktioniert auch ohne checkvalidate
-                    if(dataListFromLocalDB!=null) { //DONE (08/2020) LG
-                        for (int j = 0; j < dataListFromLocalDB.size(); j++) {
-                            if (dataListFromLocalDB.get(j).getValidation().equals(validation)) {
-                                //checkTermin = dataListFromLocalDB.get(j).getTermin();
-                                checkvalidate = true;
-                            }
-                        }
-                    }//if
-                    */
-
-                    //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
-                    //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-                    for (JsonResponse eintragDB: response.body()) {
-
-                        //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
-                        PruefplanEintrag pruefplanEintrag = new PruefplanEintrag();
-
-                        //Festlegen vom Dateformat
-                        String datumZeitzone;
-                        String datumDerPruefung = eintragDB.getDatum();
-                        datumZeitzone = datumDerPruefung.replaceFirst("CET", "");
-                        datumZeitzone = datumZeitzone.replaceFirst("CEST","");
-                        String datumLetzePruefungFormatiert = null;
-
-                        try {
-                            DateFormat dateFormat = new SimpleDateFormat(
-                                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                            Date datumLetztePruefung = dateFormat.parse(datumZeitzone);
-                            SimpleDateFormat targetFormat
-                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            datumLetzePruefungFormatiert = targetFormat.format(datumLetztePruefung);
-                            Date datumAktuell = Calendar.getInstance().getTime();
-                            SimpleDateFormat df
-                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String datumAktuellFormatiert = df.format(datumAktuell);
-
-
-                            Log.d("Datum letzte Prüfung",datumLetzePruefungFormatiert);
-                            Log.d("Datum aktuell",datumAktuellFormatiert);
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        /*
-                            DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
-                            jetzt hinzugefügt.
-                         */
-                         // if(!checkvalidate){
-                             //erhaltene Werte zur Datenbank hinzufügen
-                        pruefplanEintrag.setErstpruefer(eintragDB.getErstpruefer());
-                        pruefplanEintrag.setZweitpruefer(eintragDB.getZweitpruefer());
-                        pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
-                        pruefplanEintrag.setID(eintragDB.getID());
-                        pruefplanEintrag.setStudiengang(eintragDB.getStudiengang());
-                        pruefplanEintrag.setModul(eintragDB.getModul());
-                        pruefplanEintrag.setSemester(eintragDB.getSemester());
-                        pruefplanEintrag.setTermin(eintragDB.getTermin());
-                        pruefplanEintrag.setRaum(eintragDB.getRaum());
-                        pruefplanEintrag.setPruefform(eintragDB.getPruefform());
-                        pruefplanEintrag.setStatus(eintragDB.getStatus());
-                        pruefplanEintrag.setHint(eintragDB.getHint());
-                        pruefplanEintrag.setColor(eintragDB.getColor());
-
-                        //lokale datenbank initialiseren
-                         //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
-                         //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                         //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
-                         //Log.d("Test4", String.valueOf(userdaten2.size()));
-
-                         try {
-                             for (int b = 0; b < Optionen.idList.size(); b++) {
-                                 if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
-                                     //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                                     pruefplanEintrag.setFavorit(true);
-                                 }
-                             }
-                         }
-                         catch (Exception e)
-                         {
-                            Log.d("Fehler RetrofitConnect",
-                                  "Fehler beim Ermitteln der favorisierten Prüfungen");
-                         }
-
-                         //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                         pruefplanEintrag.setValidation(jahr + eintragDB.getStudiengangId() + pruefungsphase);
-
-                        // Start Merlin Gürtler
-                        // Extra Thread da sonst die Db nicht aktualisiert werden kann.
-                        new Thread((new Runnable() {
-                            @Override
-                            public void run() {
-                                addUser(roomdaten, pruefplanEintrag);
-                            }
-                        })).start();
-                        // Ende Merlin Gürtler
-                    }
-
-                    checkuebertragung = true;
-
+                    insertCoursesToDatabase(roomdaten, jahr, pruefungsphase, response.body());
 
                 }//if(response.isSuccessful())
-                else { Log.d("RESPONSE", ":::NO RESPONSE:::"); }
+                else {
+                    Log.d("RESPONSE", ":::NO RESPONSE:::");
+                }
             }
 
             @Override
             public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
 
             }
         });
@@ -241,10 +247,10 @@ public class RetrofitConnect {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
-        List <String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
+        List<String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
         JSONArray studiengangIds = new JSONArray();
 
-        for(String id: Ids) {
+        for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
                 idJson.put("ID", id);
@@ -260,12 +266,12 @@ public class RetrofitConnect {
         //uebergabe der parameter an die Adresse
         String relPathWithParameters = relativePPlanUrl
                 + "entity.pruefplaneintrag/update/"
-                + pruefungsphase +"/"
-                + termin +"/"
-                + jahr +"/"
+                + pruefungsphase + "/"
+                + termin + "/"
+                + jahr + "/"
                 + studiengangIds.toString() + "/";
 
-        String URL = urlfhb+ relPathWithParameters;
+        String URL = urlfhb + relPathWithParameters;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -281,13 +287,13 @@ public class RetrofitConnect {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            for(JsonUpdate updateExam: response.body()) {
+                            for (JsonUpdate updateExam : response.body()) {
                                 try {
                                     String datumZeitzone;
                                     String datumDerPrüfung = updateExam.getDatum();
                                     String datumLetzePruefungFormatiert = null;
                                     datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
-                                    datumZeitzone = datumZeitzone.replaceFirst("CEST","");
+                                    datumZeitzone = datumZeitzone.replaceFirst("CEST", "");
                                     DateFormat dateFormat = new SimpleDateFormat(
                                             "EEE MMM dd HH:mm:ss yyyy", Locale.US);
                                     Date datumLetztePrüfung = null;
@@ -315,21 +321,21 @@ public class RetrofitConnect {
                             }
                         }
                     }).start();
+                } else {
+                    Log.d("RESPONSE", ":::NO RESPONSE:::");
                 }
-                else { Log.d("RESPONSE", ":::NO RESPONSE:::"); }
             }
-
 
 
             @Override
             public void onFailure(Call<List<JsonUpdate>> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
             }
         });
     }
 
     public void firstStart(Context ctx, final AppDatabase roomdaten,
-                            final String serverAdress) {
+                           final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
@@ -339,7 +345,7 @@ public class RetrofitConnect {
 
         // Erhalte die gewählte Fakultät aus den Shared Preferences
         SharedPreferences sharedPrefFakultaetValidation =
-                ctx2.getSharedPreferences("validation",0);
+                ctx2.getSharedPreferences("validation", 0);
 
         String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
 
@@ -347,7 +353,7 @@ public class RetrofitConnect {
         String adresse = relativePPlanUrl + "entity.user/firstStart/" +
                 faculty + "/";
 
-        String URL = urlfhb+adresse;
+        String URL = urlfhb + adresse;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -374,7 +380,7 @@ public class RetrofitConnect {
 
             @Override
             public void onFailure(Call<JsonUuid> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
             }
         });
 
@@ -382,7 +388,7 @@ public class RetrofitConnect {
     }
 
     public void anotherStart(Context ctx, final AppDatabase roomdaten,
-                           final String serverAdress) {
+                             final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
@@ -395,7 +401,7 @@ public class RetrofitConnect {
         //uebergabe der parameter an die Adresse
         String adresse = relativePPlanUrl + "entity.user/anotherStart/" + uuid.getUuid() + "/";
 
-        String URL = urlfhb+adresse;
+        String URL = urlfhb + adresse;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -407,13 +413,13 @@ public class RetrofitConnect {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d("Success","Success");
+                    Log.d("Success", "Success");
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
             }
         });
 
@@ -433,7 +439,7 @@ public class RetrofitConnect {
         Uuid uuid = roomdaten.userDao().getUuid();
 
         // Falls kein Text eingegeben wurde
-        if(text.length() < 1) {
+        if (text.length() < 1) {
             text = "Platzhalter";
         }
 
@@ -441,7 +447,7 @@ public class RetrofitConnect {
         String adresse = relativePPlanUrl + "entity.feedback/sendFeedback/" + uuid.getUuid()
                 + "/" + usability + "/" + functions + "/" + stability + "/" + text + "/";
 
-        String URL = urlfhb+adresse;
+        String URL = urlfhb + adresse;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -453,20 +459,20 @@ public class RetrofitConnect {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d("Success","Success");
+                    Log.d("Success", "Success");
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
             }
         });
 
     }
 
     public void getStudiengaenge(Context ctx, final AppDatabase roomdaten,
-                             final String serverAdress) {
+                                 final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
@@ -477,7 +483,7 @@ public class RetrofitConnect {
         //uebergabe der parameter an die Adresse
         String adresse = relativePPlanUrl + "entity.studiengang/";
 
-        String URL = urlfhb+adresse;
+        String URL = urlfhb + adresse;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -495,7 +501,7 @@ public class RetrofitConnect {
                             // lösche die Tabelle
                             roomdaten.userDao().deleteStudiengang();
                             // füge die Einträge der db hinzu
-                            for(JsonStudiengang studiengang: response.body()) {
+                            for (JsonStudiengang studiengang : response.body()) {
                                 roomdaten.userDao().insertStudiengang(
                                         studiengang.getSGID(),
                                         studiengang.getSGName(),
@@ -510,24 +516,24 @@ public class RetrofitConnect {
 
             @Override
             public void onFailure(Call<List<JsonStudiengang>> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
             }
         });
 
     }
 
     public void setUserCourses(Context ctx, final AppDatabase roomdaten,
-                             final String serverAdress) {
+                               final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
         ctx2 = ctx;
 
         // erhalte die gewählten Studiengänge
-        List <String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
+        List<String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
         JSONArray studiengangIds = new JSONArray();
 
-        for(String id: Ids) {
+        for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
                 idJson.put("ID", id);
@@ -544,9 +550,9 @@ public class RetrofitConnect {
 
         //uebergabe der parameter an die Adresse
         String adresse = relativePPlanUrl + "entity.usercourses/" +
-                studiengangIds.toString() + "/" + uuid.getUuid() + "/" ;
+                studiengangIds.toString() + "/" + uuid.getUuid() + "/";
 
-        String URL = urlfhb+adresse;
+        String URL = urlfhb + adresse;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -558,13 +564,13 @@ public class RetrofitConnect {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
-                    Log.d("Success","Success");
+                    Log.d("Success", "Success");
                 }
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
             }
         });
 
@@ -572,12 +578,12 @@ public class RetrofitConnect {
     }
 
     public <serverAdress> void UpdateUnkownCourses(Context ctx,
-                                                 final AppDatabase roomdaten,
-                                                 final String jahr,
-                                                 final String pruefungsphase,
-                                                 final String termin,
-                                                 final String serverAdress,
-                                                 final String courses){
+                                                   final AppDatabase roomdaten,
+                                                   final String jahr,
+                                                   final String pruefungsphase,
+                                                   final String termin,
+                                                   final String serverAdress,
+                                                   final String courses) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse
                 = ctx.getSharedPreferences("Server_Address", 0);
@@ -590,9 +596,9 @@ public class RetrofitConnect {
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
                 + "entity.pruefplaneintrag/"
-                + pruefungsphase +"/"
-                + termin +"/"
-                + jahr +"/"
+                + pruefungsphase + "/"
+                + termin + "/"
+                + jahr + "/"
                 + courses + "/";
 
         String URL = urlfhb + relPathWithParameters;
@@ -609,131 +615,16 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-
-                    //Hole alle Einträge aus der lokalen Room-DB
-                    List<PruefplanEintrag> dataListFromLocalDB = null;
-                    try { //DONE (08/2020) LG
-                        dataListFromLocalDB = roomdaten.userDao().getAll2();
-                        //roomdaten.clearAllTables();
-                    } catch (Exception e) {
-                        Log.d("Fehler: ","Kein Zugriff auf die Datenbank!");
-                    }
-
-                    // String validation = jahr+studiengang+pruefungsphase;
-                    //String checkTermin = "0";
-
-                    //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
-                    /*
-                    Merlin Gürtler
-                    Es Funktioniert auch ohne checkvalidate
-                    if(dataListFromLocalDB!=null) { //DONE (08/2020) LG
-                        for (int j = 0; j < dataListFromLocalDB.size(); j++) {
-                            if (dataListFromLocalDB.get(j).getValidation().equals(validation)) {
-                                //checkTermin = dataListFromLocalDB.get(j).getTermin();
-                                checkvalidate = true;
-                            }
-                        }
-                    }//if
-                    */
-
-                    //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
-                    //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-                    for (JsonResponse eintragDB: response.body()) {
-
-                        //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
-                        PruefplanEintrag pruefplanEintrag = new PruefplanEintrag();
-
-                        //Festlegen vom Dateformat
-                        String datumZeitzone;
-                        String datumDerPruefung = eintragDB.getDatum();
-                        datumZeitzone = datumDerPruefung.replaceFirst("CET", "");
-                        datumZeitzone = datumZeitzone.replaceFirst("CEST","");
-                        String datumLetzePruefungFormatiert = null;
-
-                        try {
-                            DateFormat dateFormat = new SimpleDateFormat(
-                                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                            Date datumLetztePruefung = dateFormat.parse(datumZeitzone);
-                            SimpleDateFormat targetFormat
-                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            datumLetzePruefungFormatiert = targetFormat.format(datumLetztePruefung);
-                            Date datumAktuell = Calendar.getInstance().getTime();
-                            SimpleDateFormat df
-                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String datumAktuellFormatiert = df.format(datumAktuell);
-
-
-                            Log.d("Datum letzte Prüfung",datumLetzePruefungFormatiert);
-                            Log.d("Datum aktuell",datumAktuellFormatiert);
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-
-                        /*
-                            DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
-                            jetzt hinzugefügt.
-                         */
-                        // if(!checkvalidate){
-                        //erhaltene Werte zur Datenbank hinzufügen
-                        pruefplanEintrag.setErstpruefer(eintragDB.getErstpruefer());
-                        pruefplanEintrag.setZweitpruefer(eintragDB.getZweitpruefer());
-                        pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
-                        pruefplanEintrag.setID(eintragDB.getID());
-                        pruefplanEintrag.setStudiengang(eintragDB.getStudiengang());
-                        pruefplanEintrag.setModul(eintragDB.getModul());
-                        pruefplanEintrag.setSemester(eintragDB.getSemester());
-                        pruefplanEintrag.setTermin(eintragDB.getTermin());
-                        pruefplanEintrag.setRaum(eintragDB.getRaum());
-                        pruefplanEintrag.setPruefform(eintragDB.getPruefform());
-                        pruefplanEintrag.setStatus(eintragDB.getStatus());
-                        pruefplanEintrag.setHint(eintragDB.getHint());
-                        pruefplanEintrag.setColor(eintragDB.getColor());
-
-                        //lokale datenbank initialiseren
-                        //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
-                        //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                        //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
-                        //Log.d("Test4", String.valueOf(userdaten2.size()));
-
-                        try {
-                            for (int b = 0; b < Optionen.idList.size(); b++) {
-                                if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
-                                    //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                                    pruefplanEintrag.setFavorit(true);
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            Log.d("Fehler RetrofitConnect",
-                                    "Fehler beim Ermitteln der favorisierten Prüfungen");
-                        }
-
-                        //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                        pruefplanEintrag.setValidation(jahr + eintragDB.getStudiengangId() + pruefungsphase);
-
-                        // Start Merlin Gürtler
-                        // Extra Thread da sonst die Db nicht aktualisiert werden kann.
-                        new Thread((new Runnable() {
-                            @Override
-                            public void run() {
-                                addUser(roomdaten, pruefplanEintrag);
-                            }
-                        })).start();
-                        // Ende Merlin Gürtler
-                    }
-
-                    checkuebertragung = true;
-
-
+                    insertCoursesToDatabase(roomdaten, jahr, pruefungsphase, response.body());
                 }//if(response.isSuccessful())
-                else { Log.d("RESPONSE", ":::NO RESPONSE:::"); }
+                else {
+                    Log.d("RESPONSE", ":::NO RESPONSE:::");
+                }
             }
 
             @Override
             public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+                Log.d("Error", t.getMessage());
 
             }
         });
@@ -745,7 +636,7 @@ public class RetrofitConnect {
         PruefplanEintrag existingEntry = db.userDao().getPruefung(pruefplanEintrag.getID());
         // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist
         // dies wird verwendet, da die Favoriten behalten werden sollen
-        if(existingEntry == null) {
+        if (existingEntry == null) {
             db.userDao().insertAll(pruefplanEintrag);
         }
     }

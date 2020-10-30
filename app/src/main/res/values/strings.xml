@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Pruefungsplaner</string>
-    <string name="server_adress">http://192.168.2.104:8080/</string>
-    <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
+    <string name="server_adress">http://h2906928.stratoserver.net:8080/</string>
+    <string name="server_url">PruefplanMaven/resources/org.fh.ppv.</string>
 
     <!-- Prüfungsphase Corona -->
    <string name="month_wise">10</string>
