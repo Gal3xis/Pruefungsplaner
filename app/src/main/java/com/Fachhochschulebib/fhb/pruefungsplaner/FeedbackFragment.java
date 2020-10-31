@@ -90,8 +90,8 @@ public class FeedbackFragment extends Fragment {
                                         v.getContext().getString(R.string.sendedFeedBack),
                                         Toast.LENGTH_SHORT).show();
 
-                                Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
-                                startActivity(hauptfenster);
+                                Intent mainWindow = new Intent(v.getContext(), table.class);
+                                startActivity(mainWindow);
                             }
                         });
                     }

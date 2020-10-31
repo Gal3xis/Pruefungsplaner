@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
@@ -66,12 +66,12 @@ public class AddCourseFragment extends Fragment {
                 String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
 
                 // Fülle die Recylcerview
-                List<Studiengang> studienganenge =
-                        database.userDao().getStudiengaenge(faculty);
+                List<Courses> courses =
+                        database.userDao().getCourses(faculty);
 
-                for(Studiengang studie: studienganenge) {
-                    courseName.add(studie.getStudiengangName());
-                    courseChosen.add(studie.getGewaehlt());
+                for(Courses cours: courses) {
+                    courseName.add(cours.getCourseName());
+                    courseChosen.add(cours.getChoosen());
                 }
 
                 mAdapter = new CheckListAdapter(courseName,
@@ -111,7 +111,7 @@ public class AddCourseFragment extends Fragment {
                     public void run() {
                         // Aktualisiere die Studiengänge
                         for(int i = 0; i < courseChosen.size(); i++) {
-                            database.userDao().updateStudiengang(courseName.get(i),
+                            database.userDao().updateCourse(courseName.get(i),
                                     courseChosen.get(i));
                         }
 
@@ -125,37 +125,37 @@ public class AddCourseFragment extends Fragment {
                         String serverAddress
                                 = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
 
-                        SharedPreferences mSharedPreferencesPruefTermin
+                        SharedPreferences mSharedPreferencesCurrentTermin
                                 = AddCourseFragment.this.getContext()
                                 .getSharedPreferences("PruefTermin", 0);
 
-                        String aktuellerTermin
-                                = mSharedPreferencesPruefTermin.getString("aktPruefTermin", "0");
+                        String currentDate
+                                = mSharedPreferencesCurrentTermin.getString("aktPruefTermin", "0");
 
 
                         SharedPreferences mSharedPreferencesValidation
                                 = AddCourseFragment.
                                 this.getContext().getSharedPreferences("validation", 0);
 
-                        String pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
-                        String aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+                        String examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
+                        String currentExamine = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
 
-                        List <Studiengang> studiengaenge = database.userDao().getStudiengaenge();
+                        List <Courses> courses = database.userDao().getCourses();
 
                         // aktualsiere die db Einträge
 
                         JSONArray studiengangIds = new JSONArray();
 
-                        String studienganName;
+                        String courseName;
 
-                        for(Studiengang studiengang: studiengaenge) {
+                        for(Courses studiengang: courses) {
                             try {
-                                studienganName = studiengang.getStudiengangName();
-                                if(!studiengang.getGewaehlt()) {
+                                courseName = studiengang.getCourseName();
+                                if(!studiengang.getChoosen()) {
                                     // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                    database.userDao().deletePruefplanEintragExceptChoosen(studienganName, false);
+                                    database.userDao().deletePruefplanEintragExceptChoosen(courseName, false);
                                 }
-                                if(database.userDao().getOneEntryByName(studienganName) == null && studiengang.getGewaehlt()) {
+                                if(database.userDao().getOneEntryByName(courseName) == null && studiengang.getChoosen()) {
                                     JSONObject idJson = new JSONObject();
                                     idJson.put("ID", studiengang.getSgid());
                                     studiengangIds.put(idJson);
@@ -171,9 +171,9 @@ public class AddCourseFragment extends Fragment {
                             retrofit.UpdateUnkownCourses(
                                     getContext(),
                                     database,
-                                    pruefJahr,
-                                    aktuellePruefphase,
-                                    aktuellerTermin,
+                                    examineYear,
+                                    currentExamine,
+                                    currentDate,
                                     serverAddress,
                                     studiengangIds.toString());
                         }
@@ -189,8 +189,8 @@ public class AddCourseFragment extends Fragment {
                                         v.getContext().getString(R.string.courseActualisation),
                                         Toast.LENGTH_SHORT).show();
 
-                                Intent hauptfenster = new Intent(v.getContext(), Tabelle.class);
-                                startActivity(hauptfenster);
+                                Intent mainWindow = new Intent(v.getContext(), table.class);
+                                startActivity(mainWindow);
                             }
                         });
                     }

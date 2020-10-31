@@ -39,7 +39,7 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
@@ -54,21 +54,21 @@ import java.util.TimeZone;
 
 
 public class Optionen extends Fragment {
-    private boolean speicher;
+    private boolean save;
     private SharedPreferences.Editor mEditorGoogleKalender;
-    private SharedPreferences.Editor mEditorAdresse;
+    private SharedPreferences.Editor mEditorAdress;
     private JSONArray response;
     private GregorianCalendar calDate = new GregorianCalendar();
-    private String studiengang;
-    SharedPreferences mSharedPreferencesPruefTermin;
-    private String aktuellerTermin;
+    private String course;
+    SharedPreferences mSharedPreferencesCurrentTermin;
+    private String currentTermin;
     static EditText txtServerAddress;
 
     //DONE: 08/2020 LG
     SharedPreferences mSharedPreferencesPPServerAddress;
     SharedPreferences mSharedPreferencesValidation;
-    String serverAddress, relativePPlanURL, pruefJahr,
-            aktuellePruefphase, rueckgabeStudiengang;
+    String serverAddress, relativePPlanURL, examineYear,
+            currentExaminePeriod, returnCourse;
 
     public static List<String> idList = new ArrayList<String>();
 
@@ -85,9 +85,9 @@ public class Optionen extends Fragment {
         mSharedPreferencesValidation
                 = container.getContext().getSharedPreferences("validation", 0);
 
-        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
         // Ende Merlin Gürtler
 
         final View v = inflater.inflate(R.layout.optionfragment, container, false);
@@ -98,8 +98,8 @@ public class Optionen extends Fragment {
             @Override
             public void onClick(View v) {
 
-                String validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
-                updatePruefplan(validation);
+                String validation = examineYear + returnCourse + currentExaminePeriod;
+                updatePlan(validation);
             }
 
 
@@ -122,7 +122,7 @@ public class Optionen extends Fragment {
         mSharedPreferencesPPServerAddress
                 = v.getContext().getSharedPreferences("Server_Address", 0);
         //Creating editor to store uebergebeneModule to shared preferences
-        mEditorAdresse = mSharedPreferencesPPServerAddress.edit();
+        mEditorAdress = mSharedPreferencesPPServerAddress.edit();
 
         //------------------------------------------------------------------
         //DONE: 08/2020 LG
@@ -135,13 +135,13 @@ public class Optionen extends Fragment {
         txtServerAddress.setText(serverAddress);
 
         //----------------------------------------------------------------------------------------
-        mSharedPreferencesPruefTermin
+        mSharedPreferencesCurrentTermin
                 = v.getContext()
                 .getSharedPreferences("PruefTermin", 0);
 
-        SharedPreferences.Editor mEditorTermin = mSharedPreferencesPruefTermin.edit();
-        aktuellerTermin
-                = mSharedPreferencesPruefTermin.getString("aktPruefTermin", "0");
+        SharedPreferences.Editor mEditorTermin = mSharedPreferencesCurrentTermin.edit();
+        currentTermin
+                = mSharedPreferencesCurrentTermin.getString("aktPruefTermin", "0");
         //----------------------------------------------------------------------------------------
 
         response = new JSONArray();
@@ -156,13 +156,13 @@ public class Optionen extends Fragment {
         }
 
         int i;
-        speicher = false;
+        save = false;
         for (i = 0; i < response.length(); i++) {
             {
                 try {
                     if (response.get(i).toString().equals("1")) {
                         SWgooglecalender.setChecked(true);
-                        speicher = true;
+                        save = true;
                     }
                 } catch (JSONException e) {
                     Log.d("Fehler Optionen", "Google Kalender aktivierung");
@@ -186,39 +186,39 @@ public class Optionen extends Fragment {
                             mEditorGoogleKalender.putString("jsondata2", response.toString());
                             mEditorGoogleKalender.apply();
 
-                            AppDatabase datenbank = AppDatabase.getAppDatabase(getContext());
-                            List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
+                            AppDatabase database = AppDatabase.getAppDatabase(getContext());
+                            List<TestPlanEntry> ppeList = database.userDao().getFavorites(true);
 
 
                             CheckGoogleCalendar googlecal = new CheckGoogleCalendar();
                             googlecal.setCtx(getContext());
 
-                            for (PruefplanEintrag eintrag : ppeList) {
-                                String id = eintrag.getID();
+                            for (TestPlanEntry entry : ppeList) {
+                                String id = entry.getID();
 
                                 //überprüfung von ein/aus Google Kalender
                                 if (googlecal.checkCal(Integer.valueOf(id))) {
                                     //ermitteln von benötigten Variablen
-                                    String[] splitDatumUndUhrzeit
-                                            = eintrag.getDatum().split(" ");
+                                    String[] splitDateAndTime
+                                            = entry.getDate().split(" ");
 
-                                    String[] splitTagMonatJahr
-                                            = splitDatumUndUhrzeit[0].split("-");
-                                    studiengang = eintrag.getStudiengang();
-                                    studiengang = studiengang + " " + eintrag.getModul();
-                                    int uhrzeitStart
-                                            = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
-                                    int uhrzeitEnde
-                                            = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
+                                    String[] splitDayMonthYear
+                                            = splitDateAndTime[0].split("-");
+                                    course = entry.getCourse();
+                                    course = course + " " + entry.getModul();
+                                    int timeStart
+                                            = Integer.valueOf(splitDateAndTime[1].substring(0, 2));
+                                    int timeEnd
+                                            = Integer.valueOf(splitDateAndTime[1].substring(4, 5));
 
                                     calDate = new GregorianCalendar(
-                                            Integer.valueOf(splitTagMonatJahr[0]),
-                                            Integer.valueOf(splitTagMonatJahr[1]) - 1,
-                                            Integer.valueOf(splitTagMonatJahr[2]),
-                                            uhrzeitStart, uhrzeitEnde);
+                                            Integer.valueOf(splitDayMonthYear[0]),
+                                            Integer.valueOf(splitDayMonthYear[1]) - 1,
+                                            Integer.valueOf(splitDayMonthYear[2]),
+                                            timeStart, timeEnd);
 
                                     //Methode zum Speichern im Kalender
-                                    int calendarid = calendarID(studiengang);
+                                    int calendarid = calendarID(course);
 
                                     //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
                                     googlecal.insertCal(Integer.valueOf(id), calendarid);
@@ -295,10 +295,10 @@ public class Optionen extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
+                        AppDatabase database = AppDatabase.getAppDatabase(v.getContext());
                         Log.d("Test", "Lokale DB löschen.");
 
-                        datenbank.userDao().deletePruefplanEintragAll();
+                        database.userDao().deleteTestPlanEntryAll();
 
                         // Start Merlin Gürtler
 
@@ -306,10 +306,10 @@ public class Optionen extends Fragment {
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         retrofit.RetrofitWebAccess(
                                 getContext(),
-                                datenbank,
-                                pruefJahr,
-                                aktuellePruefphase,
-                                aktuellerTermin,
+                                database,
+                                examineYear,
+                                currentExaminePeriod,
+                                currentTermin,
                                 serverAddress);
                         // Ende Merlin Gürtler
 
@@ -330,7 +330,7 @@ public class Optionen extends Fragment {
         //Google Kalender einträge löschen
         btnGoogleloeschen.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                kalenderLöschen();
+                deleteCalendar();
                 Toast.makeText(
                         v.getContext(),
                         v.getContext().getString(R.string.delete_calendar),
@@ -344,7 +344,7 @@ public class Optionen extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        kalenderUpdate();
+                        updateCalendar();
                     }
                 }).start();
 
@@ -366,15 +366,15 @@ public class Optionen extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        AppDatabase datenbank = AppDatabase.getAppDatabase(v.getContext());
-                        List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
-                        for (PruefplanEintrag eintrag : ppeList) {
+                        AppDatabase database = AppDatabase.getAppDatabase(v.getContext());
+                        List<TestPlanEntry> ppeList = database.userDao().getFavorites(true);
+                        for (TestPlanEntry entry : ppeList) {
 
                             Log.d("Test Favoriten löschen.",
-                                    String.valueOf(eintrag.getID()));
-                            datenbank.userDao()
+                                    String.valueOf(entry.getID()));
+                            database.userDao()
                                     .update(false,
-                                            Integer.valueOf(eintrag.getID()));
+                                            Integer.valueOf(entry.getID()));
                         }
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -395,13 +395,13 @@ public class Optionen extends Fragment {
         return v;
     }
 
-    public void updatePruefplan(String validation) {
+    public void updatePlan(String validation) {
 
         boolean a = PingUrl(serverAddress);
     }
 
     //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
-    public void keineVerbindung() {
+    public void noConnection() {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 Toast.makeText(
@@ -418,7 +418,7 @@ public class Optionen extends Fragment {
     // Die Prüfungen werden erneut vom Webserver geladen und mit
     // den gespeicherten IDs favorisiert
 
-    public void pruefplanAktualisieren() {
+    public void updateCheckPlan() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -432,9 +432,9 @@ public class Optionen extends Fragment {
                 RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                 retrofit.retroUpdate(getContext(),
                         database,
-                        pruefJahr,
-                        aktuellePruefphase,
-                        aktuellerTermin,
+                        examineYear,
+                        currentExaminePeriod,
+                        currentTermin,
                         serverAddress);
 
                 // Log.d("Test3",String.valueOf(stringaufteilung[5]));
@@ -468,10 +468,10 @@ public class Optionen extends Fragment {
                     if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         // System.out.println("Time (ms) : " + (endTime - startTime));
                         // System.out.println("Ping to " + address + " successful.");
-                        pruefplanAktualisieren();
+                        updateCheckPlan();
                     }
                 } catch (final Exception e) {
-                    keineVerbindung();
+                    noConnection();
                 }
 
             }
@@ -481,7 +481,7 @@ public class Optionen extends Fragment {
     }
 
     //Google Kalender einträge löschen
-    public void kalenderLöschen() {
+    public void deleteCalendar() {
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.clearCal();
@@ -489,7 +489,7 @@ public class Optionen extends Fragment {
     }
 
     //Google Kalender aktualisieren
-    public void kalenderUpdate() {
+    public void updateCalendar() {
         CheckGoogleCalendar cal = new CheckGoogleCalendar();
         cal.setCtx(getContext());
         cal.updateCal();
@@ -499,7 +499,7 @@ public class Optionen extends Fragment {
 
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
-        event.put(CalendarContract.Events.TITLE, studiengang);
+        event.put(CalendarContract.Events.TITLE, course);
         event.put(CalendarContract.Events.DESCRIPTION, getContext().getString(R.string.fh_name));
         event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
         event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));

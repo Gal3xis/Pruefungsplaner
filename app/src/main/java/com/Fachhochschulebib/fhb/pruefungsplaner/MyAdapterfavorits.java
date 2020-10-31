@@ -20,7 +20,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 
 import java.util.List;
 
@@ -37,38 +37,38 @@ import java.util.List;
 
 
 public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.ViewHolder> {
-    private List<String> moduleUndStudiengangsList;
-    private List<String> prueferUndSemesterList;
+    private List<String> moduleAndCourseList;
+    private List<String> TesterAndSemesterList;
     private List<String> ppIdList;
-    private List<String> datumsList;
-    private List<String> raumList;
+    private List<String> datesList;
+    private List<String> roomList;
     private List<String> formList;
-    private String modulname;
+    private String modulName;
     private String name;
     private Context context;
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapterfavorits(List<String> moduleListParam,
-                             List<String> studiengangListParam,
-                             List<String> datumsListParam,
+                             List<String> courseListParam,
+                             List<String> dateListParam,
                              List<String> pruefPlanIdListParam,
-                             List<String> raumListParam,
+                             List<String> roomListParam,
                              List <String> formListParam) {
-        moduleUndStudiengangsList = moduleListParam;
-        datumsList = datumsListParam;
-        prueferUndSemesterList = studiengangListParam;
+        moduleAndCourseList = moduleListParam;
+        datesList = dateListParam;
+        TesterAndSemesterList = courseListParam;
         ppIdList = pruefPlanIdListParam;
-        raumList = raumListParam;
+        roomList = roomListParam;
         formList = formListParam;
     }
 
     public void add(int position, String item) {
-        moduleUndStudiengangsList.add(position, item);
+        moduleAndCourseList.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        moduleUndStudiengangsList.remove(position);
+        moduleAndCourseList.remove(position);
         notifyItemRemoved(position);
         deleteItemThread(position);
     }
@@ -97,7 +97,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                                  @SuppressLint("RecyclerView") final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        name = moduleUndStudiengangsList.get(holder.getAdapterPosition());
+        name = moduleAndCourseList.get(holder.getAdapterPosition());
         holder.txtHeader.setText(name);
 
         //Prüfitem von der Favoritenliste löschen
@@ -108,26 +108,26 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             }
         });
 
-        holder.txtFooter.setText(context.getString(R.string.prof) + prueferUndSemesterList.get(position).toString());
-        name = moduleUndStudiengangsList.get(position);
-        String[] studiengang = name.split(" ");
-        modulname = "";
+        holder.txtFooter.setText(context.getString(R.string.prof) + TesterAndSemesterList.get(position).toString());
+        name = moduleAndCourseList.get(position);
+        String[] course = name.split(" ");
+        modulName = "";
         int b;
-        for (b = 0; b < (studiengang.length - 1); b++) {
-            modulname = (modulname + " " + studiengang[b]);
+        for (b = 0; b < (course.length - 1); b++) {
+            modulName = (modulName + " " + course[b]);
 
         }
 
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
-        SharedPreferences sharedPrefSelectedStudiengang = context.
+        SharedPreferences sharedPreferencesCourse = context.
                 getSharedPreferences("validation", Context.MODE_PRIVATE);
-        String selectedStudiengang[] = sharedPrefSelectedStudiengang.
+        String selectedCourse[] = sharedPreferencesCourse.
                 getString("selectedStudiengang", "0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
 
-        if (!selectedStudiengang[selectedStudiengang.length - 1].equals(studiengang[studiengang.length - 1])) {
+        if (!selectedCourse[selectedCourse.length - 1].equals(course[course.length - 1])) {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
@@ -145,56 +145,56 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // Ende Merlin Gürtler
 
         //darstellen der Informationen für das Prüfitem
-        String[] splitDatumUndUhrzeit = datumsList.get(position).split(" ");
-        String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
+        String[] splitDateAndTime = datesList.get(position).split(" ");
+        String[] splitDayMonthYear = splitDateAndTime[0].split("-");
         holder.txtthirdline.setText(context.getString(R.string.clockTime2)
-                + splitDatumUndUhrzeit[1].substring(0, 5).toString()
+                + splitDateAndTime[1].substring(0, 5).toString()
                 + context.getString(R.string.date2)
-                + splitTagMonatJahr[2].toString() + "."
-                + splitTagMonatJahr[1].toString() + "."
-                + splitTagMonatJahr[0].toString());
-        final String[] splitPrueferUndSemester
-                = prueferUndSemesterList.get(position).split(" ");
+                + splitDayMonthYear[2].toString() + "."
+                + splitDayMonthYear[1].toString() + "."
+                + splitDayMonthYear[0].toString());
+        final String[] splitTesterAndSemester
+                = TesterAndSemesterList.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
-                + splitPrueferUndSemester[0] + ", " + splitPrueferUndSemester[1]
-                + context.getString(R.string.semester) + splitPrueferUndSemester[2]);
+                + splitTesterAndSemester[0] + ", " + splitTesterAndSemester[1]
+                + context.getString(R.string.semester) + splitTesterAndSemester[2]);
     }
 
 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return moduleUndStudiengangsList.size();
+        return moduleAndCourseList.size();
     }
 
     public String giveString(int position) {
 
         try {
-            String name = moduleUndStudiengangsList.get(position);
-            String[] studiengang = name.split(" ");
-            modulname = "";
+            String name = moduleAndCourseList.get(position);
+            String[] course = name.split(" ");
+            modulName = "";
             int b;
-            for (b = 0; b < (studiengang.length - 1); b++) {
-                modulname = (modulname + " " + studiengang[b]);
+            for (b = 0; b < (course.length - 1); b++) {
+                modulName = (modulName + " " + course[b]);
 
             }
 
-            String[] aufteilung1 = datumsList.get(position).split(" ");
-            String[] aufteilung2 = aufteilung1[0].split("-");
+            String[] division1 = datesList.get(position).split(" ");
+            String[] division2 = division1[0].split("-");
             //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-            final String[] sa = prueferUndSemesterList.get(position).split(" ");
+            final String[] sa = TesterAndSemesterList.get(position).split(" ");
             //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
             String s = (context.getString(R.string.information) +
-                    context.getString(R.string.course) + studiengang[studiengang.length - 1] +
-                    context.getString(R.string.modul) + modulname +
+                    context.getString(R.string.course) + course[course.length - 1] +
+                    context.getString(R.string.modul) + modulName +
                     context.getString(R.string.firstProf) + sa[0] +
                     context.getString(R.string.secondProf) + sa[1] +
-                    context.getString(R.string.date) + aufteilung2[2].toString() + "."
-                    + aufteilung2[1].toString() + "."
-                    + aufteilung2[0].toString() +
-                    context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
+                    context.getString(R.string.date) + division2[2].toString() + "."
+                    + division2[1].toString() + "."
+                    + division2[0].toString() +
+                    context.getString(R.string.clockTime) + division1[1].substring(0, 5).toString() +
                     context.getString(R.string.clock) +
-                    context.getString(R.string.room) + raumList.get(position) +
+                    context.getString(R.string.room) + roomList.get(position) +
                     context.getString(R.string.form) + formList.get(position) + "\n " + "\n \n \n \n \n \n ");
 
             return (s);
@@ -212,13 +212,13 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         new Thread(new Runnable() {
             @Override
             public void run() {
-                AppDatabase datenbank = AppDatabase.getAppDatabase(context);
-                List<PruefplanEintrag> ppeList = datenbank.userDao().getFavorites(true);
+                AppDatabase database = AppDatabase.getAppDatabase(context);
+                List<TestPlanEntry> ppeList = database.userDao().getFavorites(true);
                 // second parameter is necessary ie.,
                 // Value to return if this preference does not exist.
-                for (PruefplanEintrag eintrag : ppeList) {
-                    if (eintrag.getID().equals(ppIdList.get(position))) {
-                        datenbank.userDao()
+                for (TestPlanEntry entry : ppeList) {
+                    if (entry.getID().equals(ppIdList.get(position))) {
+                        database.userDao()
                                 .update(false, Integer.valueOf(ppIdList.get(position)));
 
                         //Entferne den Eintrag aus dem Calendar falls vorhanden

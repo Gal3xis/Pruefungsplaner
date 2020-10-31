@@ -33,7 +33,7 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -41,54 +41,54 @@ import java.util.TimeZone;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    public List<String> uebergebeneModule;
-    private List<String> prueferUSemster;
+    public List<String> moduls;
+    private List<String> testerAndSemester;
     private List<String> moduleList;
-    private List<String> Datum;
-    private List<String> raumAdapter;
-    private List<String> pruefform;
+    private List<String> date;
+    private List<String> roomAdapter;
+    private List<String> examForm;
     private List<String> statusList;
     private List<String> statusHintList;
-    private boolean speicher;
-    private String modulname;
+    private boolean save;
+    private String modulName;
     private TextView txtSecondScreen;
     static boolean favcheck = true;
     private Context context;
     // private Intent calIntent;
-    private RecyclerView.LayoutManager aktuelleslayout;
-    private List<String> pruefplanid;
+    private RecyclerView.LayoutManager currentLayout;
+    private List<String> planId;
     private GregorianCalendar calDate = new GregorianCalendar();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<String> module,
-                     List<String> prueferUndSemester,
-                     List<String> datum,
+    public MyAdapter(List<String> passedModuls,
+                     List<String> passedTesterAndSemester,
+                     List<String> passedDate,
                      List<String> modul,
-                     List<String> ppid,
-                     List<String> pruefformList,
+                     List<String> passedId,
+                     List<String> passedExamForm,
                      RecyclerView.LayoutManager mLayout,
-                     List<String> raum,
-                     List<String> status,
-                     List<String> statusHint) {
-        uebergebeneModule = module;
-        Datum = datum;
-        prueferUSemster = prueferUndSemester;
+                     List<String> passedRoom,
+                     List<String> passedStatus,
+                     List<String> passedStatusHint) {
+        moduls = passedModuls;
+        date = passedDate;
+        testerAndSemester = passedTesterAndSemester;
         moduleList = modul;
-        pruefplanid = ppid;
-        raumAdapter = raum;
-        pruefform = pruefformList;
-        aktuelleslayout = mLayout;
-        statusList = status;
-        statusHintList = statusHint;
+        planId = passedId;
+        roomAdapter = passedRoom;
+        examForm = passedExamForm;
+        currentLayout = mLayout;
+        statusList = passedStatus;
+        statusHintList = passedStatusHint;
     }
 
     public void add(int position, String item) {
-        uebergebeneModule.add(position, item);
+        moduls.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        uebergebeneModule.remove(position);
+        moduls.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -110,21 +110,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        String name = uebergebeneModule.get(position);
+        String name = moduls.get(position);
 
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
-        SharedPreferences sharedPrefSelectedStudiengang = context.
+        SharedPreferences sharedPreferencesSelectedCourse = context.
                 getSharedPreferences("validation", Context.MODE_PRIVATE);
-        String[] selectedStudiengang = sharedPrefSelectedStudiengang.
+        String[] selectedCourse = sharedPreferencesSelectedCourse.
                 getString("selectedStudiengang", "0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
-        String[] studiengang = name.split(" ");
+        String[] course = name.split(" ");
 
         // Ende Merlin Gürtler
 
-        if (!selectedStudiengang[selectedStudiengang.length - 1].equals(studiengang[studiengang.length - 1])) {
+        if (!selectedCourse[selectedCourse.length - 1].equals(course[course.length - 1])) {
             // Lege die Farben für die Wahlmodule fest
             GradientDrawable backGroundGradient = new GradientDrawable(
                     GradientDrawable.Orientation.TOP_BOTTOM,
@@ -143,39 +143,39 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                modulname = "";
+                modulName = "";
 
-                for (int b = 0; b < (studiengang.length - 1); b++) {
-                    modulname = (modulname + " " + studiengang[b]);
+                for (int b = 0; b < (course.length - 1); b++) {
+                    modulName = (modulName + " " + course[b]);
                 }
 
                 //Datenbank und Pruefplan laden
-                AppDatabase datenbank = AppDatabase.getAppDatabase(context);
-                List<PruefplanEintrag> ppeList = datenbank.userDao().getAll2();
+                AppDatabase database = AppDatabase.getAppDatabase(context);
+                List<TestPlanEntry> ppeList = database.userDao().getAll2();
 
                 // Überprüfung, ob Prüfitem favorisiert wurde
                 //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
                 //                  Toast.LENGTH_SHORT).show();
-                speicher = false;
+                save = false;
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         if (position >= 0) {
-                            int pruefid = Integer.valueOf(pruefplanid.get(position));
+                            int pruefid = Integer.valueOf(planId.get(position));
 
-                            for (PruefplanEintrag eintrag : ppeList) {
-                                if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
+                            for (TestPlanEntry entry : ppeList) {
+                                if (Integer.valueOf(entry.getID()).equals(pruefid)) {
                                     // Start Merlin Gürtler
                                     // Setze die Farbe des Icons
-                                    holder.statusIcon.setColorFilter(Color.parseColor(eintrag.getColor()));
+                                    holder.statusIcon.setColorFilter(Color.parseColor(entry.getColor()));
 
                                     //if (eintrag.getStatus().equals("final")) {
                                     //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
                                     //}
                                     // Ende Merlin Gürtler
 
-                                    if (eintrag.getFavorit()) {
+                                    if (entry.getFavorit()) {
                                         holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
                                         // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                                     }
@@ -215,59 +215,59 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         });
 
         //Aufteilung nach verschiedenen Tagen
-        String[] splitTage = Datum.get(position).split(" ");
+        String[] splitDay = date.get(position).split(" ");
         if (position > 0) {
-            String[] splitTagePositionVorher = Datum.get(position - 1).split(" ");
+            String[] splitDayBefore = date.get(position - 1).split(" ");
 
             //Vergleich der beiden Tage
             //wenn ungleich, dann blaue box mit Datumseintrag
-            if (splitTage[0].toString().equals(splitTagePositionVorher[0].toString())) {
+            if (splitDay[0].toString().equals(splitDayBefore[0].toString())) {
                 holder.button.setHeight(0);
             }
         }
 
         //Darstellen der Werte in der Prüfitem Komponente
-        String[] splitMonatJahrTage = splitTage[0].split("-");
-        holder.txtthirdline.setText(context.getString(R.string.time) + splitTage[1].substring(0, 5).toString());
-        holder.button.setText(splitMonatJahrTage[2].toString() + "."
-                + splitMonatJahrTage[1].toString() + "."
-                + splitMonatJahrTage[0].toString());
-        final String[] splitPrueferUndSemester = prueferUSemster.get(position).split(" ");
+        String[] splitMonthDayYear = splitDay[0].split("-");
+        holder.txtthirdline.setText(context.getString(R.string.time) + splitDay[1].substring(0, 5).toString());
+        holder.button.setText(splitMonthDayYear[2].toString() + "."
+                + splitMonthDayYear[1].toString() + "."
+                + splitMonthDayYear[0].toString());
+        final String[] splitTesterAndSemester = testerAndSemester.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
-                + splitPrueferUndSemester[0] + ", "
-                + splitPrueferUndSemester[1]
-                + context.getString(R.string.semester) + splitPrueferUndSemester[2]);
+                + splitTesterAndSemester[0] + ", "
+                + splitTesterAndSemester[1]
+                + context.getString(R.string.semester) + splitTesterAndSemester[2]);
         //holder.txtthirdline.setText("Semester: " + Semester5.toString());
     }
 
     //Methode zum Darstellen der "weiteren Informationen"
     public String giveString(int position) {
-        String name = uebergebeneModule.get(position);
-        String[] studiengang = name.split(" ");
-        modulname = "";
+        String name = moduls.get(position);
+        String[] course = name.split(" ");
+        modulName = "";
         int b;
-        for (b = 0; b < (studiengang.length - 1); b++) {
-            modulname = (modulname + " " + studiengang[b]);
+        for (b = 0; b < (course.length - 1); b++) {
+            modulName = (modulName + " " + course[b]);
         }
-        String raum2 = raumAdapter.get(position);
-        String[] aufteilung1 = Datum.get(position).split(" ");
-        String[] aufteilung2 = aufteilung1[0].split("-");
+        String room2 = roomAdapter.get(position);
+        String[] division1 = date.get(position).split(" ");
+        String[] division2 = division1[0].split("-");
         //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-        final String[] sa = prueferUSemster.get(position).split(" ");
+        final String[] sa = testerAndSemester.get(position).split(" ");
 
         //String mit dem Inhalt für weitere Informationen
         String s = (context.getString(R.string.information) +
-                context.getString(R.string.course) + studiengang[studiengang.length - 1]
-                + context.getString(R.string.modul) + modulname
+                context.getString(R.string.course) + course[course.length - 1]
+                + context.getString(R.string.modul) + modulName
                 + context.getString(R.string.firstProf) + sa[0]
                 + context.getString(R.string.secondProf) + sa[1]
-                + context.getString(R.string.date) + aufteilung2[2].toString() + "."
-                + aufteilung2[1].toString() + "."
-                + aufteilung2[0].toString()
-                + context.getString(R.string.clockTime) + aufteilung1[1].substring(0, 5).toString() +
+                + context.getString(R.string.date) + division2[2].toString() + "."
+                + division2[1].toString() + "."
+                + division2[0].toString()
+                + context.getString(R.string.clockTime) + division1[1].substring(0, 5).toString() +
                 context.getString(R.string.clock)
-                + context.getString(R.string.room) + raum2
-                + context.getString(R.string.form) + pruefform.get(position) + "\n \n \n \n \n \n ");
+                + context.getString(R.string.room) + room2
+                + context.getString(R.string.form) + examForm.get(position) + "\n \n \n \n \n \n ");
 
         return (s);
     }
@@ -278,20 +278,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 favcheck = false;
 
                 //Datenbank und Pruefplan laden
-                AppDatabase datenbank1 = AppDatabase.getAppDatabase(context);
-                List<PruefplanEintrag> ppeList1 = datenbank1.userDao().getAll2();
+                AppDatabase database = AppDatabase.getAppDatabase(context);
+                List<TestPlanEntry> ppeList1 = database.userDao().getAll2();
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
                 // Toast.LENGTH_SHORT).show();
 
-                    for (PruefplanEintrag eintrag : ppeList1) {
-                        if ((eintrag.getID().toString()
-                                .equals(pruefplanid.get(position)) &
-                                (eintrag.getFavorit()))) {
-                            datenbank1.userDao()
+                    for (TestPlanEntry entry : ppeList1) {
+                        if ((entry.getID().toString()
+                                .equals(planId.get(position)) &
+                                (entry.getFavorit()))) {
+                            database.userDao()
                                     .update(false,
-                                            Integer.valueOf(pruefplanid.get(position)));
+                                            Integer.valueOf(planId.get(position)));
                         }
                     }
 
@@ -302,8 +302,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         //Entferne den Eintrag aus dem Calendar falls vorhanden
                             CheckGoogleCalendar cal = new CheckGoogleCalendar();
                             cal.setCtx(context);
-                            if (!cal.checkCal(Integer.valueOf(pruefplanid.get(position)))) {
-                                cal.deleteEntry(Integer.valueOf(pruefplanid.get(position)));
+                            if (!cal.checkCal(Integer.valueOf(planId.get(position)))) {
+                                cal.deleteEntry(Integer.valueOf(planId.get(position)));
                             }
 
                             holder.ivicon.clearColorFilter();
@@ -322,8 +322,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 favcheck = false;
 
                 //Datenbank und Pruefplan laden
-                AppDatabase datenbank1 = AppDatabase.getAppDatabase(context);
-                List<PruefplanEintrag> ppeList1 = datenbank1.userDao().getAll2();
+                AppDatabase database = AppDatabase.getAppDatabase(context);
+                List<TestPlanEntry> ppeList1 = database.userDao().getAll2();
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -331,22 +331,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Speichern des Prüfitem als Favorit
                     // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-                    for (PruefplanEintrag eintrag : ppeList1) {
-                        if ((eintrag.getID().toString()
-                                .equals(pruefplanid.get(position)) &
-                                (!eintrag.getFavorit()))) {
-                            datenbank1.userDao()
+                    for (TestPlanEntry entry : ppeList1) {
+                        if ((entry.getID().toString()
+                                .equals(planId.get(position)) &
+                                (!entry.getFavorit()))) {
+                            database.userDao()
                                     .update(true,
-                                            Integer.valueOf(pruefplanid.get(position)));
+                                            Integer.valueOf(planId.get(position)));
                         }
                 }
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        int pruefid = Integer.valueOf(pruefplanid.get(position));
-                        for (PruefplanEintrag eintrag : ppeList1) {
-                            if (Integer.valueOf(eintrag.getID()).equals(pruefid)) {
+                        int pruefid = Integer.valueOf(planId.get(position));
+                        for (TestPlanEntry entry : ppeList1) {
+                            if (Integer.valueOf(entry.getID()).equals(pruefid)) {
                                 holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
                                 // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                             }
@@ -365,62 +365,62 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                             // Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der
                             // Google Kalender aktiviert
-                            boolean speicher2 = false;
+                            boolean save2 = false;
 
-                            for (int zaehler = 0; zaehler < checkGooglecalender.length(); zaehler++) {
-                                String ss1 = String.valueOf(checkGooglecalender.charAt(zaehler));
+                            for (int counter = 0; counter < checkGooglecalender.length(); counter++) {
+                                String ss1 = String.valueOf(checkGooglecalender.charAt(counter));
                                 if (ss1.equals(String.valueOf(1))) {
-                                    speicher2 = true;
+                                    save2 = true;
                                 }
                             }
 
                             //Hinzufügen der Prüfungen zum Google Kalender
-                            CheckGoogleCalendar checkeintrag = new CheckGoogleCalendar();
-                            checkeintrag.setCtx(context);
+                            CheckGoogleCalendar checkEntry = new CheckGoogleCalendar();
+                            checkEntry.setCtx(context);
 
                             //Abfrage des geklickten Items
-                            if (checkeintrag.checkCal(Integer.valueOf(pruefplanid.get(position)))) {
-                                if (speicher2) {
+                            if (checkEntry.checkCal(Integer.valueOf(planId.get(position)))) {
+                                if (save2) {
 
                                     //Ermitteln benötigter Variablen
-                                    String[] splitDatumUndUhrzeit = Datum.get(position).split(" ");
+                                    String[] splitDateAndTime = date.get(position).split(" ");
 
-                                    String[] splitTagMonatJahr = splitDatumUndUhrzeit[0].split("-");
+                                    String[] splitDayMonthYear = splitDateAndTime[0].split("-");
 
                                     holder.txtthirdline
                                             .setText(context.getString(R.string.time)
-                                                    + splitDatumUndUhrzeit[1].substring(0, 5).toString());
+                                                    + splitDateAndTime[1].substring(0, 5).toString());
                                     holder.button
-                                            .setText(splitTagMonatJahr[2].toString() + "."
-                                                    + splitTagMonatJahr[1].toString() + "."
-                                                    + splitTagMonatJahr[0].toString());
-                                    final String[] sa = prueferUSemster.get(position).split(" ");
+                                            .setText(splitDayMonthYear[2].toString() + "."
+                                                    + splitDayMonthYear[1].toString() + "."
+                                                    + splitDayMonthYear[0].toString());
+                                    final String[] sa = testerAndSemester.get(position).split(" ");
                                     holder.txtFooter
                                             .setText(context.getString(R.string.prof) + sa[0] + ", " + sa[1]
                                                     + context.getString(R.string.semester) + sa[2]);
-                                    String name1 = uebergebeneModule.get(position);
+                                    String name1 = moduls.get(position);
                                     String[] modulname1 = name1.split(" ");
-                                    modulname = "";
+                                    modulName = "";
                                     int b;
                                     for (b = 0; b < (modulname1.length - 1); b++) {
-                                        modulname = (modulname + " " + modulname1[b]);
+                                        modulName = (modulName + " " + modulname1[b]);
                                     }
 
-                                    int uhrzeitStart
-                                            = Integer.valueOf(splitDatumUndUhrzeit[1].substring(0, 2));
-                                    int uhrzeitEnde
-                                            = Integer.valueOf(splitDatumUndUhrzeit[1].substring(4, 5));
+                                    int timeStart
+                                            = Integer.valueOf(splitDateAndTime[1].substring(0, 2));
+                                    int timeEnd
+                                            = Integer.valueOf(splitDateAndTime[1].substring(4, 5));
                                     calDate = new GregorianCalendar(
-                                            Integer.valueOf(splitTagMonatJahr[0]),
-                                            (Integer.valueOf(splitTagMonatJahr[1]) - 1),
-                                            Integer.valueOf(splitTagMonatJahr[2]),
-                                            uhrzeitStart, uhrzeitEnde);
+                                            Integer.valueOf(splitDayMonthYear[0]),
+                                            (Integer.valueOf(splitDayMonthYear[1]) - 1),
+                                            Integer.valueOf(splitDayMonthYear[2]),
+                                            timeStart, timeEnd);
 
                                     //Methode zum Speichern im Kalender
-                                    int calendarid = calendarID(modulname);
+                                    int calendarid = calendarID(modulName);
 
                                     //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
-                                    checkeintrag.insertCal(Integer.valueOf(pruefplanid.get(position)),
+                                    checkEntry.insertCal(Integer.valueOf(planId.get(position)),
                                             calendarid);
 
                                 }
@@ -436,31 +436,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         favcheck = false;
 
         //Datenbank und Pruefplan laden
-        AppDatabase datenbank1 = AppDatabase.getAppDatabase(context);
-        List<PruefplanEintrag> ppeList1 = datenbank1.userDao().getAll2();
+        AppDatabase database = AppDatabase.getAppDatabase(context);
+        List<TestPlanEntry> ppeList1 = database.userDao().getAll2();
 
         //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
         //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
         // Toast.LENGTH_SHORT).show();
-        speicher = false;
+        save = false;
 
-        for (PruefplanEintrag eintrag : ppeList1) {
-            if ((eintrag.getID().toString()
-                    .equals(pruefplanid.get(position)) &
-                    (eintrag.getFavorit()))) {
-                speicher = true;
+        for (TestPlanEntry entry : ppeList1) {
+            if ((entry.getID().toString()
+                    .equals(planId.get(position)) &
+                    (entry.getFavorit()))) {
+                save = true;
                 break;
                 // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
             }
         }
 
-        return speicher;
+        return save;
     }
 
     //Item anzahl
     @Override
     public int getItemCount() {
-        return uebergebeneModule.size();
+        return moduls.size();
     }
 
     @Override
@@ -505,7 +505,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
-        event.put(CalendarContract.Events.TITLE, modulname);
+        event.put(CalendarContract.Events.TITLE, modulName);
         event.put(CalendarContract.Events.DESCRIPTION, context.getString(R.string.fh_name));
         event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
         event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));

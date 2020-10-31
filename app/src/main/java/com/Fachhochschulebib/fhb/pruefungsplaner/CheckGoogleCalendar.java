@@ -27,7 +27,7 @@ import android.provider.CalendarContract;
 import android.util.Log;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -209,7 +209,7 @@ public class CheckGoogleCalendar {
         ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
 
         //step four: Database connect
-        List<PruefplanEintrag> ppeList = databaseConnect();
+        List<TestPlanEntry> ppeList = databaseConnect();
 
         //step fifth: Schleifen zum vergleichen
         Log.i("userID", String.valueOf(listOfString.size()));
@@ -218,11 +218,11 @@ public class CheckGoogleCalendar {
             String[] element = listOfString.get(i).split(",");
             Log.i("userID", element.toString());
             Log.i("elemnt[0}", String.valueOf(element[0]));
-            for (PruefplanEintrag eintrag: ppeList) {
+            for (TestPlanEntry entry: ppeList) {
                 // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
                 // ist die GoogleCalendar Id für den gespeicherten eintrag
-                Log.i("userID2", eintrag.getID());
-                if(eintrag.getID().equals(element[0])) {
+                Log.i("userID2", entry.getID());
+                if(entry.getID().equals(element[0])) {
                     //output tag
                     String DEBUG_TAG = "MyActivity";
                     //eventID ist die Google calendar Id
@@ -235,16 +235,16 @@ public class CheckGoogleCalendar {
                     // Sieht so aus wie 22-01-2019 10:00 Uhr
                     // es wird nach dem Leerzeichen getrennt
                     //trennen von datum und Uhrzeit
-                    String[] s = eintrag.getDatum().split(" ");
+                    String[] s = entry.getDate().split(" ");
                     //print Datum
                     //aufteilen von tag, monat und jahr.
                     //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
                     String[] ss = s[0].split("-");
                     //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
-                    int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
-                    int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
+                    int time1 = Integer.valueOf(s[1].substring(0, 2));
+                    int time2 = Integer.valueOf(s[1].substring(4, 5));
                     // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, eintrag.getModul());
+                    values.put(CalendarContract.Events.TITLE, entry.getModul());
                     values.put(CalendarContract.Events.EVENT_LOCATION,
                                "Fachhochschule Bielefeld Update");
                     values.put(CalendarContract.Events.DESCRIPTION, "");
@@ -253,7 +253,7 @@ public class CheckGoogleCalendar {
                             Integer.valueOf(ss[0]),
                             Integer.valueOf(ss[1]) - 1,
                             Integer.valueOf(ss[2]),
-                            uhrzeit1, uhrzeit2);
+                            time1, time2);
                     values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                     values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
                     values.put( CalendarContract.Events.DTEND,
@@ -334,21 +334,21 @@ public class CheckGoogleCalendar {
 
     }
 
-    public PruefplanEintrag getFavoritePruefung(String id){
+    public TestPlanEntry getFavoritePruefung(String id){
         AppDatabase database2 = AppDatabase.getAppDatabase(context);
         // Erhalte die Prüfung die geupdated werden soll
-        PruefplanEintrag pruefung = database2.userDao().getPruefung(id);
-        return(pruefung);
+        TestPlanEntry exam = database2.userDao().getExams(id);
+        return(exam);
     }
 
 
     // Ende Merlin Gürtler
 
-    public List<PruefplanEintrag> databaseConnect(){
+    public List<TestPlanEntry> databaseConnect(){
         AppDatabase database2 = AppDatabase.getAppDatabase(context);
         // Änderun Merlin Gürtler
         // Nicht alle Einträge, um Iterationen zu sparen
-        List<PruefplanEintrag> ppeList = database2.userDao().getFavorites(true);
+        List<TestPlanEntry> ppeList = database2.userDao().getFavorites(true);
      return(ppeList);
     }
 
@@ -392,23 +392,23 @@ public class CheckGoogleCalendar {
 
                 ContentValues values = new ContentValues();
 
-                PruefplanEintrag favoritePruefung = getFavoritePruefung(String.valueOf(pruefID));
+                TestPlanEntry favoriteExam = getFavoritePruefung(String.valueOf(pruefID));
 
                 //Datum und Uhrzeit aufteilen.
                 // Sieht so aus wie 22-01-2019 10:00 Uhr
                 // es wird nach dem Leerzeichen getrennt
                 //trennen von datum und Uhrzeit
-                String[] s = favoritePruefung.getDatum().split(" ");
+                String[] s = favoriteExam.getDate().split(" ");
                 //print Datum
                 //aufteilen von tag, monat und jahr.
                 //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
                 String[] ss = s[0].split("-");
                 //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
-                int uhrzeit1 = Integer.valueOf(s[1].substring(0, 2));
-                int uhrzeit2 = Integer.valueOf(s[1].substring(4, 5));
+                int time1 = Integer.valueOf(s[1].substring(0, 2));
+                int time2 = Integer.valueOf(s[1].substring(4, 5));
 
                 // The new title for the updatet event
-                values.put(CalendarContract.Events.TITLE, favoritePruefung.getModul());
+                values.put(CalendarContract.Events.TITLE, favoriteExam.getModul());
                 values.put(CalendarContract.Events.EVENT_LOCATION,
                         "Fachhochschule Bielefeld");
                 values.put(CalendarContract.Events.DESCRIPTION, "");
@@ -417,7 +417,7 @@ public class CheckGoogleCalendar {
                         Integer.valueOf(ss[0]),
                         Integer.valueOf(ss[1]) - 1,
                         Integer.valueOf(ss[2]),
-                        uhrzeit1, uhrzeit2);
+                        time1, time2);
                 values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
                 values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
                 values.put( CalendarContract.Events.DTEND,

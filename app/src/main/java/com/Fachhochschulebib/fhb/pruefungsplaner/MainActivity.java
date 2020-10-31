@@ -50,7 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
@@ -60,18 +60,18 @@ public class MainActivity extends AppCompatActivity {
 
     private Button buttonSpinner;
     private Button buttonOk;
-    public static String pruefJahr = null;
-    public static String aktuellePruefphase = null;
-    public static String rueckgabeStudiengang = null;
-    public static String rueckgabeFakultaet = null;
+    public static String currentYear = null;
+    public static String currentExamine = null;
+    public static String returnCourse = null;
+    public static String returnFaculty = null;
     private Boolean checkReturn = true;
-    public static String aktuellerTermin;
+    public static String currentDate;
     //KlassenVariablen
-    private String studiengangMain;
-    private JSONArray jsonArrayFakultaten;
-    final List<Boolean> studiengangGewaehlt = new ArrayList<Boolean>();
-    final List<String> studiengangName = new ArrayList<String>();
-    final List<String> fakultaetName = new ArrayList<String>();
+    private String courseMain;
+    private JSONArray jsonArrayFacultys;
+    final List<Boolean> courseChosen = new ArrayList<Boolean>();
+    final List<String> courseName = new ArrayList<String>();
+    final List<String> facultyName = new ArrayList<String>();
     // private Spinner spStudiengangMain;
     // List<String> idList = new ArrayList<String>();
     private Message msg = new Message();
@@ -87,8 +87,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // hole die Studiengang ID aus der DB
-                AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
-                rueckgabeStudiengang = datenbank.userDao().getIdStudiengang(choosenCourse);
+                AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
+                returnCourse = database.userDao().getIdCourse(choosenCourse);
 
                 // Erstelle Shared Pref für die anderen Fragmente
                 SharedPreferences sharedPrefStudiengangValidation =
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                         sharedPrefStudiengangValidation.edit();
 
                 editorStudiengangValidation.putString("selectedStudiengang", choosenCourse);
-                editorStudiengangValidation.putString("rueckgabeStudiengang", rueckgabeStudiengang);
+                editorStudiengangValidation.putString("rueckgabeStudiengang", returnCourse);
                 editorStudiengangValidation.apply();
 
                 // Thread für die Uuid
@@ -107,18 +107,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         // Überprüfe ob die App schonmal gestartet wurde
-                        if(datenbank.userDao().getUuid() == null) {
+                        if(database.userDao().getUuid() == null) {
                             RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                             // Sende nur ans Backend wenn die App wirklich zum ersten mal
                             // gestartet wurde
-                            retrofit.firstStart(getApplicationContext(), datenbank,
+                            retrofit.firstStart(getApplicationContext(), database,
                                     serverAddress);
                         }
                     }
                 }).start();
 
-                Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                startActivityForResult(hauptfenster, 0);
+                Intent mainWindow = new Intent(getApplicationContext(), table.class);
+                startActivityForResult(mainWindow, 0);
             }
         }).start();
     }
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences mSharedPreferencesValidation
                 = getApplication().getSharedPreferences("validation", 0);
 
-        studiengangMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
+        courseMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
         // Ende Merlin Gürtler
 
         mSharedPreferencesPPServerAdress
@@ -177,40 +177,40 @@ public class MainActivity extends AppCompatActivity {
         relativePPlanURL
                 = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0");
 
-        pingPruefPeriode();
+        pingExaminePeriod();
 
         //Defininition des Arrays jahreszeit
-        List<String> jahresZeit = new ArrayList<String>();
-        jahresZeit.add(context.getString(R.string.sommer));
-        jahresZeit.add(context.getString(R.string.winter));
+        List<String> season = new ArrayList<String>();
+        season.add(context.getString(R.string.sommer));
+        season.add(context.getString(R.string.winter));
 
         //Kalender:: aktuelles Jahr --> Bestimmung der Prüfphase (WiSe, SoSe)
         Calendar calendar = Calendar.getInstance();
-        int kalenderMonat = calendar.get(Calendar.MONTH );
-        Log.d("Output Monat",String.valueOf(kalenderMonat));
+        int calendarMonth = calendar.get(Calendar.MONTH );
+        Log.d("Output Monat",String.valueOf(calendarMonth));
 
-        if (kalenderMonat  <= 4)
+        if (calendarMonth  <= 4)
         {
-            aktuellePruefphase = context.getString(R.string.winter_short);
+            currentExamine = context.getString(R.string.winter_short);
             int thisYear = calendar.get(Calendar.YEAR);
-            pruefJahr = String.valueOf(thisYear);
+            currentYear = String.valueOf(thisYear);
         }
 
-        if (kalenderMonat  > 4)
+        if (calendarMonth  > 4)
         {
-            aktuellePruefphase = context.getString(R.string.sommer_short);
+            currentExamine = context.getString(R.string.sommer_short);
             int thisYear = calendar.get(Calendar.YEAR);
-            pruefJahr = String.valueOf(thisYear);
+            currentYear = String.valueOf(thisYear);
         }
 
         // TODO Nach Corona muss der Wert in der strings.xml wieder auf 9 geändert werden
-        if (kalenderMonat >= Integer.parseInt(
+        if (calendarMonth >= Integer.parseInt(
                 getApplicationContext().getString(R.string.month_wise)
         )) {
 
-            aktuellePruefphase = context.getString(R.string.winter_short);
+            currentExamine = context.getString(R.string.winter_short);
             int thisYear = calendar.get(Calendar.YEAR);
-            pruefJahr = String.valueOf(thisYear +1);
+            currentYear = String.valueOf(thisYear +1);
         }
 
         // Start Merlin Gürtler
@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferencesPruefPhase
                 = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
         SharedPreferences.Editor mEditorPruefPhaseUndJahr = mSharedPreferencesPruefPhase.edit();
-        mEditorPruefPhaseUndJahr.putString("aktuellePruefphase", aktuellePruefphase);
-        mEditorPruefPhaseUndJahr.putString("pruefJahr", pruefJahr);
+        mEditorPruefPhaseUndJahr.putString("aktuellePruefphase", currentExamine);
+        mEditorPruefPhaseUndJahr.putString("pruefJahr", currentYear);
         mEditorPruefPhaseUndJahr.apply();
 
         // Ende Merlin Gürtler
@@ -230,24 +230,24 @@ public class MainActivity extends AppCompatActivity {
                 = getApplicationContext().getSharedPreferences("PruefPeriode", MODE_PRIVATE);
         String strJson = sharedPrefPruefPeriode.getString("aktPruefPeriode", "0");
         try {
-            Checkverbindung();
+            checkConnection();
             //Creating editor to store uebergebeneModule to shared preferencess
-            TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
+            TextView txtTestPeriod = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
             if (strJson != null) {
-                txtpruefperiode.setText(strJson);
+                txtTestPeriod.setText(strJson);
             }
         }
         //Wenn Verbindung zum Server nicht möglich, dann Daten aus der Datenbank nehmen
         catch(Exception e) {
             if (strJson != null) {
                 try {
-                    jsonArrayFakultaten = new JSONArray(strJson);
+                    jsonArrayFacultys = new JSONArray(strJson);
 
-                    for (int i = 0; i < jsonArrayFakultaten.length(); i++) {
-                        JSONObject json = jsonArrayFakultaten.getJSONObject(i);
-                        fakultaetName.add(json.get("facName").toString());
-                        FacNamesToSpinner();
+                    for (int i = 0; i < jsonArrayFacultys.length(); i++) {
+                        JSONObject json = jsonArrayFacultys.getJSONObject(i);
+                        facultyName.add(json.get("facName").toString());
+                        facNamesToSpinner();
                     }
 
                 } catch (Exception b) {
@@ -263,9 +263,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Aufruf in onCreate()
-    public void Checkverbindung(){
+    public void checkConnection(){
         boolean aktuelleurl
-                = PingUrl(serverAddress + relativePPlanURL + "entity.faculty");
+                = pingUrl(serverAddress + relativePPlanURL + "entity.faculty");
 
         if (!aktuelleurl) {
             KeineVerbindung();
@@ -275,14 +275,14 @@ public class MainActivity extends AppCompatActivity {
             RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
             // initialisierung db
-            AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+            AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
 
             // Thread für die Studiengänge
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(datenbank.userDao().getStudiengang().size() == 0) {
-                        retrofit.getStudiengaenge(getApplication(), datenbank, serverAddress);
+                    if(database.userDao().getCourse().size() == 0) {
+                        retrofit.getCourses(getApplication(), database, serverAddress);
                     }
                 }
             }).start();
@@ -291,10 +291,10 @@ public class MainActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    Uuid uuid = datenbank.userDao().getUuid();
+                    Uuid uuid = database.userDao().getUuid();
                     if(!globalVariable.getAppStarted() && uuid != null && !globalVariable.isChangeFaculty()) {
                         globalVariable.setAppStarted(true);
-                        retrofit.anotherStart(getApplicationContext(), datenbank,
+                        retrofit.anotherStart(getApplicationContext(), database,
                                 serverAddress);
                     }
                 }
@@ -306,9 +306,9 @@ public class MainActivity extends AppCompatActivity {
                 public void run() {
 
                     // Skippe die erstauswahl, wenn schon ein Studiengang gewählt wurde
-                    if(!studiengangMain.equals("0") && !globalVariable.isChangeFaculty()) {
-                        Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-                        startActivityForResult(hauptfenster, 0);
+                    if(!courseMain.equals("0") && !globalVariable.isChangeFaculty()) {
+                        Intent mainWindow = new Intent(getApplicationContext(), table.class);
+                        startActivityForResult(mainWindow, 0);
                     }
 
                 }
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Übernahme der Fakultätsnamen in die Spinner-Komponente.
-    public void FacNamesToSpinner(){
+    public void facNamesToSpinner(){
         MainActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 /* Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert",
@@ -343,25 +343,25 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder chooseFaculty = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
 
-                        String[] facultys = new String [fakultaetName.size()];
+                        String[] facultys = new String [facultyName.size()];
 
-                        for(int i = 0; i < fakultaetName.size(); i++) {
-                            facultys[i] = fakultaetName.get(i);
+                        for(int i = 0; i < facultyName.size(); i++) {
+                            facultys[i] = facultyName.get(i);
                         }
 
                         // Der Listener für die Item Auswahl
                         chooseFaculty.setItems(facultys, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                for (int i = 0 ; i < fakultaetName.size(); i++)
+                                for (int i = 0; i < facultyName.size(); i++)
                                 {
                                     if (facultys[which]
-                                            .equals(fakultaetName.get(i))) {
+                                            .equals(facultyName.get(i))) {
                                         try{
-                                            JSONObject object = jsonArrayFakultaten.getJSONObject(i);
-                                            rueckgabeFakultaet = object.get("fbid").toString();
+                                            JSONObject object = jsonArrayFacultys.getJSONObject(i);
+                                            returnFaculty = object.get("fbid").toString();
                                             Log.d("Output Fakultaet",
-                                                    rueckgabeFakultaet);
+                                                    returnFaculty);
                                             // Erstelle Shared Pref für die anderen Fragmente
                                             SharedPreferences sharedPrefFakultaetValidation =
                                                     getApplicationContext().
@@ -371,23 +371,23 @@ public class MainActivity extends AppCompatActivity {
                                                     sharedPrefFakultaetValidation.edit();
 
                                             editorFakultaetValidation.putString("selectedFakultaet", facultys[which]);
-                                            editorFakultaetValidation.putString("rueckgabeFakultaet", rueckgabeFakultaet);
+                                            editorFakultaetValidation.putString("rueckgabeFakultaet", returnFaculty);
                                             editorFakultaetValidation.apply();
 
                                             // füllt die Liste mit Studiengängena
                                             new Thread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
-                                                    List<Studiengang> studienganenge =
-                                                            datenbank.userDao().getStudiengaenge(rueckgabeFakultaet);
+                                                    AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
+                                                    List<Courses> courses =
+                                                            database.userDao().getCourses(returnFaculty);
 
-                                                    studiengangGewaehlt.clear();
-                                                    studiengangName.clear();
+                                                    courseChosen.clear();
+                                                    courseName.clear();
 
-                                                    for(Studiengang studie: studienganenge) {
-                                                        studiengangName.add(studie.getStudiengangName());
-                                                        studiengangGewaehlt.add(studie.getGewaehlt());
+                                                    for(Courses course: courses) {
+                                                        courseName.add(course.getCourseName());
+                                                        courseChosen.add(course.getChoosen());
                                                     }
 
                                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -402,8 +402,8 @@ public class MainActivity extends AppCompatActivity {
                                                             }
 
                                                             // füge den Adapter der Recyclerview hinzu
-                                                            mAdapter = new CheckListAdapter(studiengangName,
-                                                                    studiengangGewaehlt,
+                                                            mAdapter = new CheckListAdapter(courseName,
+                                                                    courseChosen,
                                                                     getApplicationContext());
                                                             recyclerView.setAdapter(mAdapter);
 
@@ -413,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
                                                                 chooseCourse.setVisibility(View.VISIBLE);
                                                             }
 
-                                                            if(studiengangName.size() == 0) {
+                                                            if(courseName.size() == 0) {
                                                                 if(buttonOk.getVisibility() == View.VISIBLE) {
                                                                     buttonOk.setVisibility(View.INVISIBLE);
                                                                 }
@@ -460,16 +460,16 @@ public class MainActivity extends AppCompatActivity {
 
                         final boolean[] oneFavorite = {false};
 
-                        AppDatabase datenbank = AppDatabase.getAppDatabase(getBaseContext());
+                        AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
 
-                        List<String> favorisierteStudiengaenge = new ArrayList<>();
+                        List<String> favoriteCourses = new ArrayList<>();
 
                         new Thread(new Runnable() {
                             @Override
                             public void run() {
                                 // prüfe ob mindesten ein Studiengang favorisiert wurde
-                                for(Boolean gewaehlt: studiengangGewaehlt) {
-                                    if(gewaehlt) {
+                                for(Boolean choosen: courseChosen) {
+                                    if(choosen) {
                                         oneFavorite[0] = true;
                                         break;
                                     }
@@ -477,11 +477,11 @@ public class MainActivity extends AppCompatActivity {
                                 if(oneFavorite[0]) {
                                     // aktualisiere die db
 
-                                    for(int i = 0; i < studiengangGewaehlt.size(); i++) {
-                                        datenbank.userDao().updateStudiengang(studiengangName.get(i),
-                                                studiengangGewaehlt.get(i));
-                                        if(studiengangGewaehlt.get(i)) {
-                                            favorisierteStudiengaenge.add(studiengangName.get(i));
+                                    for(int i = 0; i < courseChosen.size(); i++) {
+                                        database.userDao().updateCourse(courseName.get(i),
+                                                courseChosen.get(i));
+                                        if(courseChosen.get(i)) {
+                                            favoriteCourses.add(courseName.get(i));
                                         }
                                     }
                                 }
@@ -490,14 +490,14 @@ public class MainActivity extends AppCompatActivity {
                                     @Override
                                     public void run() {
                                         if(oneFavorite[0]) {
-                                            if(favorisierteStudiengaenge.size() == 1) {
-                                                addMainCourse(favorisierteStudiengaenge.get(0));
+                                            if(favoriteCourses.size() == 1) {
+                                                addMainCourse(favoriteCourses.get(0));
                                             } else {
 
-                                                String[] courses = new String [favorisierteStudiengaenge.size()];
+                                                String[] courses = new String [favoriteCourses.size()];
 
-                                                for(int i = 0; i < favorisierteStudiengaenge.size(); i++) {
-                                                    courses[i] = favorisierteStudiengaenge.get(i);
+                                                for(int i = 0; i < favoriteCourses.size(); i++) {
+                                                    courses[i] = favoriteCourses.get(i);
                                                 }
 
                                                 chooseCourse.setTitle(R.string.choose_main);
@@ -538,7 +538,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Methode zum Überprüfen der fakultaeten
     //Aufruf in checkVerbindung()
-    public boolean PingUrl(final String address) {
+    public boolean pingUrl(final String address) {
         //eigenständiger Thread, weil die Abfrage Asynchron ist
         new Thread(() -> {
             // Die Fakultaeten werden in einer Shared Preferences Variable gespeichert.
@@ -589,22 +589,22 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 //Werte von JSONARRay in JSONObject konvertieren
-                JSONArray erhaltenteFakultaeten = new JSONArray();
+                JSONArray receivesFacultys = new JSONArray();
 
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject object = jsonArray.getJSONObject(i);
-                    erhaltenteFakultaeten.put(object.get("faculty"));
+                    receivesFacultys.put(object.get("faculty"));
                 }
 
-                String konvertiertZuString = erhaltenteFakultaeten.toString();
-                String klammernEntfernen
-                        = konvertiertZuString.substring(1,konvertiertZuString.length()-1);
+                String convertedToString = receivesFacultys.toString();
+                String deletedCling
+                        = convertedToString.substring(1,convertedToString.length()-1);
                 //konvertieren zu JSONArray
-                jsonArrayFakultaten = new JSONArray(klammernEntfernen);
+                jsonArrayFacultys = new JSONArray(deletedCling);
 
-                for(int i = 0; i< jsonArrayFakultaten.length(); i++) {
-                    JSONObject json = jsonArrayFakultaten.getJSONObject(i);
-                    fakultaetName.add(json.get("facName").toString());
+                for(int i = 0; i< jsonArrayFacultys.length(); i++) {
+                    JSONObject json = jsonArrayFacultys.getJSONObject(i);
+                    facultyName.add(json.get("facName").toString());
                 }
 
                 // Werte Speichern für die offline Verwendung
@@ -613,14 +613,14 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     fakultaetEditor.clear();
                     fakultaetEditor.apply();
-                    fakultaetEditor.putString("fakultaeten", klammernEntfernen);
+                    fakultaetEditor.putString("fakultaeten", deletedCling);
                     fakultaetEditor.apply();
                 } catch (Exception e) {
                     Log.d("Output checkFakultaet",
                             "Fehler: Parsen von Fakultaet");
                 }
 
-                FacNamesToSpinner();
+                facNamesToSpinner();
                 Log.d("Output checkFakultaet","abgeschlossen");
 
             }
@@ -629,16 +629,16 @@ public class MainActivity extends AppCompatActivity {
              */
             catch (final Exception e)
             {
-                String strFakultaet
+                String strFacultys
                         = sharedPrefsFakultaet.getString("fakultaeten","0");
                 //Log.d("Output 426",strFakultaet);
-                if (strFakultaet != null) {
+                if (strFacultys != null) {
                     try{
-                        jsonArrayFakultaten = new JSONArray(strFakultaet);
-                        for(int i = 0; i< jsonArrayFakultaten.length(); i++) {
-                            JSONObject json = jsonArrayFakultaten.getJSONObject(i);
-                            fakultaetName.add(json.get("facName").toString());
-                            FacNamesToSpinner();
+                        jsonArrayFacultys = new JSONArray(strFacultys);
+                        for(int i = 0; i< jsonArrayFacultys.length(); i++) {
+                            JSONObject json = jsonArrayFacultys.getJSONObject(i);
+                            facultyName.add(json.get("facName").toString());
+                            facNamesToSpinner();
                         }
 
                     }catch (Exception b)
@@ -664,7 +664,7 @@ public class MainActivity extends AppCompatActivity {
     // Ende Merlin Gürtler
 
     //Methode zum Abfragen der Aktuellen Prüfperiode
-    public boolean pingPruefPeriode() {
+    public boolean pingExaminePeriod() {
 
         Thread retrothreadMain = new Thread(new Runnable() {
 
@@ -722,12 +722,12 @@ public class MainActivity extends AppCompatActivity {
                         jsonArray.put(jsonObj.get(key));
                     }
 
-                    JSONArray pruefperiodeArray = new JSONArray();
+                    JSONArray examinePeriodArray = new JSONArray();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject object = jsonArray.getJSONObject(i);
-                        pruefperiodeArray.put(object.get("pruefperioden"));
+                        examinePeriodArray.put(object.get("pruefperioden"));
                     }
-                    String arrayZuString = pruefperiodeArray.toString();
+                    String arrayZuString = examinePeriodArray.toString();
                     String erstesUndletztesZeichenentfernen
                             = arrayZuString.substring(1,arrayZuString.length()-1);
                     JSONArray mainObject2 = new JSONArray(erstesUndletztesZeichenentfernen);
@@ -735,42 +735,42 @@ public class MainActivity extends AppCompatActivity {
                     //DONE (09/2020 LG) Aktuellen Prüftermin aus JSON-String herausfiltern!
                     //Heutiges Datum als Vergleichsdatum ermitteln und den Formatierer festlegen.
                     GregorianCalendar now = new GregorianCalendar();
-                    Date aktDatum = now.getTime();
+                    Date currentDate = now.getTime();
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-                    JSONObject aktPruefperiodenTermin = null;
-                    String datum;
-                    Date ppDatum;
+                    JSONObject currentExamineDate = null;
+                    String date;
+                    Date examineDate;
                     Date lastDayPp;
-                    int ppWochen;
+                    int examineWeek;
 
                     //Durch-Iterieren durch alle Prüfperioden-Objekte des JSON-Ergebnisses
                     for (int i=0;i<mainObject2.length();i++) {
-                        aktPruefperiodenTermin = mainObject2.getJSONObject(i);
-                        datum = aktPruefperiodenTermin.get("startDatum").toString();
+                        currentExamineDate = mainObject2.getJSONObject(i);
+                        date = currentExamineDate.get("startDatum").toString();
                         //Aus dem String das Datum herauslösen
-                        datum = datum.substring(0,10);
+                        date = date.substring(0,10);
                         //und in ein Date-Objekt umwandeln
-                        ppDatum = formatter.parse(datum);
+                        examineDate = formatter.parse(date);
 
                         // Erhalte die Anzahl der Wochen
-                        ppWochen = Integer.parseInt(aktPruefperiodenTermin.get("PPWochen").toString());
+                        examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
 
                         Calendar c = Calendar.getInstance();
-                        c.setTime(ppDatum);
-                        c.add(Calendar.DATE, 7 * ppWochen - 2);  // Anzahl der Tage Klausurenphase
+                        c.setTime(examineDate);
+                        c.add(Calendar.DATE, 7 * examineWeek - 2);  // Anzahl der Tage Klausurenphase
                         lastDayPp = formatter.parse(formatter.format(c.getTime()));
 
                         //und mit dem heutigen Datum vergleichen.
                         //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
                         //liegt ist die aktuelle Prüfperiode!
-                        if(aktDatum.before(lastDayPp)) break;
+                        if(currentDate.before(lastDayPp)) break;
                     }
 
-                    ppWochen = Integer.parseInt(aktPruefperiodenTermin.get("PPWochen").toString());
+                    examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
 
                     //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
-                    aktuellerTermin =  aktPruefperiodenTermin.get("PPNum").toString();
+                    MainActivity.currentDate =  currentExamineDate.get("PPNum").toString();
                     //-------------------------------------------------------------------
                     //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
                     SharedPreferences mSharedPreferencesPruefTermin
@@ -778,12 +778,12 @@ public class MainActivity extends AppCompatActivity {
                             .getSharedPreferences("PruefTermin", MODE_PRIVATE);
 
                     SharedPreferences.Editor mEditorTermin = mSharedPreferencesPruefTermin.edit();
-                    mEditorTermin.putString("aktPruefTermin", aktuellerTermin);
+                    mEditorTermin.putString("aktPruefTermin", MainActivity.currentDate);
 
                     mEditorTermin.apply();  //Ausführen der Schreiboperation!
                     //-------------------------------------------------------------------
 
-                    String pruefPeriode = aktPruefperiodenTermin.get("startDatum").toString();
+                    String pruefPeriode = currentExamineDate.get("startDatum").toString();
                     String[] arrayPruefPeriode=  pruefPeriode.split("T");
                     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
                     Date inputDate = fmt.parse(arrayPruefPeriode[0]);
@@ -795,14 +795,14 @@ public class MainActivity extends AppCompatActivity {
                     //Add one to month {0 - 11}
                     int month = calendar.get(Calendar.MONTH) + 1;
                     int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    calendar.add(Calendar.DATE, 7 * ppWochen - 2);
+                    calendar.add(Calendar.DATE, 7 * examineWeek - 2);
                     int year2 = calendar.get(Calendar.YEAR);
                     //Add one to month {0 - 11}
                     int month2 = calendar.get(Calendar.MONTH) + 1;
                     int day2 = calendar.get(Calendar.DAY_OF_MONTH);
 
                     //String Prüfperiode zum Anzeigen
-                    String pruefPeriodeDatum = getApplicationContext().getString(R.string.current)
+                    String currentExamineDateFormatted = getApplicationContext().getString(R.string.current)
                             + formatDate(String.valueOf(day))
                             +"."+ formatDate(String.valueOf(month))
                             +"."+ year +getApplicationContext().getString(R.string.bis)
@@ -823,20 +823,20 @@ public class MainActivity extends AppCompatActivity {
                     String strJson
                             = mSharedPreferencesPPeriode.getString("aktPruefPeriode", "0");
                     if (strJson != null) {
-                        if (strJson.equals(pruefPeriodeDatum))
+                        if (strJson.equals(currentExamineDateFormatted))
                         {
 
                         }
                         else{
                             mEditor.clear();
                             mEditor.apply();
-                            mEditor.putString("aktPruefPeriode", pruefPeriodeDatum);
+                            mEditor.putString("aktPruefPeriode", currentExamineDateFormatted);
                             mEditor.apply();
                             // Start Merlin Gürtler
                             // Dies ist nötig, da die Serverantwort dauert,
                             // somit wird vorher der Standardwert 0 geladen
-                            TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
-                            txtpruefperiode.setText(pruefPeriodeDatum);
+                            TextView txtExamine = (TextView) findViewById(R.id.txtpruefperiode);
+                            txtExamine.setText(currentExamineDateFormatted);
                             // Ende Merlin Gürtler
                         }
                     }

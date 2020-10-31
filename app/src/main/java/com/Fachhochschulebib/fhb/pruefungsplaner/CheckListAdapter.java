@@ -27,18 +27,18 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.ViewHolder> {
-    private List<String> studiengangList;
-    private List<Boolean> auswahlList;
-    String selectedStudiengang;
+    private List<String> coursesList;
+    private List<Boolean> chosenList;
+    String selectedCourse;
     private Context context;
     private StartClass globalVariable;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public CheckListAdapter(List<String> studiengaenge,
-                     List<Boolean> ausgewaehlt,
+    public CheckListAdapter(List<String> courses,
+                     List<Boolean> chosen,
                             Context ApplicationContext) {
-        studiengangList = studiengaenge;
-        auswahlList = ausgewaehlt;
+        coursesList = courses;
+        chosenList = chosen;
         context = ApplicationContext;
     }
 
@@ -55,46 +55,46 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
 
         globalVariable = (StartClass) context;
 
-        SharedPreferences sharedPrefSelectedStudiengang = context.
+        SharedPreferences sharedPreferencesSelectedCourse = context.
                 getSharedPreferences("validation", MODE_PRIVATE);
-        selectedStudiengang  = sharedPrefSelectedStudiengang.
+        selectedCourse = sharedPreferencesSelectedCourse.
                 getString("selectedStudiengang","0");
 
         return vh;
     }
 
     private boolean addFavorite(int position) {
-        if(!studiengangList.get(position).equals(selectedStudiengang) || globalVariable.isChangeFaculty()) {
-            auswahlList.set(position,
-                    !auswahlList.get(position));
+        if(!coursesList.get(position).equals(selectedCourse) || globalVariable.isChangeFaculty()) {
+            chosenList.set(position,
+                    !chosenList.get(position));
         } else {
             Toast.makeText(context, context.getString(R.string.favorite_main_course),
                     Toast.LENGTH_SHORT).show();
         }
 
-        return auswahlList.get(position);
+        return chosenList.get(position);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // Initialisierung der Komponenten
-        holder.nameStudiengang.setText(studiengangList.get(position));
-        holder.checkBoxStudiengang.setChecked(auswahlList.get(position));
+        holder.nameCourse.setText(coursesList.get(position));
+        holder.checkBoxCourse.setChecked(chosenList.get(position));
 
-        holder.checkBoxStudiengang.setOnClickListener(new View.OnClickListener() {
+        holder.checkBoxCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Speichere die auswahl in der Liste
-                holder.checkBoxStudiengang.setChecked(addFavorite(position));
+                holder.checkBoxCourse.setChecked(addFavorite(position));
             }
         });
 
-        holder.nameStudiengang.setOnClickListener(new View.OnClickListener() {
+        holder.nameCourse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Speichere die auswahl in der Liste
-                holder.checkBoxStudiengang.setChecked(addFavorite(position));
+                holder.checkBoxCourse.setChecked(addFavorite(position));
             }
         });
 
@@ -103,7 +103,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     //Item anzahl
     @Override
     public int getItemCount() {
-        return studiengangList.size();
+        return coursesList.size();
     }
 
     @Override
@@ -116,13 +116,13 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView nameStudiengang;
-        private CheckBox checkBoxStudiengang;
+        private TextView nameCourse;
+        private CheckBox checkBoxCourse;
 
         private ViewHolder(View v) {
             super(v);
-            nameStudiengang = (TextView) v.findViewById(R.id.studiengangName);
-            checkBoxStudiengang = (CheckBox) v.findViewById(R.id.checkBox);
+            nameCourse = (TextView) v.findViewById(R.id.courseName);
+            checkBoxCourse = (CheckBox) v.findViewById(R.id.checkBox);
         }
     }
 }

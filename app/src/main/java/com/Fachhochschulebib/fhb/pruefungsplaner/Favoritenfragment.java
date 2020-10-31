@@ -31,7 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ import java.util.List;
 public class Favoritenfragment extends Fragment {
     private RecyclerView recyclerView;
     private CalendarView calendar;
-    private  Button btnsuche;
+    private  Button btnSearch;
     MyAdapterfavorits mAdapter;
     List<Boolean> check = new ArrayList<>();
 
@@ -65,16 +65,16 @@ public class Favoritenfragment extends Fragment {
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
         recyclerView.setLayoutManager(layoutManager);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
-        btnsuche = (Button) v.findViewById(R.id.btnDatum);
+        btnSearch = (Button) v.findViewById(R.id.btnDatum);
 
         calendar.setVisibility(View.GONE);
-        List<String> studiengang = new ArrayList<>();
-        List<String> profnamen = new ArrayList<>();
-        List<String> datum = new ArrayList<>();
-        List<String> pruefungsNr = new ArrayList<>();
-        List<String> raum = new ArrayList<>();
+        List<String> courses = new ArrayList<>();
+        List<String> profnames = new ArrayList<>();
+        List<String> dates = new ArrayList<>();
+        List<String> examNo = new ArrayList<>();
+        List<String> room = new ArrayList<>();
         List<String> form = new ArrayList<>();
-        btnsuche.setVisibility(View.INVISIBLE);
+        btnSearch.setVisibility(View.INVISIBLE);
 
         // Merlin Gürtler
         // Aktiviert den swipe listener
@@ -83,26 +83,26 @@ public class Favoritenfragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<PruefplanEintrag> ppeList = roomdaten.userDao().getFavorites(true);
+                List<TestPlanEntry> ppeList = roomdaten.userDao().getFavorites(true);
                 
                 // Abfrage ob Prüfungen favorisiert wurden
                 // Favorisierte Prüfungen für die Anzeige vorbereiten
-                for (PruefplanEintrag eintrag: ppeList) {
-                    studiengang.add(eintrag.getModul() + " "
-                            + eintrag.getStudiengang());
-                    profnamen.add(eintrag.getErstpruefer() + " "
-                            + eintrag.getZweitpruefer() + " "
-                            + eintrag.getSemester());
-                    datum.add(eintrag.getDatum());
-                    pruefungsNr.add(eintrag.getID());
-                    raum.add(eintrag.getRaum());
-                    form.add(eintrag.getPruefform());
+                for (TestPlanEntry entry: ppeList) {
+                    courses.add(entry.getModul() + " "
+                            + entry.getCourse());
+                    profnames.add(entry.getFirstTester() + " "
+                            + entry.getSecondTester() + " "
+                            + entry.getSemester());
+                    dates.add(entry.getDate());
+                    examNo.add(entry.getID());
+                    room.add(entry.getRoom());
+                    form.add(entry.getExamForm());
                     check.add(true);
                 }
 
                 // definiere adapter
                 // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-                mAdapter = new MyAdapterfavorits(studiengang, profnamen, datum, pruefungsNr,raum, form);
+                mAdapter = new MyAdapterfavorits(courses, profnames, dates, examNo,room, form);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override

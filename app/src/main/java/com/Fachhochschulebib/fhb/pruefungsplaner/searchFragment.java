@@ -35,7 +35,7 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,27 +43,27 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
-public class sucheFragment extends Fragment {
+public class searchFragment extends Fragment {
 
     SharedPreferences mSharedPreferencesValidation;
-    final List<String> sgModulList = new ArrayList();
+    final List<String> courseModulList = new ArrayList();
     final List<String> profList = new ArrayList();
-    final List<Integer> rueckgabeProfList = new ArrayList();
-    final List<Integer> rueckgabeSgModuleList = new ArrayList();
-    final List<Integer> rueckgabeDatumsList = new ArrayList();
-    final List<Integer> rueckgabeSemModulList = new ArrayList();
+    final List<Integer> returnProfList = new ArrayList();
+    final List<Integer> returnCourseModulList = new ArrayList();
+    final List<Integer> returnDateList = new ArrayList();
+    final List<Integer> returnSemesterModulList = new ArrayList();
     final List<String> sortedList = new ArrayList();
     private String profName;
     private String dateForSearch = null;
-    String pruefJahr, aktuellePruefphase,
-            rueckgabeStudiengang, validation;
-    List<PruefplanEintrag> ppeList = new ArrayList();
+    String examineYear, currentExaminePeriod,
+            returnCourse, validation;
+    List<TestPlanEntry> ppeList = new ArrayList();
 
     private AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
-    AppDatabase roomDaten = AppDatabase.getAppDatabase(getContext());
+    AppDatabase roomData = AppDatabase.getAppDatabase(getContext());
 
     // Start Merlin Gürtler
     // Funktion um die Führende 0 hinzuzufügen
@@ -83,16 +83,16 @@ public class sucheFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (clicked) {
-                    if (rueckgabeSemModulList.size() <= 0) {
+                    if (returnSemesterModulList.size() <= 0) {
                         for (int i = 0; i < (ppeList.size()); i++) {
-                            rueckgabeSemModulList.add(99999);
+                            returnSemesterModulList.add(99999);
                         }
                     }
 
                     for (int i = 0; i < ppeList.size(); i++) {
                         if (String.valueOf(value).equals(ppeList.get(i).getSemester())) {
                             btn.setBackgroundResource(R.drawable.button_rounded_corners);
-                            rueckgabeSemModulList.set(i, i);
+                            returnSemesterModulList.set(i, i);
 
                         }
                     }
@@ -103,7 +103,7 @@ public class sucheFragment extends Fragment {
 
                     for (int i = 0; i < ppeList.size(); i++) {
                         if (String.valueOf(value).equals(ppeList.get(i).getSemester())) {
-                            rueckgabeSemModulList.set(i, 99999);
+                            returnSemesterModulList.set(i, 99999);
                         }
                     }
 
@@ -130,10 +130,10 @@ public class sucheFragment extends Fragment {
         mSharedPreferencesValidation
                 = container.getContext().getSharedPreferences("validation", 0);
 
-        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
-        String selectedStudiengang  = mSharedPreferencesValidation.
+        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        String selectedCourse  = mSharedPreferencesValidation.
                 getString("selectedStudiengang","0");
 
         // Start Merlin Gürtler
@@ -142,20 +142,20 @@ public class sucheFragment extends Fragment {
             public void run() {
 
                 // Erstelle Validierung und starte DB Abfrage
-                validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
-                ppeList = roomDaten.userDao().getAll(validation);
+                validation = examineYear + returnCourse + currentExaminePeriod;
+                ppeList = roomData.userDao().getAll(validation);
                 // Ende Merlin Gürtler
 
                 //Überprüfung, ob ein Semester-Button geklickt wurde
                 //der Wert des Semsters wird gespeichert
-                rueckgabeSemModulList.clear();
+                returnSemesterModulList.clear();
 
                 //Initialisierung der Anfangswerte
                 int i;
                 for (i = 0; i < ppeList.size(); i++) {
-                    rueckgabeProfList.add(i);
-                    rueckgabeSgModuleList.add(i);
-                    rueckgabeDatumsList.add(i);
+                    returnProfList.add(i);
+                    returnCourseModulList.add(i);
+                    returnDateList.add(i);
                 }
 
             }
@@ -167,7 +167,7 @@ public class sucheFragment extends Fragment {
         final AutoCompleteTextView acProf
                 = (AutoCompleteTextView) v.findViewById(R.id.acProfessor);
 
-        Spinner spSGModule = (Spinner) v.findViewById(R.id.spStudiengang);
+        Spinner spCourseModule = (Spinner) v.findViewById(R.id.spStudiengang);
 
         //Initialiseren der UI Komponente
         //Spinners spinner = new Spinners();
@@ -196,15 +196,15 @@ public class sucheFragment extends Fragment {
         // Hier schon setzen für ein besseres UI
         ArrayAdapter<String> adapterModule = new ArrayAdapter<String>(
                 v.getContext(), R.layout.simple_spinner_item, spinnerModuleArrayList);
-        spSGModule.setAdapter(adapterModule);
+        spCourseModule.setAdapter(adapterModule);
 
         try {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
                     //Spinner-Aufruf und Spinner mit Werten füllen
-                    spinnerModuleArrayList.addAll(roomDaten.userDao().getModuleWithCourseDistinct(selectedStudiengang));
-                    List<String> spinnerProfArrayList = roomDaten.userDao().getErstprueferDistinct(selectedStudiengang);
+                    spinnerModuleArrayList.addAll(roomData.userDao().getModuleWithCourseDistinct(selectedCourse));
+                    List<String> spinnerProfArrayList = roomData.userDao().getFirstTesterDistinct(selectedCourse);
 
 
                     // Für das AutoComplete
@@ -226,7 +226,7 @@ public class sucheFragment extends Fragment {
                             // beim ändern der Orientierung crasht die app wegen Problemen mit dem Context
                             try {
                                 profList.add(getContext().getString(R.string.all));
-                                sgModulList.add(getContext().getString(R.string.all));
+                                courseModulList.add(getContext().getString(R.string.all));
                             } catch (Exception e) {
                                 Log.d("ERROR", "ERROR " + e);
                             }
@@ -321,17 +321,17 @@ public class sucheFragment extends Fragment {
                 @Override
                 public void afterTextChanged(Editable s) {
                     int a;
-                    rueckgabeProfList.clear();
+                    returnProfList.clear();
                     profName = acProf.getText().toString();
                     for (a = 0; a < ppeList.size(); a++) {
                         if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
-                            rueckgabeProfList.add(a);
+                            returnProfList.add(a);
                         } else if (Pattern.matches("^.*("                       // Wildcard begin
                                         + acProf.getText().toString().trim().toLowerCase()    // Input Name
                                         +").*$",                                              // Wildcard end
-                            ppeList.get(a).getErstpruefer().toLowerCase())) // Name in db
+                            ppeList.get(a).getFirstTester().toLowerCase())) // Name in db
                         {
-                            rueckgabeProfList.add(a);
+                            returnProfList.add(a);
                         }
                     }
                 }
@@ -381,24 +381,24 @@ public class sucheFragment extends Fragment {
                 //... your stuf
             });
 
-            spSGModule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            spCourseModule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent,
                                            View view, int position, long id) {
-                    rueckgabeSgModuleList.clear();
+                    returnCourseModulList.clear();
                     //this is your selected item
-                    sgModulList.add(parent.getItemAtPosition(position).toString());
+                    courseModulList.add(parent.getItemAtPosition(position).toString());
 
                     int i;
                     String a;
                     for (i = 0; i < (ppeList.size()); i++) {
-                        if (sgModulList.get(sgModulList.size() - 1).toString()
+                        if (courseModulList.get(courseModulList.size() - 1).toString()
                                 .equals(getContext().getString(R.string.modul_search))) {
-                            rueckgabeSgModuleList.add(i);
+                            returnCourseModulList.add(i);
                         } else {
-                            if (sgModulList.get(sgModulList.size() - 1).toString()
+                            if (courseModulList.get(courseModulList.size() - 1).toString()
                                     .equals(ppeList.get(i).getModul().toString())) {
-                                rueckgabeSgModuleList.add(i);
-                                // database.userDao().Checkverbindung(Tabellenrueckgabe());
+                                returnCourseModulList.add(i);
+                                // database.userDao().Checkverbindung(tableReturn());
                             }
                         }
                         //txtview.setText(prof.get(prof.size()-1).toString()
@@ -422,67 +422,67 @@ public class sucheFragment extends Fragment {
                         public void run() {
                             if(dateForSearch != null) {
                                 sortedList.clear();
-                                ppeList = roomDaten.userDao().getByDate(dateForSearch.substring(0,10) + "%");
+                                ppeList = roomData.userDao().getByDate(dateForSearch.substring(0,10) + "%");
 
-                                for(PruefplanEintrag eintrag: ppeList) {
+                                for(TestPlanEntry eintrag: ppeList) {
                                     sortedList.add(String.valueOf(eintrag.getID()));
                                 }
 
-                                database.userDao().sucheUndZurueckSetzen(false);
+                                database.userDao().searchAndReset(false);
                                 for (int i =0; i< sortedList.size();i++) {
-                                    // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
                                     database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                                 }
                             }
                             else {
                                 if(profName.equals(getContext().getString(R.string.all))
-                                        &&  !sgModulList.get(sgModulList.size() - 1).toString().
+                                        &&  !courseModulList.get(courseModulList.size() - 1).toString().
                                         equals(getContext().getString(R.string.modul_search)))
                                 {
                                     sortedList.clear();
-                                    ppeList = roomDaten.userDao().getModule(sgModulList.get(sgModulList .size() - 1));
-                                    for(PruefplanEintrag eintrag: ppeList) {
+                                    ppeList = roomData.userDao().getModule(courseModulList.get(courseModulList.size() - 1));
+                                    for(TestPlanEntry eintrag: ppeList) {
                                         sortedList.add(String.valueOf(eintrag.getID()));
                                     }
 
-                                    database.userDao().sucheUndZurueckSetzen(false);
+                                    database.userDao().searchAndReset(false);
                                     for (int i =0; i< sortedList.size();i++) {
-                                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                                        // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
                                         database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                                     }
                                 } else if(!profName.equals(getContext().getString(R.string.all))) {
                                     sortedList .clear();
-                                    ppeList = roomDaten.userDao().getModuleProf("%" +
+                                    ppeList = roomData.userDao().getModuleProf("%" +
                                             acProf.getText().toString().trim() + "%");
 
                                     for(int m = 0; m < ppeList.size(); m++) {
                                         sortedList.add(String.valueOf(ppeList.get(m).getID()));
                                     }
 
-                                    database.userDao().sucheUndZurueckSetzen(false);
+                                    database.userDao().searchAndReset(false);
                                     for (int i =0; i< sortedList.size();i++) {
-                                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i), Toast.LENGTH_SHORT).show();
+                                        // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
                                         database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
                                     }
                                 } else {
                                     // Ende Merlin Gürtler
                                     if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
                                         int a;
-                                        rueckgabeProfList.clear();
+                                        returnProfList.clear();
                                         for (a = 0; a < (ppeList.size()); a++) {
-                                            rueckgabeProfList.add(a);
+                                            returnProfList.add(a);
                                         }
                                     }
 
-                                    database.userDao().sucheUndZurueckSetzen(false);
-                                    List<PruefplanEintrag> ppeList = AppDatabase.getAppDatabase(v.getContext())
+                                    database.userDao().searchAndReset(false);
+                                    List<TestPlanEntry> ppeList = AppDatabase.getAppDatabase(v.getContext())
                                             .userDao().getAll(validation);
-                                    for (int i = 0; i < Tabellenrueckgabe().size(); i++) {
-                                        // Toast.makeText(getContext(),Tabellenrueckgabe().get(i),
+                                    for (int i = 0; i < tableReturn().size(); i++) {
+                                        // Toast.makeText(getContext(),tableReturn().get(i),
                                         // Toast.LENGTH_SHORT).show();
                                         database.userDao().update2(true,
                                                 Integer.valueOf(ppeList.get(
-                                                        Integer.valueOf(Tabellenrueckgabe().get(i))).getID()));
+                                                        Integer.valueOf(tableReturn().get(i))).getID()));
                                     }
                                 }
                             }
@@ -500,7 +500,7 @@ public class sucheFragment extends Fragment {
                             }
 
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
+                            ft.replace(R.id.frame_placeholder, new TermineFragmentSearch());
                             ft.commit();
                         }
                     }).start();
@@ -515,14 +515,14 @@ public class sucheFragment extends Fragment {
         return v;
     }
 
-    public List<String> Tabellenrueckgabe () {
+    public List<String> tableReturn() {
         int i, j, k, l;
         String test = "a";
         boolean checkSemester = true;
-        for(int z = 0; z< rueckgabeSemModulList.size(); z++)
+        for(int z = 0; z< returnSemesterModulList.size(); z++)
         {
             //überprüfung, ob Semester ausgewählt wurden. Sonst alle Semester anzeigen.
-            if(!rueckgabeSemModulList.get(z).equals(rueckgabeSemModulList.get(z+1)))
+            if(!returnSemesterModulList.get(z).equals(returnSemesterModulList.get(z+1)))
             {
                 // DONE (08/2020) LG: Vereinfachung if(!...)
                 // Gäbler: Nicht alle Semester anzeigen, weil ein oder
@@ -535,25 +535,25 @@ public class sucheFragment extends Fragment {
         if (checkSemester)
         {
             for (int z = 0; z < ppeList.size(); z++) {
-                rueckgabeSemModulList.add(z);
+                returnSemesterModulList.add(z);
             }
         }
 
         sortedList.clear();
-        for (i = 0; i < (rueckgabeSgModuleList.size()); i++) {
-            for (j = 0; j < (rueckgabeSemModulList.size()); j++) {
-                if (rueckgabeSgModuleList.get(i).equals(rueckgabeSemModulList.get(j))) {
-                    for (k = 0; k < (rueckgabeDatumsList.size()); k++) {
-                        if (rueckgabeDatumsList
+        for (i = 0; i < (returnCourseModulList.size()); i++) {
+            for (j = 0; j < (returnSemesterModulList.size()); j++) {
+                if (returnCourseModulList.get(i).equals(returnSemesterModulList.get(j))) {
+                    for (k = 0; k < (returnDateList.size()); k++) {
+                        if (returnDateList
                                 .get(k)
-                                .equals(rueckgabeSgModuleList.get(i))) {
-                            for (l = 0; l < (rueckgabeProfList.size()); l++) {
-                                if (rueckgabeProfList
+                                .equals(returnCourseModulList.get(i))) {
+                            for (l = 0; l < (returnProfList.size()); l++) {
+                                if (returnProfList
                                         .get(l)
-                                        .equals(rueckgabeSgModuleList.get(i))) {
+                                        .equals(returnCourseModulList.get(i))) {
                                     sortedList.add(
-                                            String.valueOf(rueckgabeSgModuleList.get(i)));
-                                    test = String.valueOf(rueckgabeDatumsList.get(k)) + test;
+                                            String.valueOf(returnCourseModulList.get(i)));
+                                    test = String.valueOf(returnDateList.get(k)) + test;
                                 }//if
                             }//for
                         }//of

@@ -18,7 +18,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 
 import org.json.JSONArray;
@@ -52,14 +52,14 @@ public class RetrofitConnect {
 
     // Start Merlin Gürtler
     // Refactoring
-    private void insertCoursesToDatabase(final AppDatabase roomdaten,
-                                   final String jahr,
-                                   final String pruefungsphase,
+    private void insertCoursesToDatabase(final AppDatabase roomData,
+                                   final String year,
+                                   final String examinePeriod,
                                    List<JsonResponse> body) {
         //Hole alle Einträge aus der lokalen Room-DB
-        List<PruefplanEintrag> dataListFromLocalDB = null;
+        List<TestPlanEntry> dataListFromLocalDB = null;
         try { //DONE (08/2020) LG
-            dataListFromLocalDB = roomdaten.userDao().getAll2();
+            dataListFromLocalDB = roomData.userDao().getAll2();
             //roomdaten.clearAllTables();
         } catch (Exception e) {
             Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!");
@@ -84,33 +84,33 @@ public class RetrofitConnect {
 
         //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
         //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-        for (JsonResponse eintragDB : body) {
+        for (JsonResponse entryDb : body) {
 
             //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
-            PruefplanEintrag pruefplanEintrag = new PruefplanEintrag();
+            TestPlanEntry testPlanEntry = new TestPlanEntry();
 
             //Festlegen vom Dateformat
-            String datumZeitzone;
-            String datumDerPruefung = eintragDB.getDatum();
-            datumZeitzone = datumDerPruefung.replaceFirst("CET", "");
-            datumZeitzone = datumZeitzone.replaceFirst("CEST", "");
-            String datumLetzePruefungFormatiert = null;
+            String dateTimeZone;
+            String dateOfExam = entryDb.getDatum();
+            dateTimeZone = dateOfExam.replaceFirst("CET", "");
+            dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
+            String dateLastExamFormated = null;
 
             try {
                 DateFormat dateFormat = new SimpleDateFormat(
                         "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                Date datumLetztePruefung = dateFormat.parse(datumZeitzone);
+                Date dateLastExam = dateFormat.parse(dateTimeZone);
                 SimpleDateFormat targetFormat
                         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                datumLetzePruefungFormatiert = targetFormat.format(datumLetztePruefung);
-                Date datumAktuell = Calendar.getInstance().getTime();
+                dateLastExamFormated = targetFormat.format(dateLastExam);
+                Date currentDate = Calendar.getInstance().getTime();
                 SimpleDateFormat df
                         = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String datumAktuellFormatiert = df.format(datumAktuell);
+                String currentDateFormated = df.format(currentDate);
 
 
-                Log.d("Datum letzte Prüfung", datumLetzePruefungFormatiert);
-                Log.d("Datum aktuell", datumAktuellFormatiert);
+                Log.d("Datum letzte Prüfung", dateLastExamFormated);
+                Log.d("Datum aktuell", currentDateFormated);
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -122,19 +122,19 @@ public class RetrofitConnect {
                          */
             // if(!checkvalidate){
             //erhaltene Werte zur Datenbank hinzufügen
-            pruefplanEintrag.setErstpruefer(eintragDB.getErstpruefer());
-            pruefplanEintrag.setZweitpruefer(eintragDB.getZweitpruefer());
-            pruefplanEintrag.setDatum(String.valueOf(datumLetzePruefungFormatiert));
-            pruefplanEintrag.setID(eintragDB.getID());
-            pruefplanEintrag.setStudiengang(eintragDB.getStudiengang());
-            pruefplanEintrag.setModul(eintragDB.getModul());
-            pruefplanEintrag.setSemester(eintragDB.getSemester());
-            pruefplanEintrag.setTermin(eintragDB.getTermin());
-            pruefplanEintrag.setRaum(eintragDB.getRaum());
-            pruefplanEintrag.setPruefform(eintragDB.getPruefform());
-            pruefplanEintrag.setStatus(eintragDB.getStatus());
-            pruefplanEintrag.setHint(eintragDB.getHint());
-            pruefplanEintrag.setColor(eintragDB.getColor());
+            testPlanEntry.setFirstTester(entryDb.getErstpruefer());
+            testPlanEntry.setSecondTester(entryDb.getZweitpruefer());
+            testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
+            testPlanEntry.setID(entryDb.getID());
+            testPlanEntry.setCourse(entryDb.getStudiengang());
+            testPlanEntry.setModul(entryDb.getModul());
+            testPlanEntry.setSemester(entryDb.getSemester());
+            testPlanEntry.setTermin(entryDb.getTermin());
+            testPlanEntry.setRoom(entryDb.getRaum());
+            testPlanEntry.setExamForm(entryDb.getPruefform());
+            testPlanEntry.setStatus(entryDb.getStatus());
+            testPlanEntry.setHint(entryDb.getHint());
+            testPlanEntry.setColor(entryDb.getColor());
 
             //lokale datenbank initialiseren
             //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -144,9 +144,9 @@ public class RetrofitConnect {
 
             try {
                 for (int b = 0; b < Optionen.idList.size(); b++) {
-                    if (pruefplanEintrag.getID().equals(Optionen.idList.get(b))) {
+                    if (testPlanEntry.getID().equals(Optionen.idList.get(b))) {
                         //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                        pruefplanEintrag.setFavorit(true);
+                        testPlanEntry.setFavorit(true);
                     }
                 }
             } catch (Exception e) {
@@ -155,14 +155,14 @@ public class RetrofitConnect {
             }
 
             //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-            pruefplanEintrag.setValidation(jahr + eintragDB.getStudiengangId() + pruefungsphase);
+            testPlanEntry.setValidation(year + entryDb.getStudiengangId() + examinePeriod);
 
             // Start Merlin Gürtler
             // Extra Thread da sonst die Db nicht aktualisiert werden kann.
             new Thread((new Runnable() {
                 @Override
                 public void run() {
-                    addUser(roomdaten, pruefplanEintrag);
+                    addUser(roomData, testPlanEntry);
                 }
             })).start();
             // Ende Merlin Gürtler
@@ -173,9 +173,9 @@ public class RetrofitConnect {
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
     public <serverAdress> void RetrofitWebAccess(Context ctx,
-                                                 final AppDatabase roomdaten,
-                                                 final String jahr,
-                                                 final String pruefungsphase,
+                                                 final AppDatabase roomData,
+                                                 final String year,
+                                                 final String currentPeriod,
                                                  final String termin,
                                                  final String serverAdress) {
         //Serveradresse
@@ -187,14 +187,14 @@ public class RetrofitConnect {
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
-        List<String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
-        JSONArray studiengangIds = new JSONArray();
+        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
+        JSONArray courseIds = new JSONArray();
 
         for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
                 idJson.put("ID", id);
-                studiengangIds.put(idJson);
+                courseIds.put(idJson);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -203,10 +203,10 @@ public class RetrofitConnect {
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
                 + "entity.pruefplaneintrag/"
-                + pruefungsphase + "/"
+                + currentPeriod + "/"
                 + termin + "/"
-                + jahr + "/"
-                + studiengangIds.toString() + "/";
+                + year + "/"
+                + courseIds.toString() + "/";
 
         String URL = urlfhb + relPathWithParameters;
 
@@ -222,7 +222,7 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    insertCoursesToDatabase(roomdaten, jahr, pruefungsphase, response.body());
+                    insertCoursesToDatabase(roomData, year, currentPeriod, response.body());
 
                 }//if(response.isSuccessful())
                 else {
@@ -239,22 +239,22 @@ public class RetrofitConnect {
     }
 
     // Start Merlin Gürtler
-    public void retroUpdate(Context ctx, final AppDatabase roomdaten,
-                            final String jahr,
-                            final String pruefungsphase,
+    public void retroUpdate(Context ctx, final AppDatabase roomData,
+                            final String year,
+                            final String currentPeriod,
                             final String termin,
                             final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
-        List<String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
-        JSONArray studiengangIds = new JSONArray();
+        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
+        JSONArray courseIds = new JSONArray();
 
         for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
                 idJson.put("ID", id);
-                studiengangIds.put(idJson);
+                courseIds.put(idJson);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -266,10 +266,10 @@ public class RetrofitConnect {
         //uebergabe der parameter an die Adresse
         String relPathWithParameters = relativePPlanUrl
                 + "entity.pruefplaneintrag/update/"
-                + pruefungsphase + "/"
+                + currentPeriod + "/"
                 + termin + "/"
-                + jahr + "/"
-                + studiengangIds.toString() + "/";
+                + year + "/"
+                + courseIds.toString() + "/";
 
         String URL = urlfhb + relPathWithParameters;
 
@@ -289,21 +289,21 @@ public class RetrofitConnect {
                         public void run() {
                             for (JsonUpdate updateExam : response.body()) {
                                 try {
-                                    String datumZeitzone;
-                                    String datumDerPrüfung = updateExam.getDatum();
-                                    String datumLetzePruefungFormatiert = null;
-                                    datumZeitzone = datumDerPrüfung.replaceFirst("CET", "");
-                                    datumZeitzone = datumZeitzone.replaceFirst("CEST", "");
+                                    String dateTimeZone;
+                                    String dateExam = updateExam.getDatum();
+                                    String dateLastExamFormated = null;
+                                    dateTimeZone = dateExam.replaceFirst("CET", "");
+                                    dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
                                     DateFormat dateFormat = new SimpleDateFormat(
                                             "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                                    Date datumLetztePrüfung = null;
+                                    Date dateLastExam = null;
 
-                                    datumLetztePrüfung = dateFormat.parse(datumZeitzone);
+                                    dateLastExam = dateFormat.parse(dateTimeZone);
 
                                     SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    datumLetzePruefungFormatiert = targetFormat.format(datumLetztePrüfung);
+                                    dateLastExamFormated = targetFormat.format(dateLastExam);
 
-                                    roomdaten.userDao().updateExam(datumLetzePruefungFormatiert,
+                                    roomData.userDao().updateExam(dateLastExamFormated,
                                             updateExam.getStatus(),
                                             updateExam.getID(),
                                             updateExam.getHint(),
@@ -334,7 +334,7 @@ public class RetrofitConnect {
         });
     }
 
-    public void firstStart(Context ctx, final AppDatabase roomdaten,
+    public void firstStart(Context ctx, final AppDatabase roomData,
                            final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
@@ -369,10 +369,10 @@ public class RetrofitConnect {
                         @Override
                         public void run() {
                             // Speichere die erhaltene Uuid
-                            roomdaten.userDao().insertUuid(response.body().getUuid());
+                            roomData.userDao().insertUuid(response.body().getUuid());
 
                             // sende die gewählten Kurse
-                            setUserCourses(ctx, roomdaten, serverAdress);
+                            setUserCourses(ctx, roomData, serverAdress);
                         }
                     }).start();
                 }
@@ -399,9 +399,9 @@ public class RetrofitConnect {
         Uuid uuid = roomdaten.userDao().getUuid();
 
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.user/anotherStart/" + uuid.getUuid() + "/";
+        String adress = relativePPlanUrl + "entity.user/anotherStart/" + uuid.getUuid() + "/";
 
-        String URL = urlfhb + adresse;
+        String URL = urlfhb + adress;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -444,10 +444,10 @@ public class RetrofitConnect {
         }
 
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.feedback/sendFeedback/" + uuid.getUuid()
+        String adress = relativePPlanUrl + "entity.feedback/sendFeedback/" + uuid.getUuid()
                 + "/" + usability + "/" + functions + "/" + stability + "/" + text + "/";
 
-        String URL = urlfhb + adresse;
+        String URL = urlfhb + adress;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -471,8 +471,8 @@ public class RetrofitConnect {
 
     }
 
-    public void getStudiengaenge(Context ctx, final AppDatabase roomdaten,
-                                 final String serverAdress) {
+    public void getCourses(Context ctx, final AppDatabase roomData,
+                           final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
@@ -481,9 +481,9 @@ public class RetrofitConnect {
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.studiengang/";
+        String adress = relativePPlanUrl + "entity.studiengang/";
 
-        String URL = urlfhb + adresse;
+        String URL = urlfhb + adress;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -499,13 +499,13 @@ public class RetrofitConnect {
                         @Override
                         public void run() {
                             // lösche die Tabelle
-                            roomdaten.userDao().deleteStudiengang();
+                            roomData.userDao().deleteCourse();
                             // füge die Einträge der db hinzu
-                            for (JsonStudiengang studiengang : response.body()) {
-                                roomdaten.userDao().insertStudiengang(
-                                        studiengang.getSGID(),
-                                        studiengang.getSGName(),
-                                        studiengang.getFKFBID(),
+                            for (JsonStudiengang course : response.body()) {
+                                roomData.userDao().insertCourse(
+                                        course.getSGID(),
+                                        course.getSGName(),
+                                        course.getFKFBID(),
                                         false
                                 );
                             }
@@ -522,7 +522,7 @@ public class RetrofitConnect {
 
     }
 
-    public void setUserCourses(Context ctx, final AppDatabase roomdaten,
+    public void setUserCourses(Context ctx, final AppDatabase roomData,
                                final String serverAdress) {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
@@ -530,29 +530,29 @@ public class RetrofitConnect {
         ctx2 = ctx;
 
         // erhalte die gewählten Studiengänge
-        List<String> Ids = roomdaten.userDao().getChoosenStudiengangId(true);
-        JSONArray studiengangIds = new JSONArray();
+        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
+        JSONArray courseIds = new JSONArray();
 
         for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
                 idJson.put("ID", id);
-                studiengangIds.put(idJson);
+                courseIds.put(idJson);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
 
-        Uuid uuid = roomdaten.userDao().getUuid();
+        Uuid uuid = roomData.userDao().getUuid();
 
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         //uebergabe der parameter an die Adresse
-        String adresse = relativePPlanUrl + "entity.usercourses/" +
-                studiengangIds.toString() + "/" + uuid.getUuid() + "/";
+        String adress = relativePPlanUrl + "entity.usercourses/" +
+                courseIds.toString() + "/" + uuid.getUuid() + "/";
 
-        String URL = urlfhb + adresse;
+        String URL = urlfhb + adress;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(URL)
@@ -578,9 +578,9 @@ public class RetrofitConnect {
     }
 
     public <serverAdress> void UpdateUnkownCourses(Context ctx,
-                                                   final AppDatabase roomdaten,
-                                                   final String jahr,
-                                                   final String pruefungsphase,
+                                                   final AppDatabase roomData,
+                                                   final String year,
+                                                   final String examinPeriod,
                                                    final String termin,
                                                    final String serverAdress,
                                                    final String courses) {
@@ -596,9 +596,9 @@ public class RetrofitConnect {
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
                 + "entity.pruefplaneintrag/"
-                + pruefungsphase + "/"
+                + examinPeriod + "/"
                 + termin + "/"
-                + jahr + "/"
+                + year + "/"
                 + courses + "/";
 
         String URL = urlfhb + relPathWithParameters;
@@ -615,7 +615,7 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    insertCoursesToDatabase(roomdaten, jahr, pruefungsphase, response.body());
+                    insertCoursesToDatabase(roomData, year, examinPeriod, response.body());
                 }//if(response.isSuccessful())
                 else {
                     Log.d("RESPONSE", ":::NO RESPONSE:::");
@@ -632,12 +632,12 @@ public class RetrofitConnect {
     // Ende Merlin Gürtler
 
     //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!
-    public static void addUser(final AppDatabase db, PruefplanEintrag pruefplanEintrag) {
-        PruefplanEintrag existingEntry = db.userDao().getPruefung(pruefplanEintrag.getID());
+    public static void addUser(final AppDatabase db, TestPlanEntry testPlanEntry) {
+        TestPlanEntry existingEntry = db.userDao().getExams(testPlanEntry.getID());
         // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist
         // dies wird verwendet, da die Favoriten behalten werden sollen
         if (existingEntry == null) {
-            db.userDao().insertAll(pruefplanEintrag);
+            db.userDao().insertAll(testPlanEntry);
         }
     }
 }

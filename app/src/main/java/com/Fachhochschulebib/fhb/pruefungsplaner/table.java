@@ -30,7 +30,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
@@ -38,18 +38,18 @@ import java.util.List;
 
 // Eigentlich die Hauptklasse wurde noch nicht umgenannt
 // von hier werden die fragmente aufgerufen
-public class Tabelle extends AppCompatActivity  {
+public class table extends AppCompatActivity  {
     static public FragmentTransaction ft ;
     private RecyclerView recyclerView;
     private CalendarView calendar;
-    private Button btnsuche;
+    private Button btnSearch;
     private DrawerLayout dl;
     private NavigationView nv;
     private Toolbar header;
 
     SharedPreferences mSharedPreferencesValidation;
-    String pruefJahr,
-            aktuellePruefphase, rueckgabeStudiengang;
+    String examineYear,
+            currentExaminePeriode, returnCourse;
     //Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
 
@@ -82,11 +82,11 @@ public class Tabelle extends AppCompatActivity  {
 
         // Nun aus Shared Preferences
         mSharedPreferencesValidation
-                = Tabelle.this.getSharedPreferences("validation", 0);
+                = table.this.getSharedPreferences("validation", 0);
 
-        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        currentExaminePeriode = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
         // Ende Merlin Gürtler
 
         dl = findViewById(R.id.drawer_layout);
@@ -143,7 +143,7 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_calender));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         //dl.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
                         ft.replace(R.id.frame_placeholder, new Terminefragment());
@@ -156,11 +156,11 @@ public class Tabelle extends AppCompatActivity  {
                             @Override
                             public void run() {
                                 String validation
-                                        = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
-                                AppDatabase roomdaten
+                                        = examineYear + returnCourse + currentExaminePeriode;
+                                AppDatabase rommData
                                         = AppDatabase.getAppDatabase(getApplicationContext());
-                                List<PruefplanEintrag> ppeList
-                                        = roomdaten.userDao().getAll(validation);
+                                List<TestPlanEntry> ppeList
+                                        = rommData.userDao().getAll(validation);
 
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
@@ -168,14 +168,14 @@ public class Tabelle extends AppCompatActivity  {
                                         header.setTitle(getApplicationContext().getString(R.string.title_search));
                                         recyclerView.setVisibility(View.INVISIBLE);
                                         calendar.setVisibility(View.GONE);
-                                        btnsuche.setVisibility(View.GONE);
+                                        btnSearch.setVisibility(View.GONE);
                                         dl.closeDrawer(GravityCompat.START);
 
 
                                         //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
                                         if (ppeList.size() < 2) {
                                         }else{
-                                            ft.replace(R.id.frame_placeholder, new sucheFragment());
+                                            ft.replace(R.id.frame_placeholder, new searchFragment());
                                             ft.commit();
                                         }
                                     }
@@ -188,7 +188,7 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_exam));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
                         ft.replace(R.id.frame_placeholder, new Favoritenfragment());
                         ft.commit();
@@ -199,7 +199,7 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_settings));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
                         ft.replace(R.id.frame_placeholder, new Optionen());
                         ft.commit();
@@ -211,9 +211,9 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_electiveModule));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new WahlModulSucheFragment());
+                        ft.replace(R.id.frame_placeholder, new ChoiceModulSearchFragment());
                         ft.commit();
 
                         return true;
@@ -223,7 +223,7 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_feedback));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
                         ft.replace(R.id.frame_placeholder, new FeedbackFragment());
                         ft.commit();
@@ -234,7 +234,7 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_changeFaculty));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
                         // globale Variable, damit die Fakultät gewechselt werden kann
                         final StartClass globalVariable = (StartClass) getApplicationContext();
@@ -248,7 +248,7 @@ public class Tabelle extends AppCompatActivity  {
                         header.setTitle(getApplicationContext().getString(R.string.title_changeCourse));
                         recyclerView.setVisibility(View.INVISIBLE);
                         calendar.setVisibility(View.GONE);
-                        btnsuche.setVisibility(View.GONE);
+                        btnSearch.setVisibility(View.GONE);
                         dl.closeDrawer(GravityCompat.START);
                         ft.replace(R.id.frame_placeholder, new AddCourseFragment());
                         ft.commit();
@@ -271,10 +271,10 @@ public class Tabelle extends AppCompatActivity  {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView4);
         recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) findViewById(R.id.caCalender);
-        btnsuche = (Button) findViewById(R.id.btnDatum);
+        btnSearch = (Button) findViewById(R.id.btnDatum);
         recyclerView.setVisibility(View.INVISIBLE);
         calendar.setVisibility(View.GONE);
-        btnsuche.setVisibility(View.GONE);
+        btnSearch.setVisibility(View.GONE);
         ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.frame_placeholder, new Terminefragment());
         ft.commit();
@@ -294,7 +294,7 @@ public class Tabelle extends AppCompatActivity  {
                     header.setTitle(getApplicationContext().getString(R.string.title_calender));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
-                    btnsuche.setVisibility(View.GONE);
+                    btnSearch.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new Terminefragment());
                     //ft.addToBackStack(null);
                     ft.commit();
@@ -305,8 +305,8 @@ public class Tabelle extends AppCompatActivity  {
                     header.setTitle(getApplicationContext().getString(R.string.title_search));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
-                    btnsuche.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new sucheFragment());
+                    btnSearch.setVisibility(View.GONE);
+                    ft.replace(R.id.frame_placeholder, new searchFragment());
                     //ft.addToBackStack("suche");
                     ft.commit();
                     return true;
@@ -316,7 +316,7 @@ public class Tabelle extends AppCompatActivity  {
                     header.setTitle(getApplicationContext().getString(R.string.title_exam));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
-                    btnsuche.setVisibility(View.GONE);
+                    btnSearch.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new Favoritenfragment());
                     //ft.addToBackStack(null);
                     ft.commit();
@@ -327,7 +327,7 @@ public class Tabelle extends AppCompatActivity  {
                     header.setTitle(getApplicationContext().getString(R.string.title_settings));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
-                    btnsuche.setVisibility(View.GONE);
+                    btnSearch.setVisibility(View.GONE);
                     ft.replace(R.id.frame_placeholder, new Optionen());
                     //ft.addToBackStack(null);
                     ft.commit();
@@ -337,8 +337,8 @@ public class Tabelle extends AppCompatActivity  {
                     header.setTitle(getApplicationContext().getString(R.string.title_electiveModule));
                     recyclerView.setVisibility(View.INVISIBLE);
                     calendar.setVisibility(View.GONE);
-                    btnsuche.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new WahlModulSucheFragment());
+                    btnSearch.setVisibility(View.GONE);
+                    ft.replace(R.id.frame_placeholder, new ChoiceModulSearchFragment());
                     ft.commit();
 
 

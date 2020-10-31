@@ -37,19 +37,19 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.Tabelle.ft;
+import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
-public class WahlModulSucheFragment extends Fragment {
+public class ChoiceModulSearchFragment extends Fragment {
 
     private AppDatabase database = AppDatabase.getAppDatabase(getContext());
-    List<PruefplanEintrag> ppeList;
+    List<TestPlanEntry> ppeList;
 
-    private String selectedStudiengangSpinner;
+    private String selectedCourseSpinner;
     private String modulName;
 
     public void onCreate(Bundle savedInstanceState) {
@@ -61,23 +61,23 @@ public class WahlModulSucheFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View v = inflater.inflate(R.layout.wahlmodul, container, false);
 
-        final Spinner spStudiengang = v.findViewById(R.id.spStudiengang);
+        final Spinner spCourse = v.findViewById(R.id.spStudiengang);
         final Button searchBtn = v.findViewById(R.id.BtnOk);
-        final AutoCompleteTextView editWahlModul = v.findViewById(R.id.wahlModulName);
+        final AutoCompleteTextView editChoiceModul = v.findViewById(R.id.wahlModulName);
 
         // Studiengang auswahl
-        List<String> studiengangArrayList = new ArrayList<String>();
-        studiengangArrayList.add(0,v.getContext().getString(R.string.all_cours));
+        List<String> courseArrayList = new ArrayList<String>();
+        courseArrayList.add(0,v.getContext().getString(R.string.all_cours));
 
         // Design für den Spinner
         // Hier schon setzen für ein besseres UI
-        ArrayAdapter<String> adapterStudiengang = new ArrayAdapter<String>(
-                v.getContext(), R.layout.simple_spinner_item, studiengangArrayList);
+        ArrayAdapter<String> adapterCourse = new ArrayAdapter<String>(
+                v.getContext(), R.layout.simple_spinner_item, courseArrayList);
 
-        adapterStudiengang.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spStudiengang.setAdapter(adapterStudiengang);
+        adapterCourse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spCourse.setAdapter(adapterCourse);
 
-        selectedStudiengangSpinner = getContext().getString(R.string.all_cours);
+        selectedCourseSpinner = getContext().getString(R.string.all_cours);
         modulName = getContext().getString(R.string.all);
 
         new Thread(new Runnable() {
@@ -87,13 +87,13 @@ public class WahlModulSucheFragment extends Fragment {
                 ArrayAdapter<String> adapterModuleAutoComplete = new ArrayAdapter<String>
                         (v.getContext(), android.R.layout.simple_list_item_1, modulNameArrayList);
 
-                studiengangArrayList.addAll(database.userDao().getChoosenStudiengang(true));
+                courseArrayList.addAll(database.userDao().getChoosenCourse(true));
 
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        editWahlModul.setAdapter(adapterModuleAutoComplete);
+                        editChoiceModul.setAdapter(adapterModuleAutoComplete);
                         // spStudiengang.setAdapter(adapterStudiengang);
                     }
                 });
@@ -101,7 +101,7 @@ public class WahlModulSucheFragment extends Fragment {
             }
         }).start();
 
-        editWahlModul.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        editChoiceModul.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -119,11 +119,11 @@ public class WahlModulSucheFragment extends Fragment {
 
         });
 
-        spStudiengang.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spCourse.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Setze den ausgewählten Studiengang
-                selectedStudiengangSpinner = parent.getItemAtPosition(position).toString();
+                selectedCourseSpinner = parent.getItemAtPosition(position).toString();
             }
 
             @Override
@@ -132,7 +132,7 @@ public class WahlModulSucheFragment extends Fragment {
             }
         });
 
-        editWahlModul.addTextChangedListener(new TextWatcher() {
+        editChoiceModul.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 //
@@ -146,7 +146,7 @@ public class WahlModulSucheFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
                 // Setze das ausgewählte Modul
-                modulName = editWahlModul.getText().toString();
+                modulName = editChoiceModul.getText().toString();
             }
         });
 
@@ -162,33 +162,33 @@ public class WahlModulSucheFragment extends Fragment {
                     @Override
                     public void run() {
                         if((modulName.trim().length() > 3 && !modulName.equals(getContext().getString(R.string.all)))
-                                || !selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))) {
+                                || !selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))) {
 
                             // Nur ein Modulnamen eingetragen
-                            if (selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                            if (selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))
                                     && !modulName.equals(getContext().getString(R.string.all))) {
 
                                 ppeList = database.userDao().getModule("%" + modulName.trim() + "%");
 
                                 // Alles eingegeben
-                            } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                            } else if (!selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))
                                     && !modulName.equals(getContext().getString(R.string.all))) {
 
                                 ppeList = database.userDao().getModuleWithCourseAndModule("%" +
-                                        modulName.trim() + "%", selectedStudiengangSpinner);
+                                        modulName.trim() + "%", selectedCourseSpinner);
 
                                 // Nur ein Studiengang ausgewählt
-                            } else if (!selectedStudiengangSpinner.equals(getContext().getString(R.string.all_cours))
+                            } else if (!selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))
                                     && modulName.equals(getContext().getString(R.string.all))) {
 
-                                ppeList = database.userDao().getModuleWithCourseOrdered(selectedStudiengangSpinner);
+                                ppeList = database.userDao().getModuleWithCourseOrdered(selectedCourseSpinner);
 
                             }
 
 
                             // Setze die gewählten Daten in der DB
-                            database.userDao().sucheUndZurueckSetzen(false);
-                            for (PruefplanEintrag eintrag: ppeList) {
+                            database.userDao().searchAndReset(false);
+                            for (TestPlanEntry eintrag: ppeList) {
                                 database.userDao().update2(true,
                                         Integer.valueOf(eintrag.getID()));
                             }
@@ -207,7 +207,7 @@ public class WahlModulSucheFragment extends Fragment {
                             }
 
                             ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.frame_placeholder, new TerminefragmentSuche());
+                            ft.replace(R.id.frame_placeholder, new TermineFragmentSearch());
                             ft.commit();
                         }
 
@@ -215,7 +215,7 @@ public class WahlModulSucheFragment extends Fragment {
                             @Override
                             public void run() {
                                 if(!((modulName.trim().length() > 3 && !modulName.equals(v.getContext().getString(R.string.all)))
-                                        || !selectedStudiengangSpinner.equals(v.getContext().getString(R.string.all_cours)))) {
+                                        || !selectedCourseSpinner.equals(v.getContext().getString(R.string.all_cours)))) {
 
                                     Toast.makeText(v.getContext(),v.getContext().getString(R.string.elective_search), Toast.LENGTH_LONG)
                                             .show();

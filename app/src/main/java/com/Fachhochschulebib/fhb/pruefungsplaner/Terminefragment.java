@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.PruefplanEintrag;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Studiengang;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
@@ -58,66 +58,66 @@ public class Terminefragment extends Fragment {
     ProgressDialog progressBar;
     private RecyclerView recyclerView;
     private CalendarView calendar;
-    private Button btnsuche;
+    private Button btnSearch;
     private String date;
     private String month2;
     private String day2;
-    int positionAlt = 0;
+    int positionOld = 0;
     private String year2;
     List<Boolean> checkList = new ArrayList<>();
     //Variablen
-    List<String> modulUndStudiengangsList = new ArrayList<>();
-    List<String> prueferUndSemesterList = new ArrayList<>();
-    List<String> datumsList = new ArrayList<>();
+    List<String> moduleAndCourseList = new ArrayList<>();
+    List<String> testerAndSemesterList = new ArrayList<>();
+    List<String> dateList = new ArrayList<>();
     List<String> modulList = new ArrayList<>();
     List<String> idList = new ArrayList<>();
-    List<String> pruefFormList = new ArrayList<>();
-    List<String> raumList = new ArrayList<>();
+    List<String> formList = new ArrayList<>();
+    List<String> roomList = new ArrayList<>();
     List<String> status = new ArrayList<>();
     List<String> statusMessage = new ArrayList<>();
     int sleeptime;
-    String pruefJahr, aktuellePruefphase, rueckgabeStudiengang;
+    String examineYear, currentExaminePeriod, returnCourse;
 
     public static String validation;
     MyAdapter mAdapter;
     private RecyclerView.LayoutManager mLayout;
 
-    AppDatabase datenbank;
+    AppDatabase database;
 
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
     // Start Merlin Gürtler
     private void createAdapter() {
-        final List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+        final List<TestPlanEntry> ppeList = database.userDao().getAll(validation);
 
         checkList.clear();
         ClearLists();
 
-        for (PruefplanEintrag eintrag : ppeList) {
-            status.add(eintrag.getStatus());
-            modulUndStudiengangsList.add(
-                    eintrag.getModul() + "\n "
-                            + eintrag.getStudiengang());
-            prueferUndSemesterList.add(
-                    eintrag.getErstpruefer()
-                            + " " + eintrag.getZweitpruefer()
-                            + " " + eintrag.getSemester() + " ");
-            datumsList.add(eintrag.getDatum());
-            modulList.add(eintrag.getModul());
-            idList.add(eintrag.getID());
-            pruefFormList.add(eintrag.getPruefform());
-            raumList.add(eintrag.getRaum());
-            statusMessage.add(eintrag.getHint());
+        for (TestPlanEntry entry : ppeList) {
+            status.add(entry.getStatus());
+            moduleAndCourseList.add(
+                    entry.getModul() + "\n "
+                            + entry.getCourse());
+            testerAndSemesterList.add(
+                    entry.getFirstTester()
+                            + " " + entry.getSecondTester()
+                            + " " + entry.getSemester() + " ");
+            dateList.add(entry.getDate());
+            modulList.add(entry.getModul());
+            idList.add(entry.getID());
+            formList.add(entry.getExamForm());
+            roomList.add(entry.getRoom());
+            statusMessage.add(entry.getHint());
             checkList.add(true);
         }// define an adapter
 
-        mAdapter = new MyAdapter(modulUndStudiengangsList,
-                prueferUndSemesterList,
-                datumsList,
+        mAdapter = new MyAdapter(moduleAndCourseList,
+                testerAndSemesterList,
+                dateList,
                 modulList,
                 idList,
-                pruefFormList,
+                formList,
                 mLayout,
-                raumList,
+                roomList,
                 status,
                 statusMessage);
     }
@@ -141,9 +141,9 @@ public class Terminefragment extends Fragment {
         SharedPreferences mSharedPreferencesValidation
                 = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
 
-        String studiengangMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
+        String courseMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
 
-        datenbank = AppDatabase.getAppDatabase(this.getContext());
+        database = AppDatabase.getAppDatabase(this.getContext());
 
         final StartClass globalVariable = (StartClass) this.getContext().getApplicationContext();
         if (!globalVariable.isShowNoProgressBar() || globalVariable.isChangeFaculty()) {
@@ -170,12 +170,12 @@ public class Terminefragment extends Fragment {
             String serverAddress
                     = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
 
-            SharedPreferences mSharedPreferencesPruefTermin
+            SharedPreferences mSharedPreferencesExamineYear
                     = Terminefragment.this.getContext()
                     .getSharedPreferences("PruefTermin", 0);
 
-            String aktuellerTermin
-                    = mSharedPreferencesPruefTermin.getString("aktPruefTermin", "0");
+            String currentExamineYear
+                    = mSharedPreferencesExamineYear.getString("aktPruefTermin", "0");
 
             RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
@@ -183,24 +183,24 @@ public class Terminefragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    List <Studiengang> studiengaenge = datenbank.userDao().getStudiengaenge();
+                    List <Courses> courses = database.userDao().getCourses();
 
                     // aktualsiere die db Einträge
 
                     JSONArray studiengangIds = new JSONArray();
 
-                    String studienganName;
+                    String courseName;
 
-                    for(Studiengang studiengang: studiengaenge) {
+                    for(Courses course: courses) {
                         try {
-                            studienganName = studiengang.getStudiengangName();
-                            if(!studiengang.getGewaehlt()) {
+                            courseName = course.getCourseName();
+                            if(!course.getChoosen()) {
                                 // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                datenbank.userDao().deletePruefplanEintragExceptChoosen(studienganName, false);
+                                database.userDao().deletePruefplanEintragExceptChoosen(courseName, false);
                             }
-                            if(datenbank.userDao().getOneEntryByName(studienganName) == null && studiengang.getGewaehlt()) {
+                            if(database.userDao().getOneEntryByName(courseName) == null && course.getChoosen()) {
                                 JSONObject idJson = new JSONObject();
-                                idJson.put("ID", studiengang.getSgid());
+                                idJson.put("ID", course.getSgid());
                                 studiengangIds.put(idJson);
                             }
                         } catch (JSONException e) {
@@ -212,10 +212,10 @@ public class Terminefragment extends Fragment {
                     if(studiengangIds.toString().length() > 2) {
                         retrofit.UpdateUnkownCourses(
                                 getContext(),
-                                datenbank,
-                                pruefJahr,
-                                aktuellePruefphase,
-                                aktuellerTermin,
+                                database,
+                                examineYear,
+                                currentExaminePeriod,
+                                currentExamineYear,
                                 serverAddress,
                                 studiengangIds.toString());
                     }
@@ -228,30 +228,30 @@ public class Terminefragment extends Fragment {
 
                         SharedPreferences sharedPrefSPruefTermin = Terminefragment.this.getContext().
                                 getSharedPreferences("PruefTermin",Terminefragment.this.getContext().MODE_PRIVATE);
-                        String pruefPeriode  = sharedPrefSPruefTermin.
+                        String examinePeriod  = sharedPrefSPruefTermin.
                                 getString("aktPruefTermin","0");
 
                     // Prüft zusätzlich nioch ob sich die Prüfungsphase geändert hat
-                    if (datenbank.userDao().getByName(studiengangMain).size() == 0
-                    || !pruefPeriode.equals(datenbank.userDao().getTermin())) {
+                    if (database.userDao().getByName(courseMain).size() == 0
+                    || !examinePeriod.equals(database.userDao().getTermin())) {
 
-                        datenbank.userDao().deletePruefplanEintragAll();
+                        database.userDao().deleteTestPlanEntryAll();
 
                         retrofit.RetrofitWebAccess(
                                 Terminefragment.this.getContext(),
-                                datenbank,
-                                pruefJahr,
-                                aktuellePruefphase,
-                                aktuellerTermin,
+                                database,
+                                examineYear,
+                                currentExaminePeriod,
+                                currentExamineYear,
                                 serverAddress);
 
                         sleeptime = 3000;
                     } else {
 
-                        retrofit.retroUpdate(Terminefragment.this.getContext(), datenbank,
-                                pruefJahr,
-                                aktuellePruefphase,
-                                aktuellerTermin,
+                        retrofit.retroUpdate(Terminefragment.this.getContext(), database,
+                                examineYear,
+                                currentExaminePeriod,
+                                currentExamineYear,
                                 serverAddress);
 
                         sleeptime = 2000;
@@ -282,11 +282,11 @@ public class Terminefragment extends Fragment {
                 = Terminefragment.
                 this.getContext().getSharedPreferences("validation", 0);
 
-        pruefJahr = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        aktuellePruefphase = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        rueckgabeStudiengang = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
 
-        validation = pruefJahr + rueckgabeStudiengang + aktuellePruefphase;
+        validation = examineYear + returnCourse + currentExaminePeriod;
         // Ende Merlin Gürtler
 
         LongOperation asynctask = new LongOperation();
@@ -300,8 +300,8 @@ public class Terminefragment extends Fragment {
 
         @Override
         protected String doInBackground(String... params) {
-            List<PruefplanEintrag> ppeList
-                    = Terminefragment.this.datenbank.userDao().getAll(validation);
+            List<TestPlanEntry> ppeList
+                    = Terminefragment.this.database.userDao().getAll(validation);
             if (ppeList.size() < 1) {
                 for (int c = 0; c < 1000; c++) {
                     try {
@@ -319,7 +319,7 @@ public class Terminefragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            AdapterUebergabe();
+            AdapterPassed();
         }
 
         @Override
@@ -353,7 +353,7 @@ public class Terminefragment extends Fragment {
         recyclerView.setLayoutManager(layoutManager);
         mLayout = recyclerView.getLayoutManager();
 
-        AdapterUebergabe();
+        AdapterPassed();
 
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(getActivity(), new RecyclerItemClickListener.OnItemClickListener() {
@@ -410,7 +410,7 @@ public class Terminefragment extends Fragment {
                                 "Fehler weitere Informationen");
                     }
                     */
-                        positionAlt = position;
+                        positionOld = position;
                     }
                 })
         );
@@ -440,20 +440,20 @@ public class Terminefragment extends Fragment {
 
         //initialisieren der UI-Komponenten
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
-        btnsuche = (Button) v.findViewById(R.id.btnDatum);
+        btnSearch = (Button) v.findViewById(R.id.btnDatum);
         calendar.setVisibility(View.GONE);
 
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
-        btnsuche.setOnClickListener(new View.OnClickListener() {
-            boolean speicher = true;
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            boolean save = true;
 
             @Override
             public void onClick(View v) {
-                if (!speicher) {
+                if (!save) {
                     calendar.setVisibility(View.GONE);
-                    AdapterUebergabe();
-                    speicher = true;
+                    AdapterPassed();
+                    save = true;
 
                 } else {
                     //Kalender wurde eingeschalet
@@ -470,7 +470,7 @@ public class Terminefragment extends Fragment {
                                 @Override
                                 public void run() {
                                     //Datenbank
-                                    List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+                                    List<TestPlanEntry> ppeList = database.userDao().getAll(validation);
 
                                     //unnötige Werte entfernen
                                     if (month < 9) {
@@ -488,39 +488,39 @@ public class Terminefragment extends Fragment {
                                     checkList.clear();
 
                                     ClearLists();
-                                    for (PruefplanEintrag eintrag : ppeList) {
-                                        String[] date2 = eintrag.getDatum().split(" ");
+                                    for (TestPlanEntry eintrag : ppeList) {
+                                        String[] date2 = eintrag.getDate().split(" ");
 
                                 /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
                                     Kalender datum übereinstimmt
                                  */
                                         if (date2[0].equals(date)) {
                                             status.add(eintrag.getStatus());
-                                            modulUndStudiengangsList.add(
+                                            moduleAndCourseList.add(
                                                     eintrag.getModul()
-                                                            + "\n " + eintrag.getStudiengang());
-                                            prueferUndSemesterList.add(
-                                                    eintrag.getErstpruefer()
-                                                            + " " + eintrag.getZweitpruefer()
+                                                            + "\n " + eintrag.getCourse());
+                                            testerAndSemesterList.add(
+                                                    eintrag.getFirstTester()
+                                                            + " " + eintrag.getSecondTester()
                                                             + " " + eintrag.getSemester() + " ");
-                                            datumsList.add(eintrag.getDatum());
+                                            dateList.add(eintrag.getDate());
                                             modulList.add(eintrag.getModul());
                                             idList.add(eintrag.getID());
-                                            pruefFormList.add(eintrag.getPruefform());
-                                            raumList.add(eintrag.getRaum());
+                                            formList.add(eintrag.getExamForm());
+                                            roomList.add(eintrag.getRoom());
                                             statusMessage.add(eintrag.getHint());
                                             checkList.add(true);
                                         }
                                     }// define an adapter
 
                                     //Adapter mit Werten füllen
-                                    mAdapter = new MyAdapter(modulUndStudiengangsList,
-                                            prueferUndSemesterList,
-                                            datumsList,
+                                    mAdapter = new MyAdapter(moduleAndCourseList,
+                                            testerAndSemesterList,
+                                            dateList,
                                             modulList,
                                             idList,
-                                            pruefFormList, mLayout,
-                                            raumList,
+                                            formList, mLayout,
+                                            roomList,
                                             status,
                                             statusMessage);
                                     //Anzeigen
@@ -534,14 +534,14 @@ public class Terminefragment extends Fragment {
                             }).start();
                         }
                     });
-                    speicher = false;
+                    save = false;
                 }
             }
         });
         return v;
     }
 
-    public void AdapterUebergabe() {
+    public void AdapterPassed() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -564,13 +564,13 @@ public class Terminefragment extends Fragment {
     }
 
     public void ClearLists() {
-        modulUndStudiengangsList.clear();
-        prueferUndSemesterList.clear();
-        datumsList.clear();
+        moduleAndCourseList.clear();
+        testerAndSemesterList.clear();
+        dateList.clear();
         modulList.clear();
         idList.clear();
-        pruefFormList.clear();
-        raumList.clear();
+        formList.clear();
+        roomList.clear();
         status.clear();
     }
 

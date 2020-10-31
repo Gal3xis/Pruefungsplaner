@@ -12,38 +12,38 @@ import java.util.List;
 public interface UserDao {
 
     // Start Merlin Gürtler
-    @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul")
-    List<PruefplanEintrag> getModule(String modul);
+    @Query("SELECT * FROM TestPlanEntry WHERE modul LIKE :modul")
+    List<TestPlanEntry> getModule(String modul);
 
-    @Query("UPDATE PruefplanEintrag SET Datum = :datum, Status = :status, Hint = :hint, Color =:color where ID = :id")
-    void updateExam(String datum, String status, String id, String hint, String color);
+    @Query("UPDATE TestPlanEntry SET date = :date, status = :status, hint = :hint, color =:color where ID = :id")
+    void updateExam(String date, String status, String id, String hint, String color);
 
-    @Query("SELECT * from PruefplanEintrag WHERE Erstpruefer LIKE :prof ORDER BY Datum")
-    List<PruefplanEintrag> getModuleProf(String prof);
+    @Query("SELECT * from TestPlanEntry WHERE firstTester LIKE :prof ORDER BY date")
+    List<TestPlanEntry> getModuleProf(String prof);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Modul LIKE :modul AND Studiengang = :studiengang")
-    List<PruefplanEintrag>
-    getModuleWithCourseAndModule(String modul, String studiengang);
+    @Query("SELECT * FROM TestPlanEntry WHERE modul LIKE :modul AND course = :course")
+    List<TestPlanEntry>
+    getModuleWithCourseAndModule(String modul, String course);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang ORDER BY Modul")
-    List<PruefplanEintrag>
-    getModuleWithCourseOrdered(String studiengang);
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY modul")
+    List<TestPlanEntry>
+    getModuleWithCourseOrdered(String course);
 
-    @Query("SELECT DISTINCT Modul FROM PruefplanEintrag ORDER BY Modul")
+    @Query("SELECT DISTINCT modul FROM TestPlanEntry ORDER BY modul")
     List<String>
     getModuleOrdered();
 
-    @Query("SELECT DISTINCT Erstpruefer FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang")
-    List<String> getErstprueferDistinct(String selectedStudiengang);
+    @Query("SELECT DISTINCT firstTester FROM TestPlanEntry WHERE course = :selectedCourse")
+    List<String> getFirstTesterDistinct(String selectedCourse);
 
-    @Query("SELECT Modul FROM PruefplanEintrag WHERE Studiengang = :selectedStudiengang ORDER BY Modul")
-    List<String> getModuleWithCourseDistinct(String selectedStudiengang);
+    @Query("SELECT modul FROM TestPlanEntry WHERE course = :selctedCourse ORDER BY modul")
+    List<String> getModuleWithCourseDistinct(String selctedCourse);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Favorit = :favorite ORDER BY Datum, Termin, Modul")
-    List<PruefplanEintrag> getFavorites(boolean favorite);
+    @Query("SELECT * FROM TestPlanEntry WHERE Favorit = :favorite ORDER BY date, termin, modul")
+    List<TestPlanEntry> getFavorites(boolean favorite);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE ID = :id")
-    PruefplanEintrag getPruefung(String id);
+    @Query("SELECT * FROM TestPlanEntry WHERE ID = :id")
+    TestPlanEntry getExams(String id);
 
     @Query("INSERT INTO Uuid VALUES (:uuid)")
     void insertUuid(String uuid);
@@ -51,88 +51,81 @@ public interface UserDao {
     @Query("SELECT * FROM Uuid")
     Uuid getUuid();
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Datum LIKE :date ORDER BY Termin")
-    List<PruefplanEintrag> getByDate(String date);
+    @Query("SELECT * FROM TestPlanEntry WHERE date LIKE :date ORDER BY termin")
+    List<TestPlanEntry> getByDate(String date);
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengang")
-    List<PruefplanEintrag> getByName(String studiengang);
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :course")
+    List<TestPlanEntry> getByName(String course);
 
-    @Query("INSERT INTO Studiengang VALUES (:sgid, :StudiengangName, :FachbereichId, :Gewaehlt)")
-    void insertStudiengang(
+    @Query("INSERT INTO Courses VALUES (:sgid, :courseName, :facultyId, :choosen)")
+    void insertCourse(
             String sgid,
-            String StudiengangName,
-            String FachbereichId,
-            Boolean Gewaehlt
+            String courseName,
+            String facultyId,
+            Boolean choosen
     );
 
-    @Query("DELETE FROM Studiengang")
-    void deleteStudiengang();
+    @Query("DELETE FROM Courses")
+    void deleteCourse();
 
-    @Query("DELETE FROM pruefplanEintrag WHERE Studiengang = :sgName AND Ausgewaehlt = :gewaehlt")
-    void deletePruefplanEintragExceptChoosen(String sgName, boolean gewaehlt);
+    @Query("DELETE FROM TestPlanEntry WHERE course = :courseName AND choosen = :choosen")
+    void deletePruefplanEintragExceptChoosen(String courseName, boolean choosen);
 
-    @Query("DELETE FROM pruefplanEintrag ")
-    void deletePruefplanEintragAll();
+    @Query("DELETE FROM TestPlanEntry ")
+    void deleteTestPlanEntryAll();
 
-    @Query("SELECT * FROM Studiengang WHERE FachbereichId = :fachbereichId")
-    List<Studiengang> getStudiengaenge(String fachbereichId);
+    @Query("SELECT * FROM Courses WHERE facultyId = :facultyId")
+    List<Courses> getCourses(String facultyId);
 
-    @Query("UPDATE Studiengang SET gewaehlt = :gewaehlt WHERE studiengangName = :studiengangName")
-    void updateStudiengang(String studiengangName, boolean gewaehlt);
+    @Query("UPDATE Courses SET choosen = :choosen WHERE couresName = :courseName")
+    void updateCourse(String courseName, boolean choosen);
 
-    @Query("SELECT sgid from Studiengang WHERE studiengangName = :studiengangName")
-    String getIdStudiengang(String studiengangName);
+    @Query("SELECT cId from Courses WHERE couresName = :courseName")
+    String getIdCourse(String courseName);
 
-    @Query("SELECT studiengangName FROM Studiengang WHERE gewaehlt = :gewaehlt ORDER BY studiengangName")
-    List<String> getChoosenStudiengang(Boolean gewaehlt);
+    @Query("SELECT couresName FROM Courses WHERE choosen = :choosen ORDER BY couresName")
+    List<String> getChoosenCourse(Boolean choosen);
 
-    @Query("SELECT sgid FROM Studiengang WHERE gewaehlt = :gewaehlt")
-    List<String> getChoosenStudiengangId(Boolean gewaehlt);
+    @Query("SELECT cId FROM Courses WHERE choosen = :choosen")
+    List<String> getChoosenCourseId(Boolean choosen);
 
-    @Query("SELECT DISTINCT Termin FROM PruefplanEintrag LIMIT 1")
+    @Query("SELECT DISTINCT termin FROM TestPlanEntry LIMIT 1")
     String getTermin();
 
-    @Query("SELECT * FROM Studiengang")
-    List<Studiengang> getStudiengaenge();
+    @Query("SELECT * FROM Courses")
+    List<Courses> getCourses();
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Studiengang = :studiengangName LIMIT 1")
-    PruefplanEintrag getOneEntryByName(String studiengangName);
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName LIMIT 1")
+    TestPlanEntry getOneEntryByName(String courseName);
     // Ende Merlin Gürtler
 
 
-    @Query("SELECT * FROM PruefplanEintrag WHERE Validation = :validation")
-    List<PruefplanEintrag> getAll(String validation);
+    @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation")
+    List<TestPlanEntry> getAll(String validation);
 
-    @Query("SELECT * FROM PruefplanEintrag ORDER BY Datum, Termin, Modul")
-    List<PruefplanEintrag> getAll2();
+    @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, modul")
+    List<TestPlanEntry> getAll2();
 
-    @Query("SELECT Studiengang FROM PruefplanEintrag")
-    List<String> getStudiengang();
+    @Query("SELECT course FROM TestPlanEntry")
+    List<String> getCourse();
 
-    @Query("SELECT Erstpruefer FROM PruefplanEintrag")
-    List<String> getErstpruefer();
-
-    @Query("SELECT Modul FROM PruefplanEintrag")
+    @Query("SELECT modul FROM TestPlanEntry")
     List<String> getModul();
 
-    @Query("SELECT COUNT(*) from PruefplanEintrag")
+    @Query("SELECT COUNT(*) from TestPlanEntry")
     int countUsers();
 
     @Insert
-    void insertAll(PruefplanEintrag... pruefplanEintrags);
+    void insertAll(TestPlanEntry... testPlanEntries);
 
-    @Query ("UPDATE PruefplanEintrag SET Favorit = :favorit WHERE ID = :id")
+    @Query ("UPDATE TestPlanEntry SET Favorit = :favorit WHERE ID = :id")
     void update(boolean favorit, int id);
 
-    @Query ("UPDATE PruefplanEintrag SET Ausgewaehlt = :pruefungen WHERE ID = :id")
-    void update2(boolean pruefungen, int id);
+    @Query ("UPDATE TestPlanEntry SET Choosen = :exams WHERE ID = :id")
+    void update2(boolean exams, int id);
 
-    @Query ("UPDATE PruefplanEintrag SET Validation  = :nullSetzen WHERE Validation = :validation")
-    void updateValidation(String nullSetzen, String validation);
 
-    @Query ("UPDATE PruefplanEintrag SET Ausgewaehlt = :pruefungen ")
-    void sucheUndZurueckSetzen(boolean pruefungen);
+    @Query ("UPDATE TestPlanEntry SET Choosen = :exams ")
+    void searchAndReset(boolean exams);
 
-    @Delete
-    void delete(PruefplanEintrag pruefplanEintrag);
 }
