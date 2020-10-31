@@ -84,9 +84,9 @@ public class table extends AppCompatActivity  {
         mSharedPreferencesValidation
                 = table.this.getSharedPreferences("validation", 0);
 
-        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        currentExaminePeriode = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
+        currentExaminePeriode = mSharedPreferencesValidation.getString("currentPeriode", "0");
+        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
         // Ende Merlin Gürtler
 
         dl = findViewById(R.id.drawer_layout);

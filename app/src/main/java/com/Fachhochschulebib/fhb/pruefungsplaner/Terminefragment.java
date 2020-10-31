@@ -141,7 +141,7 @@ public class Terminefragment extends Fragment {
         SharedPreferences mSharedPreferencesValidation
                 = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
 
-        String courseMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
+        String courseMain = mSharedPreferencesValidation.getString("selectedCourse", "0");
 
         database = AppDatabase.getAppDatabase(this.getContext());
 
@@ -282,9 +282,9 @@ public class Terminefragment extends Fragment {
                 = Terminefragment.
                 this.getContext().getSharedPreferences("validation", 0);
 
-        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        currentExaminePeriod = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("currentPeriode", "0");
+        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
 
         validation = examineYear + returnCourse + currentExaminePeriod;
         // Ende Merlin Gürtler
@@ -306,7 +306,7 @@ public class Terminefragment extends Fragment {
                 for (int c = 0; c < 1000; c++) {
                     try {
                         Thread.sleep(3000);
-                        if (RetrofitConnect.checkuebertragung) {
+                        if (RetrofitConnect.checkTransmission) {
                             return "Executed";
                         }
                     } catch (InterruptedException e) {

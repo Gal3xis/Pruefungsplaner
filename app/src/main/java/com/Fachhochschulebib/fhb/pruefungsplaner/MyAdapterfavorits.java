@@ -123,7 +123,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         SharedPreferences sharedPreferencesCourse = context.
                 getSharedPreferences("validation", Context.MODE_PRIVATE);
         String selectedCourse[] = sharedPreferencesCourse.
-                getString("selectedStudiengang", "0").split(" ");
+                getString("selectedCourse", "0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
 

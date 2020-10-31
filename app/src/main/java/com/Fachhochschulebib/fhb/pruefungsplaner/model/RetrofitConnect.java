@@ -41,7 +41,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitConnect {
     public String termine;
-    public static boolean checkuebertragung = false;
+    public static boolean checkTransmission = false;
     private String relativePPlanUrl;
     // private boolean checkvalidate = false;
     Context ctx2;
@@ -168,7 +168,7 @@ public class RetrofitConnect {
             // Ende Merlin Gürtler
         }
 
-        checkuebertragung = true;
+        checkTransmission = true;
     };
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
@@ -344,10 +344,10 @@ public class RetrofitConnect {
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         // Erhalte die gewählte Fakultät aus den Shared Preferences
-        SharedPreferences sharedPrefFakultaetValidation =
+        SharedPreferences sahredPreferencesFacultyValidation =
                 ctx2.getSharedPreferences("validation", 0);
 
-        String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
+        String faculty = sahredPreferencesFacultyValidation.getString("returnFaculty", "0");
 
         //uebergabe der parameter an die Adresse
         String adresse = relativePPlanUrl + "entity.user/firstStart/" +

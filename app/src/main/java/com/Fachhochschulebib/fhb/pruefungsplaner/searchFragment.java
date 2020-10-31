@@ -130,11 +130,11 @@ public class searchFragment extends Fragment {
         mSharedPreferencesValidation
                 = container.getContext().getSharedPreferences("validation", 0);
 
-        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        currentExaminePeriod = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("currentPeriode", "0");
+        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
         String selectedCourse  = mSharedPreferencesValidation.
-                getString("selectedStudiengang","0");
+                getString("selectedCourse","0");
 
         // Start Merlin Gürtler
         new Thread(new Runnable() {

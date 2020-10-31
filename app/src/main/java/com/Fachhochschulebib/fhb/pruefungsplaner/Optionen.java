@@ -85,9 +85,9 @@ public class Optionen extends Fragment {
         mSharedPreferencesValidation
                 = container.getContext().getSharedPreferences("validation", 0);
 
-        examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
-        currentExaminePeriod = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
-        returnCourse = mSharedPreferencesValidation.getString("rueckgabeStudiengang", "0");
+        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("currentPeriode", "0");
+        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
         // Ende Merlin Gürtler
 
         final View v = inflater.inflate(R.layout.optionfragment, container, false);

@@ -98,8 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences.Editor editorStudiengangValidation =
                         sharedPrefStudiengangValidation.edit();
 
-                editorStudiengangValidation.putString("selectedStudiengang", choosenCourse);
-                editorStudiengangValidation.putString("rueckgabeStudiengang", returnCourse);
+                editorStudiengangValidation.putString("selectedCourse", choosenCourse);
+                editorStudiengangValidation.putString("returnCourse", returnCourse);
                 editorStudiengangValidation.apply();
 
                 // Thread für die Uuid
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences mSharedPreferencesValidation
                 = getApplication().getSharedPreferences("validation", 0);
 
-        courseMain = mSharedPreferencesValidation.getString("selectedStudiengang", "0");
+        courseMain = mSharedPreferencesValidation.getString("selectedCourse", "0");
         // Ende Merlin Gürtler
 
         mSharedPreferencesPPServerAdress
@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferencesPruefPhase
                 = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
         SharedPreferences.Editor mEditorPruefPhaseUndJahr = mSharedPreferencesPruefPhase.edit();
-        mEditorPruefPhaseUndJahr.putString("aktuellePruefphase", currentExamine);
-        mEditorPruefPhaseUndJahr.putString("pruefJahr", currentYear);
+        mEditorPruefPhaseUndJahr.putString("currentPeriode", currentExamine);
+        mEditorPruefPhaseUndJahr.putString("examineYear", currentYear);
         mEditorPruefPhaseUndJahr.apply();
 
         // Ende Merlin Gürtler
@@ -227,8 +227,8 @@ public class MainActivity extends AppCompatActivity {
         //Anzahl der Elemente
         //Adapter-Aufruf
         SharedPreferences sharedPrefPruefPeriode
-                = getApplicationContext().getSharedPreferences("PruefPeriode", MODE_PRIVATE);
-        String strJson = sharedPrefPruefPeriode.getString("aktPruefPeriode", "0");
+                = getApplicationContext().getSharedPreferences("periode", MODE_PRIVATE);
+        String strJson = sharedPrefPruefPeriode.getString("currentPeriode", "0");
         try {
             checkConnection();
             //Creating editor to store uebergebeneModule to shared preferencess
@@ -363,16 +363,15 @@ public class MainActivity extends AppCompatActivity {
                                             Log.d("Output Fakultaet",
                                                     returnFaculty);
                                             // Erstelle Shared Pref für die anderen Fragmente
-                                            SharedPreferences sharedPrefFakultaetValidation =
+                                            SharedPreferences sharedPrefFacultyValidation =
                                                     getApplicationContext().
                                                             getSharedPreferences("validation",0);
 
-                                            SharedPreferences.Editor editorFakultaetValidation =
-                                                    sharedPrefFakultaetValidation.edit();
+                                            SharedPreferences.Editor editorFacultyValidation =
+                                                    sharedPrefFacultyValidation.edit();
 
-                                            editorFakultaetValidation.putString("selectedFakultaet", facultys[which]);
-                                            editorFakultaetValidation.putString("rueckgabeFakultaet", returnFaculty);
-                                            editorFakultaetValidation.apply();
+                                            editorFacultyValidation.putString("returnFaculty", returnFaculty);
+                                            editorFacultyValidation.apply();
 
                                             // füllt die Liste mit Studiengängena
                                             new Thread(new Runnable() {
@@ -543,10 +542,10 @@ public class MainActivity extends AppCompatActivity {
         new Thread(() -> {
             // Die Fakultaeten werden in einer Shared Preferences Variable gespeichert.
             // Creating editor to store Fakultaeten to shared preferences
-            SharedPreferences.Editor fakultaetEditor;
-            SharedPreferences sharedPrefsFakultaet
+            SharedPreferences.Editor facultyEditor;
+            SharedPreferences sharedPrefsFaculty
                     = getApplicationContext()
-                    .getSharedPreferences("fakultaeten", 0);
+                    .getSharedPreferences("faculty", 0);
 
             //Verbindungsaufbau zum Webserver
             try {
@@ -609,12 +608,12 @@ public class MainActivity extends AppCompatActivity {
 
                 // Werte Speichern für die offline Verwendung
                 //Log.d("Output fakultaet", jsonArrayFakultaeten.get(0).toString());
-                fakultaetEditor = sharedPrefsFakultaet.edit();
+                facultyEditor = sharedPrefsFaculty.edit();
                 try {
-                    fakultaetEditor.clear();
-                    fakultaetEditor.apply();
-                    fakultaetEditor.putString("fakultaeten", deletedCling);
-                    fakultaetEditor.apply();
+                    facultyEditor.clear();
+                    facultyEditor.apply();
+                    facultyEditor.putString("faculty", deletedCling);
+                    facultyEditor.apply();
                 } catch (Exception e) {
                     Log.d("Output checkFakultaet",
                             "Fehler: Parsen von Fakultaet");
@@ -630,7 +629,7 @@ public class MainActivity extends AppCompatActivity {
             catch (final Exception e)
             {
                 String strFacultys
-                        = sharedPrefsFakultaet.getString("fakultaeten","0");
+                        = sharedPrefsFaculty.getString("faculty","0");
                 //Log.d("Output 426",strFakultaet);
                 if (strFacultys != null) {
                     try{
@@ -671,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
             //Shared Pref. für die Pruefperiode
             SharedPreferences.Editor mEditor;
             SharedPreferences mSharedPreferencesPPeriode
-                    = getApplicationContext().getSharedPreferences("PruefPeriode", MODE_PRIVATE);
+                    = getApplicationContext().getSharedPreferences("periode", MODE_PRIVATE);
 
             public void run() {
                 try {
@@ -821,7 +820,7 @@ public class MainActivity extends AppCompatActivity {
                     // Ende Merlin Gürtler
 
                     String strJson
-                            = mSharedPreferencesPPeriode.getString("aktPruefPeriode", "0");
+                            = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
                     if (strJson != null) {
                         if (strJson.equals(currentExamineDateFormatted))
                         {
@@ -830,7 +829,7 @@ public class MainActivity extends AppCompatActivity {
                         else{
                             mEditor.clear();
                             mEditor.apply();
-                            mEditor.putString("aktPruefPeriode", currentExamineDateFormatted);
+                            mEditor.putString("currentPeriode", currentExamineDateFormatted);
                             mEditor.apply();
                             // Start Merlin Gürtler
                             // Dies ist nötig, da die Serverantwort dauert,

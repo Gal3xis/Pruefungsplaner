@@ -58,7 +58,7 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
         SharedPreferences sharedPreferencesSelectedCourse = context.
                 getSharedPreferences("validation", MODE_PRIVATE);
         selectedCourse = sharedPreferencesSelectedCourse.
-                getString("selectedStudiengang","0");
+                getString("selectedCourse","0");
 
         return vh;
     }

@@ -59,11 +59,11 @@ public class AddCourseFragment extends Fragment {
             @Override
             public void run() {
                 // Erhalte die gewählte Fakultät aus den Shared Preferences
-                SharedPreferences sharedPrefFakultaetValidation =
+                SharedPreferences sharedPreferencesFacultyEditor =
                         getContext().
                                 getSharedPreferences("validation",0);
 
-                String faculty = sharedPrefFakultaetValidation.getString("rueckgabeFakultaet", "0");
+                String faculty = sharedPreferencesFacultyEditor.getString("returnFaculty", "0");
 
                 // Fülle die Recylcerview
                 List<Courses> courses =
@@ -137,8 +137,8 @@ public class AddCourseFragment extends Fragment {
                                 = AddCourseFragment.
                                 this.getContext().getSharedPreferences("validation", 0);
 
-                        String examineYear = mSharedPreferencesValidation.getString("pruefJahr", "0");
-                        String currentExamine = mSharedPreferencesValidation.getString("aktuellePruefphase", "0");
+                        String examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
+                        String currentExamine = mSharedPreferencesValidation.getString("currentPeriode", "0");
 
                         List <Courses> courses = database.userDao().getCourses();
 
