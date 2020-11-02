@@ -88,6 +88,9 @@ public interface UserDao {
     @Query("SELECT cId FROM Courses WHERE choosen = :choosen")
     List<String> getChoosenCourseId(Boolean choosen);
 
+    @Query("SELECT cId FROM Courses WHERE cId = :cId")
+    List<String> getCourseById(String cId);
+
     @Query("SELECT DISTINCT termin FROM TestPlanEntry LIMIT 1")
     String getTermin();
 

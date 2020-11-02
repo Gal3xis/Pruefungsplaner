@@ -25,7 +25,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -210,8 +209,6 @@ public class RetrofitConnect {
                 + courseIds.toString() + "/";
 
         String URL = urlfhb + relPathWithParameters;
-
-        System.out.println("TEST " + URL);
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(URL);
@@ -493,24 +490,25 @@ public class RetrofitConnect {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<List<JsonStudiengang>> call = request.getStudiengaenge();
-        call.enqueue(new Callback<List<JsonStudiengang>>() {
+        Call<List<JsonCourse>> call = request.getStudiengaenge();
+        call.enqueue(new Callback<List<JsonCourse>>() {
             @Override
-            public void onResponse(Call<List<JsonStudiengang>> call, Response<List<JsonStudiengang>> response) {
+            public void onResponse(Call<List<JsonCourse>> call, Response<List<JsonCourse>> response) {
                 if (response.isSuccessful()) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            // lösche die Tabelle
-                            roomData.userDao().deleteCourse();
                             // füge die Einträge der db hinzu
-                            for (JsonStudiengang course : response.body()) {
-                                roomData.userDao().insertCourse(
-                                        course.getSGID(),
-                                        course.getSGName(),
-                                        course.getFKFBID(),
-                                        false
-                                );
+                            for (JsonCourse course : response.body()) {
+                                // > 2 wegen den [] Klammern
+                                if(roomData.userDao().getCourseById(course.getSGID()).size()  == 0) {
+                                    roomData.userDao().insertCourse(
+                                            course.getSGID(),
+                                            course.getSGName(),
+                                            course.getFKFBID(),
+                                            false
+                                    );
+                                }
                             }
                         }
                     }).start();
@@ -518,7 +516,7 @@ public class RetrofitConnect {
             }
 
             @Override
-            public void onFailure(Call<List<JsonStudiengang>> call, Throwable t) {
+            public void onFailure(Call<List<JsonCourse>> call, Throwable t) {
                 Log.d("Error", t.getMessage());
             }
         });

@@ -22,7 +22,7 @@
 
 -keep class * extends androidx.room.RoomDatabase
 -dontwarn androidx.room.paging.**
--keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonStudiengang { *; }
+-keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonCourse { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUpdate { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonPruefungsform { *; }

@@ -3,7 +3,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class JsonStudiengang {
+public class JsonCourse {
 
     @SerializedName("SGName")
     @Expose
