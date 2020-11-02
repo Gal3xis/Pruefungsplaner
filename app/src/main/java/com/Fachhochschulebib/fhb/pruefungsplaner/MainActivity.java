@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button buttonSpinner;
     private Button buttonOk;
-    public static String currentYear = null;
     public static String currentExamine = null;
     public static String returnCourse = null;
     public static String returnFaculty = null;
@@ -186,15 +185,11 @@ public class MainActivity extends AppCompatActivity {
         if (calendarMonth  <= 4)
         {
             currentExamine = context.getString(R.string.winter_short);
-            int thisYear = calendar.get(Calendar.YEAR);
-            currentYear = String.valueOf(thisYear);
         }
 
         if (calendarMonth  > 4)
         {
             currentExamine = context.getString(R.string.sommer_short);
-            int thisYear = calendar.get(Calendar.YEAR);
-            currentYear = String.valueOf(thisYear);
         }
 
         // TODO Nach Corona muss der Wert in der strings.xml wieder auf 9 geändert werden
@@ -203,8 +198,6 @@ public class MainActivity extends AppCompatActivity {
         )) {
 
             currentExamine = context.getString(R.string.winter_short);
-            int thisYear = calendar.get(Calendar.YEAR);
-            currentYear = String.valueOf(thisYear +1);
         }
 
         // Start Merlin Gürtler
@@ -214,7 +207,6 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor mEditorExaminePeriodAndYear = mSharedPreferencesExaminePeriod.edit();
 
         mEditorExaminePeriodAndYear.putString("currentPeriode", currentExamine);
-        mEditorExaminePeriodAndYear.putString("examineYear", currentYear);
         mEditorExaminePeriodAndYear.apply();
 
         // Ende Merlin Gürtler

@@ -212,11 +212,11 @@ public class Terminefragment extends Fragment {
                             = getContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
 
                     // Erhalte die gewählte Fakultät aus den Shared Preferences
-                    SharedPreferences sharedPreferencesFacultyEditor =
+                    SharedPreferences mSharedPreferencesValidation =
                             getContext().
                                     getSharedPreferences("validation",0);
 
-                    String facultyId = sharedPreferencesFacultyEditor.getString("returnFaculty", "0");
+                    String facultyId = mSharedPreferencesValidation.getString("returnFaculty", "0");
 
                     try {
                         StringBuilder result = new StringBuilder();
@@ -225,6 +225,8 @@ public class Terminefragment extends Fragment {
                         String address = serverAddress + relativePPlanURL + "entity.pruefperioden";
 
                         final URL url = new URL(address);
+
+                        System.out.println("TEST " + url);
 
                     /*
                         HttpURLConnection anstelle Retrofit, um die XML/Json-Daten abzufragen!!!
@@ -320,6 +322,11 @@ public class Terminefragment extends Fragment {
                                 = getContext()
                                 .getSharedPreferences("examineTermin", MODE_PRIVATE);
 
+                        SharedPreferences.Editor mEditorExaminePeriodAndYear = mSharedPreferencesValidation.edit();
+
+                        mEditorExaminePeriodAndYear.putString("examineYear", currentExamineDate.get("PPJahr").toString());
+                        mEditorExaminePeriodAndYear.apply();
+
                         SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
                         mEditorTermin.putString("currentTermin", currentExamineDate.get("PPNum").toString());
 
@@ -399,20 +406,50 @@ public class Terminefragment extends Fragment {
                     String currentExamineYearThread
                             = mSharedPreferencesExamineYearThread.getString("currentTermin", "0");
 
-                    retrofit.RetrofitWebAccess(
-                            Terminefragment.this.getContext(),
-                            database,
-                            examineYearThread,
-                            currentExaminePeriodThread,
-                            currentExamineYearThread,
-                            serverAddress);
+                    if (database.userDao().getByName(courseMain).size() == 0
+                            || !currentExamineYearThread.equals(database.userDao().getTermin())) {
+
+                        database.userDao().deleteTestPlanEntryAll();
+
+                        retrofit.RetrofitWebAccess(
+                                Terminefragment.this.getContext(),
+                                database,
+                                examineYearThread,
+                                currentExaminePeriodThread,
+                                currentExamineYearThread,
+                                serverAddress);
+
+                        sleeptime = 3000;
+                    } else {
+
+                        retrofit.retroUpdate(Terminefragment.this.getContext(), database,
+                                examineYearThread,
+                                currentExaminePeriodThread,
+                                currentExamineYearThread,
+                                serverAddress);
+
+                        sleeptime = 2000;
+                    }
+
+                    createAdapter();
+
+                    try {
+                        // Timeout für die Progressbar
+                        Thread.sleep(sleeptime);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    progressBar.dismiss();
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
                         public void run() {
                             String strJson
                                     = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
-                            currentPeriodeTextView.setText(strJson);
+                            if (!strJson.equals("0")) {
+                                currentPeriodeTextView.setText(strJson);
+                            }
+                            recyclerView.setAdapter(mAdapter);
                         }
                     });
                 }
@@ -458,60 +495,6 @@ public class Terminefragment extends Fragment {
                                 serverAddress,
                                 studiengangIds.toString());
                     }
-                }
-            }).start();
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                        SharedPreferences sharedPreferencesExamineTermin = Terminefragment.this.getContext().
-                                getSharedPreferences("examineTermin",Terminefragment.this.getContext().MODE_PRIVATE);
-                        String examinePeriod  = sharedPreferencesExamineTermin.
-                                getString("currentTermin","0");
-
-                    // Prüft zusätzlich nioch ob sich die Prüfungsphase geändert hat
-                    if (database.userDao().getByName(courseMain).size() == 0
-                    || !examinePeriod.equals(database.userDao().getTermin())) {
-
-                        database.userDao().deleteTestPlanEntryAll();
-
-                        retrofit.RetrofitWebAccess(
-                                Terminefragment.this.getContext(),
-                                database,
-                                examineYear,
-                                currentExaminePeriod,
-                                currentExamineYear,
-                                serverAddress);
-
-                        sleeptime = 3000;
-                    } else {
-
-                        retrofit.retroUpdate(Terminefragment.this.getContext(), database,
-                                examineYear,
-                                currentExaminePeriod,
-                                currentExamineYear,
-                                serverAddress);
-
-                        sleeptime = 2000;
-                    }
-
-                    createAdapter();
-
-                    try {
-                        // Timeout für die Progressbar
-                        Thread.sleep(sleeptime);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    progressBar.dismiss();
-
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.setAdapter(mAdapter);
-                        }
-                    });
                 }
             }).start();
         }
