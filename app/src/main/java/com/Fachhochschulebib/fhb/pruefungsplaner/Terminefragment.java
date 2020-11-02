@@ -226,8 +226,6 @@ public class Terminefragment extends Fragment {
 
                         final URL url = new URL(address);
 
-                        System.out.println("TEST " + url);
-
                     /*
                         HttpURLConnection anstelle Retrofit, um die XML/Json-Daten abzufragen!!!
                      */
@@ -310,6 +308,7 @@ public class Terminefragment extends Fragment {
                             //und mit dem heutigen Datum vergleichen.
                             //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
                             //liegt ist die aktuelle Prüfperiode!
+                            // die Fakultäts id wird noch mit der gewählten Fakultät verglichen
                             if(currentDate.before(lastDayPp) && facultyId.equals(facultyIdDB)) break;
                         }
 
@@ -393,11 +392,9 @@ public class Terminefragment extends Fragment {
                         //Keineverbindung();
                     }
                     // Nun aus Shared Preferences
-                    SharedPreferences mSharedPreferencesValidationThread
-                            = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
-
-                    String examineYearThread = mSharedPreferencesValidationThread.getString("examineYear", "0");
-                    String currentExaminePeriodThread = mSharedPreferencesValidationThread.getString("currentPeriode", "0");
+                    // die Daten für die Periode aus den Shared Preferences
+                    String examineYearThread = mSharedPreferencesValidation.getString("examineYear", "0");
+                    String currentExaminePeriodThread = mSharedPreferencesValidation.getString("currentPeriode", "0");
 
                     SharedPreferences mSharedPreferencesExamineYearThread
                             = Terminefragment.this.getContext()
