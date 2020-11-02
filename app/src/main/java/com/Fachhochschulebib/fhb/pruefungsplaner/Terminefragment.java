@@ -314,7 +314,6 @@ public class Terminefragment extends Fragment {
                         examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
 
                         //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
-                        MainActivity.currentDate =  currentExamineDate.get("PPNum").toString();
                         //-------------------------------------------------------------------
                         //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
                         SharedPreferences mSharedPreferencesExamineTermin
@@ -322,7 +321,7 @@ public class Terminefragment extends Fragment {
                                 .getSharedPreferences("examineTermin", MODE_PRIVATE);
 
                         SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
-                        mEditorTermin.putString("currentTermin", MainActivity.currentDate);
+                        mEditorTermin.putString("currentTermin", currentExamineDate.get("PPNum").toString());
 
                         mEditorTermin.apply();  //Ausführen der Schreiboperation!
                         //-------------------------------------------------------------------
@@ -386,6 +385,27 @@ public class Terminefragment extends Fragment {
                         Log.d("Output", "Konnte nicht die Pruefphase aktualisieren");
                         //Keineverbindung();
                     }
+                    // Nun aus Shared Preferences
+                    SharedPreferences mSharedPreferencesValidationThread
+                            = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
+
+                    String examineYearThread = mSharedPreferencesValidationThread.getString("examineYear", "0");
+                    String currentExaminePeriodThread = mSharedPreferencesValidationThread.getString("currentPeriode", "0");
+
+                    SharedPreferences mSharedPreferencesExamineYearThread
+                            = Terminefragment.this.getContext()
+                            .getSharedPreferences("examineTermin", 0);
+
+                    String currentExamineYearThread
+                            = mSharedPreferencesExamineYearThread.getString("currentTermin", "0");
+
+                    retrofit.RetrofitWebAccess(
+                            Terminefragment.this.getContext(),
+                            database,
+                            examineYearThread,
+                            currentExaminePeriodThread,
+                            currentExamineYearThread,
+                            serverAddress);
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override

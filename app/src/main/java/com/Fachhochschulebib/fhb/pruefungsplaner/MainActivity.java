@@ -61,7 +61,6 @@ public class MainActivity extends AppCompatActivity {
     public static String returnCourse = null;
     public static String returnFaculty = null;
     private Boolean checkReturn = true;
-    public static String currentDate;
     //KlassenVariablen
     private String courseMain;
     private JSONArray jsonArrayFacultys;
@@ -213,6 +212,7 @@ public class MainActivity extends AppCompatActivity {
         mSharedPreferencesExaminePeriod
                 = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
         SharedPreferences.Editor mEditorExaminePeriodAndYear = mSharedPreferencesExaminePeriod.edit();
+
         mEditorExaminePeriodAndYear.putString("currentPeriode", currentExamine);
         mEditorExaminePeriodAndYear.putString("examineYear", currentYear);
         mEditorExaminePeriodAndYear.apply();

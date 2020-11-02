@@ -57,19 +57,24 @@ public class RetrofitConnect {
                                    final String year,
                                    final String examinePeriod,
                                    List<JsonResponse> body) {
-        //Hole alle Einträge aus der lokalen Room-DB
-        List<TestPlanEntry> dataListFromLocalDB = null;
-        try { //DONE (08/2020) LG
-            dataListFromLocalDB = roomData.userDao().getAll2();
-            //roomdaten.clearAllTables();
-        } catch (Exception e) {
-            Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!");
-        }
+            // Start Merlin Gürtler
+            // Extra Thread da sonst die Db nicht aktualisiert werden kann.
+            new Thread((new Runnable() {
+                @Override
+                public void run() {
+                    //Hole alle Einträge aus der lokalen Room-DB
+                    List<TestPlanEntry> dataListFromLocalDB = null;
+                    try { //DONE (08/2020) LG
+                        dataListFromLocalDB = roomData.userDao().getAll2();
+                        //roomdaten.clearAllTables();
+                    } catch (Exception e) {
+                        Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!");
+                    }
 
-        // String validation = jahr+studiengang+pruefungsphase;
-        //String checkTermin = "0";
+                    // String validation = jahr+studiengang+pruefungsphase;
+                    //String checkTermin = "0";
 
-        //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
+                    //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
                     /*
                     Merlin Gürtler
                     Es Funktioniert auch ohne checkvalidate
@@ -83,91 +88,87 @@ public class RetrofitConnect {
                     }//if
                     */
 
-        //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
-        //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-        for (JsonResponse entryDb : body) {
+                    //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
+                    //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
+                    for (JsonResponse entryDb : body) {
 
-            //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
-            TestPlanEntry testPlanEntry = new TestPlanEntry();
+                        //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
+                        TestPlanEntry testPlanEntry = new TestPlanEntry();
 
-            //Festlegen vom Dateformat
-            String dateTimeZone;
-            String dateOfExam = entryDb.getDatum();
-            dateTimeZone = dateOfExam.replaceFirst("CET", "");
-            dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
-            String dateLastExamFormated = null;
+                        //Festlegen vom Dateformat
+                        String dateTimeZone;
+                        String dateOfExam = entryDb.getDatum();
+                        dateTimeZone = dateOfExam.replaceFirst("CET", "");
+                        dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
+                        String dateLastExamFormated = null;
 
-            try {
-                DateFormat dateFormat = new SimpleDateFormat(
-                        "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                Date dateLastExam = dateFormat.parse(dateTimeZone);
-                SimpleDateFormat targetFormat
-                        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                dateLastExamFormated = targetFormat.format(dateLastExam);
-                Date currentDate = Calendar.getInstance().getTime();
-                SimpleDateFormat df
-                        = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String currentDateFormated = df.format(currentDate);
+                        try {
+                            DateFormat dateFormat = new SimpleDateFormat(
+                                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+                            Date dateLastExam = dateFormat.parse(dateTimeZone);
+                            SimpleDateFormat targetFormat
+                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            dateLastExamFormated = targetFormat.format(dateLastExam);
+                            Date currentDate = Calendar.getInstance().getTime();
+                            SimpleDateFormat df
+                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String currentDateFormated = df.format(currentDate);
 
 
-                Log.d("Datum letzte Prüfung", dateLastExamFormated);
-                Log.d("Datum aktuell", currentDateFormated);
+                            Log.d("Datum letzte Prüfung", dateLastExamFormated);
+                            Log.d("Datum aktuell", currentDateFormated);
 
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
 
                         /*
                             DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
                             jetzt hinzugefügt.
                          */
-            // if(!checkvalidate){
-            //erhaltene Werte zur Datenbank hinzufügen
-            testPlanEntry.setFirstTester(entryDb.getErstpruefer());
-            testPlanEntry.setSecondTester(entryDb.getZweitpruefer());
-            testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
-            testPlanEntry.setID(entryDb.getID());
-            testPlanEntry.setCourse(entryDb.getStudiengang());
-            testPlanEntry.setModul(entryDb.getModul());
-            testPlanEntry.setSemester(entryDb.getSemester());
-            testPlanEntry.setTermin(entryDb.getTermin());
-            testPlanEntry.setRoom(entryDb.getRaum());
-            testPlanEntry.setExamForm(entryDb.getPruefform());
-            testPlanEntry.setStatus(entryDb.getStatus());
-            testPlanEntry.setHint(entryDb.getHint());
-            testPlanEntry.setColor(entryDb.getColor());
+                        // if(!checkvalidate){
+                        //erhaltene Werte zur Datenbank hinzufügen
+                        testPlanEntry.setFirstTester(entryDb.getErstpruefer());
+                        testPlanEntry.setSecondTester(entryDb.getZweitpruefer());
+                        testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
+                        testPlanEntry.setID(entryDb.getID());
+                        testPlanEntry.setCourse(entryDb.getStudiengang());
+                        testPlanEntry.setModul(entryDb.getModul());
+                        testPlanEntry.setSemester(entryDb.getSemester());
+                        testPlanEntry.setTermin(entryDb.getTermin());
+                        testPlanEntry.setRoom(entryDb.getRaum());
+                        testPlanEntry.setExamForm(entryDb.getPruefform());
+                        testPlanEntry.setStatus(entryDb.getStatus());
+                        testPlanEntry.setHint(entryDb.getHint());
+                        testPlanEntry.setColor(entryDb.getColor());
 
-            //lokale datenbank initialiseren
-            //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
-            //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-            //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
-            //Log.d("Test4", String.valueOf(userdaten2.size()));
+                        //lokale datenbank initialiseren
+                        //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
+                        //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
+                        //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
+                        //Log.d("Test4", String.valueOf(userdaten2.size()));
 
-            try {
-                for (int b = 0; b < Optionen.idList.size(); b++) {
-                    if (testPlanEntry.getID().equals(Optionen.idList.get(b))) {
-                        //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                        testPlanEntry.setFavorit(true);
-                    }
-                }
-            } catch (Exception e) {
-                Log.d("Fehler RetrofitConnect",
-                        "Fehler beim Ermitteln der favorisierten Prüfungen");
-            }
+                        try {
+                            for (int b = 0; b < Optionen.idList.size(); b++) {
+                                if (testPlanEntry.getID().equals(Optionen.idList.get(b))) {
+                                    //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
+                                    testPlanEntry.setFavorit(true);
+                                }
+                            }
+                        } catch (Exception e) {
+                            Log.d("Fehler RetrofitConnect",
+                                    "Fehler beim Ermitteln der favorisierten Prüfungen");
+                        }
 
-            //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-            testPlanEntry.setValidation(year + entryDb.getStudiengangId() + examinePeriod);
+                        //Schlüssel für die Erkennung bzw unterscheidung Festlegen
+                        testPlanEntry.setValidation(year + entryDb.getStudiengangId() + examinePeriod);
 
-            // Start Merlin Gürtler
-            // Extra Thread da sonst die Db nicht aktualisiert werden kann.
-            new Thread((new Runnable() {
-                @Override
-                public void run() {
-                    addUser(roomData, testPlanEntry);
+                        addUser(roomData, testPlanEntry);
+                   }
                 }
             })).start();
             // Ende Merlin Gürtler
-        }
+
 
         checkTransmission = true;
     };
@@ -190,7 +191,6 @@ public class RetrofitConnect {
 
         List<String> Ids = roomData.userDao().getChoosenCourseId(true);
         JSONArray courseIds = new JSONArray();
-
         for (String id : Ids) {
             try {
                 JSONObject idJson = new JSONObject();
@@ -210,6 +210,8 @@ public class RetrofitConnect {
                 + courseIds.toString() + "/";
 
         String URL = urlfhb + relPathWithParameters;
+
+        System.out.println("TEST " + URL);
 
         Retrofit.Builder builder = new Retrofit.Builder();
         builder.baseUrl(URL);
