@@ -243,12 +243,11 @@ public class searchFragment extends Fragment {
             searchDate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    SharedPreferences sharedPrefCurrentPeriode
+                            = getContext().getSharedPreferences("currentPeriode", Context.MODE_PRIVATE);
 
-                    SharedPreferences sharedPrefPruefPeriode
-                            = getContext().getSharedPreferences("PruefPeriode", Context.MODE_PRIVATE);
-                    String startDate = sharedPrefPruefPeriode.getString("startDatum", "0");
-                    String endDate = sharedPrefPruefPeriode.getString("endDatum", "0");
-
+                    String startDate = sharedPrefCurrentPeriode.getString("startDate", "0");
+                    String endDate = sharedPrefCurrentPeriode.getString("endDate", "0");
                     // Daten des Startdatums
                     int day = Integer.parseInt(startDate.substring(0,2));
                     int month = Integer.parseInt(startDate.substring(3,5));

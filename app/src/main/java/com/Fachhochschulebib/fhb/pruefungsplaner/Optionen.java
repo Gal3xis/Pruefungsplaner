@@ -137,11 +137,11 @@ public class Optionen extends Fragment {
         //----------------------------------------------------------------------------------------
         mSharedPreferencesCurrentTermin
                 = v.getContext()
-                .getSharedPreferences("PruefTermin", 0);
+                .getSharedPreferences("examineTermin", 0);
 
         SharedPreferences.Editor mEditorTermin = mSharedPreferencesCurrentTermin.edit();
         currentTermin
-                = mSharedPreferencesCurrentTermin.getString("aktPruefTermin", "0");
+                = mSharedPreferencesCurrentTermin.getString("currentTermin", "0");
         //----------------------------------------------------------------------------------------
 
         response = new JSONArray();

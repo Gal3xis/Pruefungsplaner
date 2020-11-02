@@ -127,10 +127,10 @@ public class AddCourseFragment extends Fragment {
 
                         SharedPreferences mSharedPreferencesCurrentTermin
                                 = AddCourseFragment.this.getContext()
-                                .getSharedPreferences("PruefTermin", 0);
+                                .getSharedPreferences("examineTermin", 0);
 
                         String currentDate
-                                = mSharedPreferencesCurrentTermin.getString("aktPruefTermin", "0");
+                                = mSharedPreferencesCurrentTermin.getString("currentTermin", "0");
 
 
                         SharedPreferences mSharedPreferencesValidation

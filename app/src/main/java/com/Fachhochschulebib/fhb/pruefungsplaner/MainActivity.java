@@ -670,7 +670,7 @@ public class MainActivity extends AppCompatActivity {
             //Shared Pref. für die Pruefperiode
             SharedPreferences.Editor mEditor;
             SharedPreferences mSharedPreferencesPPeriode
-                    = getApplicationContext().getSharedPreferences("periode", MODE_PRIVATE);
+                    = getApplicationContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
 
             public void run() {
                 try {
@@ -772,20 +772,20 @@ public class MainActivity extends AppCompatActivity {
                     MainActivity.currentDate =  currentExamineDate.get("PPNum").toString();
                     //-------------------------------------------------------------------
                     //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
-                    SharedPreferences mSharedPreferencesPruefTermin
+                    SharedPreferences mSharedPreferencesExamineTermin
                             = getApplicationContext()
-                            .getSharedPreferences("PruefTermin", MODE_PRIVATE);
+                            .getSharedPreferences("examineTermin", MODE_PRIVATE);
 
-                    SharedPreferences.Editor mEditorTermin = mSharedPreferencesPruefTermin.edit();
-                    mEditorTermin.putString("aktPruefTermin", MainActivity.currentDate);
+                    SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
+                    mEditorTermin.putString("currentTermin", MainActivity.currentDate);
 
                     mEditorTermin.apply();  //Ausführen der Schreiboperation!
                     //-------------------------------------------------------------------
 
-                    String pruefPeriode = currentExamineDate.get("startDatum").toString();
-                    String[] arrayPruefPeriode=  pruefPeriode.split("T");
+                    String currentPeriode = currentExamineDate.get("startDatum").toString();
+                    String[] arrayCurrentPeriode=  currentPeriode.split("T");
                     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-                    Date inputDate = fmt.parse(arrayPruefPeriode[0]);
+                    Date inputDate = fmt.parse(arrayCurrentPeriode[0]);
 
                     //erhaltenes Datum Parsen als Datum
                     Calendar calendar = new GregorianCalendar();
@@ -814,8 +814,10 @@ public class MainActivity extends AppCompatActivity {
 
                     // Start Merlin Gürtler
                     // Speichere das Start und Enddatum der Prüfperiode
-                    mEditor.putString("startDatum", day + "/" + month + "/" + year);
-                    mEditor.putString("endDatum", day2 + "/" + month2 + "/" + year2);
+                    mEditor.putString("startDate", formatDate(String.valueOf(day))
+                            + "/" + formatDate(String.valueOf(month)) + "/" + formatDate(String.valueOf(year)));
+                    mEditor.putString("endDate", formatDate(String.valueOf(day2))
+                            + "/" + formatDate(String.valueOf(month2)) + "/" + formatDate(String.valueOf(year2)));
                     mEditor.apply();
                     // Ende Merlin Gürtler
 
@@ -824,7 +826,6 @@ public class MainActivity extends AppCompatActivity {
                     if (strJson != null) {
                         if (strJson.equals(currentExamineDateFormatted))
                         {
-
                         }
                         else{
                             mEditor.clear();

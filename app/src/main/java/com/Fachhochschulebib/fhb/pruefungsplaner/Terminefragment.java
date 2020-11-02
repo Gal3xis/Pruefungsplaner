@@ -172,10 +172,10 @@ public class Terminefragment extends Fragment {
 
             SharedPreferences mSharedPreferencesExamineYear
                     = Terminefragment.this.getContext()
-                    .getSharedPreferences("PruefTermin", 0);
+                    .getSharedPreferences("examineTermin", 0);
 
             String currentExamineYear
-                    = mSharedPreferencesExamineYear.getString("aktPruefTermin", "0");
+                    = mSharedPreferencesExamineYear.getString("currentTermin", "0");
 
             RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
@@ -226,10 +226,10 @@ public class Terminefragment extends Fragment {
                 @Override
                 public void run() {
 
-                        SharedPreferences sharedPrefSPruefTermin = Terminefragment.this.getContext().
-                                getSharedPreferences("PruefTermin",Terminefragment.this.getContext().MODE_PRIVATE);
-                        String examinePeriod  = sharedPrefSPruefTermin.
-                                getString("aktPruefTermin","0");
+                        SharedPreferences sharedPreferencesExamineTermin = Terminefragment.this.getContext().
+                                getSharedPreferences("examineTermin",Terminefragment.this.getContext().MODE_PRIVATE);
+                        String examinePeriod  = sharedPreferencesExamineTermin.
+                                getString("currentTermin","0");
 
                     // Prüft zusätzlich nioch ob sich die Prüfungsphase geändert hat
                     if (database.userDao().getByName(courseMain).size() == 0
