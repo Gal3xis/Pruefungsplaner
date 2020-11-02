@@ -69,7 +69,7 @@ public interface UserDao {
     void deleteCourse();
 
     @Query("DELETE FROM TestPlanEntry WHERE course = :courseName AND choosen = :choosen")
-    void deletePruefplanEintragExceptChoosen(String courseName, boolean choosen);
+    void deleteEntryExceptChoosenCourses(String courseName, boolean choosen);
 
     @Query("DELETE FROM TestPlanEntry ")
     void deleteTestPlanEntryAll();

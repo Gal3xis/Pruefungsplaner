@@ -153,7 +153,7 @@ public class AddCourseFragment extends Fragment {
                                 courseName = studiengang.getCourseName();
                                 if(!studiengang.getChoosen()) {
                                     // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                    database.userDao().deletePruefplanEintragExceptChoosen(courseName, false);
+                                    database.userDao().deleteEntryExceptChoosenCourses(courseName, false);
                                 }
                                 if(database.userDao().getOneEntryByName(courseName) == null && studiengang.getChoosen()) {
                                     JSONObject idJson = new JSONObject();

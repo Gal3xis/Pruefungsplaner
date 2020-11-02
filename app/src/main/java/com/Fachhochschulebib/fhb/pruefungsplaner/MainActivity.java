@@ -18,7 +18,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,11 +40,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
 
@@ -74,10 +70,9 @@ public class MainActivity extends AppCompatActivity {
     final List<String> facultyName = new ArrayList<String>();
     // private Spinner spStudiengangMain;
     // List<String> idList = new ArrayList<String>();
-    private Message msg = new Message();
 
     SharedPreferences mSharedPreferencesPPServerAdress;
-    SharedPreferences mSharedPreferencesPruefPhase;
+    SharedPreferences mSharedPreferencesExaminePeriod;
     String serverAddress, relativePPlanURL;
 
     // Start Merlin Gürtler
@@ -215,12 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Start Merlin Gürtler
         // Schreiben der Pruefphase in eine shared preference
-        mSharedPreferencesPruefPhase
+        mSharedPreferencesExaminePeriod
                 = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
-        SharedPreferences.Editor mEditorPruefPhaseUndJahr = mSharedPreferencesPruefPhase.edit();
-        mEditorPruefPhaseUndJahr.putString("currentPeriode", currentExamine);
-        mEditorPruefPhaseUndJahr.putString("examineYear", currentYear);
-        mEditorPruefPhaseUndJahr.apply();
+        SharedPreferences.Editor mEditorExaminePeriodAndYear = mSharedPreferencesExaminePeriod.edit();
+        mEditorExaminePeriodAndYear.putString("currentPeriode", currentExamine);
+        mEditorExaminePeriodAndYear.putString("examineYear", currentYear);
+        mEditorExaminePeriodAndYear.apply();
 
         // Ende Merlin Gürtler
 
@@ -232,11 +227,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             checkConnection();
             //Creating editor to store uebergebeneModule to shared preferencess
-            TextView txtTestPeriod = (TextView) findViewById(R.id.txtpruefperiode);
             //second parameter is necessary ie.,Value to return if this preference does not exist.
-            if (strJson != null) {
-                txtTestPeriod.setText(strJson);
-            }
         }
         //Wenn Verbindung zum Server nicht möglich, dann Daten aus der Datenbank nehmen
         catch(Exception e) {
@@ -253,11 +244,6 @@ public class MainActivity extends AppCompatActivity {
                 } catch (Exception b) {
                     Log.d("Datenbankfehler","Keine Daten in der Datenbank vorhanden!");
                 }
-            }
-            TextView txtpruefperiode = (TextView) findViewById(R.id.txtpruefperiode);
-            //second parameter is necessary ie.,Value to return if this preference does not exist.
-            if (strJson != null) {
-                txtpruefperiode.setText(strJson);
             }
         }
     }
@@ -369,7 +355,6 @@ public class MainActivity extends AppCompatActivity {
 
                                             SharedPreferences.Editor editorFacultyValidation =
                                                     sharedPrefFacultyValidation.edit();
-
                                             editorFacultyValidation.putString("returnFaculty", returnFaculty);
                                             editorFacultyValidation.apply();
 
@@ -652,201 +637,15 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    // Start Merlin Gürtler
-    // Funktion um die Führende 0 hinzuzufügen
-    public String formatDate (String dateToFormat) {
-        if(dateToFormat.length() == 1) {
-            dateToFormat = "0" + dateToFormat;
-        }
-        return dateToFormat;
-    }
-    // Ende Merlin Gürtler
-
     //Methode zum Abfragen der Aktuellen Prüfperiode
     public boolean pingExaminePeriod() {
 
         Thread retrothreadMain = new Thread(new Runnable() {
 
-            //Shared Pref. für die Pruefperiode
-            SharedPreferences.Editor mEditor;
-            SharedPreferences mSharedPreferencesPPeriode
-                    = getApplicationContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
+
 
             public void run() {
-                try {
-                    StringBuilder result = new StringBuilder();
 
-                    //DONE (08/2020 LG)
-                    String address = serverAddress + relativePPlanURL + "entity.pruefperioden";
-
-                    final URL url = new URL(address);
-
-                    /*
-                        HttpURLConnection anstelle Retrofit, um die XML/Json-Daten abzufragen!!!
-                     */
-                    final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
-                    urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
-
-                    try {
-                        urlConn.connect();
-                    }catch (Exception e)
-                    {
-                        Log.d("Output exception",e.toString());
-                        msg.arg1=1;
-                        handler.sendMessage(msg);
-                    }
-
-                    //Variablen zum lesen der erhaltenen werte
-                    InputStream in = new BufferedInputStream(urlConn.getInputStream());
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        result.append(line);
-                    }
-
-
-                    JSONObject jsonObj = null;
-                    try {
-                        jsonObj = XML.toJSONObject(String.valueOf(result));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    //hinzufügen der erhaltenen werte JSONObject werte zum JSONArray
-                    Iterator x = jsonObj.keys();
-                    JSONArray jsonArray = new JSONArray();
-                    while (x.hasNext()){
-                        String key = (String) x.next();
-                        jsonArray.put(jsonObj.get(key));
-                    }
-
-                    JSONArray examinePeriodArray = new JSONArray();
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        examinePeriodArray.put(object.get("pruefperioden"));
-                    }
-                    String arrayZuString = examinePeriodArray.toString();
-                    String erstesUndletztesZeichenentfernen
-                            = arrayZuString.substring(1,arrayZuString.length()-1);
-                    JSONArray mainObject2 = new JSONArray(erstesUndletztesZeichenentfernen);
-
-                    //DONE (09/2020 LG) Aktuellen Prüftermin aus JSON-String herausfiltern!
-                    //Heutiges Datum als Vergleichsdatum ermitteln und den Formatierer festlegen.
-                    GregorianCalendar now = new GregorianCalendar();
-                    Date currentDate = now.getTime();
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-                    JSONObject currentExamineDate = null;
-                    String date;
-                    Date examineDate;
-                    Date lastDayPp;
-                    int examineWeek;
-
-                    //Durch-Iterieren durch alle Prüfperioden-Objekte des JSON-Ergebnisses
-                    for (int i=0;i<mainObject2.length();i++) {
-                        currentExamineDate = mainObject2.getJSONObject(i);
-                        date = currentExamineDate.get("startDatum").toString();
-                        //Aus dem String das Datum herauslösen
-                        date = date.substring(0,10);
-                        //und in ein Date-Objekt umwandeln
-                        examineDate = formatter.parse(date);
-
-                        // Erhalte die Anzahl der Wochen
-                        examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
-
-                        Calendar c = Calendar.getInstance();
-                        c.setTime(examineDate);
-                        c.add(Calendar.DATE, 7 * examineWeek - 2);  // Anzahl der Tage Klausurenphase
-                        lastDayPp = formatter.parse(formatter.format(c.getTime()));
-
-                        //und mit dem heutigen Datum vergleichen.
-                        //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
-                        //liegt ist die aktuelle Prüfperiode!
-                        if(currentDate.before(lastDayPp)) break;
-                    }
-
-                    examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
-
-                    //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
-                    MainActivity.currentDate =  currentExamineDate.get("PPNum").toString();
-                    //-------------------------------------------------------------------
-                    //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
-                    SharedPreferences mSharedPreferencesExamineTermin
-                            = getApplicationContext()
-                            .getSharedPreferences("examineTermin", MODE_PRIVATE);
-
-                    SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
-                    mEditorTermin.putString("currentTermin", MainActivity.currentDate);
-
-                    mEditorTermin.apply();  //Ausführen der Schreiboperation!
-                    //-------------------------------------------------------------------
-
-                    String currentPeriode = currentExamineDate.get("startDatum").toString();
-                    String[] arrayCurrentPeriode=  currentPeriode.split("T");
-                    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-                    Date inputDate = fmt.parse(arrayCurrentPeriode[0]);
-
-                    //erhaltenes Datum Parsen als Datum
-                    Calendar calendar = new GregorianCalendar();
-                    calendar.setTime(inputDate);
-                    int year = calendar.get(Calendar.YEAR);
-                    //Add one to month {0 - 11}
-                    int month = calendar.get(Calendar.MONTH) + 1;
-                    int day = calendar.get(Calendar.DAY_OF_MONTH);
-                    calendar.add(Calendar.DATE, 7 * examineWeek - 2);
-                    int year2 = calendar.get(Calendar.YEAR);
-                    //Add one to month {0 - 11}
-                    int month2 = calendar.get(Calendar.MONTH) + 1;
-                    int day2 = calendar.get(Calendar.DAY_OF_MONTH);
-
-                    //String Prüfperiode zum Anzeigen
-                    String currentExamineDateFormatted = getApplicationContext().getString(R.string.current)
-                            + formatDate(String.valueOf(day))
-                            +"."+ formatDate(String.valueOf(month))
-                            +"."+ year +getApplicationContext().getString(R.string.bis)
-                            + formatDate(String.valueOf(day2))
-                            +"."+ formatDate(String.valueOf(month2))
-                            +"."+ year2;  // number of days to add;
-
-                    //Prüfperiode für die Offline-Verwendung speichern
-                    mEditor = mSharedPreferencesPPeriode.edit();
-
-                    // Start Merlin Gürtler
-                    // Speichere das Start und Enddatum der Prüfperiode
-                    mEditor.putString("startDate", formatDate(String.valueOf(day))
-                            + "/" + formatDate(String.valueOf(month)) + "/" + formatDate(String.valueOf(year)));
-                    mEditor.putString("endDate", formatDate(String.valueOf(day2))
-                            + "/" + formatDate(String.valueOf(month2)) + "/" + formatDate(String.valueOf(year2)));
-                    mEditor.apply();
-                    // Ende Merlin Gürtler
-
-                    String strJson
-                            = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
-                    if (strJson != null) {
-                        if (strJson.equals(currentExamineDateFormatted))
-                        {
-                        }
-                        else{
-                            mEditor.clear();
-                            mEditor.apply();
-                            mEditor.putString("currentPeriode", currentExamineDateFormatted);
-                            mEditor.apply();
-                            // Start Merlin Gürtler
-                            // Dies ist nötig, da die Serverantwort dauert,
-                            // somit wird vorher der Standardwert 0 geladen
-                            TextView txtExamine = (TextView) findViewById(R.id.txtpruefperiode);
-                            txtExamine.setText(currentExamineDateFormatted);
-                            // Ende Merlin Gürtler
-                        }
-                    }
-                    // Ende Merlin Gürtler
-                }
-                catch (final Exception e)
-                {
-                    checkReturn = false;
-                    //Keineverbindung();
-                }
             }
         });
 

@@ -37,7 +37,18 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
@@ -48,6 +59,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.XML;
 
 import static android.content.Context.MODE_PRIVATE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -57,6 +69,7 @@ public class Terminefragment extends Fragment {
 
     ProgressDialog progressBar;
     private RecyclerView recyclerView;
+    private TextView currentPeriodeTextView;
     private CalendarView calendar;
     private Button btnSearch;
     private String date;
@@ -83,6 +96,16 @@ public class Terminefragment extends Fragment {
     private RecyclerView.LayoutManager mLayout;
 
     AppDatabase database;
+
+    // Start Merlin Gürtler
+    // Funktion um die Führende 0 hinzuzufügen
+    public String formatDate (String dateToFormat) {
+        if(dateToFormat.length() == 1) {
+            dateToFormat = "0" + dateToFormat;
+        }
+        return dateToFormat;
+    }
+    // Ende Merlin Gürtler
 
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
     // Start Merlin Gürtler
@@ -179,6 +202,202 @@ public class Terminefragment extends Fragment {
 
             RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
+            // Thread um die Prüfperiode zu aktualisieren
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //Shared Pref. für die Pruefperiode
+                    SharedPreferences.Editor mEditor;
+                    SharedPreferences mSharedPreferencesPPeriode
+                            = getContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
+
+                    // Erhalte die gewählte Fakultät aus den Shared Preferences
+                    SharedPreferences sharedPreferencesFacultyEditor =
+                            getContext().
+                                    getSharedPreferences("validation",0);
+
+                    String facultyId = sharedPreferencesFacultyEditor.getString("returnFaculty", "0");
+
+                    try {
+                        StringBuilder result = new StringBuilder();
+
+                        //DONE (08/2020 LG)
+                        String address = serverAddress + relativePPlanURL + "entity.pruefperioden";
+
+                        final URL url = new URL(address);
+
+                    /*
+                        HttpURLConnection anstelle Retrofit, um die XML/Json-Daten abzufragen!!!
+                     */
+                        final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
+                        urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
+
+                        try {
+                            urlConn.connect();
+                        }catch (Exception e)
+                        {
+                            Log.d("Output exception",e.toString());
+                        }
+
+                        //Variablen zum lesen der erhaltenen werte
+                        InputStream in = new BufferedInputStream(urlConn.getInputStream());
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            result.append(line);
+                        }
+
+
+                        JSONObject jsonObj = null;
+                        try {
+                            jsonObj = XML.toJSONObject(String.valueOf(result));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        //hinzufügen der erhaltenen werte JSONObject werte zum JSONArray
+                        Iterator x = jsonObj.keys();
+                        JSONArray jsonArray = new JSONArray();
+                        while (x.hasNext()){
+                            String key = (String) x.next();
+                            jsonArray.put(jsonObj.get(key));
+                        }
+
+                        JSONArray examinePeriodArray = new JSONArray();
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject object = jsonArray.getJSONObject(i);
+                            examinePeriodArray.put(object.get("pruefperioden"));
+                        }
+                        String arrayZuString = examinePeriodArray.toString();
+                        String erstesUndletztesZeichenentfernen
+                                = arrayZuString.substring(1,arrayZuString.length()-1);
+                        JSONArray mainObject2 = new JSONArray(erstesUndletztesZeichenentfernen);
+
+                        //DONE (09/2020 LG) Aktuellen Prüftermin aus JSON-String herausfiltern!
+                        //Heutiges Datum als Vergleichsdatum ermitteln und den Formatierer festlegen.
+                        GregorianCalendar now = new GregorianCalendar();
+                        Date currentDate = now.getTime();
+                        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+                        JSONObject currentExamineDate = null;
+                        String date;
+                        String facultyIdDB;
+                        Date examineDate;
+                        Date lastDayPp;
+                        int examineWeek;
+
+                        //Durch-Iterieren durch alle Prüfperioden-Objekte des JSON-Ergebnisses
+                        for (int i=0;i<mainObject2.length();i++) {
+                            currentExamineDate = mainObject2.getJSONObject(i);
+                            date = currentExamineDate.get("startDatum").toString();
+                            facultyIdDB =  currentExamineDate.getJSONObject("fbFbid").get("fbid").toString();
+                            //Aus dem String das Datum herauslösen
+                            date = date.substring(0,10);
+                            //und in ein Date-Objekt umwandeln
+                            examineDate = formatter.parse(date);
+
+                            // Erhalte die Anzahl der Wochen
+                            examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
+
+                            Calendar c = Calendar.getInstance();
+                            c.setTime(examineDate);
+                            c.add(Calendar.DATE, 7 * examineWeek - 2);  // Anzahl der Tage Klausurenphase
+                            lastDayPp = formatter.parse(formatter.format(c.getTime()));
+
+                            //und mit dem heutigen Datum vergleichen.
+                            //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
+                            //liegt ist die aktuelle Prüfperiode!
+                            if(currentDate.before(lastDayPp) && facultyId.equals(facultyIdDB)) break;
+                        }
+
+                        examineWeek = Integer.parseInt(currentExamineDate.get("PPWochen").toString());
+
+                        //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
+                        MainActivity.currentDate =  currentExamineDate.get("PPNum").toString();
+                        //-------------------------------------------------------------------
+                        //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
+                        SharedPreferences mSharedPreferencesExamineTermin
+                                = getContext()
+                                .getSharedPreferences("examineTermin", MODE_PRIVATE);
+
+                        SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
+                        mEditorTermin.putString("currentTermin", MainActivity.currentDate);
+
+                        mEditorTermin.apply();  //Ausführen der Schreiboperation!
+                        //-------------------------------------------------------------------
+
+                        String currentPeriode = currentExamineDate.get("startDatum").toString();
+                        String[] arrayCurrentPeriode=  currentPeriode.split("T");
+                        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+                        Date inputDate = fmt.parse(arrayCurrentPeriode[0]);
+
+                        //erhaltenes Datum Parsen als Datum
+                        Calendar calendar = new GregorianCalendar();
+                        calendar.setTime(inputDate);
+                        int year = calendar.get(Calendar.YEAR);
+                        //Add one to month {0 - 11}
+                        int month = calendar.get(Calendar.MONTH) + 1;
+                        int day = calendar.get(Calendar.DAY_OF_MONTH);
+                        calendar.add(Calendar.DATE, 7 * examineWeek - 2);
+                        int year2 = calendar.get(Calendar.YEAR);
+                        //Add one to month {0 - 11}
+                        int month2 = calendar.get(Calendar.MONTH) + 1;
+                        int day2 = calendar.get(Calendar.DAY_OF_MONTH);
+
+                        //String Prüfperiode zum Anzeigen
+                        String currentExamineDateFormatted = getContext().getString(R.string.current)
+                                + formatDate(String.valueOf(day))
+                                +"."+ formatDate(String.valueOf(month))
+                                +"."+ year +getContext().getString(R.string.bis)
+                                + formatDate(String.valueOf(day2))
+                                +"."+ formatDate(String.valueOf(month2))
+                                +"."+ year2;  // number of days to add;
+
+                        //Prüfperiode für die Offline-Verwendung speichern
+                        mEditor = mSharedPreferencesPPeriode.edit();
+
+                        // Start Merlin Gürtler
+                        // Speichere das Start und Enddatum der Prüfperiode
+                        mEditor.putString("startDate", formatDate(String.valueOf(day))
+                                + "/" + formatDate(String.valueOf(month)) + "/" + formatDate(String.valueOf(year)));
+                        mEditor.putString("endDate", formatDate(String.valueOf(day2))
+                                + "/" + formatDate(String.valueOf(month2)) + "/" + formatDate(String.valueOf(year2)));
+                        mEditor.apply();
+                        // Ende Merlin Gürtler
+
+                        String strJson
+                                = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
+                        if (strJson != null) {
+                            if (strJson.equals(currentExamineDateFormatted))
+                            {
+                            }
+                            else{
+                                mEditor.clear();
+                                mEditor.apply();
+                                mEditor.putString("currentPeriode", currentExamineDateFormatted);
+                                mEditor.apply();
+                            }
+                        }
+                        // Ende Merlin Gürtler
+                    }
+                    catch (final Exception e)
+                    {
+                        Log.d("Output", "Konnte nicht die Pruefphase aktualisieren");
+                        //Keineverbindung();
+                    }
+
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            String strJson
+                                    = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
+                            currentPeriodeTextView.setText(strJson);
+                        }
+                    });
+                }
+            }).start();
+
             // prüft ob auch alle ausgewählten Studiengänge vorhanden sind
             new Thread(new Runnable() {
                 @Override
@@ -196,7 +415,7 @@ public class Terminefragment extends Fragment {
                             courseName = course.getCourseName();
                             if(!course.getChoosen()) {
                                 // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                database.userDao().deletePruefplanEintragExceptChoosen(courseName, false);
+                                database.userDao().deleteEntryExceptChoosenCourses(courseName, false);
                             }
                             if(database.userDao().getOneEntryByName(courseName) == null && course.getChoosen()) {
                                 JSONObject idJson = new JSONObject();
@@ -338,6 +557,14 @@ public class Terminefragment extends Fragment {
 
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
+        currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
+
+        SharedPreferences mSharedPreferencesPPeriode
+                = getContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
+
+        String strJson
+                = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
+        currentPeriodeTextView.setText(strJson);
 
         recyclerView.setVisibility(View.VISIBLE);
 

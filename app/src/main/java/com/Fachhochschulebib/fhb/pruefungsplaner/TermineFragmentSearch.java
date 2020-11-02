@@ -42,11 +42,14 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class TermineFragmentSearch extends Fragment {
     SharedPreferences mSharedPreferencesValidation;
 
     private RecyclerView recyclerView;
     private CalendarView calendar;
+    private TextView currentPeriodeTextView;
     private Button btnSearch;
     private String date;
     String examineYear, currentExaminePeriod, returnCourse, validation;
@@ -99,6 +102,16 @@ public class TermineFragmentSearch extends Fragment {
 
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
+
+        currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
+
+        SharedPreferences mSharedPreferencesPPeriode
+                = getContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
+
+        String strJson
+                = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
+        currentPeriodeTextView.setText(strJson);
+
         recyclerView.setVisibility(View.VISIBLE);
         // use this setting to
         // improve performance if you know that changes
