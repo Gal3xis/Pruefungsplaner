@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button buttonSpinner;
     private Button buttonOk;
-    public static String currentExamine = null;
     public static String returnCourse = null;
     public static String returnFaculty = null;
     private Boolean checkReturn = true;
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
     // List<String> idList = new ArrayList<String>();
 
     SharedPreferences mSharedPreferencesPPServerAdress;
-    SharedPreferences mSharedPreferencesExaminePeriod;
     String serverAddress, relativePPlanURL;
 
     // Start Merlin Gürtler
@@ -182,35 +180,7 @@ public class MainActivity extends AppCompatActivity {
         int calendarMonth = calendar.get(Calendar.MONTH );
         Log.d("Output Monat",String.valueOf(calendarMonth));
 
-        if (calendarMonth  <= 4)
-        {
-            currentExamine = context.getString(R.string.winter_short);
-        }
-
-        if (calendarMonth  > 4)
-        {
-            currentExamine = context.getString(R.string.sommer_short);
-        }
-
-        // TODO Nach Corona muss der Wert in der strings.xml wieder auf 9 geändert werden
-        if (calendarMonth >= Integer.parseInt(
-                getApplicationContext().getString(R.string.month_wise)
-        )) {
-
-            currentExamine = context.getString(R.string.winter_short);
-        }
-
         // Start Merlin Gürtler
-        // Schreiben der Pruefphase in eine shared preference
-        mSharedPreferencesExaminePeriod
-                = getApplicationContext().getSharedPreferences("validation", MODE_PRIVATE);
-        SharedPreferences.Editor mEditorExaminePeriodAndYear = mSharedPreferencesExaminePeriod.edit();
-
-        mEditorExaminePeriodAndYear.putString("currentPeriode", currentExamine);
-        mEditorExaminePeriodAndYear.apply();
-
-        // Ende Merlin Gürtler
-
         //Anzahl der Elemente
         //Adapter-Aufruf
         SharedPreferences sharedPrefPruefPeriode

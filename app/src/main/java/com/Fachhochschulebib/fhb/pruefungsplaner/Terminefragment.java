@@ -327,7 +327,8 @@ public class Terminefragment extends Fragment {
                         mEditorExaminePeriodAndYear.apply();
 
                         SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
-                        mEditorTermin.putString("currentTermin", currentExamineDate.get("PPNum").toString());
+                        mEditorTermin.putString("currentTermin", currentExamineDate.get("pruefTermin").toString());
+                        mEditorExaminePeriodAndYear.putString("currentPeriode", currentExamineDate.get("pruefSemester").toString());
 
                         mEditorTermin.apply();  //Ausführen der Schreiboperation!
                         //-------------------------------------------------------------------
@@ -427,9 +428,6 @@ public class Terminefragment extends Fragment {
 
                         sleeptime = 2000;
                     }
-
-                    createAdapter();
-
                     try {
                         // Timeout für die Progressbar
                         Thread.sleep(sleeptime);
@@ -437,6 +435,8 @@ public class Terminefragment extends Fragment {
                         e.printStackTrace();
                     }
                     progressBar.dismiss();
+
+                    createAdapter();
 
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
                         @Override
@@ -459,7 +459,6 @@ public class Terminefragment extends Fragment {
                     List <Courses> courses = database.userDao().getCourses();
 
                     // aktualsiere die db Einträge
-
                     JSONArray studiengangIds = new JSONArray();
 
                     String courseName;

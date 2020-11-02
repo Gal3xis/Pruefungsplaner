@@ -1,10 +1,7 @@
 <resources>
     <string name="app_name">Pruefungsplaner</string>
-    <string name="server_adress">http://h2906928.stratoserver.net:8080/</string>
-    <string name="server_url">PruefplanMaven/resources/org.fh.ppv.</string>
-
-    <!-- Prüfungsphase Corona -->
-   <string name="month_wise">10</string>
+    <string name="server_adress">http://192.168.2.104:8080/</string>
+    <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
 
     <!-- Ui -->
     <string name="currentPeriod">Die akutelle Phase konnte nicht geladen werden</string>
@@ -42,24 +39,9 @@
     <string name="title_changeFaculty">Fachbereich ändern</string>
     <string name="title_feedback">Feedback geben</string>
 
-    <!-- Klausur Typen -->
-    <string name="klausur">K_90</string>
-    <string name="klausur60">K_60</string>
-    <string name="klausur120">K_120</string>
-    <string name="klausur180">K_180</string>
-    <string name="projektarbeit">PA_30</string>
-    <string name="kombination15">KP_15</string>
-    <string name="kombination30">KP_30</string>
-    <string name="ilias60">I_60</string>
-    <string name="ilias90">I_90</string>
-    <string name="online60">0_60</string>
-    <string name="online90">0_90</string>
-
     <!-- Jahreszeiten -->
     <string name="sommer">Sommer</string>
-    <string name="sommer_short">SoSe</string>
     <string name="winter">Winter</string>
-    <string name="winter_short">WiSe</string>
 
     <!-- Nachricht -->
     <string name="noConnection">Keine Verbindung zum Server möglich.</string>
