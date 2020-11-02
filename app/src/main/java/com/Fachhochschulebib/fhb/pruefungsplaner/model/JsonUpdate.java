@@ -10,9 +10,9 @@ public class JsonUpdate {
     private String ID;
 
 
-    @SerializedName("Datum")
+    @SerializedName("Date")
     @Expose
-    private String Datum;
+    private String Date;
 
 
     @SerializedName("Status")
@@ -51,12 +51,12 @@ public class JsonUpdate {
         this.ID = ID;
     }
 
-    public String getDatum() {
-        return Datum;
+    public String getDate() {
+        return Date;
     }
 
-    public void setDatum(String datum) {
-        Datum = datum;
+    public void setDate(String date) {
+        Date = date;
     }
 
     public String getStatus() {

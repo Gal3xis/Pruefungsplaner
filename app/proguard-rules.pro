@@ -25,5 +25,4 @@
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonCourse { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUpdate { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse { *; }
--keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonPruefungsform { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUuid { *; }

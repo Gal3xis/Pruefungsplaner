@@ -21,19 +21,19 @@ import com.google.gson.annotations.SerializedName;
 
 public class JsonResponse {
 
-    @SerializedName("Erstpruefer")
+    @SerializedName("FirstTester")
     @Expose
-    private String Erstpruefer;
+    private String FirstTester;
 
 
-    @SerializedName("Zweitpruefer")
+    @SerializedName("SecondTester")
     @Expose
-    private String Zweitpruefer;
+    private String SecondTester;
 
 
-    @SerializedName("Pruefform")
+    @SerializedName("Form")
     @Expose
-    private String Pruefform;
+    private String Form;
 
 
     @SerializedName("Semester")
@@ -41,19 +41,19 @@ public class JsonResponse {
     private String Semester;
 
 
-    @SerializedName("Datum")
+    @SerializedName("Date")
     @Expose
-    private String Datum;
+    private String Date;
 
 
-    @SerializedName("Modul")
+    @SerializedName("Module")
     @Expose
-    private String Modul;
+    private String Module;
 
 
-    @SerializedName("Studiengang")
+    @SerializedName("Course")
     @Expose
-    private String Studiengang;
+    private String Course;
 
 
     @SerializedName("Termin")
@@ -65,14 +65,14 @@ public class JsonResponse {
     @Expose
     private String ID;
 
-    @SerializedName("Raum")
+    @SerializedName("Room")
     @Expose
-    private String Raum;
+    private String Room;
 
     // Start Merlin Gürtler
-    @SerializedName("StudiengangId")
+    @SerializedName("CourseId")
     @Expose
-    private String StudiengangId;
+    private String CourseId;
 
     @SerializedName("Status")
     @Expose
@@ -112,44 +112,44 @@ public class JsonResponse {
         Status = status;
     }
 
-    public String getErstpruefer() {
-        return Erstpruefer;
+    public String getFirstTester() {
+        return FirstTester;
     }
 
-    public void setErstpruefer(String erstpruefer) {
-        this.Erstpruefer = erstpruefer;
+    public void setFirstTester(String firstTester) {
+        this.FirstTester = firstTester;
     }
 
-    public String getRaum() {
-        return Raum;
+    public String getRoom() {
+        return Room;
     }
 
-    public void setRaum(String raum) {
-        this.Raum = raum;
+    public void setRoom(String room) {
+        this.Room = room;
     }
 
-    public String getDatum() {
-        return Datum;
+    public String getDate() {
+        return Date;
     }
 
-    public void setDatum(String datum) {
-        this.Datum = datum;
+    public void setDate(String date) {
+        this.Date = date;
     }
 
-    public String getZweitpruefer() {
-        return Zweitpruefer;
+    public String getSecondTester() {
+        return SecondTester;
     }
 
-    public void setZweitpruefer(String zweitpruefer) {
-        Zweitpruefer = zweitpruefer;
+    public void setSecondTester(String secondTester) {
+        SecondTester = secondTester;
     }
 
-    public String getPruefform() {
-        return Pruefform;
+    public String getForm() {
+        return Form;
     }
 
-    public void setPruefform(String pruefform) {
-        Pruefform = pruefform;
+    public void setForm(String form) {
+        Form = form;
     }
 
     public String getSemester() {
@@ -160,20 +160,20 @@ public class JsonResponse {
         Semester = semester;
     }
 
-    public String getModul() {
-        return Modul;
+    public String getModule() {
+        return Module;
     }
 
-    public void setModul(String modul) {
-        Modul = modul;
+    public void setModule(String module) {
+        Module = module;
     }
 
-    public String getStudiengang() {
-        return Studiengang;
+    public String getCourse() {
+        return Course;
     }
 
-    public void setStudiengang(String studiengang) {
-        Studiengang = studiengang;
+    public void setCourse(String course) {
+        Course = course;
     }
 
     public String getTermin() {
@@ -192,12 +192,12 @@ public class JsonResponse {
         this.ID = ID;
     }
 
-    public String getStudiengangId() {
-        return StudiengangId;
+    public String getCourseId() {
+        return CourseId;
     }
 
-    public void setStudiengangId(String studiengangId) {
-        StudiengangId = studiengangId;
+    public void setCourseId(String courseId) {
+        CourseId = courseId;
     }
 
 }

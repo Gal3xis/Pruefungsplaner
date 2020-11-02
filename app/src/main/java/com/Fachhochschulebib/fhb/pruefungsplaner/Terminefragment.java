@@ -143,6 +143,13 @@ public class Terminefragment extends Fragment {
                 roomList,
                 status,
                 statusMessage);
+
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.setAdapter(mAdapter);
+            }
+        });
     }
 
 
@@ -324,11 +331,13 @@ public class Terminefragment extends Fragment {
                         SharedPreferences.Editor mEditorExaminePeriodAndYear = mSharedPreferencesValidation.edit();
 
                         mEditorExaminePeriodAndYear.putString("examineYear", currentExamineDate.get("PPJahr").toString());
-                        mEditorExaminePeriodAndYear.apply();
 
                         SharedPreferences.Editor mEditorTermin = mSharedPreferencesExamineTermin.edit();
                         mEditorTermin.putString("currentTermin", currentExamineDate.get("pruefTermin").toString());
                         mEditorExaminePeriodAndYear.putString("currentPeriode", currentExamineDate.get("pruefSemester").toString());
+
+                        mEditorExaminePeriodAndYear.apply();
+
 
                         mEditorTermin.apply();  //Ausführen der Schreiboperation!
                         //-------------------------------------------------------------------
@@ -417,7 +426,7 @@ public class Terminefragment extends Fragment {
                                 currentExamineYearThread,
                                 serverAddress);
 
-                        sleeptime = 3000;
+                        sleeptime = 5000;
                     } else {
 
                         retrofit.retroUpdate(Terminefragment.this.getContext(), database,
@@ -446,7 +455,6 @@ public class Terminefragment extends Fragment {
                             if (!strJson.equals("0")) {
                                 currentPeriodeTextView.setText(strJson);
                             }
-                            recyclerView.setAdapter(mAdapter);
                         }
                     });
                 }
@@ -563,7 +571,9 @@ public class Terminefragment extends Fragment {
 
         String strJson
                 = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
-        currentPeriodeTextView.setText(strJson);
+        if(!strJson.equals("0")) {
+            currentPeriodeTextView.setText(strJson);
+        }
 
         recyclerView.setVisibility(View.VISIBLE);
 
@@ -777,7 +787,6 @@ public class Terminefragment extends Fragment {
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        recyclerView.setAdapter(mAdapter);
                         // Merlin Gürtler
                         // Aktiviert den swipe listener
                         enableSwipeToDelete();

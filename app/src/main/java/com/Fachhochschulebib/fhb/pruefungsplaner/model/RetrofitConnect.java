@@ -96,7 +96,7 @@ public class RetrofitConnect {
 
                         //Festlegen vom Dateformat
                         String dateTimeZone;
-                        String dateOfExam = entryDb.getDatum();
+                        String dateOfExam = entryDb.getDate();
                         dateTimeZone = dateOfExam.replaceFirst("CET", "");
                         dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
                         String dateLastExamFormated = null;
@@ -127,16 +127,16 @@ public class RetrofitConnect {
                          */
                         // if(!checkvalidate){
                         //erhaltene Werte zur Datenbank hinzufügen
-                        testPlanEntry.setFirstTester(entryDb.getErstpruefer());
-                        testPlanEntry.setSecondTester(entryDb.getZweitpruefer());
+                        testPlanEntry.setFirstTester(entryDb.getFirstTester());
+                        testPlanEntry.setSecondTester(entryDb.getSecondTester());
                         testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
                         testPlanEntry.setID(entryDb.getID());
-                        testPlanEntry.setCourse(entryDb.getStudiengang());
-                        testPlanEntry.setModul(entryDb.getModul());
+                        testPlanEntry.setCourse(entryDb.getCourse());
+                        testPlanEntry.setModul(entryDb.getModule());
                         testPlanEntry.setSemester(entryDb.getSemester());
                         testPlanEntry.setTermin(entryDb.getTermin());
-                        testPlanEntry.setRoom(entryDb.getRaum());
-                        testPlanEntry.setExamForm(entryDb.getPruefform());
+                        testPlanEntry.setRoom(entryDb.getRoom());
+                        testPlanEntry.setExamForm(entryDb.getForm());
                         testPlanEntry.setStatus(entryDb.getStatus());
                         testPlanEntry.setHint(entryDb.getHint());
                         testPlanEntry.setColor(entryDb.getColor());
@@ -160,7 +160,7 @@ public class RetrofitConnect {
                         }
 
                         //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                        testPlanEntry.setValidation(year + entryDb.getStudiengangId() + examinePeriod);
+                        testPlanEntry.setValidation(year + entryDb.getCourseId() + examinePeriod);
 
                         addUser(roomData, testPlanEntry);
                    }
@@ -290,7 +290,7 @@ public class RetrofitConnect {
                             for (JsonUpdate updateExam : response.body()) {
                                 try {
                                     String dateTimeZone;
-                                    String dateExam = updateExam.getDatum();
+                                    String dateExam = updateExam.getDate();
                                     String dateLastExamFormated = null;
                                     dateTimeZone = dateExam.replaceFirst("CET", "");
                                     dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
@@ -504,7 +504,7 @@ public class RetrofitConnect {
                                 if(roomData.userDao().getCourseById(course.getSGID()).size()  == 0) {
                                     roomData.userDao().insertCourse(
                                             course.getSGID(),
-                                            course.getSGName(),
+                                            course.getCourse(),
                                             course.getFKFBID(),
                                             false
                                     );
