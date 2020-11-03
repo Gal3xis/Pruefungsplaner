@@ -42,7 +42,7 @@ import java.util.TimeZone;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public List<String> moduls;
-    private List<String> testerAndSemester;
+    private List<String> examinerAndSemester;
     private List<String> moduleList;
     private List<String> date;
     private List<String> roomAdapter;
@@ -61,7 +61,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public MyAdapter(List<String> passedModuls,
-                     List<String> passedTesterAndSemester,
+                     List<String> passedExaminerAndSemester,
                      List<String> passedDate,
                      List<String> modul,
                      List<String> passedId,
@@ -72,7 +72,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                      List<String> passedStatusHint) {
         moduls = passedModuls;
         date = passedDate;
-        testerAndSemester = passedTesterAndSemester;
+        examinerAndSemester = passedExaminerAndSemester;
         moduleList = modul;
         planId = passedId;
         roomAdapter = passedRoom;
@@ -232,11 +232,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.button.setText(splitMonthDayYear[2].toString() + "."
                 + splitMonthDayYear[1].toString() + "."
                 + splitMonthDayYear[0].toString());
-        final String[] splitTesterAndSemester = testerAndSemester.get(position).split(" ");
+        final String[] splitExaminerAndSemester = examinerAndSemester.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
-                + splitTesterAndSemester[0] + ", "
-                + splitTesterAndSemester[1]
-                + context.getString(R.string.semester) + splitTesterAndSemester[2]);
+                + splitExaminerAndSemester[0] + ", "
+                + splitExaminerAndSemester[1]
+                + context.getString(R.string.semester) + splitExaminerAndSemester[2]);
         //holder.txtthirdline.setText("Semester: " + Semester5.toString());
     }
 
@@ -253,7 +253,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         String[] division1 = date.get(position).split(" ");
         String[] division2 = division1[0].split("-");
         //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-        final String[] sa = testerAndSemester.get(position).split(" ");
+        final String[] sa = examinerAndSemester.get(position).split(" ");
 
         //String mit dem Inhalt für weitere Informationen
         String s = (context.getString(R.string.information) +
@@ -394,7 +394,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                             .setText(splitDayMonthYear[2].toString() + "."
                                                     + splitDayMonthYear[1].toString() + "."
                                                     + splitDayMonthYear[0].toString());
-                                    final String[] sa = testerAndSemester.get(position).split(" ");
+                                    final String[] sa = examinerAndSemester.get(position).split(" ");
                                     holder.txtFooter
                                             .setText(context.getString(R.string.prof) + sa[0] + ", " + sa[1]
                                                     + context.getString(R.string.semester) + sa[2]);

@@ -11,34 +11,34 @@ import java.util.List;
 public interface UserDao {
 
     // Start Merlin Gürtler
-    @Query("SELECT * FROM TestPlanEntry WHERE modul LIKE :modul")
-    List<TestPlanEntry> getModule(String modul);
+    @Query("SELECT * FROM TestPlanEntry WHERE module LIKE :module")
+    List<TestPlanEntry> getModule(String module);
 
     @Query("UPDATE TestPlanEntry SET date = :date, status = :status, hint = :hint, color =:color where ID = :id")
     void updateExam(String date, String status, String id, String hint, String color);
 
-    @Query("SELECT * from TestPlanEntry WHERE firstTester LIKE :prof ORDER BY date")
+    @Query("SELECT * from TestPlanEntry WHERE firstExaminer LIKE :prof ORDER BY date")
     List<TestPlanEntry> getModuleProf(String prof);
 
-    @Query("SELECT * FROM TestPlanEntry WHERE modul LIKE :modul AND course = :course")
+    @Query("SELECT * FROM TestPlanEntry WHERE module LIKE :module AND course = :course")
     List<TestPlanEntry>
-    getModuleWithCourseAndModule(String modul, String course);
+    getModuleWithCourseAndModule(String module, String course);
 
-    @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY modul")
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY module")
     List<TestPlanEntry>
     getModuleWithCourseOrdered(String course);
 
-    @Query("SELECT DISTINCT modul FROM TestPlanEntry ORDER BY modul")
+    @Query("SELECT DISTINCT module FROM TestPlanEntry ORDER BY module")
     List<String>
     getModuleOrdered();
 
-    @Query("SELECT DISTINCT firstTester FROM TestPlanEntry WHERE course = :selectedCourse")
-    List<String> getFirstTesterDistinct(String selectedCourse);
+    @Query("SELECT DISTINCT firstExaminer FROM TestPlanEntry WHERE course = :selectedCourse")
+    List<String> getFirstExaminerDistinct(String selectedCourse);
 
-    @Query("SELECT modul FROM TestPlanEntry WHERE course = :selctedCourse ORDER BY modul")
+    @Query("SELECT module FROM TestPlanEntry WHERE course = :selctedCourse ORDER BY module")
     List<String> getModuleWithCourseDistinct(String selctedCourse);
 
-    @Query("SELECT * FROM TestPlanEntry WHERE Favorit = :favorite ORDER BY date, termin, modul")
+    @Query("SELECT * FROM TestPlanEntry WHERE Favorit = :favorite ORDER BY date, termin, module")
     List<TestPlanEntry> getFavorites(boolean favorite);
 
     @Query("SELECT * FROM TestPlanEntry WHERE ID = :id")
@@ -105,14 +105,14 @@ public interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation")
     List<TestPlanEntry> getAll(String validation);
 
-    @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, modul")
+    @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     List<TestPlanEntry> getAll2();
 
     @Query("SELECT course FROM TestPlanEntry")
     List<String> getCourse();
 
-    @Query("SELECT modul FROM TestPlanEntry")
-    List<String> getModul();
+    @Query("SELECT module FROM TestPlanEntry")
+    List<String> getModule();
 
     @Query("SELECT COUNT(*) from TestPlanEntry")
     int countUsers();

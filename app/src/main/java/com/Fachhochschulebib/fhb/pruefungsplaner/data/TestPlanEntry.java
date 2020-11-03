@@ -20,11 +20,11 @@ public class TestPlanEntry {
     @ColumnInfo(name = "Choosen")
     private boolean choosen;
 
-    @ColumnInfo(name = "FirstTester")
-    private String firstTester;
+    @ColumnInfo(name = "FirstExaminer")
+    private String firstExaminer;
 
-    @ColumnInfo(name = "SecondTester")
-    private String secondTester;
+    @ColumnInfo(name = "SecondExaminer")
+    private String secondExaminer;
 
     @ColumnInfo(name = "Validation")
     private String validation;
@@ -38,8 +38,8 @@ public class TestPlanEntry {
     @ColumnInfo(name = "Semester")
     private String semester;
 
-    @ColumnInfo(name = "Modul")
-    private String modul;
+    @ColumnInfo(name = "Module")
+    private String module;
 
     @ColumnInfo(name = "course")
     private String course;
@@ -83,12 +83,12 @@ public class TestPlanEntry {
         this.status = status;
     }
 
-    public String getFirstTester() {
-        return firstTester;
+    public String getFirstExaminer() {
+        return firstExaminer;
     }
 
-    public void setFirstTester(String firstTester) {
-        this.firstTester = firstTester;
+    public void setFirstExaminer(String firstExaminer) {
+        this.firstExaminer = firstExaminer;
     }
 
     public String getRoom() {
@@ -107,12 +107,12 @@ public class TestPlanEntry {
         this.date = date;
     }
 
-    public String getSecondTester() {
-        return secondTester;
+    public String getSecondExaminer() {
+        return secondExaminer;
     }
 
-    public void setSecondTester(String secondTester) {
-        this.secondTester = secondTester;
+    public void setSecondExaminer(String secondExaminer) {
+        this.secondExaminer = secondExaminer;
     }
 
     public String getExamForm() {
@@ -131,12 +131,12 @@ public class TestPlanEntry {
         this.semester = semester;
     }
 
-    public String getModul() {
-        return modul;
+    public String getModule() {
+        return module;
     }
 
-    public void setModul(String modul) {
-        this.modul = modul;
+    public void setModule(String module) {
+        this.module = module;
     }
 
 

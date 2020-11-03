@@ -56,7 +56,7 @@ public class TermineFragmentSearch extends Fragment {
 
     List<Boolean> checkList = new ArrayList<>();
     List<String> modulAndCourseList = new ArrayList<>();
-    List<String> testerAndSemesterList = new ArrayList<>();
+    List<String> examinerAndSemester = new ArrayList<>();
     List<String> dateList = new ArrayList<>();
     List<String> modulList = new ArrayList<>();
     List<String> idList = new ArrayList<>();
@@ -180,14 +180,14 @@ public class TermineFragmentSearch extends Fragment {
 
                                         if (date2[0].equals(date) && entry.getChoosen()) {
                                             modulAndCourseList.add(
-                                                    entry.getModul() + "\n "
+                                                    entry.getModule() + "\n "
                                                             + entry.getCourse());
-                                            testerAndSemesterList.add(
-                                                    entry.getFirstTester()
-                                                            + " " + entry.getSecondTester()
+                                            examinerAndSemester.add(
+                                                    entry.getFirstExaminer()
+                                                            + " " + entry.getSecondExaminer()
                                                             + " " + entry.getSemester() + " ");
                                             dateList.add(entry.getDate());
-                                            modulList.add(entry.getModul());
+                                            modulList.add(entry.getModule());
                                             idList.add(entry.getID());
                                             formList.add(entry.getExamForm());
                                             roomList.add(entry.getRoom());
@@ -200,7 +200,7 @@ public class TermineFragmentSearch extends Fragment {
                                     //Werte an den Adapter übergeben
                                     mAdapter = new MyAdapter(
                                             modulAndCourseList,
-                                            testerAndSemesterList,
+                                            examinerAndSemester,
                                             dateList,
                                             modulList,
                                             idList,
@@ -317,10 +317,10 @@ public class TermineFragmentSearch extends Fragment {
 
                 //Variablen mit Werten aus der lokalen Datenbank füllen
                 for (int i = 0; i < valuesToShowList.size(); i++) {
-                    modulAndCourseList.add(ppeList.get(valuesToShowList.get(i)).getModul() + "\n " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getCourse());
-                    testerAndSemesterList.add(ppeList.get(valuesToShowList.get(i)).getFirstTester() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSecondTester() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSemester() + " ");
+                    modulAndCourseList.add(ppeList.get(valuesToShowList.get(i)).getModule() + "\n " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getCourse());
+                    examinerAndSemester.add(ppeList.get(valuesToShowList.get(i)).getFirstExaminer() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSecondExaminer() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSemester() + " ");
                     dateList.add(ppeList.get(valuesToShowList.get(i)).getDate());
-                    modulList.add(ppeList.get(valuesToShowList.get(i)).getModul());
+                    modulList.add(ppeList.get(valuesToShowList.get(i)).getModule());
                     idList.add(ppeList.get(valuesToShowList.get(i)).getID());
                     formList.add(ppeList.get(valuesToShowList.get(i)).getExamForm());
                     roomList.add(ppeList.get(valuesToShowList.get(i)).getRoom());
@@ -332,7 +332,7 @@ public class TermineFragmentSearch extends Fragment {
                 // define an adapter
                 mAdapter = new MyAdapter(
                         modulAndCourseList,
-                        testerAndSemesterList,
+                        examinerAndSemester,
                         dateList,
                         modulList,
                         idList,
@@ -355,7 +355,7 @@ public class TermineFragmentSearch extends Fragment {
 
     public void ClearLists() {
         modulAndCourseList.clear();
-        testerAndSemesterList.clear();
+        examinerAndSemester.clear();
         dateList.clear();
         modulList.clear();
         idList.clear();

@@ -88,10 +88,10 @@ public class Favoritenfragment extends Fragment {
                 // Abfrage ob Prüfungen favorisiert wurden
                 // Favorisierte Prüfungen für die Anzeige vorbereiten
                 for (TestPlanEntry entry: ppeList) {
-                    courses.add(entry.getModul() + " "
+                    courses.add(entry.getModule() + " "
                             + entry.getCourse());
-                    profnames.add(entry.getFirstTester() + " "
-                            + entry.getSecondTester() + " "
+                    profnames.add(entry.getFirstExaminer() + " "
+                            + entry.getSecondExaminer() + " "
                             + entry.getSemester());
                     dates.add(entry.getDate());
                     examNo.add(entry.getID());

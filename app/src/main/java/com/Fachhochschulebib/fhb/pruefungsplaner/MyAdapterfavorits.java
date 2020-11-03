@@ -38,7 +38,7 @@ import java.util.List;
 
 public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.ViewHolder> {
     private List<String> moduleAndCourseList;
-    private List<String> TesterAndSemesterList;
+    private List<String> examinerAndSemester;
     private List<String> ppIdList;
     private List<String> datesList;
     private List<String> roomList;
@@ -56,7 +56,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                              List <String> formListParam) {
         moduleAndCourseList = moduleListParam;
         datesList = dateListParam;
-        TesterAndSemesterList = courseListParam;
+        examinerAndSemester = courseListParam;
         ppIdList = pruefPlanIdListParam;
         roomList = roomListParam;
         formList = formListParam;
@@ -108,7 +108,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             }
         });
 
-        holder.txtFooter.setText(context.getString(R.string.prof) + TesterAndSemesterList.get(position).toString());
+        holder.txtFooter.setText(context.getString(R.string.prof) + examinerAndSemester.get(position).toString());
         name = moduleAndCourseList.get(position);
         String[] course = name.split(" ");
         modulName = "";
@@ -153,11 +153,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                 + splitDayMonthYear[2].toString() + "."
                 + splitDayMonthYear[1].toString() + "."
                 + splitDayMonthYear[0].toString());
-        final String[] splitTesterAndSemester
-                = TesterAndSemesterList.get(position).split(" ");
+        final String[] splitExaminerAndSemester
+                = examinerAndSemester.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
-                + splitTesterAndSemester[0] + ", " + splitTesterAndSemester[1]
-                + context.getString(R.string.semester) + splitTesterAndSemester[2]);
+                + splitExaminerAndSemester[0] + ", " + splitExaminerAndSemester[1]
+                + context.getString(R.string.semester) + splitExaminerAndSemester[2]);
     }
 
 
@@ -182,7 +182,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             String[] division1 = datesList.get(position).split(" ");
             String[] division2 = division1[0].split("-");
             //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-            final String[] sa = TesterAndSemesterList.get(position).split(" ");
+            final String[] sa = examinerAndSemester.get(position).split(" ");
             //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
             String s = (context.getString(R.string.information) +
                     context.getString(R.string.course) + course[course.length - 1] +

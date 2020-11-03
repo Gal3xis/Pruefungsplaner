@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class JsonCourse {
 
-    @SerializedName("Course")
+    @SerializedName("CourseName")
     @Expose
-    private String Course;
+    private String CourseName;
 
 
-    @SerializedName("CourseShort")
+    @SerializedName("CourseShortName")
     @Expose
-    private String CourseShort;
+    private String CourseShortName;
 
 
     @SerializedName("SGID")
@@ -31,20 +31,20 @@ public class JsonCourse {
         this.FKFBID = FKFBID;
     }
 
-    public String getCourse() {
-        return Course;
+    public String getCourseName() {
+        return CourseName;
     }
 
-    public void setCourse(String course) {
-        this.Course = course;
+    public void setCourseName(String courseName) {
+        this.CourseName = courseName;
     }
 
-    public String getCourseShort() {
-        return CourseShort;
+    public String getCourseShortName() {
+        return CourseShortName;
     }
 
-    public void setCourseShort(String courseShort) {
-        this.CourseShort = courseShort;
+    public void setCourseShortName(String courseShortName) {
+        this.CourseShortName = courseShortName;
     }
 
     public String getSGID() {

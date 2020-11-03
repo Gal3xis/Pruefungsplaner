@@ -21,14 +21,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class JsonResponse {
 
-    @SerializedName("FirstTester")
+    @SerializedName("FirstExaminer")
     @Expose
-    private String FirstTester;
+    private String FirstExaminer;
 
 
-    @SerializedName("SecondTester")
+    @SerializedName("SecondExaminer")
     @Expose
-    private String SecondTester;
+    private String SecondExaminer;
 
 
     @SerializedName("Form")
@@ -51,9 +51,9 @@ public class JsonResponse {
     private String Module;
 
 
-    @SerializedName("Course")
+    @SerializedName("CourseName")
     @Expose
-    private String Course;
+    private String CourseName;
 
 
     @SerializedName("Termin")
@@ -112,12 +112,12 @@ public class JsonResponse {
         Status = status;
     }
 
-    public String getFirstTester() {
-        return FirstTester;
+    public String getFirstExaminer() {
+        return FirstExaminer;
     }
 
-    public void setFirstTester(String firstTester) {
-        this.FirstTester = firstTester;
+    public void setFirstExaminer(String firstExaminer) {
+        this.FirstExaminer = firstExaminer;
     }
 
     public String getRoom() {
@@ -136,12 +136,12 @@ public class JsonResponse {
         this.Date = date;
     }
 
-    public String getSecondTester() {
-        return SecondTester;
+    public String getSecondExaminer() {
+        return SecondExaminer;
     }
 
-    public void setSecondTester(String secondTester) {
-        SecondTester = secondTester;
+    public void setSecondExaminer(String secondExaminer) {
+        SecondExaminer = secondExaminer;
     }
 
     public String getForm() {
@@ -168,12 +168,12 @@ public class JsonResponse {
         Module = module;
     }
 
-    public String getCourse() {
-        return Course;
+    public String getCourseName() {
+        return CourseName;
     }
 
-    public void setCourse(String course) {
-        Course = course;
+    public void setCourseName(String courseName) {
+        CourseName = courseName;
     }
 
     public String getTermin() {

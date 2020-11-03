@@ -204,7 +204,7 @@ public class searchFragment extends Fragment {
                 public void run() {
                     //Spinner-Aufruf und Spinner mit Werten füllen
                     spinnerModuleArrayList.addAll(roomData.userDao().getModuleWithCourseDistinct(selectedCourse));
-                    List<String> spinnerProfArrayList = roomData.userDao().getFirstTesterDistinct(selectedCourse);
+                    List<String> spinnerProfArrayList = roomData.userDao().getFirstExaminerDistinct(selectedCourse);
 
 
                     // Für das AutoComplete
@@ -328,7 +328,7 @@ public class searchFragment extends Fragment {
                         } else if (Pattern.matches("^.*("                       // Wildcard begin
                                         + acProf.getText().toString().trim().toLowerCase()    // Input Name
                                         +").*$",                                              // Wildcard end
-                            ppeList.get(a).getFirstTester().toLowerCase())) // Name in db
+                            ppeList.get(a).getFirstExaminer().toLowerCase())) // Name in db
                         {
                             returnProfList.add(a);
                         }
@@ -395,7 +395,7 @@ public class searchFragment extends Fragment {
                             returnCourseModulList.add(i);
                         } else {
                             if (courseModulList.get(courseModulList.size() - 1).toString()
-                                    .equals(ppeList.get(i).getModul().toString())) {
+                                    .equals(ppeList.get(i).getModule().toString())) {
                                 returnCourseModulList.add(i);
                                 // database.userDao().Checkverbindung(tableReturn());
                             }

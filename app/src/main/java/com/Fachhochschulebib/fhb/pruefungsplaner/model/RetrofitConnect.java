@@ -127,12 +127,12 @@ public class RetrofitConnect {
                          */
                         // if(!checkvalidate){
                         //erhaltene Werte zur Datenbank hinzufügen
-                        testPlanEntry.setFirstTester(entryDb.getFirstTester());
-                        testPlanEntry.setSecondTester(entryDb.getSecondTester());
+                        testPlanEntry.setFirstExaminer(entryDb.getFirstExaminer());
+                        testPlanEntry.setSecondExaminer(entryDb.getSecondExaminer());
                         testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
                         testPlanEntry.setID(entryDb.getID());
-                        testPlanEntry.setCourse(entryDb.getCourse());
-                        testPlanEntry.setModul(entryDb.getModule());
+                        testPlanEntry.setCourse(entryDb.getCourseName());
+                        testPlanEntry.setModule(entryDb.getModule());
                         testPlanEntry.setSemester(entryDb.getSemester());
                         testPlanEntry.setTermin(entryDb.getTermin());
                         testPlanEntry.setRoom(entryDb.getRoom());
@@ -504,7 +504,7 @@ public class RetrofitConnect {
                                 if(roomData.userDao().getCourseById(course.getSGID()).size()  == 0) {
                                     roomData.userDao().insertCourse(
                                             course.getSGID(),
-                                            course.getCourse(),
+                                            course.getCourseName(),
                                             course.getFKFBID(),
                                             false
                                     );

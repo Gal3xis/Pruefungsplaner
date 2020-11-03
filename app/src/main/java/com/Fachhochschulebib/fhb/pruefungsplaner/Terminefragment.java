@@ -80,7 +80,7 @@ public class Terminefragment extends Fragment {
     List<Boolean> checkList = new ArrayList<>();
     //Variablen
     List<String> moduleAndCourseList = new ArrayList<>();
-    List<String> testerAndSemesterList = new ArrayList<>();
+    List<String> examinerAndSemester = new ArrayList<>();
     List<String> dateList = new ArrayList<>();
     List<String> modulList = new ArrayList<>();
     List<String> idList = new ArrayList<>();
@@ -118,14 +118,14 @@ public class Terminefragment extends Fragment {
         for (TestPlanEntry entry : ppeList) {
             status.add(entry.getStatus());
             moduleAndCourseList.add(
-                    entry.getModul() + "\n "
+                    entry.getModule() + "\n "
                             + entry.getCourse());
-            testerAndSemesterList.add(
-                    entry.getFirstTester()
-                            + " " + entry.getSecondTester()
+            examinerAndSemester.add(
+                    entry.getFirstExaminer()
+                            + " " + entry.getSecondExaminer()
                             + " " + entry.getSemester() + " ");
             dateList.add(entry.getDate());
-            modulList.add(entry.getModul());
+            modulList.add(entry.getModule());
             idList.add(entry.getID());
             formList.add(entry.getExamForm());
             roomList.add(entry.getRoom());
@@ -134,7 +134,7 @@ public class Terminefragment extends Fragment {
         }// define an adapter
 
         mAdapter = new MyAdapter(moduleAndCourseList,
-                testerAndSemesterList,
+                examinerAndSemester,
                 dateList,
                 modulList,
                 idList,
@@ -412,7 +412,6 @@ public class Terminefragment extends Fragment {
 
                     String currentExamineYearThread
                             = mSharedPreferencesExamineYearThread.getString("currentTermin", "0");
-
                     if (database.userDao().getByName(courseMain).size() == 0
                             || !currentExamineYearThread.equals(database.userDao().getTermin())) {
 
@@ -426,7 +425,7 @@ public class Terminefragment extends Fragment {
                                 currentExamineYearThread,
                                 serverAddress);
 
-                        sleeptime = 5000;
+                        sleeptime = 3000;
                     } else {
 
                         retrofit.retroUpdate(Terminefragment.this.getContext(), database,
@@ -733,14 +732,14 @@ public class Terminefragment extends Fragment {
                                         if (date2[0].equals(date)) {
                                             status.add(eintrag.getStatus());
                                             moduleAndCourseList.add(
-                                                    eintrag.getModul()
+                                                    eintrag.getModule()
                                                             + "\n " + eintrag.getCourse());
-                                            testerAndSemesterList.add(
-                                                    eintrag.getFirstTester()
-                                                            + " " + eintrag.getSecondTester()
+                                            examinerAndSemester.add(
+                                                    eintrag.getFirstExaminer()
+                                                            + " " + eintrag.getSecondExaminer()
                                                             + " " + eintrag.getSemester() + " ");
                                             dateList.add(eintrag.getDate());
-                                            modulList.add(eintrag.getModul());
+                                            modulList.add(eintrag.getModule());
                                             idList.add(eintrag.getID());
                                             formList.add(eintrag.getExamForm());
                                             roomList.add(eintrag.getRoom());
@@ -751,11 +750,12 @@ public class Terminefragment extends Fragment {
 
                                     //Adapter mit Werten füllen
                                     mAdapter = new MyAdapter(moduleAndCourseList,
-                                            testerAndSemesterList,
+                                            examinerAndSemester,
                                             dateList,
                                             modulList,
                                             idList,
-                                            formList, mLayout,
+                                            formList,
+                                            mLayout,
                                             roomList,
                                             status,
                                             statusMessage);
@@ -800,7 +800,7 @@ public class Terminefragment extends Fragment {
 
     public void ClearLists() {
         moduleAndCourseList.clear();
-        testerAndSemesterList.clear();
+        examinerAndSemester.clear();
         dateList.clear();
         modulList.clear();
         idList.clear();

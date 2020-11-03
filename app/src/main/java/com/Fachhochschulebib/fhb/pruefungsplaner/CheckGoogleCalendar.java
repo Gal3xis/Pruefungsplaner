@@ -244,7 +244,7 @@ public class CheckGoogleCalendar {
                     int time1 = Integer.valueOf(s[1].substring(0, 2));
                     int time2 = Integer.valueOf(s[1].substring(4, 5));
                     // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, entry.getModul());
+                    values.put(CalendarContract.Events.TITLE, entry.getModule());
                     values.put(CalendarContract.Events.EVENT_LOCATION,
                                "Fachhochschule Bielefeld Update");
                     values.put(CalendarContract.Events.DESCRIPTION, "");
@@ -408,7 +408,7 @@ public class CheckGoogleCalendar {
                 int time2 = Integer.valueOf(s[1].substring(4, 5));
 
                 // The new title for the updatet event
-                values.put(CalendarContract.Events.TITLE, favoriteExam.getModul());
+                values.put(CalendarContract.Events.TITLE, favoriteExam.getModule());
                 values.put(CalendarContract.Events.EVENT_LOCATION,
                         "Fachhochschule Bielefeld");
                 values.put(CalendarContract.Events.DESCRIPTION, "");

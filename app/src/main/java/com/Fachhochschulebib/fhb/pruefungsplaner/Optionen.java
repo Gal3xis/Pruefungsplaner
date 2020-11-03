@@ -205,7 +205,7 @@ public class Optionen extends Fragment {
                                     String[] splitDayMonthYear
                                             = splitDateAndTime[0].split("-");
                                     course = entry.getCourse();
-                                    course = course + " " + entry.getModul();
+                                    course = course + " " + entry.getModule();
                                     int timeStart
                                             = Integer.valueOf(splitDateAndTime[1].substring(0, 2));
                                     int timeEnd
