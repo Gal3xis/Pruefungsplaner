@@ -408,12 +408,8 @@ public class Terminefragment extends Fragment {
                     String examineYearThread = mSharedPreferencesValidation.getString("examineYear", "0");
                     String currentExaminePeriodThread = mSharedPreferencesValidation.getString("currentPeriode", "0");
 
-                    SharedPreferences mSharedPreferencesExamineYearThread
-                            = Terminefragment.this.getContext()
-                            .getSharedPreferences("examineTermin", 0);
-
                     String currentExamineYearThread
-                            = mSharedPreferencesExamineYearThread.getString("currentTermin", "0");
+                            = mSharedPreferencesExamineYear.getString("currentTermin", "0");
                     if (database.userDao().getByName(courseMain).size() == 0
                             || !currentExamineYearThread.equals(database.userDao().getTermin())) {
 

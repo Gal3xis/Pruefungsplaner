@@ -41,6 +41,7 @@ public class Favoritenfragment extends Fragment {
     private RecyclerView recyclerView;
     private CalendarView calendar;
     private  Button btnSearch;
+    private TextView currentPeriodeTextView;
     MyAdapterfavorits mAdapter;
     List<Boolean> check = new ArrayList<>();
 
@@ -63,9 +64,14 @@ public class Favoritenfragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         //linear layout manager
         LinearLayoutManager layoutManager = new LinearLayoutManager(v.getContext());
+
         recyclerView.setLayoutManager(layoutManager);
+
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
         btnSearch = (Button) v.findViewById(R.id.btnDatum);
+
+        currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
+        currentPeriodeTextView.setVisibility(View.GONE);
 
         calendar.setVisibility(View.GONE);
         List<String> courses = new ArrayList<>();
