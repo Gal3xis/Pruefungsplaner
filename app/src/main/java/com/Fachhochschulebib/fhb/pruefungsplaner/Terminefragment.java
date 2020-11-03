@@ -88,6 +88,7 @@ public class Terminefragment extends Fragment {
     List<String> roomList = new ArrayList<>();
     List<String> status = new ArrayList<>();
     List<String> statusMessage = new ArrayList<>();
+    SharedPreferences mSharedPreferencesValidation;
     int sleeptime;
     String examineYear, currentExaminePeriod, returnCourse;
 
@@ -110,11 +111,17 @@ public class Terminefragment extends Fragment {
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
     // Start Merlin Gürtler
     private void createAdapter() {
+        // Nun aus Shared Preferences
+        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
+        currentExaminePeriod = mSharedPreferencesValidation.getString("currentPeriode", "0");
+        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
+
+        validation = examineYear + returnCourse + currentExaminePeriod;
+
         final List<TestPlanEntry> ppeList = database.userDao().getAll(validation);
 
         checkList.clear();
         ClearLists();
-
         for (TestPlanEntry entry : ppeList) {
             status.add(entry.getStatus());
             moduleAndCourseList.add(
@@ -167,8 +174,7 @@ public class Terminefragment extends Fragment {
                 Manifest.permission.READ_CALENDAR,
                 Manifest.permission.WRITE_CALENDAR);
 
-
-        SharedPreferences mSharedPreferencesValidation
+        mSharedPreferencesValidation
                 = Terminefragment.this.getContext().getSharedPreferences("validation", 0);
 
         String courseMain = mSharedPreferencesValidation.getString("selectedCourse", "0");
@@ -219,10 +225,6 @@ public class Terminefragment extends Fragment {
                             = getContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
 
                     // Erhalte die gewählte Fakultät aus den Shared Preferences
-                    SharedPreferences mSharedPreferencesValidation =
-                            getContext().
-                                    getSharedPreferences("validation",0);
-
                     String facultyId = mSharedPreferencesValidation.getString("returnFaculty", "0");
 
                     try {
@@ -442,6 +444,7 @@ public class Terminefragment extends Fragment {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+
                     progressBar.dismiss();
 
                     createAdapter();
@@ -501,18 +504,6 @@ public class Terminefragment extends Fragment {
                 }
             }).start();
         }
-
-        // Nun aus Shared Preferences
-        mSharedPreferencesValidation
-                = Terminefragment.
-                this.getContext().getSharedPreferences("validation", 0);
-
-        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
-        currentExaminePeriod = mSharedPreferencesValidation.getString("currentPeriode", "0");
-        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
-
-        validation = examineYear + returnCourse + currentExaminePeriod;
-        // Ende Merlin Gürtler
 
         LongOperation asynctask = new LongOperation();
 
