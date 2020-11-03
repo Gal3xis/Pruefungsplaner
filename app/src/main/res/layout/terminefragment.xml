@@ -20,8 +20,8 @@
     <Button
         android:id="@+id/btnDatum"
         android:layout_width="0dp"
+        android:layout_marginTop="20dp"
         android:layout_height="25dp"
-        android:layout_marginTop="47dp"
         android:layout_marginBottom="2dp"
         android:background="#50333333"
         android:text="@string/open_calendar"
