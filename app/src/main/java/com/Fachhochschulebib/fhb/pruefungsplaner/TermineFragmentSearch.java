@@ -62,7 +62,6 @@ public class TermineFragmentSearch extends Fragment {
     List<String> idList = new ArrayList<>();
     List<String> formList = new ArrayList<>();
     List<String> roomList = new ArrayList<>();
-    List<String> status = new ArrayList<>();
     List<String> statusList = new ArrayList<>();
 
     private String month2;
@@ -191,7 +190,6 @@ public class TermineFragmentSearch extends Fragment {
                                             idList.add(entry.getID());
                                             formList.add(entry.getExamForm());
                                             roomList.add(entry.getRoom());
-                                            status.add(entry.getStatus());
                                             statusList.add(entry.getHint());
                                             checkList.add(true);
                                         }
@@ -207,7 +205,6 @@ public class TermineFragmentSearch extends Fragment {
                                             formList,
                                             mLayout,
                                             roomList,
-                                            status,
                                             statusList);
 
                                     //Anzeigen von recyclerview
@@ -324,7 +321,6 @@ public class TermineFragmentSearch extends Fragment {
                     idList.add(ppeList.get(valuesToShowList.get(i)).getID());
                     formList.add(ppeList.get(valuesToShowList.get(i)).getExamForm());
                     roomList.add(ppeList.get(valuesToShowList.get(i)).getRoom());
-                    status.add(ppeList.get(valuesToShowList.get(i)).getStatus());
                     statusList.add(ppeList.get(valuesToShowList.get(i)).getHint());
                     checkList.add(true);
                 }
@@ -339,7 +335,6 @@ public class TermineFragmentSearch extends Fragment {
                         formList,
                         mLayout,
                         roomList,
-                        status,
                         statusList);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -361,6 +356,7 @@ public class TermineFragmentSearch extends Fragment {
         idList.clear();
         formList.clear();
         roomList.clear();
+        statusList.clear();
     }
 
 

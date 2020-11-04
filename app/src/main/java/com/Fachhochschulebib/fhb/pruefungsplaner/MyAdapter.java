@@ -47,7 +47,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> date;
     private List<String> roomAdapter;
     private List<String> examForm;
-    private List<String> statusList;
     private List<String> statusHintList;
     private boolean save;
     private String modulName;
@@ -68,7 +67,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                      List<String> passedExamForm,
                      RecyclerView.LayoutManager mLayout,
                      List<String> passedRoom,
-                     List<String> passedStatus,
                      List<String> passedStatusHint) {
         moduls = passedModuls;
         date = passedDate;
@@ -78,7 +76,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         roomAdapter = passedRoom;
         examForm = passedExamForm;
         currentLayout = mLayout;
-        statusList = passedStatus;
         statusHintList = passedStatusHint;
     }
 
@@ -190,7 +187,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.txtHeader.setText(name);
 
         // Start Merlin Gürtler
-
         // Gibt die Statusmeldung aus
         holder.statusIcon.setOnClickListener(v -> {
             Toast.makeText(v.getContext(),

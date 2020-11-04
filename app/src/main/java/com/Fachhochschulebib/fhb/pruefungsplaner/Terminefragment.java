@@ -86,7 +86,6 @@ public class Terminefragment extends Fragment {
     List<String> idList = new ArrayList<>();
     List<String> formList = new ArrayList<>();
     List<String> roomList = new ArrayList<>();
-    List<String> status = new ArrayList<>();
     List<String> statusMessage = new ArrayList<>();
     SharedPreferences mSharedPreferencesValidation;
     int sleeptime;
@@ -122,7 +121,6 @@ public class Terminefragment extends Fragment {
 
         ClearLists();
         for (TestPlanEntry entry : ppeList) {
-            status.add(entry.getStatus());
             moduleAndCourseList.add(
                     entry.getModule() + "\n "
                             + entry.getCourse());
@@ -147,7 +145,6 @@ public class Terminefragment extends Fragment {
                 formList,
                 mLayout,
                 roomList,
-                status,
                 statusMessage);
 
         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -491,7 +488,7 @@ public class Terminefragment extends Fragment {
                     }
 
                     // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-                    System.out.println("TEST LÄNGE TERMIN " + courseIds.toString().length() + " " + courseIds.toString());
+
                     if(courseIds.toString().length() > 2) {
                         retrofit.UpdateUnkownCourses(
                                 getContext(),
@@ -721,7 +718,6 @@ public class Terminefragment extends Fragment {
                                     Kalender datum übereinstimmt
                                  */
                                         if (date2[0].equals(date)) {
-                                            status.add(entry.getStatus());
                                             moduleAndCourseList.add(
                                                     entry.getModule()
                                                             + "\n " + entry.getCourse());
@@ -748,7 +744,6 @@ public class Terminefragment extends Fragment {
                                             formList,
                                             mLayout,
                                             roomList,
-                                            status,
                                             statusMessage);
                                     //Anzeigen
                                     new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -797,7 +792,7 @@ public class Terminefragment extends Fragment {
         idList.clear();
         formList.clear();
         roomList.clear();
-        status.clear();
+        statusMessage.clear();
         checkList.clear();
     }
 

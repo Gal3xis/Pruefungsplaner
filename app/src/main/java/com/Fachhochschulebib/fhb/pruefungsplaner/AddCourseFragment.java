@@ -173,7 +173,7 @@ public class AddCourseFragment extends Fragment {
 
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-                        System.out.println("TEST " + courseIds.toString().length());
+
                         if(courseIds.toString().length() > 2) {
                             retrofit.UpdateUnkownCourses(
                                     getContext(),

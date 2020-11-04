@@ -411,10 +411,9 @@ public class Optionen extends Fragment {
     }
 
     // Methode zum Aktualiseren der Prüfungen
-    // Prüfungen werden gespeichert und dann wird die Datenbank gelöscht.
-    // Die Prüfungen werden erneut vom Webserver geladen und mit
-    // den gespeicherten IDs favorisiert
-
+    // die Abfrage Methodes des Webservers
+    // gibt Mögliche Änderungen wie den Status zurück,
+    // diese werden dann geupdated
     public void updateCheckPlan() {
         new Thread(new Runnable() {
             @Override

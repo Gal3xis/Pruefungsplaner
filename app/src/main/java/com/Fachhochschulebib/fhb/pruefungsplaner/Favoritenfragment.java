@@ -108,7 +108,7 @@ public class Favoritenfragment extends Fragment {
 
                 // definiere adapter
                 // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-                mAdapter = new MyAdapterfavorits(courses, profnames, dates, examNo,room, form);
+                mAdapter = new MyAdapterfavorits(courses, profnames, dates, examNo, room, form);
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
