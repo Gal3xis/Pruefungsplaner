@@ -2,6 +2,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.data;
 
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -38,7 +39,7 @@ public interface UserDao {
     @Query("SELECT module FROM TestPlanEntry WHERE course = :selctedCourse ORDER BY module")
     List<String> getModuleWithCourseDistinct(String selctedCourse);
 
-    @Query("SELECT * FROM TestPlanEntry WHERE Favorit = :favorite ORDER BY date, termin, module")
+    @Query("SELECT * FROM TestPlanEntry WHERE favorit = :favorite ORDER BY date, termin, module")
     List<TestPlanEntry> getFavorites(boolean favorite);
 
     @Query("SELECT * FROM TestPlanEntry WHERE ID = :id")
@@ -67,8 +68,8 @@ public interface UserDao {
     @Query("DELETE FROM Courses")
     void deleteCourse();
 
-    @Query("DELETE FROM TestPlanEntry WHERE course = :courseName AND choosen = :choosen")
-    void deleteEntryExceptChoosenCourses(String courseName, boolean choosen);
+    @Delete
+    public void deleteEntry(TestPlanEntry... entry);
 
     @Query("DELETE FROM TestPlanEntry ")
     void deleteTestPlanEntryAll();
@@ -97,16 +98,19 @@ public interface UserDao {
     @Query("SELECT * FROM Courses")
     List<Courses> getCourses();
 
-    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName LIMIT 1")
-    TestPlanEntry getOneEntryByName(String courseName);
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName AND favorit = :favorite LIMIT 1")
+    TestPlanEntry getOneEntryByName(String courseName, boolean favorite);
     // Ende Merlin Gürtler
 
 
     @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation ORDER BY date, termin, module")
-    List<TestPlanEntry> getAll(String validation);
+    List<TestPlanEntry> getByValidation(String validation);
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
-    List<TestPlanEntry> getAll2();
+    List<TestPlanEntry> getAll();
+
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY date, termin, module")
+    List<TestPlanEntry> getByCourseName(String course);
 
     @Query("SELECT course FROM TestPlanEntry")
     List<String> getCourse();
@@ -120,7 +124,7 @@ public interface UserDao {
     @Insert
     void insertAll(TestPlanEntry... testPlanEntries);
 
-    @Query ("UPDATE TestPlanEntry SET Favorit = :favorit WHERE ID = :id")
+    @Query ("UPDATE TestPlanEntry SET favorit = :favorit WHERE ID = :id")
     void update(boolean favorit, int id);
 
     @Query ("UPDATE TestPlanEntry SET Choosen = :exams WHERE ID = :id")

@@ -33,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 
 import org.json.JSONArray;
@@ -144,21 +145,26 @@ public class AddCourseFragment extends Fragment {
 
                         // aktualsiere die db Einträge
 
-                        JSONArray studiengangIds = new JSONArray();
+                        JSONArray courseIds = new JSONArray();
 
                         String courseName;
 
-                        for(Courses studiengang: courses) {
+                        for(Courses course: courses) {
                             try {
-                                courseName = studiengang.getCourseName();
-                                if(!studiengang.getChoosen()) {
-                                    // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                    database.userDao().deleteEntryExceptChoosenCourses(courseName, false);
+                                courseName = course.getCourseName();
+                                if(!course.getChoosen()) {
+                                    // lösche nicht die Einträge der gewählten Studiengänge und Favorit
+                                    List<TestPlanEntry> toDelete = database.userDao().getByCourseName(courseName);
+                                    for(TestPlanEntry entry: toDelete) {
+                                        if(!entry.getFavorit()) {
+                                            database.userDao().deleteEntry(entry);
+                                        }
+                                    }
                                 }
-                                if(database.userDao().getOneEntryByName(courseName) == null && studiengang.getChoosen()) {
+                                if(database.userDao().getOneEntryByName(courseName, false) == null && course.getChoosen()) {
                                     JSONObject idJson = new JSONObject();
-                                    idJson.put("ID", studiengang.getSgid());
-                                    studiengangIds.put(idJson);
+                                    idJson.put("ID", course.getSgid());
+                                    courseIds.put(idJson);
                                 }
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -167,7 +173,8 @@ public class AddCourseFragment extends Fragment {
 
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-                        if(studiengangIds.toString().length() > 2) {
+                        System.out.println("TEST " + courseIds.toString().length());
+                        if(courseIds.toString().length() > 2) {
                             retrofit.UpdateUnkownCourses(
                                     getContext(),
                                     database,
@@ -175,7 +182,7 @@ public class AddCourseFragment extends Fragment {
                                     currentExamine,
                                     currentDate,
                                     serverAddress,
-                                    studiengangIds.toString());
+                                    courseIds.toString());
                         }
 
                         retrofit.setUserCourses(getContext(), database,

@@ -143,7 +143,7 @@ public class searchFragment extends Fragment {
 
                 // Erstelle Validierung und starte DB Abfrage
                 validation = examineYear + returnCourse + currentExaminePeriod;
-                ppeList = roomData.userDao().getAll(validation);
+                ppeList = roomData.userDao().getByValidation(validation);
                 // Ende Merlin Gürtler
 
                 //Überprüfung, ob ein Semester-Button geklickt wurde
@@ -423,8 +423,8 @@ public class searchFragment extends Fragment {
                                 sortedList.clear();
                                 ppeList = roomData.userDao().getByDate(dateForSearch.substring(0,10) + "%");
 
-                                for(TestPlanEntry eintrag: ppeList) {
-                                    sortedList.add(String.valueOf(eintrag.getID()));
+                                for(TestPlanEntry entry: ppeList) {
+                                    sortedList.add(String.valueOf(entry.getID()));
                                 }
 
                                 database.userDao().searchAndReset(false);
@@ -440,8 +440,8 @@ public class searchFragment extends Fragment {
                                 {
                                     sortedList.clear();
                                     ppeList = roomData.userDao().getModule(courseModulList.get(courseModulList.size() - 1));
-                                    for(TestPlanEntry eintrag: ppeList) {
-                                        sortedList.add(String.valueOf(eintrag.getID()));
+                                    for(TestPlanEntry entry: ppeList) {
+                                        sortedList.add(String.valueOf(entry.getID()));
                                     }
 
                                     database.userDao().searchAndReset(false);
@@ -475,7 +475,7 @@ public class searchFragment extends Fragment {
 
                                     database.userDao().searchAndReset(false);
                                     List<TestPlanEntry> ppeList = AppDatabase.getAppDatabase(v.getContext())
-                                            .userDao().getAll(validation);
+                                            .userDao().getByValidation(validation);
                                     for (int i = 0; i < tableReturn().size(); i++) {
                                         // Toast.makeText(getContext(),tableReturn().get(i),
                                         // Toast.LENGTH_SHORT).show();

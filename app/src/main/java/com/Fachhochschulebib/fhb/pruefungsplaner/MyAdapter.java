@@ -151,7 +151,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Datenbank und Pruefplan laden
                 AppDatabase database = AppDatabase.getAppDatabase(context);
-                List<TestPlanEntry> ppeList = database.userDao().getAll2();
+                List<TestPlanEntry> ppeList = database.userDao().getAll();
 
                 // Überprüfung, ob Prüfitem favorisiert wurde
                 //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -279,7 +279,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Datenbank und Pruefplan laden
                 AppDatabase database = AppDatabase.getAppDatabase(context);
-                List<TestPlanEntry> ppeList1 = database.userDao().getAll2();
+                List<TestPlanEntry> ppeList1 = database.userDao().getAll();
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -323,7 +323,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Datenbank und Pruefplan laden
                 AppDatabase database = AppDatabase.getAppDatabase(context);
-                List<TestPlanEntry> ppeList1 = database.userDao().getAll2();
+                List<TestPlanEntry> ppeList1 = database.userDao().getAll();
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -437,7 +437,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         //Datenbank und Pruefplan laden
         AppDatabase database = AppDatabase.getAppDatabase(context);
-        List<TestPlanEntry> ppeList1 = database.userDao().getAll2();
+        List<TestPlanEntry> ppeList1 = database.userDao().getAll();
 
         //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
         //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),

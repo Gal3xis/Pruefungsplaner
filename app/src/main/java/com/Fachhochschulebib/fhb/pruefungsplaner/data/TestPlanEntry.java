@@ -15,7 +15,7 @@ public class TestPlanEntry {
     private String ID;
 
     @ColumnInfo(name = "Favorit")
-    private boolean Favorit;
+    private boolean favorit;
 
     @ColumnInfo(name = "Choosen")
     private boolean choosen;
@@ -182,11 +182,11 @@ public class TestPlanEntry {
     }
 
     public boolean getFavorit() {
-        return Favorit;
+        return favorit;
     }
 
     public void setFavorit(boolean fav) {
-        Favorit = fav;
+        favorit = fav;
     }
 
     public boolean getChoosen() {

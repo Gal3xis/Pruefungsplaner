@@ -52,10 +52,10 @@ public class RetrofitConnect {
 
     // Start Merlin Gürtler
     // Refactoring
-    private void insertCoursesToDatabase(final AppDatabase roomData,
-                                   final String year,
-                                   final String examinePeriod,
-                                   List<JsonResponse> body) {
+    private void inserEntryToDatabase(final AppDatabase roomData,
+                                      final String year,
+                                      final String examinePeriod,
+                                      List<JsonResponse> body) {
             // Start Merlin Gürtler
             // Extra Thread da sonst die Db nicht aktualisiert werden kann.
             new Thread((new Runnable() {
@@ -64,7 +64,7 @@ public class RetrofitConnect {
                     //Hole alle Einträge aus der lokalen Room-DB
                     List<TestPlanEntry> dataListFromLocalDB = null;
                     try { //DONE (08/2020) LG
-                        dataListFromLocalDB = roomData.userDao().getAll2();
+                        dataListFromLocalDB = roomData.userDao().getAll();
                         //roomdaten.clearAllTables();
                     } catch (Exception e) {
                         Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!");
@@ -144,7 +144,7 @@ public class RetrofitConnect {
                         //lokale datenbank initialiseren
                         //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
                         //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                        //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll2();
+                        //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll();
                         //Log.d("Test4", String.valueOf(userdaten2.size()));
 
                         try {
@@ -222,7 +222,7 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    insertCoursesToDatabase(roomData, year, currentPeriod, response.body());
+                    inserEntryToDatabase(roomData, year, currentPeriod, response.body());
 
                 }//if(response.isSuccessful())
                 else {
@@ -616,7 +616,7 @@ public class RetrofitConnect {
             public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful()) {
-                    insertCoursesToDatabase(roomData, year, examinPeriod, response.body());
+                    inserEntryToDatabase(roomData, year, examinPeriod, response.body());
                 }//if(response.isSuccessful())
                 else {
                     Log.d("RESPONSE", ":::NO RESPONSE:::");
@@ -638,6 +638,7 @@ public class RetrofitConnect {
         // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist
         // dies wird verwendet, da die Favoriten behalten werden sollen
         // und um doppelte Eintrage zu verhindern
+        System.out.println("TEST " + existingEntry);
         if (existingEntry == null) {
             db.userDao().insertAll(testPlanEntry);
         }

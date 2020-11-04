@@ -82,12 +82,12 @@ public class MainActivity extends AppCompatActivity {
                 returnCourse = database.userDao().getIdCourse(choosenCourse);
 
                 // Erstelle Shared Pref für die anderen Fragmente
-                SharedPreferences sharedPrefStudiengangValidation =
+                SharedPreferences sharedPrefCourseValidation =
                         getApplicationContext().
                                 getSharedPreferences("validation",0);
 
                 SharedPreferences.Editor editorStudiengangValidation =
-                        sharedPrefStudiengangValidation.edit();
+                        sharedPrefCourseValidation.edit();
 
                 editorStudiengangValidation.putString("selectedCourse", choosenCourse);
                 editorStudiengangValidation.putString("returnCourse", returnCourse);

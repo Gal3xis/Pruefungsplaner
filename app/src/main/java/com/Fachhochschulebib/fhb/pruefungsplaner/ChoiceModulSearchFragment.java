@@ -188,9 +188,9 @@ public class ChoiceModulSearchFragment extends Fragment {
 
                             // Setze die gewählten Daten in der DB
                             database.userDao().searchAndReset(false);
-                            for (TestPlanEntry eintrag: ppeList) {
+                            for (TestPlanEntry entry: ppeList) {
                                 database.userDao().update2(true,
-                                        Integer.valueOf(eintrag.getID()));
+                                        Integer.valueOf(entry.getID()));
                             }
 
                             // Merlin Gürtler

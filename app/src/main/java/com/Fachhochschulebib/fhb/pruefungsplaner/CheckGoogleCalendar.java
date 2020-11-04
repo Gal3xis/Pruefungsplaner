@@ -194,9 +194,9 @@ public class CheckGoogleCalendar {
     public void updateCal()
     {
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences Googleeintrag
+        SharedPreferences googleEntry
                 = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-        String stringids = Googleeintrag.getString("IDs", "");
+        String stringids = googleEntry.getString("IDs", "");
 
         // step one : converting comma separate String to array of String
         String[] elementsList = stringids.split("-");

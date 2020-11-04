@@ -157,7 +157,7 @@ public class TermineFragmentSearch extends Fragment {
                                 @Override
                                 public void run() {
                                     AppDatabase roomData = AppDatabase.getAppDatabase(getContext());
-                                    List<TestPlanEntry> ppeList = roomData.userDao().getAll2();
+                                    List<TestPlanEntry> ppeList = roomData.userDao().getAll();
 
                                     ClearLists();
 
@@ -302,9 +302,9 @@ public class TermineFragmentSearch extends Fragment {
                 AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
                 // Änderung Merlin Gürtler
-                // List<Pruefplan> pruefplandaten = datenbank.userDao().getAll(validation);
+                // List<Pruefplan> pruefplandaten = datenbank.userDao().getByValidation(validation);
                 // Für die Suche von Modulen
-                List<TestPlanEntry> ppeList = database.userDao().getAll2();
+                List<TestPlanEntry> ppeList = database.userDao().getAll();
                 // Ende Änderung Merlin Gürtler
 
                 ClearLists();

@@ -108,7 +108,7 @@ public class Terminefragment extends Fragment {
     }
     // Ende Merlin Gürtler
 
-    // List<PruefplanEintrag> ppeList = datenbank.userDao().getAll(validation);
+    // List<PruefplanEintrag> ppeList = datenbank.userDao().getByValidation(validation);
     // Start Merlin Gürtler
     private void createAdapter() {
         // Nun aus Shared Preferences
@@ -118,7 +118,7 @@ public class Terminefragment extends Fragment {
 
         validation = examineYear + returnCourse + currentExaminePeriod;
 
-        final List<TestPlanEntry> ppeList = database.userDao().getAll(validation);
+        final List<TestPlanEntry> ppeList = database.userDao().getByValidation(validation);
 
         ClearLists();
         for (TestPlanEntry entry : ppeList) {
@@ -464,7 +464,7 @@ public class Terminefragment extends Fragment {
                     List <Courses> courses = database.userDao().getCourses();
 
                     // aktualsiere die db Einträge
-                    JSONArray studiengangIds = new JSONArray();
+                    JSONArray courseIds = new JSONArray();
 
                     String courseName;
 
@@ -472,13 +472,18 @@ public class Terminefragment extends Fragment {
                         try {
                             courseName = course.getCourseName();
                             if(!course.getChoosen()) {
-                                // lösche nicht die Einträge der gewählten Studiengänge und favorit
-                                database.userDao().deleteEntryExceptChoosenCourses(courseName, false);
+                                // lösche nicht die Einträge der gewählten Studiengänge und Favorit
+                                List<TestPlanEntry> toDelete = database.userDao().getByCourseName(courseName);
+                                for(TestPlanEntry entry: toDelete) {
+                                    if(!entry.getFavorit()) {
+                                        database.userDao().deleteEntry(entry);
+                                    }
+                                }
                             }
-                            if(database.userDao().getOneEntryByName(courseName) == null && course.getChoosen()) {
+                            if(database.userDao().getOneEntryByName(courseName, false) == null && course.getChoosen()) {
                                 JSONObject idJson = new JSONObject();
                                 idJson.put("ID", course.getSgid());
-                                studiengangIds.put(idJson);
+                                courseIds.put(idJson);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -486,7 +491,8 @@ public class Terminefragment extends Fragment {
                     }
 
                     // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-                    if(studiengangIds.toString().length() > 2) {
+                    System.out.println("TEST LÄNGE TERMIN " + courseIds.toString().length() + " " + courseIds.toString());
+                    if(courseIds.toString().length() > 2) {
                         retrofit.UpdateUnkownCourses(
                                 getContext(),
                                 database,
@@ -494,7 +500,7 @@ public class Terminefragment extends Fragment {
                                 currentExaminePeriod,
                                 currentExamineYear,
                                 serverAddress,
-                                studiengangIds.toString());
+                                courseIds.toString());
                     }
                 }
             }).start();
@@ -512,7 +518,7 @@ public class Terminefragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             List<TestPlanEntry> ppeList
-                    = Terminefragment.this.database.userDao().getAll(validation);
+                    = Terminefragment.this.database.userDao().getByValidation(validation);
             if (ppeList.size() < 1) {
                 for (int c = 0; c < 1000; c++) {
                     try {
@@ -691,7 +697,7 @@ public class Terminefragment extends Fragment {
                                 @Override
                                 public void run() {
                                     //Datenbank
-                                    List<TestPlanEntry> ppeList = database.userDao().getAll(validation);
+                                    List<TestPlanEntry> ppeList = database.userDao().getByValidation(validation);
 
                                     //unnötige Werte entfernen
                                     if (month < 9) {
@@ -708,27 +714,27 @@ public class Terminefragment extends Fragment {
                                     date = year2 + "-" + month2 + "-" + day2;
 
                                     ClearLists();
-                                    for (TestPlanEntry eintrag : ppeList) {
-                                        String[] date2 = eintrag.getDate().split(" ");
+                                    for (TestPlanEntry entry : ppeList) {
+                                        String[] date2 = entry.getDate().split(" ");
 
                                 /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
                                     Kalender datum übereinstimmt
                                  */
                                         if (date2[0].equals(date)) {
-                                            status.add(eintrag.getStatus());
+                                            status.add(entry.getStatus());
                                             moduleAndCourseList.add(
-                                                    eintrag.getModule()
-                                                            + "\n " + eintrag.getCourse());
+                                                    entry.getModule()
+                                                            + "\n " + entry.getCourse());
                                             examinerAndSemester.add(
-                                                    eintrag.getFirstExaminer()
-                                                            + " " + eintrag.getSecondExaminer()
-                                                            + " " + eintrag.getSemester() + " ");
-                                            dateList.add(eintrag.getDate());
-                                            modulList.add(eintrag.getModule());
-                                            idList.add(eintrag.getID());
-                                            formList.add(eintrag.getExamForm());
-                                            roomList.add(eintrag.getRoom());
-                                            statusMessage.add(eintrag.getHint());
+                                                    entry.getFirstExaminer()
+                                                            + " " + entry.getSecondExaminer()
+                                                            + " " + entry.getSemester() + " ");
+                                            dateList.add(entry.getDate());
+                                            modulList.add(entry.getModule());
+                                            idList.add(entry.getID());
+                                            formList.add(entry.getExamForm());
+                                            roomList.add(entry.getRoom());
+                                            statusMessage.add(entry.getHint());
                                             checkList.add(true);
                                         }
                                     }// define an adapter
