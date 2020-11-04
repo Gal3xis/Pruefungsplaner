@@ -55,7 +55,7 @@ public class TermineFragmentSearch extends Fragment {
     String examineYear, currentExaminePeriod, returnCourse, validation;
 
     List<Boolean> checkList = new ArrayList<>();
-    List<String> modulAndCourseList = new ArrayList<>();
+    List<String> moduleAndCourseList = new ArrayList<>();
     List<String> examinerAndSemester = new ArrayList<>();
     List<String> dateList = new ArrayList<>();
     List<String> moduleList = new ArrayList<>();
@@ -178,7 +178,7 @@ public class TermineFragmentSearch extends Fragment {
                                         String[] date2 = entry.getDate().split(" ");
 
                                         if (date2[0].equals(date) && entry.getChoosen()) {
-                                            modulAndCourseList.add(
+                                            moduleAndCourseList.add(
                                                     entry.getModule() + "\n "
                                                             + entry.getCourse());
                                             examinerAndSemester.add(
@@ -197,7 +197,7 @@ public class TermineFragmentSearch extends Fragment {
                                     // define an adapter
                                     //Werte an den Adapter übergeben
                                     mAdapter = new MyAdapter(
-                                            modulAndCourseList,
+                                            moduleAndCourseList,
                                             examinerAndSemester,
                                             dateList,
                                             moduleList,
@@ -314,7 +314,7 @@ public class TermineFragmentSearch extends Fragment {
 
                 //Variablen mit Werten aus der lokalen Datenbank füllen
                 for (int i = 0; i < valuesToShowList.size(); i++) {
-                    modulAndCourseList.add(ppeList.get(valuesToShowList.get(i)).getModule() + "\n " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getCourse());
+                    moduleAndCourseList.add(ppeList.get(valuesToShowList.get(i)).getModule() + "\n " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getCourse());
                     examinerAndSemester.add(ppeList.get(valuesToShowList.get(i)).getFirstExaminer() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSecondExaminer() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSemester() + " ");
                     dateList.add(ppeList.get(valuesToShowList.get(i)).getDate());
                     moduleList.add(ppeList.get(valuesToShowList.get(i)).getModule());
@@ -327,7 +327,7 @@ public class TermineFragmentSearch extends Fragment {
 
                 // define an adapter
                 mAdapter = new MyAdapter(
-                        modulAndCourseList,
+                        moduleAndCourseList,
                         examinerAndSemester,
                         dateList,
                         moduleList,
@@ -349,7 +349,7 @@ public class TermineFragmentSearch extends Fragment {
     }
 
     public void ClearLists() {
-        modulAndCourseList.clear();
+        moduleAndCourseList.clear();
         examinerAndSemester.clear();
         dateList.clear();
         moduleList.clear();

@@ -41,7 +41,7 @@ import java.util.TimeZone;
 
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    public List<String> moduls;
+    public List<String> modules;
     private List<String> examinerAndSemester;
     private List<String> moduleList;
     private List<String> date;
@@ -49,7 +49,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private List<String> examForm;
     private List<String> statusHintList;
     private boolean save;
-    private String modulName;
+    private String moduleName;
     private TextView txtSecondScreen;
     static boolean favcheck = true;
     private Context context;
@@ -59,19 +59,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private GregorianCalendar calDate = new GregorianCalendar();
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(List<String> passedModuls,
+    public MyAdapter(List<String> passedModules,
                      List<String> passedExaminerAndSemester,
                      List<String> passedDate,
-                     List<String> modul,
+                     List<String> module,
                      List<String> passedId,
                      List<String> passedExamForm,
                      RecyclerView.LayoutManager mLayout,
                      List<String> passedRoom,
                      List<String> passedStatusHint) {
-        moduls = passedModuls;
+        modules = passedModules;
         date = passedDate;
         examinerAndSemester = passedExaminerAndSemester;
-        moduleList = modul;
+        moduleList = module;
         planId = passedId;
         roomAdapter = passedRoom;
         examForm = passedExamForm;
@@ -80,12 +80,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public void add(int position, String item) {
-        moduls.add(position, item);
+        modules.add(position, item);
         notifyItemInserted(position);
     }
 
     public void remove(int position) {
-        moduls.remove(position);
+        modules.remove(position);
         notifyItemRemoved(position);
     }
 
@@ -107,7 +107,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // Replace the contents of a view (invoked by the layout manager)
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        String name = moduls.get(position);
+        String name = modules.get(position);
 
         // Start Merlin Gürtler
         // erhalte den ausgewählten Studiengang
@@ -140,10 +140,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                modulName = "";
+                moduleName = "";
 
                 for (int b = 0; b < (course.length - 1); b++) {
-                    modulName = (modulName + " " + course[b]);
+                    moduleName = (moduleName + " " + course[b]);
                 }
 
                 //Datenbank und Pruefplan laden
@@ -238,12 +238,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     //Methode zum Darstellen der "weiteren Informationen"
     public String giveString(int position) {
-        String name = moduls.get(position);
+        String name = modules.get(position);
         String[] course = name.split(" ");
-        modulName = "";
+        moduleName = "";
         int b;
         for (b = 0; b < (course.length - 1); b++) {
-            modulName = (modulName + " " + course[b]);
+            moduleName = (moduleName + " " + course[b]);
         }
         String room2 = roomAdapter.get(position);
         String[] division1 = date.get(position).split(" ");
@@ -254,7 +254,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //String mit dem Inhalt für weitere Informationen
         String s = (context.getString(R.string.information) +
                 context.getString(R.string.course) + course[course.length - 1]
-                + context.getString(R.string.modul) + modulName
+                + context.getString(R.string.modul) + moduleName
                 + context.getString(R.string.firstProf) + sa[0]
                 + context.getString(R.string.secondProf) + sa[1]
                 + context.getString(R.string.date) + division2[2].toString() + "."
@@ -394,12 +394,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                     holder.txtFooter
                                             .setText(context.getString(R.string.prof) + sa[0] + ", " + sa[1]
                                                     + context.getString(R.string.semester) + sa[2]);
-                                    String name1 = moduls.get(position);
+                                    String name1 = modules.get(position);
                                     String[] modulname1 = name1.split(" ");
-                                    modulName = "";
+                                    moduleName = "";
                                     int b;
                                     for (b = 0; b < (modulname1.length - 1); b++) {
-                                        modulName = (modulName + " " + modulname1[b]);
+                                        moduleName = (moduleName + " " + modulname1[b]);
                                     }
 
                                     int timeStart
@@ -413,7 +413,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                             timeStart, timeEnd);
 
                                     //Methode zum Speichern im Kalender
-                                    int calendarid = calendarID(modulName);
+                                    int calendarid = calendarID(moduleName);
 
                                     //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
                                     checkEntry.insertCal(Integer.valueOf(planId.get(position)),
@@ -456,7 +456,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     //Item anzahl
     @Override
     public int getItemCount() {
-        return moduls.size();
+        return modules.size();
     }
 
     @Override
@@ -501,7 +501,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         final ContentValues event = new ContentValues();
         event.put(CalendarContract.Events.CALENDAR_ID, 2);
-        event.put(CalendarContract.Events.TITLE, modulName);
+        event.put(CalendarContract.Events.TITLE, moduleName);
         event.put(CalendarContract.Events.DESCRIPTION, context.getString(R.string.fh_name));
         event.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
         event.put(CalendarContract.Events.DTEND, calDate.getTimeInMillis() + (90 * 60000));
