@@ -56,7 +56,6 @@ import java.util.TimeZone;
 public class Optionen extends Fragment {
     private boolean save;
     private SharedPreferences.Editor mEditorGoogleKalender;
-    private SharedPreferences.Editor mEditorAdress;
     private JSONArray response;
     private GregorianCalendar calDate = new GregorianCalendar();
     private String course;
@@ -122,7 +121,6 @@ public class Optionen extends Fragment {
         mSharedPreferencesPPServerAddress
                 = v.getContext().getSharedPreferences("Server_Address", 0);
         //Creating editor to store uebergebeneModule to shared preferences
-        mEditorAdress = mSharedPreferencesPPServerAddress.edit();
 
         //------------------------------------------------------------------
         //DONE: 08/2020 LG
@@ -139,7 +137,6 @@ public class Optionen extends Fragment {
                 = v.getContext()
                 .getSharedPreferences("examineTermin", 0);
 
-        SharedPreferences.Editor mEditorTermin = mSharedPreferencesCurrentTermin.edit();
         currentTermin
                 = mSharedPreferencesCurrentTermin.getString("currentTermin", "0");
         //----------------------------------------------------------------------------------------

@@ -637,6 +637,7 @@ public class RetrofitConnect {
         TestPlanEntry existingEntry = db.userDao().getExams(testPlanEntry.getID());
         // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist
         // dies wird verwendet, da die Favoriten behalten werden sollen
+        // und um doppelte Eintrage zu verhindern
         if (existingEntry == null) {
             db.userDao().insertAll(testPlanEntry);
         }

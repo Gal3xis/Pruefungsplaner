@@ -102,7 +102,7 @@ public interface UserDao {
     // Ende Merlin Gürtler
 
 
-    @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation")
+    @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation ORDER BY date, termin, module")
     List<TestPlanEntry> getAll(String validation);
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")

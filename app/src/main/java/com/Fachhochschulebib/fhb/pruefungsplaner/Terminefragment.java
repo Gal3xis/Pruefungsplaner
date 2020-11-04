@@ -120,7 +120,6 @@ public class Terminefragment extends Fragment {
 
         final List<TestPlanEntry> ppeList = database.userDao().getAll(validation);
 
-        checkList.clear();
         ClearLists();
         for (TestPlanEntry entry : ppeList) {
             status.add(entry.getStatus());
@@ -707,7 +706,6 @@ public class Terminefragment extends Fragment {
                                     }
                                     year2 = String.valueOf(year);
                                     date = year2 + "-" + month2 + "-" + day2;
-                                    checkList.clear();
 
                                     ClearLists();
                                     for (TestPlanEntry eintrag : ppeList) {
@@ -794,6 +792,7 @@ public class Terminefragment extends Fragment {
         formList.clear();
         roomList.clear();
         status.clear();
+        checkList.clear();
     }
 
     // Start Merlin Gürtler
