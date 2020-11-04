@@ -58,7 +58,7 @@ public class TermineFragmentSearch extends Fragment {
     List<String> modulAndCourseList = new ArrayList<>();
     List<String> examinerAndSemester = new ArrayList<>();
     List<String> dateList = new ArrayList<>();
-    List<String> modulList = new ArrayList<>();
+    List<String> moduleList = new ArrayList<>();
     List<String> idList = new ArrayList<>();
     List<String> formList = new ArrayList<>();
     List<String> roomList = new ArrayList<>();
@@ -186,7 +186,7 @@ public class TermineFragmentSearch extends Fragment {
                                                             + " " + entry.getSecondExaminer()
                                                             + " " + entry.getSemester() + " ");
                                             dateList.add(entry.getDate());
-                                            modulList.add(entry.getModule());
+                                            moduleList.add(entry.getModule());
                                             idList.add(entry.getID());
                                             formList.add(entry.getExamForm());
                                             roomList.add(entry.getRoom());
@@ -200,7 +200,7 @@ public class TermineFragmentSearch extends Fragment {
                                             modulAndCourseList,
                                             examinerAndSemester,
                                             dateList,
-                                            modulList,
+                                            moduleList,
                                             idList,
                                             formList,
                                             mLayout,
@@ -317,7 +317,7 @@ public class TermineFragmentSearch extends Fragment {
                     modulAndCourseList.add(ppeList.get(valuesToShowList.get(i)).getModule() + "\n " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getCourse());
                     examinerAndSemester.add(ppeList.get(valuesToShowList.get(i)).getFirstExaminer() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSecondExaminer() + " " + ppeList.get(Integer.valueOf(valuesToShowList.get(i))).getSemester() + " ");
                     dateList.add(ppeList.get(valuesToShowList.get(i)).getDate());
-                    modulList.add(ppeList.get(valuesToShowList.get(i)).getModule());
+                    moduleList.add(ppeList.get(valuesToShowList.get(i)).getModule());
                     idList.add(ppeList.get(valuesToShowList.get(i)).getID());
                     formList.add(ppeList.get(valuesToShowList.get(i)).getExamForm());
                     roomList.add(ppeList.get(valuesToShowList.get(i)).getRoom());
@@ -330,7 +330,7 @@ public class TermineFragmentSearch extends Fragment {
                         modulAndCourseList,
                         examinerAndSemester,
                         dateList,
-                        modulList,
+                        moduleList,
                         idList,
                         formList,
                         mLayout,
@@ -352,7 +352,7 @@ public class TermineFragmentSearch extends Fragment {
         modulAndCourseList.clear();
         examinerAndSemester.clear();
         dateList.clear();
-        modulList.clear();
+        moduleList.clear();
         idList.clear();
         formList.clear();
         roomList.clear();

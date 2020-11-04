@@ -82,7 +82,7 @@ public class Terminefragment extends Fragment {
     List<String> moduleAndCourseList = new ArrayList<>();
     List<String> examinerAndSemester = new ArrayList<>();
     List<String> dateList = new ArrayList<>();
-    List<String> modulList = new ArrayList<>();
+    List<String> moduleList = new ArrayList<>();
     List<String> idList = new ArrayList<>();
     List<String> formList = new ArrayList<>();
     List<String> roomList = new ArrayList<>();
@@ -129,7 +129,7 @@ public class Terminefragment extends Fragment {
                             + " " + entry.getSecondExaminer()
                             + " " + entry.getSemester() + " ");
             dateList.add(entry.getDate());
-            modulList.add(entry.getModule());
+            moduleList.add(entry.getModule());
             idList.add(entry.getID());
             formList.add(entry.getExamForm());
             roomList.add(entry.getRoom());
@@ -140,7 +140,7 @@ public class Terminefragment extends Fragment {
         mAdapter = new MyAdapter(moduleAndCourseList,
                 examinerAndSemester,
                 dateList,
-                modulList,
+                moduleList,
                 idList,
                 formList,
                 mLayout,
@@ -726,7 +726,7 @@ public class Terminefragment extends Fragment {
                                                             + " " + entry.getSecondExaminer()
                                                             + " " + entry.getSemester() + " ");
                                             dateList.add(entry.getDate());
-                                            modulList.add(entry.getModule());
+                                            moduleList.add(entry.getModule());
                                             idList.add(entry.getID());
                                             formList.add(entry.getExamForm());
                                             roomList.add(entry.getRoom());
@@ -739,7 +739,7 @@ public class Terminefragment extends Fragment {
                                     mAdapter = new MyAdapter(moduleAndCourseList,
                                             examinerAndSemester,
                                             dateList,
-                                            modulList,
+                                            moduleList,
                                             idList,
                                             formList,
                                             mLayout,
@@ -788,7 +788,7 @@ public class Terminefragment extends Fragment {
         moduleAndCourseList.clear();
         examinerAndSemester.clear();
         dateList.clear();
-        modulList.clear();
+        moduleList.clear();
         idList.clear();
         formList.clear();
         roomList.clear();

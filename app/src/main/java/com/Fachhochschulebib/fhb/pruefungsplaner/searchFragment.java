@@ -48,12 +48,12 @@ import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 public class searchFragment extends Fragment {
 
     SharedPreferences mSharedPreferencesValidation;
-    final List<String> courseModulList = new ArrayList();
+    final List<String> courseModuleList = new ArrayList();
     final List<String> profList = new ArrayList();
     final List<Integer> returnProfList = new ArrayList();
-    final List<Integer> returnCourseModulList = new ArrayList();
+    final List<Integer> returnCourseModuleList = new ArrayList();
     final List<Integer> returnDateList = new ArrayList();
-    final List<Integer> returnSemesterModulList = new ArrayList();
+    final List<Integer> returnSemesterModuleList = new ArrayList();
     final List<String> sortedList = new ArrayList();
     private String profName;
     private String dateForSearch = null;
@@ -83,16 +83,16 @@ public class searchFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (clicked) {
-                    if (returnSemesterModulList.size() <= 0) {
+                    if (returnSemesterModuleList.size() <= 0) {
                         for (int i = 0; i < (ppeList.size()); i++) {
-                            returnSemesterModulList.add(99999);
+                            returnSemesterModuleList.add(99999);
                         }
                     }
 
                     for (int i = 0; i < ppeList.size(); i++) {
                         if (String.valueOf(value).equals(ppeList.get(i).getSemester())) {
                             btn.setBackgroundResource(R.drawable.button_rounded_corners);
-                            returnSemesterModulList.set(i, i);
+                            returnSemesterModuleList.set(i, i);
 
                         }
                     }
@@ -103,7 +103,7 @@ public class searchFragment extends Fragment {
 
                     for (int i = 0; i < ppeList.size(); i++) {
                         if (String.valueOf(value).equals(ppeList.get(i).getSemester())) {
-                            returnSemesterModulList.set(i, 99999);
+                            returnSemesterModuleList.set(i, 99999);
                         }
                     }
 
@@ -148,13 +148,13 @@ public class searchFragment extends Fragment {
 
                 //Überprüfung, ob ein Semester-Button geklickt wurde
                 //der Wert des Semsters wird gespeichert
-                returnSemesterModulList.clear();
+                returnSemesterModuleList.clear();
 
                 //Initialisierung der Anfangswerte
                 int i;
                 for (i = 0; i < ppeList.size(); i++) {
                     returnProfList.add(i);
-                    returnCourseModulList.add(i);
+                    returnCourseModuleList.add(i);
                     returnDateList.add(i);
                 }
 
@@ -226,7 +226,7 @@ public class searchFragment extends Fragment {
                             // beim ändern der Orientierung crasht die app wegen Problemen mit dem Context
                             try {
                                 profList.add(getContext().getString(R.string.all));
-                                courseModulList.add(getContext().getString(R.string.all));
+                                courseModuleList.add(getContext().getString(R.string.all));
                             } catch (Exception e) {
                                 Log.d("ERROR", "ERROR " + e);
                             }
@@ -383,20 +383,20 @@ public class searchFragment extends Fragment {
             spCourseModule.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parent,
                                            View view, int position, long id) {
-                    returnCourseModulList.clear();
+                    returnCourseModuleList.clear();
                     //this is your selected item
-                    courseModulList.add(parent.getItemAtPosition(position).toString());
+                    courseModuleList.add(parent.getItemAtPosition(position).toString());
 
                     int i;
                     String a;
                     for (i = 0; i < (ppeList.size()); i++) {
-                        if (courseModulList.get(courseModulList.size() - 1).toString()
+                        if (courseModuleList.get(courseModuleList.size() - 1).toString()
                                 .equals(getContext().getString(R.string.modul_search))) {
-                            returnCourseModulList.add(i);
+                            returnCourseModuleList.add(i);
                         } else {
-                            if (courseModulList.get(courseModulList.size() - 1).toString()
+                            if (courseModuleList.get(courseModuleList.size() - 1).toString()
                                     .equals(ppeList.get(i).getModule().toString())) {
-                                returnCourseModulList.add(i);
+                                returnCourseModuleList.add(i);
                                 // database.userDao().Checkverbindung(tableReturn());
                             }
                         }
@@ -435,11 +435,11 @@ public class searchFragment extends Fragment {
                             }
                             else {
                                 if(profName.equals(getContext().getString(R.string.all))
-                                        &&  !courseModulList.get(courseModulList.size() - 1).toString().
+                                        &&  !courseModuleList.get(courseModuleList.size() - 1).toString().
                                         equals(getContext().getString(R.string.modul_search)))
                                 {
                                     sortedList.clear();
-                                    ppeList = roomData.userDao().getModule(courseModulList.get(courseModulList.size() - 1));
+                                    ppeList = roomData.userDao().getModule(courseModuleList.get(courseModuleList.size() - 1));
                                     for(TestPlanEntry entry: ppeList) {
                                         sortedList.add(String.valueOf(entry.getID()));
                                     }
@@ -518,10 +518,10 @@ public class searchFragment extends Fragment {
         int i, j, k, l;
         String test = "a";
         boolean checkSemester = true;
-        for(int z = 0; z< returnSemesterModulList.size(); z++)
+        for(int z = 0; z< returnSemesterModuleList.size(); z++)
         {
             //überprüfung, ob Semester ausgewählt wurden. Sonst alle Semester anzeigen.
-            if(!returnSemesterModulList.get(z).equals(returnSemesterModulList.get(z+1)))
+            if(!returnSemesterModuleList.get(z).equals(returnSemesterModuleList.get(z+1)))
             {
                 // DONE (08/2020) LG: Vereinfachung if(!...)
                 // Gäbler: Nicht alle Semester anzeigen, weil ein oder
@@ -534,24 +534,24 @@ public class searchFragment extends Fragment {
         if (checkSemester)
         {
             for (int z = 0; z < ppeList.size(); z++) {
-                returnSemesterModulList.add(z);
+                returnSemesterModuleList.add(z);
             }
         }
 
         sortedList.clear();
-        for (i = 0; i < (returnCourseModulList.size()); i++) {
-            for (j = 0; j < (returnSemesterModulList.size()); j++) {
-                if (returnCourseModulList.get(i).equals(returnSemesterModulList.get(j))) {
+        for (i = 0; i < (returnCourseModuleList.size()); i++) {
+            for (j = 0; j < (returnSemesterModuleList.size()); j++) {
+                if (returnCourseModuleList.get(i).equals(returnSemesterModuleList.get(j))) {
                     for (k = 0; k < (returnDateList.size()); k++) {
                         if (returnDateList
                                 .get(k)
-                                .equals(returnCourseModulList.get(i))) {
+                                .equals(returnCourseModuleList.get(i))) {
                             for (l = 0; l < (returnProfList.size()); l++) {
                                 if (returnProfList
                                         .get(l)
-                                        .equals(returnCourseModulList.get(i))) {
+                                        .equals(returnCourseModuleList.get(i))) {
                                     sortedList.add(
-                                            String.valueOf(returnCourseModulList.get(i)));
+                                            String.valueOf(returnCourseModuleList.get(i)));
                                     test = String.valueOf(returnDateList.get(k)) + test;
                                 }//if
                             }//for
