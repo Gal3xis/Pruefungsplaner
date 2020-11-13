@@ -71,7 +71,7 @@ public class Favoritenfragment extends Fragment {
         btnSearch = (Button) v.findViewById(R.id.btnDatum);
 
         currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
-        currentPeriodeTextView.setVisibility(View.GONE);
+        currentPeriodeTextView.setVisibility(View.INVISIBLE);
 
         calendar.setVisibility(View.GONE);
         List<String> courses = new ArrayList<>();

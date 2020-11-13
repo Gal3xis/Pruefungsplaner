@@ -61,7 +61,6 @@ public class Optionen extends Fragment {
     private String course;
     SharedPreferences mSharedPreferencesCurrentTermin;
     private String currentTermin;
-    static EditText txtServerAddress;
 
     //DONE: 08/2020 LG
     SharedPreferences mSharedPreferencesPPServerAddress;
@@ -110,7 +109,6 @@ public class Optionen extends Fragment {
         Button btnGoogleloeschen = (Button) v.findViewById(R.id.btnCalClear);
         Button btnGoogleupdate = (Button) v.findViewById(R.id.btnGoogleUpdate);
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
-        txtServerAddress = (EditText) v.findViewById(R.id.txtAdresse);
         //holder.zahl1 = position;
 
         SharedPreferences serverAdresse
@@ -129,8 +127,6 @@ public class Optionen extends Fragment {
         relativePPlanURL
                 = mSharedPreferencesPPServerAddress.getString("ServerRelUrlPath", "0");
         //------------------------------------------------------------------
-
-        txtServerAddress.setText(serverAddress);
 
         //----------------------------------------------------------------------------------------
         mSharedPreferencesCurrentTermin
