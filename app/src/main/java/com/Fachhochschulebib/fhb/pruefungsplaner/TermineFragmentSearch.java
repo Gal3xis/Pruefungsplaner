@@ -156,7 +156,7 @@ public class TermineFragmentSearch extends Fragment {
                                 @Override
                                 public void run() {
                                     AppDatabase roomData = AppDatabase.getAppDatabase(getContext());
-                                    List<TestPlanEntry> ppeList = roomData.userDao().getAll();
+                                    List<TestPlanEntry> ppeList = roomData.userDao().getAllChoosen(true);
 
                                     ClearLists();
 
@@ -177,7 +177,7 @@ public class TermineFragmentSearch extends Fragment {
                                     for (TestPlanEntry entry : ppeList) {
                                         String[] date2 = entry.getDate().split(" ");
 
-                                        if (date2[0].equals(date) && entry.getChoosen()) {
+                                        if (date2[0].equals(date)) {
                                             moduleAndCourseList.add(
                                                     entry.getModule() + "\n "
                                                             + entry.getCourse());
@@ -301,15 +301,13 @@ public class TermineFragmentSearch extends Fragment {
                 // Änderung Merlin Gürtler
                 // List<Pruefplan> pruefplandaten = datenbank.userDao().getByValidation(validation);
                 // Für die Suche von Modulen
-                List<TestPlanEntry> ppeList = database.userDao().getAll();
+                List<TestPlanEntry> ppeList = database.userDao().getAllChoosen(true);
                 // Ende Änderung Merlin Gürtler
 
                 ClearLists();
 
                 for (int i = 0; i < ppeList.size(); i++) {
-                    if (ppeList.get(i).getChoosen()) {
-                        valuesToShowList.add(i);
-                    }
+                    valuesToShowList.add(i);
                 }
 
                 //Variablen mit Werten aus der lokalen Datenbank füllen

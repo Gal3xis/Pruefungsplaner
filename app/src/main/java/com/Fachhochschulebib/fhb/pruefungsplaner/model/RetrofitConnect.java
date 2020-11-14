@@ -52,6 +52,52 @@ public class RetrofitConnect {
 
     // Start Merlin Gürtler
     // Refactoring
+    private TestPlanEntry createTestplanEntry(JsonResponse entryResponse)
+    {
+        //Festlegen vom Dateformat
+        String dateTimeZone;
+        String dateOfExam = entryResponse.getDate();
+        dateTimeZone = dateOfExam.replaceFirst("CET", "");
+        dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
+        String dateLastExamFormated = null;
+
+        try {
+            DateFormat dateFormat = new SimpleDateFormat(
+                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+            Date dateLastExam = dateFormat.parse(dateTimeZone);
+            SimpleDateFormat targetFormat
+                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateLastExamFormated = targetFormat.format(dateLastExam);
+            Date currentDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df
+                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentDateFormated = df.format(currentDate);
+
+
+            Log.d("Datum letzte Prüfung", dateLastExamFormated);
+            Log.d("Datum aktuell", currentDateFormated);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        TestPlanEntry testPlanEntry = new TestPlanEntry();
+        testPlanEntry.setFirstExaminer(entryResponse.getFirstExaminer());
+        testPlanEntry.setSecondExaminer(entryResponse.getSecondExaminer());
+        testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
+        testPlanEntry.setID(entryResponse.getID());
+        testPlanEntry.setCourse(entryResponse.getCourseName());
+        testPlanEntry.setModule(entryResponse.getModule());
+        testPlanEntry.setSemester(entryResponse.getSemester());
+        testPlanEntry.setTermin(entryResponse.getTermin());
+        testPlanEntry.setRoom(entryResponse.getRoom());
+        testPlanEntry.setExamForm(entryResponse.getForm());
+        testPlanEntry.setStatus(entryResponse.getStatus());
+        testPlanEntry.setHint(entryResponse.getHint());
+        testPlanEntry.setColor(entryResponse.getColor());
+        return testPlanEntry;
+    }
+
     private void inserEntryToDatabase(final AppDatabase roomData,
                                       final String year,
                                       final String examinePeriod,
@@ -89,37 +135,9 @@ public class RetrofitConnect {
 
                     //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
                     //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-                    for (JsonResponse entryDb : body) {
-
+                    for (JsonResponse entryResponse : body) {
                         //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
                         TestPlanEntry testPlanEntry = new TestPlanEntry();
-
-                        //Festlegen vom Dateformat
-                        String dateTimeZone;
-                        String dateOfExam = entryDb.getDate();
-                        dateTimeZone = dateOfExam.replaceFirst("CET", "");
-                        dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
-                        String dateLastExamFormated = null;
-
-                        try {
-                            DateFormat dateFormat = new SimpleDateFormat(
-                                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                            Date dateLastExam = dateFormat.parse(dateTimeZone);
-                            SimpleDateFormat targetFormat
-                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            dateLastExamFormated = targetFormat.format(dateLastExam);
-                            Date currentDate = Calendar.getInstance().getTime();
-                            SimpleDateFormat df
-                                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String currentDateFormated = df.format(currentDate);
-
-
-                            Log.d("Datum letzte Prüfung", dateLastExamFormated);
-                            Log.d("Datum aktuell", currentDateFormated);
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
 
                         /*
                             DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
@@ -127,19 +145,7 @@ public class RetrofitConnect {
                          */
                         // if(!checkvalidate){
                         //erhaltene Werte zur Datenbank hinzufügen
-                        testPlanEntry.setFirstExaminer(entryDb.getFirstExaminer());
-                        testPlanEntry.setSecondExaminer(entryDb.getSecondExaminer());
-                        testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
-                        testPlanEntry.setID(entryDb.getID());
-                        testPlanEntry.setCourse(entryDb.getCourseName());
-                        testPlanEntry.setModule(entryDb.getModule());
-                        testPlanEntry.setSemester(entryDb.getSemester());
-                        testPlanEntry.setTermin(entryDb.getTermin());
-                        testPlanEntry.setRoom(entryDb.getRoom());
-                        testPlanEntry.setExamForm(entryDb.getForm());
-                        testPlanEntry.setStatus(entryDb.getStatus());
-                        testPlanEntry.setHint(entryDb.getHint());
-                        testPlanEntry.setColor(entryDb.getColor());
+                        testPlanEntry = createTestplanEntry(entryResponse);
 
                         //lokale datenbank initialiseren
                         //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
@@ -160,7 +166,7 @@ public class RetrofitConnect {
                         }
 
                         //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                        testPlanEntry.setValidation(year + entryDb.getCourseId() + examinePeriod);
+                        testPlanEntry.setValidation(year + entryResponse.getCourseId() + examinePeriod);
 
                         addUser(roomData, testPlanEntry);
                    }
@@ -265,7 +271,7 @@ public class RetrofitConnect {
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
         //uebergabe der parameter an die Adresse
         String relPathWithParameters = relativePPlanUrl
-                + "entity.pruefplaneintrag/update/"
+                + "entity.pruefplaneintrag/"
                 + currentPeriod + "/"
                 + termin + "/"
                 + year + "/"
@@ -277,47 +283,56 @@ public class RetrofitConnect {
                 .baseUrl(URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         final RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<List<JsonUpdate>> call = request.getJSONUpdate();
-        call.enqueue(new Callback<List<JsonUpdate>>() {
+        Call<List<JsonResponse>> call = request.getJSON();
+
+        call.enqueue(new Callback<List<JsonResponse>>() {
             @Override
-            public void onResponse(Call<List<JsonUpdate>> call, Response<List<JsonUpdate>> response) {
+            public void onResponse(Call<List<JsonResponse>> call, Response<List<JsonResponse>> response) {
                 response.body();
                 if (response.isSuccessful() && response.body().size() > 0) {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            for (JsonUpdate updateExam : response.body()) {
-                                try {
-                                    String dateTimeZone;
-                                    String dateExam = updateExam.getDate();
-                                    String dateLastExamFormated = null;
-                                    dateTimeZone = dateExam.replaceFirst("CET", "");
-                                    dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
-                                    DateFormat dateFormat = new SimpleDateFormat(
-                                            "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-                                    Date dateLastExam = null;
-
-                                    dateLastExam = dateFormat.parse(dateTimeZone);
-
-                                    SimpleDateFormat targetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                    dateLastExamFormated = targetFormat.format(dateLastExam);
-
-                                    roomData.userDao().updateExam(dateLastExamFormated,
-                                            updateExam.getStatus(),
-                                            updateExam.getID(),
-                                            updateExam.getHint(),
-                                            updateExam.getColor());
-
-                                    //Update den Eintrag aus dem Calendar falls vorhanden
-                                    CheckGoogleCalendar cal = new CheckGoogleCalendar();
-                                    cal.setCtx(ctx);
-                                    if (!cal.checkCal(Integer.valueOf(updateExam.getID()))) {
-                                        cal.updateCalendarEntry(Integer.valueOf(updateExam.getID()));
+                            List<TestPlanEntry> dataListFromLocalDB = roomData.userDao().getAll();
+                            String responseId;
+                            int i;
+                            int listSize = dataListFromLocalDB.size();
+                            for (JsonResponse response : response.body()) {
+                                responseId = response.getID();
+                                TestPlanEntry existingEntry = new TestPlanEntry();
+                                existingEntry = roomData.userDao().getEntryById(responseId);
+                                TestPlanEntry testPlanEntryResponse = new TestPlanEntry();
+                                testPlanEntryResponse = createTestplanEntry(response);
+                                // prüfe ob der Eintrag schon existiert
+                                if(existingEntry != null)
+                                {
+                                    // entfernt den Eintrag, da die Daten geupdatet wurden
+                                    for(i=0 ; i < listSize; i++) {
+                                        if(dataListFromLocalDB.get(i).getID().
+                                            equals(response.getID())) {
+                                            dataListFromLocalDB.remove(i);
+                                            break;
+                                        }
                                     }
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
+
+                                    roomData.userDao().updateExam(testPlanEntryResponse);
+                                } else {
+                                    roomData.userDao().insertAll(testPlanEntryResponse);
                                 }
+
+                                //Update den Eintrag aus dem Calendar falls vorhanden
+                                CheckGoogleCalendar cal = new CheckGoogleCalendar();
+                                cal.setCtx(ctx);
+                                if (!cal.checkCal(Integer.parseInt(responseId))) {
+                                    cal.updateCalendarEntry(Integer.parseInt(responseId));
+                                }
+                            }
+
+                            // lösche Einträge die nicht geupdatet wurden
+                            for(TestPlanEntry entry: dataListFromLocalDB) {
+                                roomData.userDao().deleteEntry(entry);
                             }
                         }
                     }).start();
@@ -328,7 +343,7 @@ public class RetrofitConnect {
 
 
             @Override
-            public void onFailure(Call<List<JsonUpdate>> call, Throwable t) {
+            public void onFailure(Call<List<JsonResponse>> call, Throwable t) {
                 Log.d("Error", t.getMessage());
             }
         });
@@ -634,7 +649,7 @@ public class RetrofitConnect {
 
     //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!
     public static void addUser(final AppDatabase db, TestPlanEntry testPlanEntry) {
-        TestPlanEntry existingEntry = db.userDao().getExams(testPlanEntry.getID());
+        TestPlanEntry existingEntry = db.userDao().getEntryById(testPlanEntry.getID());
         // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist
         // dies wird verwendet, da die Favoriten behalten werden sollen
         // und um doppelte Eintrage zu verhindern

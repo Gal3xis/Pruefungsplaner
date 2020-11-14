@@ -148,7 +148,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Datenbank und Pruefplan laden
                 AppDatabase database = AppDatabase.getAppDatabase(context);
-                List<TestPlanEntry> ppeList = database.userDao().getAll();
+                TestPlanEntry selectedEntry = database.userDao().getEntryById(planId.get((position)));
 
                 // Überprüfung, ob Prüfitem favorisiert wurde
                 //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -161,23 +161,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         if (position >= 0) {
                             int pruefid = Integer.valueOf(planId.get(position));
 
-                            for (TestPlanEntry entry : ppeList) {
-                                if (Integer.valueOf(entry.getID()).equals(pruefid)) {
-                                    // Start Merlin Gürtler
-                                    // Setze die Farbe des Icons
-                                    holder.statusIcon.setColorFilter(Color.parseColor(entry.getColor()));
+                            if (Integer.valueOf(selectedEntry.getID()).equals(pruefid)) {
+                                // Start Merlin Gürtler
+                                // Setze die Farbe des Icons
+                                holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry.getColor()));
 
-                                    //if (eintrag.getStatus().equals("final")) {
-                                    //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
-                                    //}
-                                    // Ende Merlin Gürtler
+                                //if (eintrag.getStatus().equals("final")) {
+                                //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
+                                //}
+                                // Ende Merlin Gürtler
 
-                                    if (entry.getFavorit()) {
-                                        holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
-                                        // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                                    }
+                                if (selectedEntry.getFavorit()) {
+                                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
+                                    // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                                 }
-                            }//for
+                            }
                         }
                     }
                 });
@@ -275,21 +273,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Datenbank und Pruefplan laden
                 AppDatabase database = AppDatabase.getAppDatabase(context);
-                List<TestPlanEntry> ppeList1 = database.userDao().getAll();
+                TestPlanEntry selectedEntry = database.userDao().getEntryById(planId.get(position));
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
                 // Toast.LENGTH_SHORT).show();
 
-                    for (TestPlanEntry entry : ppeList1) {
-                        if ((entry.getID().toString()
-                                .equals(planId.get(position)) &
-                                (entry.getFavorit()))) {
-                            database.userDao()
-                                    .update(false,
-                                            Integer.valueOf(planId.get(position)));
-                        }
-                    }
+                if (selectedEntry.getFavorit()) {
+                    database.userDao()
+                            .update(false,
+                                    Integer.valueOf(planId.get(position)));
+                }
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
@@ -319,33 +313,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //Datenbank und Pruefplan laden
                 AppDatabase database = AppDatabase.getAppDatabase(context);
-                List<TestPlanEntry> ppeList1 = database.userDao().getAll();
+                TestPlanEntry selectedEntry = database.userDao().getEntryById(planId.get(position));
 
                 //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
                 //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
                 // Toast.LENGTH_SHORT).show();
 
                 //Speichern des Prüfitem als Favorit
-                    // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-                    for (TestPlanEntry entry : ppeList1) {
-                        if ((entry.getID().toString()
-                                .equals(planId.get(position)) &
-                                (!entry.getFavorit()))) {
-                            database.userDao()
-                                    .update(true,
-                                            Integer.valueOf(planId.get(position)));
-                        }
+                // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
+                if (!selectedEntry.getFavorit()) {
+                    database.userDao()
+                            .update(true,
+                                    Integer.valueOf(planId.get(position)));
                 }
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
                         int pruefid = Integer.valueOf(planId.get(position));
-                        for (TestPlanEntry entry : ppeList1) {
-                            if (Integer.valueOf(entry.getID()).equals(pruefid)) {
-                                holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
-                                // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                            }
+                        if (Integer.valueOf(selectedEntry.getID()).equals(pruefid)) {
+                            holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
+                            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                         }
 
                         //Speichern des Prüfitem als Favorit
@@ -433,21 +421,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         //Datenbank und Pruefplan laden
         AppDatabase database = AppDatabase.getAppDatabase(context);
-        List<TestPlanEntry> ppeList1 = database.userDao().getAll();
+        TestPlanEntry selectedEntry = database.userDao().getEntryById(planId.get(position));
 
         //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
         //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
         // Toast.LENGTH_SHORT).show();
         save = false;
 
-        for (TestPlanEntry entry : ppeList1) {
-            if ((entry.getID().toString()
-                    .equals(planId.get(position)) &
-                    (entry.getFavorit()))) {
-                save = true;
-                break;
-                // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-            }
+        if (selectedEntry.getFavorit()) {
+            save = true;
+            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
         }
 
         return save;

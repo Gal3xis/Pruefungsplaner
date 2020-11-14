@@ -337,7 +337,7 @@ public class CheckGoogleCalendar {
     public TestPlanEntry getFavoritePruefung(String id){
         AppDatabase database2 = AppDatabase.getAppDatabase(context);
         // Erhalte die Prüfung die geupdated werden soll
-        TestPlanEntry exam = database2.userDao().getExams(id);
+        TestPlanEntry exam = database2.userDao().getEntryById(id);
         return(exam);
     }
 

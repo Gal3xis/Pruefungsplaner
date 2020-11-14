@@ -5,6 +5,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -15,8 +16,8 @@ public interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE module LIKE :module")
     List<TestPlanEntry> getModule(String module);
 
-    @Query("UPDATE TestPlanEntry SET date = :date, status = :status, hint = :hint, color =:color where ID = :id")
-    void updateExam(String date, String status, String id, String hint, String color);
+    @Update
+    public void updateExam(TestPlanEntry... testPlanEntry);
 
     @Query("SELECT * from TestPlanEntry WHERE firstExaminer LIKE :prof ORDER BY date")
     List<TestPlanEntry> getModuleProf(String prof);
@@ -43,7 +44,7 @@ public interface UserDao {
     List<TestPlanEntry> getFavorites(boolean favorite);
 
     @Query("SELECT * FROM TestPlanEntry WHERE ID = :id")
-    TestPlanEntry getExams(String id);
+    TestPlanEntry getEntryById(String id);
 
     @Query("INSERT INTO Uuid VALUES (:uuid)")
     void insertUuid(String uuid);
@@ -108,6 +109,9 @@ public interface UserDao {
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     List<TestPlanEntry> getAll();
+
+    @Query("SELECT * FROM TestPlanEntry WHERE Choosen = :choosen ORDER BY date, termin, module")
+    List<TestPlanEntry> getAllChoosen(Boolean choosen);
 
     @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY date, termin, module")
     List<TestPlanEntry> getByCourseName(String course);
