@@ -17,7 +17,7 @@ public interface UserDao {
     List<TestPlanEntry> getModule(String module);
 
     @Update
-    public void updateExam(TestPlanEntry... testPlanEntry);
+    void updateExam(TestPlanEntry... testPlanEntry);
 
     @Query("SELECT * from TestPlanEntry WHERE firstExaminer LIKE :prof ORDER BY date")
     List<TestPlanEntry> getModuleProf(String prof);

@@ -98,6 +98,51 @@ public class RetrofitConnect {
         return testPlanEntry;
     }
 
+    private TestPlanEntry updateTestPlanEntry(JsonResponse entryResponse, TestPlanEntry existingEntry)
+    {
+        //Festlegen vom Dateformat
+        String dateTimeZone;
+        String dateOfExam = entryResponse.getDate();
+        dateTimeZone = dateOfExam.replaceFirst("CET", "");
+        dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
+        String dateLastExamFormated = null;
+
+        try {
+            DateFormat dateFormat = new SimpleDateFormat(
+                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
+            Date dateLastExam = dateFormat.parse(dateTimeZone);
+            SimpleDateFormat targetFormat
+                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateLastExamFormated = targetFormat.format(dateLastExam);
+            Date currentDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df
+                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String currentDateFormated = df.format(currentDate);
+
+
+            Log.d("Datum letzte Prüfung", dateLastExamFormated);
+            Log.d("Datum aktuell", currentDateFormated);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        existingEntry.setFirstExaminer(entryResponse.getFirstExaminer());
+        existingEntry.setSecondExaminer(entryResponse.getSecondExaminer());
+        existingEntry.setDate(String.valueOf(dateLastExamFormated));
+        existingEntry.setID(entryResponse.getID());
+        existingEntry.setCourse(entryResponse.getCourseName());
+        existingEntry.setModule(entryResponse.getModule());
+        existingEntry.setSemester(entryResponse.getSemester());
+        existingEntry.setTermin(entryResponse.getTermin());
+        existingEntry.setRoom(entryResponse.getRoom());
+        existingEntry.setExamForm(entryResponse.getForm());
+        existingEntry.setStatus(entryResponse.getStatus());
+        existingEntry.setHint(entryResponse.getHint());
+        existingEntry.setColor(entryResponse.getColor());
+        return existingEntry;
+    }
+
     private void inserEntryToDatabase(final AppDatabase roomData,
                                       final String year,
                                       final String examinePeriod,
@@ -303,8 +348,6 @@ public class RetrofitConnect {
                                 responseId = response.getID();
                                 TestPlanEntry existingEntry = new TestPlanEntry();
                                 existingEntry = roomData.userDao().getEntryById(responseId);
-                                TestPlanEntry testPlanEntryResponse = new TestPlanEntry();
-                                testPlanEntryResponse = createTestplanEntry(response);
                                 // prüfe ob der Eintrag schon existiert
                                 if(existingEntry != null)
                                 {
@@ -312,13 +355,16 @@ public class RetrofitConnect {
                                     for(i=0 ; i < listSize; i++) {
                                         if(dataListFromLocalDB.get(i).getID().
                                             equals(response.getID())) {
+                                            existingEntry = dataListFromLocalDB.get(i);
                                             dataListFromLocalDB.remove(i);
+                                            existingEntry = updateTestPlanEntry(response, existingEntry);
                                             break;
                                         }
                                     }
-
-                                    roomData.userDao().updateExam(testPlanEntryResponse);
+                                    roomData.userDao().updateExam(existingEntry);
                                 } else {
+                                    TestPlanEntry testPlanEntryResponse = new TestPlanEntry();
+                                    testPlanEntryResponse = createTestplanEntry(response);
                                     roomData.userDao().insertAll(testPlanEntryResponse);
                                 }
 
