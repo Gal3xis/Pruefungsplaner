@@ -50,16 +50,12 @@ public class RetrofitConnect {
         this.relativePPlanUrl = relativePPlanUrl;
     }
 
-    // Start Merlin Gürtler
-    // Refactoring
-    private TestPlanEntry createTestplanEntry(JsonResponse entryResponse)
-    {
+    private String getDate(String dateResponse) {
         //Festlegen vom Dateformat
         String dateTimeZone;
-        String dateOfExam = entryResponse.getDate();
-        dateTimeZone = dateOfExam.replaceFirst("CET", "");
+        dateTimeZone = dateResponse.replaceFirst("CET", "");
         dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
-        String dateLastExamFormated = null;
+        String dateLastExamFormatted = null;
 
         try {
             DateFormat dateFormat = new SimpleDateFormat(
@@ -67,24 +63,33 @@ public class RetrofitConnect {
             Date dateLastExam = dateFormat.parse(dateTimeZone);
             SimpleDateFormat targetFormat
                     = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            dateLastExamFormated = targetFormat.format(dateLastExam);
+            dateLastExamFormatted = targetFormat.format(dateLastExam);
             Date currentDate = Calendar.getInstance().getTime();
             SimpleDateFormat df
                     = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String currentDateFormated = df.format(currentDate);
 
 
-            Log.d("Datum letzte Prüfung", dateLastExamFormated);
+            Log.d("Datum letzte Prüfung", dateLastExamFormatted);
             Log.d("Datum aktuell", currentDateFormated);
 
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
+        return String.valueOf(dateLastExamFormatted);
+    }
+
+    // Start Merlin Gürtler
+    // Refactoring
+    private TestPlanEntry createTestplanEntry(JsonResponse entryResponse)
+    {
+        String dateLastExamFormatted = getDate(entryResponse.getDate());
+
         TestPlanEntry testPlanEntry = new TestPlanEntry();
         testPlanEntry.setFirstExaminer(entryResponse.getFirstExaminer());
         testPlanEntry.setSecondExaminer(entryResponse.getSecondExaminer());
-        testPlanEntry.setDate(String.valueOf(dateLastExamFormated));
+        testPlanEntry.setDate(dateLastExamFormatted);
         testPlanEntry.setID(entryResponse.getID());
         testPlanEntry.setCourse(entryResponse.getCourseName());
         testPlanEntry.setModule(entryResponse.getModule());
@@ -100,36 +105,11 @@ public class RetrofitConnect {
 
     private TestPlanEntry updateTestPlanEntry(JsonResponse entryResponse, TestPlanEntry existingEntry)
     {
-        //Festlegen vom Dateformat
-        String dateTimeZone;
-        String dateOfExam = entryResponse.getDate();
-        dateTimeZone = dateOfExam.replaceFirst("CET", "");
-        dateTimeZone = dateTimeZone.replaceFirst("CEST", "");
-        String dateLastExamFormated = null;
-
-        try {
-            DateFormat dateFormat = new SimpleDateFormat(
-                    "EEE MMM dd HH:mm:ss yyyy", Locale.US);
-            Date dateLastExam = dateFormat.parse(dateTimeZone);
-            SimpleDateFormat targetFormat
-                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            dateLastExamFormated = targetFormat.format(dateLastExam);
-            Date currentDate = Calendar.getInstance().getTime();
-            SimpleDateFormat df
-                    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String currentDateFormated = df.format(currentDate);
-
-
-            Log.d("Datum letzte Prüfung", dateLastExamFormated);
-            Log.d("Datum aktuell", currentDateFormated);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        String dateLastExamFormatted = getDate(entryResponse.getDate());
 
         existingEntry.setFirstExaminer(entryResponse.getFirstExaminer());
         existingEntry.setSecondExaminer(entryResponse.getSecondExaminer());
-        existingEntry.setDate(String.valueOf(dateLastExamFormated));
+        existingEntry.setDate(dateLastExamFormatted);
         existingEntry.setID(entryResponse.getID());
         existingEntry.setCourse(entryResponse.getCourseName());
         existingEntry.setModule(entryResponse.getModule());
