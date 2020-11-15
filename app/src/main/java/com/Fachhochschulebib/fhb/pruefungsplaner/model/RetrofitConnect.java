@@ -80,6 +80,23 @@ public class RetrofitConnect {
         return String.valueOf(dateLastExamFormatted);
     }
 
+    private String getIDs(final AppDatabase roomData) {
+        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
+        JSONArray courseIds = new JSONArray();
+
+        for (String id : Ids) {
+            try {
+                JSONObject idJson = new JSONObject();
+                idJson.put("ID", id);
+                courseIds.put(idJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return courseIds.toString();
+    }
+
     // Start Merlin Gürtler
     // Refactoring
     private TestPlanEntry createTestplanEntry(JsonResponse entryResponse)
@@ -219,17 +236,7 @@ public class RetrofitConnect {
         //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
-        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
-        JSONArray courseIds = new JSONArray();
-        for (String id : Ids) {
-            try {
-                JSONObject idJson = new JSONObject();
-                idJson.put("ID", id);
-                courseIds.put(idJson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        String courseIds = getIDs(roomData);
 
         //Uebergabe der Parameter an den relativen Server-Pfad
         String relPathWithParameters = relativePPlanUrl
@@ -237,7 +244,7 @@ public class RetrofitConnect {
                 + currentPeriod + "/"
                 + termin + "/"
                 + year + "/"
-                + courseIds.toString() + "/";
+                + courseIds + "/";
 
         String URL = urlfhb + relPathWithParameters;
 
@@ -278,18 +285,7 @@ public class RetrofitConnect {
         //Serveradresse
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
-        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
-        JSONArray courseIds = new JSONArray();
-
-        for (String id : Ids) {
-            try {
-                JSONObject idJson = new JSONObject();
-                idJson.put("ID", id);
-                courseIds.put(idJson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        String courseIds = getIDs(roomData);
 
         ctx2 = ctx;
         //Creating editor to store uebergebeneModule to shared preferences
@@ -300,7 +296,7 @@ public class RetrofitConnect {
                 + currentPeriod + "/"
                 + termin + "/"
                 + year + "/"
-                + courseIds.toString() + "/";
+                + courseIds + "/";
 
         String URL = urlfhb + relPathWithParameters;
 
@@ -572,18 +568,7 @@ public class RetrofitConnect {
         ctx2 = ctx;
 
         // erhalte die gewählten Studiengänge
-        List<String> Ids = roomData.userDao().getChoosenCourseId(true);
-        JSONArray courseIds = new JSONArray();
-
-        for (String id : Ids) {
-            try {
-                JSONObject idJson = new JSONObject();
-                idJson.put("ID", id);
-                courseIds.put(idJson);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
+        String courseIds = getIDs(roomData);
 
         Uuid uuid = roomData.userDao().getUuid();
 
@@ -592,7 +577,7 @@ public class RetrofitConnect {
 
         //uebergabe der parameter an die Adresse
         String adress = relativePPlanUrl + "entity.usercourses/" +
-                courseIds.toString() + "/" + uuid.getUuid() + "/";
+                courseIds + "/" + uuid.getUuid() + "/";
 
         String URL = urlfhb + adress;
 
