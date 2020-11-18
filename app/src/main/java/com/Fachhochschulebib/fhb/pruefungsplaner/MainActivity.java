@@ -97,13 +97,15 @@ public class MainActivity extends AppCompatActivity {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         // Überprüfe ob die App schonmal gestartet wurde
                         if(database.userDao().getUuid() == null) {
-                            RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                             // Sende nur ans Backend wenn die App wirklich zum ersten mal
                             // gestartet wurde
                             retrofit.firstStart(getApplicationContext(), database,
                                     serverAddress);
+                        }else {
+                            retrofit.setUserCourses(getApplicationContext(), database, serverAddress);
                         }
                     }
                 }).start();
