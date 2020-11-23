@@ -42,20 +42,17 @@ import java.util.TimeZone;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     public List<String> modules;
-    private List<String> examinerAndSemester;
-    private List<String> moduleList;
-    private List<String> date;
-    private List<String> roomAdapter;
-    private List<String> examForm;
-    private List<String> statusHintList;
+    private final List<String> examinerAndSemester;
+    private final List<String> moduleList;
+    private final List<String> date;
+    private final List<String> roomAdapter;
+    private final List<String> examForm;
+    private final List<String> statusHintList;
     private boolean save;
     private String moduleName;
-    private TextView txtSecondScreen;
     static boolean favcheck = true;
     private Context context;
-    // private Intent calIntent;
-    private RecyclerView.LayoutManager currentLayout;
-    private List<String> planId;
+    private final List<String> planId;
     private GregorianCalendar calDate = new GregorianCalendar();
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -75,7 +72,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         planId = passedId;
         roomAdapter = passedRoom;
         examForm = passedExamForm;
-        currentLayout = mLayout;
+        // private Intent calIntent;
         statusHintList = passedStatusHint;
     }
 
@@ -159,7 +156,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     @Override
                     public void run() {
                         if (position >= 0) {
-                            int pruefid = Integer.valueOf(planId.get(position));
+                            int pruefid = Integer.parseInt(planId.get(position));
 
                             if (Integer.valueOf(selectedEntry.getID()).equals(pruefid)) {
                                 // Start Merlin Gürtler
@@ -222,10 +219,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         //Darstellen der Werte in der Prüfitem Komponente
         String[] splitMonthDayYear = splitDay[0].split("-");
-        holder.txtthirdline.setText(context.getString(R.string.time) + splitDay[1].substring(0, 5).toString());
-        holder.button.setText(splitMonthDayYear[2].toString() + "."
-                + splitMonthDayYear[1].toString() + "."
-                + splitMonthDayYear[0].toString());
+        holder.txtthirdline.setText(context.getString(R.string.time) + splitDay[1].substring(0, 5));
+        holder.button.setText(splitMonthDayYear[2] + "."
+                + splitMonthDayYear[1] + "."
+                + splitMonthDayYear[0]);
         final String[] splitExaminerAndSemester = examinerAndSemester.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
                 + splitExaminerAndSemester[0] + ", "
@@ -282,7 +279,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 if (selectedEntry.getFavorit()) {
                     database.userDao()
                             .update(false,
-                                    Integer.valueOf(planId.get(position)));
+                                    Integer.parseInt(planId.get(position)));
                 }
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -292,8 +289,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                         //Entferne den Eintrag aus dem Calendar falls vorhanden
                             CheckGoogleCalendar cal = new CheckGoogleCalendar();
                             cal.setCtx(context);
-                            if (!cal.checkCal(Integer.valueOf(planId.get(position)))) {
-                                cal.deleteEntry(Integer.valueOf(planId.get(position)));
+                            if (!cal.checkCal(Integer.parseInt(planId.get(position)))) {
+                                cal.deleteEntry(Integer.parseInt(planId.get(position)));
                             }
 
                             holder.ivicon.clearColorFilter();
@@ -324,13 +321,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 if (!selectedEntry.getFavorit()) {
                     database.userDao()
                             .update(true,
-                                    Integer.valueOf(planId.get(position)));
+                                    Integer.parseInt(planId.get(position)));
                 }
 
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     @Override
                     public void run() {
-                        int pruefid = Integer.valueOf(planId.get(position));
+                        int pruefid = Integer.parseInt(planId.get(position));
                         if (Integer.valueOf(selectedEntry.getID()).equals(pruefid)) {
                             holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"));
                             // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
@@ -342,17 +339,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                             SharedPreferences GoogleCalenderWert
                                     = context.getSharedPreferences("json8", 0);
                             //Creating editor to store uebergebeneModule to shared preferences
-                            SharedPreferences.Editor googlekalenderEditor = GoogleCalenderWert.edit();
-                            googlekalenderEditor.apply();
-                            String checkGooglecalender
+                            SharedPreferences.Editor googleCalendarEditor = GoogleCalenderWert.edit();
+                            googleCalendarEditor.apply();
+                            String checkGoogleCalendar
                                     = GoogleCalenderWert.getString("jsondata2", "0");
 
                             // Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der
                             // Google Kalender aktiviert
                             boolean save2 = false;
 
-                            for (int counter = 0; counter < checkGooglecalender.length(); counter++) {
-                                String ss1 = String.valueOf(checkGooglecalender.charAt(counter));
+                            for (int counter = 0; counter < checkGoogleCalendar.length(); counter++) {
+                                String ss1 = String.valueOf(checkGoogleCalendar.charAt(counter));
                                 if (ss1.equals(String.valueOf(1))) {
                                     save2 = true;
                                 }
@@ -363,7 +360,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                             checkEntry.setCtx(context);
 
                             //Abfrage des geklickten Items
-                            if (checkEntry.checkCal(Integer.valueOf(planId.get(position)))) {
+                            if (checkEntry.checkCal(Integer.parseInt(planId.get(position)))) {
                                 if (save2) {
 
                                     //Ermitteln benötigter Variablen
@@ -373,11 +370,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                                     holder.txtthirdline
                                             .setText(context.getString(R.string.time)
-                                                    + splitDateAndTime[1].substring(0, 5).toString());
+                                                    + splitDateAndTime[1].substring(0, 5));
                                     holder.button
-                                            .setText(splitDayMonthYear[2].toString() + "."
-                                                    + splitDayMonthYear[1].toString() + "."
-                                                    + splitDayMonthYear[0].toString());
+                                            .setText(splitDayMonthYear[2] + "."
+                                                    + splitDayMonthYear[1] + "."
+                                                    + splitDayMonthYear[0]);
                                     final String[] sa = examinerAndSemester.get(position).split(" ");
                                     holder.txtFooter
                                             .setText(context.getString(R.string.prof) + sa[0] + ", " + sa[1]
@@ -391,20 +388,20 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                                     }
 
                                     int timeStart
-                                            = Integer.valueOf(splitDateAndTime[1].substring(0, 2));
+                                            = Integer.parseInt(splitDateAndTime[1].substring(0, 2));
                                     int timeEnd
-                                            = Integer.valueOf(splitDateAndTime[1].substring(4, 5));
+                                            = Integer.parseInt(splitDateAndTime[1].substring(4, 5));
                                     calDate = new GregorianCalendar(
-                                            Integer.valueOf(splitDayMonthYear[0]),
-                                            (Integer.valueOf(splitDayMonthYear[1]) - 1),
-                                            Integer.valueOf(splitDayMonthYear[2]),
+                                            Integer.parseInt(splitDayMonthYear[0]),
+                                            (Integer.parseInt(splitDayMonthYear[1]) - 1),
+                                            Integer.parseInt(splitDayMonthYear[2]),
                                             timeStart, timeEnd);
 
                                     //Methode zum Speichern im Kalender
                                     int calendarid = calendarID(moduleName);
 
                                     //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
-                                    checkEntry.insertCal(Integer.valueOf(planId.get(position)),
+                                    checkEntry.insertCal(Integer.parseInt(planId.get(position)),
                                             calendarid);
 
                                 }
@@ -426,12 +423,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
         //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
         // Toast.LENGTH_SHORT).show();
-        save = false;
 
-        if (selectedEntry.getFavorit()) {
-            save = true;
-            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-        }
+        // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+        save = selectedEntry.getFavorit();
 
         return save;
     }
@@ -453,14 +447,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView txtHeader;
-        private TextView txtFooter;
-        private TextView txtthirdline;
+        private final TextView txtHeader;
+        private final TextView txtFooter;
+        private final TextView txtthirdline;
         public LinearLayout layout;
         public LinearLayout bigLayout;
-        private ImageView ivicon;
-        private ImageView statusIcon;
-        private Button button;
+        private final ImageView ivicon;
+        private final ImageView statusIcon;
+        private final Button button;
 
         private ViewHolder(View v) {
             super(v);
@@ -468,7 +462,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             statusIcon = (ImageView) v.findViewById(R.id.icon2);
             txtHeader = (TextView) v.findViewById(R.id.firstLine);
             txtFooter = (TextView) v.findViewById(R.id.secondLine);
-            txtSecondScreen = (TextView) v.findViewById(R.id.txtSecondscreen);
+            TextView txtSecondScreen = (TextView) v.findViewById(R.id.txtSecondscreen);
 
             txtthirdline = (TextView) v.findViewById(R.id.thirdLine);
             button = (Button) v.findViewById(R.id.button7);
@@ -492,19 +486,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         event.put(CalendarContract.Events.HAS_ALARM, 0); // 0 for false, 1 for true
         String timeZone = TimeZone.getDefault().getID();
         event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
-        Uri baseUri;
-
-        if (Build.VERSION.SDK_INT >= 8) {
-            baseUri = Uri.parse("content://com.android.calendar/events");
-
-        } else {
-            baseUri = Uri.parse("content://calendar/events");
-        }
+        Uri baseUri = Uri.parse("content://calendar/events");
 
         context.getContentResolver().insert(baseUri, event);
 
         int result = 0;
-        String projection[] = {"_id", "title"};
+        String[] projection = {"_id", "title"};
         Cursor cursor = context.getContentResolver()
                 .query(baseUri, null,
                         null, null, null);

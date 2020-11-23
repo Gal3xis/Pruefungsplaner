@@ -88,7 +88,6 @@ public class Terminefragment extends Fragment {
     List<String> roomList = new ArrayList<>();
     List<String> statusMessage = new ArrayList<>();
     SharedPreferences mSharedPreferencesValidation;
-    int sleeptime;
     String examineYear, currentExaminePeriod, returnCourse;
 
     public static String validation;
@@ -401,6 +400,7 @@ public class Terminefragment extends Fragment {
                     }
                     // Nun aus Shared Preferences
                     // die Daten für die Periode aus den Shared Preferences
+                    int sleepTime;
                     String examineYearThread = mSharedPreferencesValidation.getString("examineYear", "0");
                     String currentExaminePeriodThread = mSharedPreferencesValidation.getString("currentPeriode", "0");
 
@@ -419,7 +419,7 @@ public class Terminefragment extends Fragment {
                                 currentExamineYearThread,
                                 serverAddress);
 
-                        sleeptime = 3000;
+                        sleepTime = 3000;
                     } else {
 
                         retrofit.retroUpdate(Terminefragment.this.getContext(), database,
@@ -428,11 +428,11 @@ public class Terminefragment extends Fragment {
                                 currentExamineYearThread,
                                 serverAddress);
 
-                        sleeptime = 2000;
+                        sleepTime = 2000;
                     }
                     try {
                         // Timeout für die Progressbar
-                        Thread.sleep(sleeptime);
+                        Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -588,8 +588,8 @@ public class Terminefragment extends Fragment {
                                 = (LinearLayout) viewItem.findViewById(R.id.linearLayout);
                         layout1.setOnClickListener(v1 -> {
                             Log.e("@@@@@", "" + position);
-                            if (txtSecondScreen.getVisibility() == v1.VISIBLE) {
-                                txtSecondScreen.setVisibility(v1.GONE);
+                            if (txtSecondScreen.getVisibility() == View.VISIBLE) {
+                                txtSecondScreen.setVisibility(View.GONE);
                                 checkList.set(position, false);
                             } else {
                                 // Start Merlin Gürtler
@@ -600,8 +600,8 @@ public class Terminefragment extends Fragment {
                                     try {
                                         final TextView txtSecondScreen2
                                                 = (TextView) holder.findViewById(R.id.txtSecondscreen);
-                                        if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
-                                            txtSecondScreen2.setVisibility(v.GONE);
+                                        if (txtSecondScreen2.getVisibility() == View.VISIBLE) {
+                                            txtSecondScreen2.setVisibility(View.GONE);
                                         }
                                     } catch (Exception e) {
                                         Log.d("ERROR", "NOT IN VIEW PORT " + e);
@@ -647,8 +647,8 @@ public class Terminefragment extends Fragment {
             public void onChildViewDetachedFromWindow(View view) {
                 final TextView txtSecondScreen
                         = (TextView) view.findViewById(R.id.txtSecondscreen);
-                if (txtSecondScreen.getVisibility() == view.VISIBLE) {
-                    txtSecondScreen.setVisibility(view.GONE);
+                if (txtSecondScreen.getVisibility() == View.VISIBLE) {
+                    txtSecondScreen.setVisibility(View.GONE);
                 }
             }
         });

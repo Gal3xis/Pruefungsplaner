@@ -61,7 +61,7 @@ public class searchFragment extends Fragment {
             returnCourse, validation;
     List<TestPlanEntry> ppeList = new ArrayList();
 
-    private AppDatabase database = AppDatabase.getAppDatabase(getContext());
+    private final AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
     AppDatabase roomData = AppDatabase.getAppDatabase(getContext());
 
@@ -430,7 +430,7 @@ public class searchFragment extends Fragment {
                                 database.userDao().searchAndReset(false);
                                 for (int i =0; i< sortedList.size();i++) {
                                     // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
-                                    database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                                    database.userDao().update2(true, Integer.parseInt(sortedList.get(i)));
                                 }
                             }
                             else {
@@ -447,7 +447,7 @@ public class searchFragment extends Fragment {
                                     database.userDao().searchAndReset(false);
                                     for (int i =0; i< sortedList.size();i++) {
                                         // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
-                                        database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                                        database.userDao().update2(true, Integer.parseInt(sortedList.get(i)));
                                     }
                                 } else if(!profName.equals(getContext().getString(R.string.all))) {
                                     sortedList .clear();
@@ -461,7 +461,7 @@ public class searchFragment extends Fragment {
                                     database.userDao().searchAndReset(false);
                                     for (int i =0; i< sortedList.size();i++) {
                                         // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
-                                        database.userDao().update2(true, Integer.valueOf(sortedList.get(i)));
+                                        database.userDao().update2(true, Integer.parseInt(sortedList.get(i)));
                                     }
                                 } else {
                                     // Ende Merlin Gürtler
@@ -480,8 +480,8 @@ public class searchFragment extends Fragment {
                                         // Toast.makeText(getContext(),tableReturn().get(i),
                                         // Toast.LENGTH_SHORT).show();
                                         database.userDao().update2(true,
-                                                Integer.valueOf(ppeList.get(
-                                                        Integer.valueOf(tableReturn().get(i))).getID()));
+                                                Integer.parseInt(ppeList.get(
+                                                        Integer.parseInt(tableReturn().get(i))).getID()));
                                     }
                                 }
                             }

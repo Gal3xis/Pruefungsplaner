@@ -46,7 +46,7 @@ import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
 public class ChoiceModulSearchFragment extends Fragment {
 
-    private AppDatabase database = AppDatabase.getAppDatabase(getContext());
+    private final AppDatabase database = AppDatabase.getAppDatabase(getContext());
     List<TestPlanEntry> ppeList;
 
     private String selectedCourseSpinner;
@@ -190,7 +190,7 @@ public class ChoiceModulSearchFragment extends Fragment {
                             database.userDao().searchAndReset(false);
                             for (TestPlanEntry entry: ppeList) {
                                 database.userDao().update2(true,
-                                        Integer.valueOf(entry.getID()));
+                                        Integer.parseInt(entry.getID()));
                             }
 
                             // Merlin Gürtler

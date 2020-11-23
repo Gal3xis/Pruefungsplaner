@@ -442,7 +442,7 @@ public class RetrofitConnect {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         final RequestInterface request = retrofit.create(RequestInterface.class);
-        Call<Void> call = request.sendUuid();
+        Call<Void> call = request.anotherStart();
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {

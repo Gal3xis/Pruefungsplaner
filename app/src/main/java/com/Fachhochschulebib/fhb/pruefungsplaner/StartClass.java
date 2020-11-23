@@ -25,7 +25,6 @@ public class StartClass extends Application {
     }
 
     public boolean getAppStarted() {
-
         return appStarted;
     }
 

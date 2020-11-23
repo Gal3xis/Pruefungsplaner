@@ -32,7 +32,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
@@ -55,7 +54,7 @@ import java.util.TimeZone;
 
 public class Optionen extends Fragment {
     private boolean save;
-    private SharedPreferences.Editor mEditorGoogleKalender;
+    private SharedPreferences.Editor mEditorGoogleCalendar;
     private JSONArray response;
     private GregorianCalendar calDate = new GregorianCalendar();
     private String course;
@@ -114,7 +113,7 @@ public class Optionen extends Fragment {
         SharedPreferences serverAdresse
                 = v.getContext().getSharedPreferences("json8", 0);
         //Creating editor to store uebergebeneModule to shared preferences
-        mEditorGoogleKalender = serverAdresse.edit();
+        mEditorGoogleCalendar = serverAdresse.edit();
 
         mSharedPreferencesPPServerAddress
                 = v.getContext().getSharedPreferences("Server_Address", 0);
@@ -173,11 +172,11 @@ public class Optionen extends Fragment {
                         // do something, the isChecked will be
                         // true if the switch is in the On position
                         if (isChecked) {
-                            mEditorGoogleKalender.clear();
-                            mEditorGoogleKalender.apply();
+                            mEditorGoogleCalendar.clear();
+                            mEditorGoogleCalendar.apply();
                             response.put("1");
-                            mEditorGoogleKalender.putString("jsondata2", response.toString());
-                            mEditorGoogleKalender.apply();
+                            mEditorGoogleCalendar.putString("jsondata2", response.toString());
+                            mEditorGoogleCalendar.apply();
 
                             AppDatabase database = AppDatabase.getAppDatabase(getContext());
                             List<TestPlanEntry> ppeList = database.userDao().getFavorites(true);
@@ -190,7 +189,7 @@ public class Optionen extends Fragment {
                                 String id = entry.getID();
 
                                 //überprüfung von ein/aus Google Kalender
-                                if (googlecal.checkCal(Integer.valueOf(id))) {
+                                if (googlecal.checkCal(Integer.parseInt(id))) {
                                     //ermitteln von benötigten Variablen
                                     String[] splitDateAndTime
                                             = entry.getDate().split(" ");
@@ -200,28 +199,28 @@ public class Optionen extends Fragment {
                                     course = entry.getCourse();
                                     course = course + " " + entry.getModule();
                                     int timeStart
-                                            = Integer.valueOf(splitDateAndTime[1].substring(0, 2));
+                                            = Integer.parseInt(splitDateAndTime[1].substring(0, 2));
                                     int timeEnd
-                                            = Integer.valueOf(splitDateAndTime[1].substring(4, 5));
+                                            = Integer.parseInt(splitDateAndTime[1].substring(4, 5));
 
                                     calDate = new GregorianCalendar(
-                                            Integer.valueOf(splitDayMonthYear[0]),
-                                            Integer.valueOf(splitDayMonthYear[1]) - 1,
-                                            Integer.valueOf(splitDayMonthYear[2]),
+                                            Integer.parseInt(splitDayMonthYear[0]),
+                                            Integer.parseInt(splitDayMonthYear[1]) - 1,
+                                            Integer.parseInt(splitDayMonthYear[2]),
                                             timeStart, timeEnd);
 
                                     //Methode zum Speichern im Kalender
                                     int calendarid = calendarID(course);
 
                                     //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                                    googlecal.insertCal(Integer.valueOf(id), calendarid);
+                                    googlecal.insertCal(Integer.parseInt(id), calendarid);
 
                                 }
                             }
 
                             if (!isChecked) {
-                                mEditorGoogleKalender.clear().apply();
-                                mEditorGoogleKalender.remove("jsondata2").apply();
+                                mEditorGoogleCalendar.clear().apply();
+                                mEditorGoogleCalendar.remove("jsondata2").apply();
                             }
 
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -367,7 +366,7 @@ public class Optionen extends Fragment {
                                     String.valueOf(entry.getID()));
                             database.userDao()
                                     .update(false,
-                                            Integer.valueOf(entry.getID()));
+                                            Integer.parseInt(entry.getID()));
                         }
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -499,20 +498,14 @@ public class Optionen extends Fragment {
         event.put(CalendarContract.Events.HAS_ALARM, 0); // 0 for false, 1 for true
         String timeZone = TimeZone.getDefault().getID();
         event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
-        Uri baseUri;
 
-        if (Build.VERSION.SDK_INT >= 8) {
-            baseUri = Uri.parse("content://com.android.calendar/events");
-
-        } else {
-            baseUri = Uri.parse("content://calendar/events");
-        }
+        Uri baseUri = Uri.parse("content://calendar/events");
 
         getContext().getContentResolver().insert(baseUri, event);
 
 
         int result = 0;
-        String projection[] = {"_id", "title"};
+        String[] projection = {"_id", "title"};
         Cursor cursor = getContext().getContentResolver()
                 .query(baseUri, null,
                         null, null, null);

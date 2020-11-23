@@ -27,10 +27,10 @@ import static android.content.Context.MODE_PRIVATE;
 
 
 public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.ViewHolder> {
-    private List<String> coursesList;
-    private List<Boolean> chosenList;
+    private final List<String> coursesList;
+    private final List<Boolean> chosenList;
     String selectedCourse;
-    private Context context;
+    private final Context context;
     private StartClass globalVariable;
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -116,8 +116,8 @@ public class CheckListAdapter extends RecyclerView.Adapter<CheckListAdapter.View
     // you provide access to all the views for a data item in a view holder
     public class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        private TextView nameCourse;
-        private CheckBox checkBoxCourse;
+        private final TextView nameCourse;
+        private final CheckBox checkBoxCourse;
 
         private ViewHolder(View v) {
             super(v);

@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
     private Button buttonOk;
     public static String returnCourse = null;
     public static String returnFaculty = null;
-    private Boolean checkReturn = true;
     //KlassenVariablen
     private String courseMain;
     private JSONArray jsonArrayFacultys;
@@ -170,8 +169,6 @@ public class MainActivity extends AppCompatActivity {
         relativePPlanURL
                 = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0");
 
-        pingExaminePeriod();
-
         //Defininition des Arrays jahreszeit
         List<String> season = new ArrayList<String>();
         season.add(context.getString(R.string.sommer));
@@ -214,11 +211,11 @@ public class MainActivity extends AppCompatActivity {
 
     //Aufruf in onCreate()
     public void checkConnection(){
-        boolean aktuelleurl
+        boolean currentUrl
                 = pingUrl(serverAddress + relativePPlanURL + "entity.faculty");
 
-        if (!aktuelleurl) {
-            KeineVerbindung();
+        if (!currentUrl) {
+            NoConnection();
         } else {
             // Start Merlin Gürtler
             final StartClass globalVariable = (StartClass) getApplicationContext();
@@ -266,7 +263,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void KeineVerbindung(){
+    public void NoConnection(){
         new Thread(() -> Toast.makeText(getApplicationContext(),
                 getApplicationContext().getString(R.string.noConnection),
                 Toast.LENGTH_SHORT).show());
@@ -291,19 +288,19 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder chooseFaculty = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
 
-                        String[] facultys = new String [facultyName.size()];
+                        String[] faculties = new String [facultyName.size()];
 
                         for(int i = 0; i < facultyName.size(); i++) {
-                            facultys[i] = facultyName.get(i);
+                            faculties[i] = facultyName.get(i);
                         }
 
                         // Der Listener für die Item Auswahl
-                        chooseFaculty.setItems(facultys, new DialogInterface.OnClickListener() {
+                        chooseFaculty.setItems(faculties, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 for (int i = 0; i < facultyName.size(); i++)
                                 {
-                                    if (facultys[which]
+                                    if (faculties[which]
                                             .equals(facultyName.get(i))) {
                                         try{
                                             JSONObject object = jsonArrayFacultys.getJSONObject(i);
@@ -340,11 +337,11 @@ public class MainActivity extends AppCompatActivity {
                                                         @Override
                                                         public void run() {
                                                             // schneidet ab dem Leerzeichen ab, da sonst nicht genug platz ist
-                                                            if(facultys[which].contains(" ")) {
-                                                                buttonSpinner.setText(facultys[which].substring
-                                                                        (0, facultys[which].indexOf(' ')));
+                                                            if(faculties[which].contains(" ")) {
+                                                                buttonSpinner.setText(faculties[which].substring
+                                                                        (0, faculties[which].indexOf(' ')));
                                                             } else {
-                                                                buttonSpinner.setText(facultys[which]);
+                                                                buttonSpinner.setText(faculties[which]);
                                                             }
 
                                                             // füge den Adapter der Recyclerview hinzu
@@ -414,8 +411,8 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // prüfe ob mindesten ein Studiengang favorisiert wurde
-                                for(Boolean choosen: courseChosen) {
-                                    if(choosen) {
+                                for(Boolean chosen: courseChosen) {
+                                    if(chosen) {
                                         oneFavorite[0] = true;
                                         break;
                                     }
@@ -500,14 +497,7 @@ public class MainActivity extends AppCompatActivity {
                 final URL url = new URL(address);
                 final HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
                 urlConn.setConnectTimeout(1000 * 10); // mTimeout is in seconds
-                final long startTime = System.currentTimeMillis();
                 urlConn.connect();
-                final long endTime = System.currentTimeMillis();
-                if (urlConn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    // System.out.println("Time (ms) : " + (endTime - startTime));
-                    // System.out.println("Ping to " + address + " was success");
-                    //uebergabeAnSpinner();
-                }
 
                 //Parsen von den  erhaltene Werte
                 InputStream in = new BufferedInputStream(urlConn.getInputStream());
@@ -593,31 +583,10 @@ public class MainActivity extends AppCompatActivity {
                                 "Fehler beim Parsen des Fakultätsnamen.");
                     }
                 }
-                KeineVerbindung();
+                NoConnection();
             }
         }).start();
         return true;
-    }
-
-    //Methode zum Abfragen der Aktuellen Prüfperiode
-    public boolean pingExaminePeriod() {
-
-        Thread retrothreadMain = new Thread(new Runnable() {
-
-
-
-            public void run() {
-
-            }
-        });
-
-        retrothreadMain.start();
-
-        if (checkReturn) {
-            return true;
-        }else{
-            return false;
-        }
     }
 
     Handler handler = new Handler(msg -> {

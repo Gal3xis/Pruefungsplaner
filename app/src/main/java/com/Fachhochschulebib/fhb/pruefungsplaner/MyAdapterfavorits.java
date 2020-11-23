@@ -37,12 +37,12 @@ import java.util.List;
 
 
 public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.ViewHolder> {
-    private List<String> moduleAndCourseList;
-    private List<String> examinerAndSemester;
-    private List<String> ppIdList;
-    private List<String> datesList;
-    private List<String> roomList;
-    private List<String> formList;
+    private final List<String> moduleAndCourseList;
+    private final List<String> examinerAndSemester;
+    private final List<String> ppIdList;
+    private final List<String> datesList;
+    private final List<String> roomList;
+    private final List<String> formList;
     private String modulName;
     private String name;
     private Context context;
@@ -108,7 +108,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
             }
         });
 
-        holder.txtFooter.setText(context.getString(R.string.prof) + examinerAndSemester.get(position).toString());
+        holder.txtFooter.setText(context.getString(R.string.prof) + examinerAndSemester.get(position));
         name = moduleAndCourseList.get(position);
         String[] course = name.split(" ");
         modulName = "";
@@ -122,7 +122,7 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // erhalte den ausgewählten Studiengang
         SharedPreferences sharedPreferencesCourse = context.
                 getSharedPreferences("validation", Context.MODE_PRIVATE);
-        String selectedCourse[] = sharedPreferencesCourse.
+        String[] selectedCourse = sharedPreferencesCourse.
                 getString("selectedCourse", "0").split(" ");
 
         String colorElectiveModule = "#7FFFD4";
@@ -148,11 +148,11 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         String[] splitDateAndTime = datesList.get(position).split(" ");
         String[] splitDayMonthYear = splitDateAndTime[0].split("-");
         holder.txtthirdline.setText(context.getString(R.string.clockTime2)
-                + splitDateAndTime[1].substring(0, 5).toString()
+                + splitDateAndTime[1].substring(0, 5)
                 + context.getString(R.string.date2)
-                + splitDayMonthYear[2].toString() + "."
-                + splitDayMonthYear[1].toString() + "."
-                + splitDayMonthYear[0].toString());
+                + splitDayMonthYear[2] + "."
+                + splitDayMonthYear[1] + "."
+                + splitDayMonthYear[0]);
         final String[] splitExaminerAndSemester
                 = examinerAndSemester.get(position).split(" ");
         holder.txtFooter.setText(context.getString(R.string.prof)
@@ -189,10 +189,10 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                     context.getString(R.string.modul) + modulName +
                     context.getString(R.string.firstProf) + sa[0] +
                     context.getString(R.string.secondProf) + sa[1] +
-                    context.getString(R.string.date) + division2[2].toString() + "."
-                    + division2[1].toString() + "."
-                    + division2[0].toString() +
-                    context.getString(R.string.clockTime) + division1[1].substring(0, 5).toString() +
+                    context.getString(R.string.date) + division2[2] + "."
+                    + division2[1] + "."
+                    + division2[0] +
+                    context.getString(R.string.clockTime) + division1[1].substring(0, 5) +
                     context.getString(R.string.clock) +
                     context.getString(R.string.room) + roomList.get(position) +
                     context.getString(R.string.form) + formList.get(position) + "\n " + "\n \n \n \n \n \n ");
@@ -224,8 +224,8 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
                         //Entferne den Eintrag aus dem Calendar falls vorhanden
                         CheckGoogleCalendar cal = new CheckGoogleCalendar();
                         cal.setCtx(context);
-                        if (!cal.checkCal(Integer.valueOf(ppIdList.get(position)))) {
-                            cal.deleteEntry(Integer.valueOf(ppIdList.get(position)));
+                        if (!cal.checkCal(Integer.parseInt(ppIdList.get(position)))) {
+                            cal.deleteEntry(Integer.parseInt(ppIdList.get(position)));
                         }
 
                     }
@@ -249,7 +249,6 @@ public class MyAdapterfavorits extends RecyclerView.Adapter<MyAdapterfavorits.Vi
         // each data item is just a string in this case
         public TextView txtHeader;
         public TextView txtFooter;
-        public Integer zahl1;
         public TextView txtthirdline;
         public ImageView ivicon;
         public LinearLayout layout2;

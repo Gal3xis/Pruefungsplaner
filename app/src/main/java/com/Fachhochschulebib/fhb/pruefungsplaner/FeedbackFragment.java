@@ -52,7 +52,7 @@ public class FeedbackFragment extends Fragment {
         // Die UI Komponenten
         final RatingBar ratingBarUsability = v.findViewById(R.id.ratingBarUsability);
         final RatingBar ratingBarStability = v.findViewById(R.id.ratingBarStability);
-        final RatingBar ratingBarFuntions = v.findViewById(R.id.ratingBarFuntions);
+        final RatingBar ratingBarFunctions = v.findViewById(R.id.ratingBarFuntions);
         final TextView feedBackInput = v.findViewById(R.id.feedBackInput);
         final Button buttonSend = v.findViewById(R.id.buttonSend);
 
@@ -79,7 +79,7 @@ public class FeedbackFragment extends Fragment {
                     public void run() {
                         // Übergebe die Daten an Retrofit
                         retrofit.sendFeedBack(v.getContext(), datenbank, serverAddress,
-                                ratingBarUsability.getRating(),ratingBarFuntions.getRating(),
+                                ratingBarUsability.getRating(),ratingBarFunctions.getRating(),
                                 ratingBarStability.getRating(),feedBackInput.getText().toString());
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {

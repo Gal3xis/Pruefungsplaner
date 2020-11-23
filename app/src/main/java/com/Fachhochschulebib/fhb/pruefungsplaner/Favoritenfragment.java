@@ -39,9 +39,6 @@ import java.util.List;
 
 public class Favoritenfragment extends Fragment {
     private RecyclerView recyclerView;
-    private CalendarView calendar;
-    private  Button btnSearch;
-    private TextView currentPeriodeTextView;
     MyAdapterfavorits mAdapter;
     List<Boolean> check = new ArrayList<>();
 
@@ -67,10 +64,10 @@ public class Favoritenfragment extends Fragment {
 
         recyclerView.setLayoutManager(layoutManager);
 
-        calendar = (CalendarView) v.findViewById(R.id.caCalender);
-        btnSearch = (Button) v.findViewById(R.id.btnDatum);
+        CalendarView calendar = (CalendarView) v.findViewById(R.id.caCalender);
+        Button btnSearch = (Button) v.findViewById(R.id.btnDatum);
 
-        currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
+        TextView currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
         currentPeriodeTextView.setVisibility(View.INVISIBLE);
 
         calendar.setVisibility(View.GONE);
@@ -152,8 +149,8 @@ public class Favoritenfragment extends Fragment {
                                             final TextView txtSecondScreen2
                                                     = (TextView) holder.findViewById(R.id.txtSecondscreen);
 
-                                            if (txtSecondScreen2.getVisibility() == v.VISIBLE) {
-                                                txtSecondScreen2.setVisibility(v.GONE);
+                                            if (txtSecondScreen2.getVisibility() == View.VISIBLE) {
+                                                txtSecondScreen2.setVisibility(View.GONE);
                                             }
                                         }catch (Exception e) {
                                             Log.d("ERROR","NOT IN VIEW PORT " + e);
@@ -162,7 +159,7 @@ public class Favoritenfragment extends Fragment {
                                     }
                                     // Ende Merlin Gürtler
 
-                                    txtSecondScreen.setVisibility(v.VISIBLE);
+                                    txtSecondScreen.setVisibility(View.VISIBLE);
                                     txtSecondScreen.setText(((MyAdapterfavorits) mAdapter)
                                                    .giveString(position));
                                 }
@@ -196,8 +193,8 @@ public class Favoritenfragment extends Fragment {
             public void onChildViewDetachedFromWindow(View view) {
                 final TextView txtSecondScreen
                         = (TextView) view.findViewById(R.id.txtSecondscreen);
-                if (txtSecondScreen.getVisibility() == view.VISIBLE) {
-                    txtSecondScreen.setVisibility(view.GONE);
+                if (txtSecondScreen.getVisibility() == View.VISIBLE) {
+                    txtSecondScreen.setVisibility(View.GONE);
                 }
             }
         });

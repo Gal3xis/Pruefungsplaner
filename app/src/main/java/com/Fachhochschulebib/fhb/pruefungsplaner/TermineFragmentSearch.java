@@ -49,8 +49,6 @@ public class TermineFragmentSearch extends Fragment {
 
     private RecyclerView recyclerView;
     private CalendarView calendar;
-    private TextView currentPeriodeTextView;
-    private Button btnSearch;
     private String date;
     String examineYear, currentExaminePeriod, returnCourse, validation;
 
@@ -102,7 +100,7 @@ public class TermineFragmentSearch extends Fragment {
         //hinzufügen von recycleview
         recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
 
-        currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
+        TextView currentPeriodeTextView = (TextView) v.findViewById(R.id.currentPeriode);
 
         SharedPreferences mSharedPreferencesPPeriode
                 = getContext().getSharedPreferences("currentPeriode", MODE_PRIVATE);
@@ -128,7 +126,7 @@ public class TermineFragmentSearch extends Fragment {
         // recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         // recyclerView.setVisibility(View.VISIBLE);
         calendar = (CalendarView) v.findViewById(R.id.caCalender);
-        btnSearch = (Button) v.findViewById(R.id.btnDatum);
+        Button btnSearch = (Button) v.findViewById(R.id.btnDatum);
 
         adapterPassed();
 
@@ -279,8 +277,8 @@ public class TermineFragmentSearch extends Fragment {
             public void onChildViewDetachedFromWindow(View view) {
                 final TextView txtSecondScreen
                         = (TextView) view.findViewById(R.id.txtSecondscreen);
-                if (txtSecondScreen.getVisibility() == view.VISIBLE) {
-                    txtSecondScreen.setVisibility(view.GONE);
+                if (txtSecondScreen.getVisibility() == View.VISIBLE) {
+                    txtSecondScreen.setVisibility(View.GONE);
                 }
             }
         });

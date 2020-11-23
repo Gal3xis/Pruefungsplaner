@@ -37,7 +37,7 @@ public interface RequestInterface {
     Call<JsonUuid> getJsonUuid();
 
     @PUT(" ")
-    Call<Void> sendUuid();
+    Call<Void> anotherStart();
 
     @POST(" ")
     Call<Void> sendFeedBack();
