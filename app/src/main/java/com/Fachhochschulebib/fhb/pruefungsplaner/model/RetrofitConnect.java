@@ -18,6 +18,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid;
 
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -353,9 +355,7 @@ public class RetrofitConnect {
                             }
 
                             // lösche Einträge die nicht geupdatet wurden
-                            for(TestPlanEntry entry: dataListFromLocalDB) {
-                                roomData.userDao().deleteEntry(entry);
-                            }
+                            roomData.userDao().deleteEntry(dataListFromLocalDB);
                         }
                     }).start();
                 } else {
@@ -536,17 +536,16 @@ public class RetrofitConnect {
                         @Override
                         public void run() {
                             // füge die Einträge der db hinzu
+                            List<Courses> insertCourses = new ArrayList<>();
                             for (JsonCourse course : response.body()) {
-                                // > 2 wegen den [] Klammern
-                                if(roomData.userDao().getCourseById(course.getSGID()).size()  == 0) {
-                                    roomData.userDao().insertCourse(
-                                            course.getSGID(),
-                                            course.getCourseName(),
-                                            course.getFKFBID(),
-                                            false
-                                    );
-                                }
+                                Courses courseFromApi = new Courses();
+                                courseFromApi.setChoosen(false);
+                                courseFromApi.setCourseName(course.getCourseName());
+                                courseFromApi.setFacultyId(course.getFKFBID());
+                                courseFromApi.setSgid(course.getSGID());
+                                insertCourses.add(courseFromApi);
                             }
+                            roomData.userDao().insertCourse(insertCourses);
                         }
                     }).start();
                 }

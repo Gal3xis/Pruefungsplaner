@@ -231,9 +231,7 @@ public class MainActivity extends AppCompatActivity {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    if(database.userDao().getCourse().size() == 0) {
-                        retrofit.getCourses(getApplication(), database, serverAddress);
-                    }
+                    retrofit.getCourses(getApplication(), database, serverAddress);
                 }
             }).start();
 

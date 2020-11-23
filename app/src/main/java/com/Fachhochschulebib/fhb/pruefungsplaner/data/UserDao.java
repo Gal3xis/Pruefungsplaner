@@ -4,6 +4,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.data;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -58,19 +59,11 @@ public interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE course = :course")
     List<TestPlanEntry> getByName(String course);
 
-    @Query("INSERT INTO Courses VALUES (:sgid, :courseName, :facultyId, :choosen)")
-    void insertCourse(
-            String sgid,
-            String courseName,
-            String facultyId,
-            Boolean choosen
-    );
-
-    @Query("DELETE FROM Courses")
-    void deleteCourse();
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    void insertCourse(List<Courses> courses);
 
     @Delete
-    public void deleteEntry(TestPlanEntry... entry);
+    void deleteEntry(List<TestPlanEntry> entry);
 
     @Query("DELETE FROM TestPlanEntry ")
     void deleteTestPlanEntryAll();
@@ -89,9 +82,6 @@ public interface UserDao {
 
     @Query("SELECT cId FROM Courses WHERE choosen = :choosen")
     List<String> getChoosenCourseId(Boolean choosen);
-
-    @Query("SELECT cId FROM Courses WHERE cId = :cId")
-    List<String> getCourseById(String cId);
 
     @Query("SELECT DISTINCT termin FROM TestPlanEntry LIMIT 1")
     String getTermin();
@@ -113,17 +103,14 @@ public interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE Choosen = :choosen ORDER BY date, termin, module")
     List<TestPlanEntry> getAllChoosen(Boolean choosen);
 
-    @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY date, termin, module")
-    List<TestPlanEntry> getByCourseName(String course);
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :course AND Favorit = :favorit")
+    List<TestPlanEntry> getByCourseName(String course, Boolean favorit);
 
     @Query("SELECT course FROM TestPlanEntry")
     List<String> getCourse();
 
     @Query("SELECT module FROM TestPlanEntry")
     List<String> getModule();
-
-    @Query("SELECT COUNT(*) from TestPlanEntry")
-    int countUsers();
 
     @Insert
     void insertAll(TestPlanEntry... testPlanEntries);

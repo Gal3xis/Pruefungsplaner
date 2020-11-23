@@ -470,12 +470,8 @@ public class Terminefragment extends Fragment {
                             courseName = course.getCourseName();
                             if(!course.getChoosen()) {
                                 // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                                List<TestPlanEntry> toDelete = database.userDao().getByCourseName(courseName);
-                                for(TestPlanEntry entry: toDelete) {
-                                    if(!entry.getFavorit()) {
-                                        database.userDao().deleteEntry(entry);
-                                    }
-                                }
+                                List<TestPlanEntry> toDelete = database.userDao().getByCourseName(courseName,false);
+                                database.userDao().deleteEntry(toDelete);
                             }
                             if(database.userDao().getOneEntryByName(courseName, false) == null && course.getChoosen()) {
                                 JSONObject idJson = new JSONObject();
