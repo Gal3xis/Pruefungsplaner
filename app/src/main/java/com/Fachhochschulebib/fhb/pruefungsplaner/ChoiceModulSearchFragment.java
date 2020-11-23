@@ -168,20 +168,20 @@ public class ChoiceModulSearchFragment extends Fragment {
                             if (selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))
                                     && !modulName.equals(getContext().getString(R.string.all))) {
 
-                                ppeList = database.userDao().getModule("%" + modulName.trim() + "%");
+                                ppeList = database.userDao().getEntriesByModule("%" + modulName.trim() + "%");
 
                                 // Alles eingegeben
                             } else if (!selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))
                                     && !modulName.equals(getContext().getString(R.string.all))) {
 
-                                ppeList = database.userDao().getModuleWithCourseAndModule("%" +
+                                ppeList = database.userDao().getEntriesWithCourseAndModule("%" +
                                         modulName.trim() + "%", selectedCourseSpinner);
 
                                 // Nur ein Studiengang ausgewählt
                             } else if (!selectedCourseSpinner.equals(getContext().getString(R.string.all_cours))
                                     && modulName.equals(getContext().getString(R.string.all))) {
 
-                                ppeList = database.userDao().getModuleWithCourseOrdered(selectedCourseSpinner);
+                                ppeList = database.userDao().getEntriesWithCourseOrdered(selectedCourseSpinner);
 
                             }
 

@@ -94,4 +94,5 @@
     <string name="feedback_text">Folgendes fand ich gut/schlecht:</string>
     <string name="sendedFeedBack">Danke für Ihr Feedback.</string>
     <string name="courseActualisation">Studiengänge aktualisiert.</string>
+    <string name="feedbackPlaceholder">Platzhalter</string>
 </resources>

@@ -15,21 +15,21 @@ public interface UserDao {
 
     // Start Merlin Gürtler
     @Query("SELECT * FROM TestPlanEntry WHERE module LIKE :module")
-    List<TestPlanEntry> getModule(String module);
+    List<TestPlanEntry> getEntriesByModule(String module);
 
     @Update
     void updateExam(TestPlanEntry... testPlanEntry);
 
     @Query("SELECT * from TestPlanEntry WHERE firstExaminer LIKE :prof ORDER BY date")
-    List<TestPlanEntry> getModuleProf(String prof);
+    List<TestPlanEntry> getEntriesByProf(String prof);
 
     @Query("SELECT * FROM TestPlanEntry WHERE module LIKE :module AND course = :course")
     List<TestPlanEntry>
-    getModuleWithCourseAndModule(String module, String course);
+    getEntriesWithCourseAndModule(String module, String course);
 
     @Query("SELECT * FROM TestPlanEntry WHERE course = :course ORDER BY module")
     List<TestPlanEntry>
-    getModuleWithCourseOrdered(String course);
+    getEntriesWithCourseOrdered(String course);
 
     @Query("SELECT DISTINCT module FROM TestPlanEntry ORDER BY module")
     List<String>
@@ -38,11 +38,11 @@ public interface UserDao {
     @Query("SELECT DISTINCT firstExaminer FROM TestPlanEntry WHERE course = :selectedCourse")
     List<String> getFirstExaminerDistinct(String selectedCourse);
 
-    @Query("SELECT module FROM TestPlanEntry WHERE course = :selctedCourse ORDER BY module")
-    List<String> getModuleWithCourseDistinct(String selctedCourse);
+    @Query("SELECT module FROM TestPlanEntry WHERE course = :selectedCourse ORDER BY module")
+    List<String> getModuleWithCourseDistinct(String selectedCourse);
 
-    @Query("SELECT * FROM TestPlanEntry WHERE favorit = :favorite ORDER BY date, termin, module")
-    List<TestPlanEntry> getFavorites(boolean favorite);
+    @Query("SELECT * FROM TestPlanEntry WHERE favorit = :favorit ORDER BY date, termin, module")
+    List<TestPlanEntry> getFavorites(boolean favorit);
 
     @Query("SELECT * FROM TestPlanEntry WHERE ID = :id")
     TestPlanEntry getEntryById(String id);
@@ -54,10 +54,10 @@ public interface UserDao {
     Uuid getUuid();
 
     @Query("SELECT * FROM TestPlanEntry WHERE date LIKE :date ORDER BY termin")
-    List<TestPlanEntry> getByDate(String date);
+    List<TestPlanEntry> getEntriesByDate(String date);
 
     @Query("SELECT * FROM TestPlanEntry WHERE course = :course")
-    List<TestPlanEntry> getByName(String course);
+    List<TestPlanEntry> getEntriesByCourseName(String course);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertCourse(List<Courses> courses);
@@ -69,7 +69,7 @@ public interface UserDao {
     void deleteTestPlanEntryAll();
 
     @Query("SELECT * FROM Courses WHERE facultyId = :facultyId")
-    List<Courses> getCourses(String facultyId);
+    List<Courses> getAllCoursesByFacultyId(String facultyId);
 
     @Query("UPDATE Courses SET choosen = :choosen WHERE couresName = :courseName")
     void updateCourse(String courseName, boolean choosen);
@@ -87,30 +87,27 @@ public interface UserDao {
     String getTermin();
 
     @Query("SELECT * FROM Courses")
-    List<Courses> getCourses();
+    List<Courses> getAllCourses();
 
-    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName AND favorit = :favorite LIMIT 1")
-    TestPlanEntry getOneEntryByName(String courseName, boolean favorite);
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName AND favorit = :favorit LIMIT 1")
+    TestPlanEntry getOneEntryByName(String courseName, boolean favorit);
     // Ende Merlin Gürtler
 
 
     @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation ORDER BY date, termin, module")
-    List<TestPlanEntry> getByValidation(String validation);
+    List<TestPlanEntry> getEntriesByValidation(String validation);
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
-    List<TestPlanEntry> getAll();
+    List<TestPlanEntry> getAllEntries();
 
     @Query("SELECT * FROM TestPlanEntry WHERE Choosen = :choosen ORDER BY date, termin, module")
     List<TestPlanEntry> getAllChoosen(Boolean choosen);
 
     @Query("SELECT * FROM TestPlanEntry WHERE course = :course AND Favorit = :favorit")
-    List<TestPlanEntry> getByCourseName(String course, Boolean favorit);
+    List<TestPlanEntry> getEntriesByCourseName(String course, Boolean favorit);
 
     @Query("SELECT course FROM TestPlanEntry")
     List<String> getCourse();
-
-    @Query("SELECT module FROM TestPlanEntry")
-    List<String> getModule();
 
     @Insert
     void insertAll(TestPlanEntry... testPlanEntries);

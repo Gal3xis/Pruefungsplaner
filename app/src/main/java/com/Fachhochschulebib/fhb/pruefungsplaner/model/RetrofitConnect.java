@@ -16,6 +16,7 @@ import android.util.Log;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar;
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen;
+import com.Fachhochschulebib.fhb.pruefungsplaner.R;
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
@@ -44,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitConnect {
     public String termine;
     public static boolean checkTransmission = false;
-    private String relativePPlanUrl;
+    private final String relativePPlanUrl;
     // private boolean checkvalidate = false;
     Context ctx2;
 
@@ -154,7 +155,7 @@ public class RetrofitConnect {
                     //Hole alle Einträge aus der lokalen Room-DB
                     List<TestPlanEntry> dataListFromLocalDB = null;
                     try { //DONE (08/2020) LG
-                        dataListFromLocalDB = roomData.userDao().getAll();
+                        dataListFromLocalDB = roomData.userDao().getAllEntries();
                         //roomdaten.clearAllTables();
                     } catch (Exception e) {
                         Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!");
@@ -194,7 +195,7 @@ public class RetrofitConnect {
                         //lokale datenbank initialiseren
                         //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
                         //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                        //List<PruefplanEintrag> userdaten2 = database2.userDao().getAll();
+                        //List<PruefplanEintrag> userdaten2 = database2.userDao().getAllEntries();
                         //Log.d("Test4", String.valueOf(userdaten2.size()));
 
                         try {
@@ -235,7 +236,6 @@ public class RetrofitConnect {
 
         ctx2 = ctx;
         termine = termin;
-        //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         String courseIds = getIDs(roomData);
@@ -290,7 +290,6 @@ public class RetrofitConnect {
         String courseIds = getIDs(roomData);
 
         ctx2 = ctx;
-        //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
         //uebergabe der parameter an die Adresse
         String relPathWithParameters = relativePPlanUrl
@@ -318,7 +317,7 @@ public class RetrofitConnect {
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            List<TestPlanEntry> dataListFromLocalDB = roomData.userDao().getAll();
+                            List<TestPlanEntry> dataListFromLocalDB = roomData.userDao().getAllEntries();
                             String responseId;
                             int i;
                             int listSize = dataListFromLocalDB.size();
@@ -377,7 +376,6 @@ public class RetrofitConnect {
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
         ctx2 = ctx;
-        //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         // Erhalte die gewählte Fakultät aus den Shared Preferences
@@ -430,7 +428,6 @@ public class RetrofitConnect {
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
         ctx2 = ctx;
-        //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         Uuid uuid = roomdaten.userDao().getUuid();
@@ -470,14 +467,14 @@ public class RetrofitConnect {
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
         ctx2 = ctx;
-        //Creating editor to store uebergebeneModule to shared preferences
+
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         Uuid uuid = roomdaten.userDao().getUuid();
 
         // Falls kein Text eingegeben wurde
         if (text.length() < 1) {
-            text = "Platzhalter";
+            text = ctx2.getString(R.string.feedbackPlaceholder);
         }
 
         //uebergabe der parameter an die Adresse
@@ -514,7 +511,7 @@ public class RetrofitConnect {
         SharedPreferences mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0);
 
         ctx2 = ctx;
-        //Creating editor to store uebergebeneModule to shared preferences
+
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         //uebergabe der parameter an die Adresse
@@ -571,7 +568,6 @@ public class RetrofitConnect {
 
         Uuid uuid = roomData.userDao().getUuid();
 
-        //Creating editor to store uebergebeneModule to shared preferences
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         //uebergabe der parameter an die Adresse
@@ -616,7 +612,7 @@ public class RetrofitConnect {
 
         ctx2 = ctx;
         termine = termin;
-        //Creating editor to store uebergebeneModule to shared preferences
+
         String urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress);
 
         //Uebergabe der Parameter an den relativen Server-Pfad

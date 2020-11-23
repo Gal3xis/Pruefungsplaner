@@ -68,7 +68,7 @@ public class AddCourseFragment extends Fragment {
 
                 // Fülle die Recylcerview
                 List<Courses> courses =
-                        database.userDao().getCourses(faculty);
+                        database.userDao().getAllCoursesByFacultyId(faculty);
 
                 for(Courses cours: courses) {
                     courseName.add(cours.getCourseName());
@@ -141,7 +141,7 @@ public class AddCourseFragment extends Fragment {
                         String examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
                         String currentExamine = mSharedPreferencesValidation.getString("currentPeriode", "0");
 
-                        List <Courses> courses = database.userDao().getCourses();
+                        List <Courses> courses = database.userDao().getAllCourses();
 
                         // aktualsiere die db Einträge
 
@@ -154,7 +154,7 @@ public class AddCourseFragment extends Fragment {
                                 courseName = course.getCourseName();
                                 if(!course.getChoosen()) {
                                     // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                                    List<TestPlanEntry> toDelete = database.userDao().getByCourseName(courseName, false);
+                                    List<TestPlanEntry> toDelete = database.userDao().getEntriesByCourseName(courseName, false);
                                     database.userDao().deleteEntry(toDelete);
                                 }
                                 if(database.userDao().getOneEntryByName(courseName, false) == null && course.getChoosen()) {

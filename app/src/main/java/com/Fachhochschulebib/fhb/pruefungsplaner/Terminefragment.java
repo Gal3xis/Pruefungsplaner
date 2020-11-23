@@ -107,7 +107,7 @@ public class Terminefragment extends Fragment {
     }
     // Ende Merlin Gürtler
 
-    // List<PruefplanEintrag> ppeList = datenbank.userDao().getByValidation(validation);
+    // List<PruefplanEintrag> ppeList = datenbank.userDao().getEntriesByValidation(validation);
     // Start Merlin Gürtler
     private void createAdapter() {
         // Nun aus Shared Preferences
@@ -117,7 +117,7 @@ public class Terminefragment extends Fragment {
 
         validation = examineYear + returnCourse + currentExaminePeriod;
 
-        final List<TestPlanEntry> ppeList = database.userDao().getByValidation(validation);
+        final List<TestPlanEntry> ppeList = database.userDao().getEntriesByValidation(validation);
 
         ClearLists();
         for (TestPlanEntry entry : ppeList) {
@@ -406,7 +406,7 @@ public class Terminefragment extends Fragment {
 
                     String currentExamineYearThread
                             = mSharedPreferencesExamineYear.getString("currentTermin", "0");
-                    if (database.userDao().getByName(courseMain).size() == 0
+                    if (database.userDao().getEntriesByCourseName(courseMain).size() == 0
                             || !currentExamineYearThread.equals(database.userDao().getTermin())) {
 
                         database.userDao().deleteTestPlanEntryAll();
@@ -458,7 +458,7 @@ public class Terminefragment extends Fragment {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    List <Courses> courses = database.userDao().getCourses();
+                    List <Courses> courses = database.userDao().getAllCourses();
 
                     // aktualsiere die db Einträge
                     JSONArray courseIds = new JSONArray();
@@ -470,7 +470,7 @@ public class Terminefragment extends Fragment {
                             courseName = course.getCourseName();
                             if(!course.getChoosen()) {
                                 // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                                List<TestPlanEntry> toDelete = database.userDao().getByCourseName(courseName,false);
+                                List<TestPlanEntry> toDelete = database.userDao().getEntriesByCourseName(courseName,false);
                                 database.userDao().deleteEntry(toDelete);
                             }
                             if(database.userDao().getOneEntryByName(courseName, false) == null && course.getChoosen()) {
@@ -511,7 +511,7 @@ public class Terminefragment extends Fragment {
         @Override
         protected String doInBackground(String... params) {
             List<TestPlanEntry> ppeList
-                    = Terminefragment.this.database.userDao().getByValidation(validation);
+                    = Terminefragment.this.database.userDao().getEntriesByValidation(validation);
             if (ppeList.size() < 1) {
                 for (int c = 0; c < 1000; c++) {
                     try {
@@ -690,7 +690,7 @@ public class Terminefragment extends Fragment {
                                 @Override
                                 public void run() {
                                     //Datenbank
-                                    List<TestPlanEntry> ppeList = database.userDao().getByValidation(validation);
+                                    List<TestPlanEntry> ppeList = database.userDao().getEntriesByValidation(validation);
 
                                     //unnötige Werte entfernen
                                     if (month < 9) {

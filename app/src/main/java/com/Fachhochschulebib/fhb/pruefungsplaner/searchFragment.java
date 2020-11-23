@@ -143,7 +143,7 @@ public class searchFragment extends Fragment {
 
                 // Erstelle Validierung und starte DB Abfrage
                 validation = examineYear + returnCourse + currentExaminePeriod;
-                ppeList = roomData.userDao().getByValidation(validation);
+                ppeList = roomData.userDao().getEntriesByValidation(validation);
                 // Ende Merlin Gürtler
 
                 //Überprüfung, ob ein Semester-Button geklickt wurde
@@ -421,7 +421,7 @@ public class searchFragment extends Fragment {
                         public void run() {
                             if(dateForSearch != null) {
                                 sortedList.clear();
-                                ppeList = roomData.userDao().getByDate(dateForSearch.substring(0,10) + "%");
+                                ppeList = roomData.userDao().getEntriesByDate(dateForSearch.substring(0,10) + "%");
 
                                 for(TestPlanEntry entry: ppeList) {
                                     sortedList.add(String.valueOf(entry.getID()));
@@ -439,7 +439,7 @@ public class searchFragment extends Fragment {
                                         equals(getContext().getString(R.string.modul_search)))
                                 {
                                     sortedList.clear();
-                                    ppeList = roomData.userDao().getModule(courseModuleList.get(courseModuleList.size() - 1));
+                                    ppeList = roomData.userDao().getEntriesByModule(courseModuleList.get(courseModuleList.size() - 1));
                                     for(TestPlanEntry entry: ppeList) {
                                         sortedList.add(String.valueOf(entry.getID()));
                                     }
@@ -451,7 +451,7 @@ public class searchFragment extends Fragment {
                                     }
                                 } else if(!profName.equals(getContext().getString(R.string.all))) {
                                     sortedList .clear();
-                                    ppeList = roomData.userDao().getModuleProf("%" +
+                                    ppeList = roomData.userDao().getEntriesByProf("%" +
                                             acProf.getText().toString().trim() + "%");
 
                                     for(int m = 0; m < ppeList.size(); m++) {
@@ -475,7 +475,7 @@ public class searchFragment extends Fragment {
 
                                     database.userDao().searchAndReset(false);
                                     List<TestPlanEntry> ppeList = AppDatabase.getAppDatabase(v.getContext())
-                                            .userDao().getByValidation(validation);
+                                            .userDao().getEntriesByValidation(validation);
                                     for (int i = 0; i < tableReturn().size(); i++) {
                                         // Toast.makeText(getContext(),tableReturn().get(i),
                                         // Toast.LENGTH_SHORT).show();

@@ -160,7 +160,7 @@ public class table extends AppCompatActivity  {
                                 AppDatabase rommData
                                         = AppDatabase.getAppDatabase(getApplicationContext());
                                 List<TestPlanEntry> ppeList
-                                        = rommData.userDao().getByValidation(validation);
+                                        = rommData.userDao().getEntriesByValidation(validation);
 
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override

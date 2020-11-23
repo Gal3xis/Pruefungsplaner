@@ -299,7 +299,7 @@ public class TermineFragmentSearch extends Fragment {
                 AppDatabase database = AppDatabase.getAppDatabase(getContext());
 
                 // Änderung Merlin Gürtler
-                // List<Pruefplan> pruefplandaten = datenbank.userDao().getByValidation(validation);
+                // List<Pruefplan> pruefplandaten = datenbank.userDao().getEntriesByValidation(validation);
                 // Für die Suche von Modulen
                 List<TestPlanEntry> ppeList = database.userDao().getAllChoosen(true);
                 // Ende Änderung Merlin Gürtler

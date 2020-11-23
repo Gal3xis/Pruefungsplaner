@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                                                 public void run() {
                                                     AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
                                                     List<Courses> courses =
-                                                            database.userDao().getCourses(returnFaculty);
+                                                            database.userDao().getAllCoursesByFacultyId(returnFaculty);
 
                                                     courseChosen.clear();
                                                     courseName.clear();
