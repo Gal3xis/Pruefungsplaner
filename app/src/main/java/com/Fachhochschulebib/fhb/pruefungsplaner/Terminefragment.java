@@ -499,13 +499,13 @@ public class Terminefragment extends Fragment {
             }).start();
         }
 
-        LongOperation asynctask = new LongOperation();
+        // LongOperation asynctask = new LongOperation();
 
-        asynctask.execute("");
+        // asynctask.execute("");
 
         super.onCreate(savedInstanceState);
     }
-
+    /*
     class LongOperation extends AsyncTask<String, Void, String> {
 
         @Override
@@ -540,6 +540,7 @@ public class Terminefragment extends Fragment {
         protected void onProgressUpdate(Void... values) {
         }
     }
+     */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
