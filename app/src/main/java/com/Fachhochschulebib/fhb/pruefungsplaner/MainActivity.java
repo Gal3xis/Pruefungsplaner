@@ -108,7 +108,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 }).start();
-
                 Intent mainWindow = new Intent(getApplicationContext(), table.class);
                 startActivityForResult(mainWindow, 0);
             }
@@ -211,62 +210,56 @@ public class MainActivity extends AppCompatActivity {
 
     //Aufruf in onCreate()
     public void checkConnection(){
-        boolean currentUrl
-                = pingUrl(serverAddress + relativePPlanURL + "entity.faculty");
+        pingUrl(serverAddress + relativePPlanURL + "entity.faculty");
+        // Start Merlin Gürtler
+        final StartClass globalVariable = (StartClass) getApplicationContext();
+        RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
 
-        if (!currentUrl) {
-            NoConnection();
-        } else {
-            // Start Merlin Gürtler
-            final StartClass globalVariable = (StartClass) getApplicationContext();
-            RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+        // initialisierung db
+        AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
 
-            // initialisierung db
-            AppDatabase database = AppDatabase.getAppDatabase(getBaseContext());
+        // Thread für die Studiengänge
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                retrofit.getCourses(getApplication(), database, serverAddress);
+            }
+        }).start();
 
-            // Thread für die Studiengänge
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    retrofit.getCourses(getApplication(), database, serverAddress);
+        // Thread für die UUid
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Uuid uuid = database.userDao().getUuid();
+                if(!globalVariable.getAppStarted() && uuid != null && !globalVariable.isChangeFaculty()) {
+                    globalVariable.setAppStarted(true);
+                    retrofit.anotherStart(getApplicationContext(), database,
+                            serverAddress);
                 }
-            }).start();
+            }
+        }).start();
 
-            // Thread für die UUid
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    Uuid uuid = database.userDao().getUuid();
-                    if(!globalVariable.getAppStarted() && uuid != null && !globalVariable.isChangeFaculty()) {
-                        globalVariable.setAppStarted(true);
-                        retrofit.anotherStart(getApplicationContext(), database,
-                                serverAddress);
-                    }
+        // Thread für die Navigation
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                // Skippe die erstauswahl, wenn schon ein Studiengang gewählt wurde
+                if(!courseMain.equals("0") && !globalVariable.isChangeFaculty()) {
+                    Intent mainWindow = new Intent(getApplicationContext(), table.class);
+                    startActivityForResult(mainWindow, 0);
                 }
-            }).start();
 
-            // Thread für die Navigation
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    // Skippe die erstauswahl, wenn schon ein Studiengang gewählt wurde
-                    if(!courseMain.equals("0") && !globalVariable.isChangeFaculty()) {
-                        Intent mainWindow = new Intent(getApplicationContext(), table.class);
-                        startActivityForResult(mainWindow, 0);
-                    }
-
-                }
-            }).start();
-            // Ende Merlin Gürtler
-        }
+            }
+        }).start();
+        // Ende Merlin Gürtler
 
     }
 
     public void NoConnection(){
-        new Thread(() -> Toast.makeText(getApplicationContext(),
+        Toast.makeText(getApplicationContext(),
                 getApplicationContext().getString(R.string.noConnection),
-                Toast.LENGTH_SHORT).show());
+                Toast.LENGTH_SHORT).show();
     }
 
 
@@ -481,7 +474,7 @@ public class MainActivity extends AppCompatActivity {
 
     //Methode zum Überprüfen der fakultaeten
     //Aufruf in checkVerbindung()
-    public boolean pingUrl(final String address) {
+    public void pingUrl(final String address) {
         //eigenständiger Thread, weil die Abfrage Asynchron ist
         new Thread(() -> {
             // Die Fakultaeten werden in einer Shared Preferences Variable gespeichert.
@@ -583,10 +576,14 @@ public class MainActivity extends AppCompatActivity {
                                 "Fehler beim Parsen des Fakultätsnamen.");
                     }
                 }
-                NoConnection();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        NoConnection();
+                    }
+                });
             }
         }).start();
-        return true;
     }
 
     Handler handler = new Handler(msg -> {
