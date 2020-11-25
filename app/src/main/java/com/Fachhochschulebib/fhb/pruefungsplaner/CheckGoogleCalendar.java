@@ -70,15 +70,15 @@ public class CheckGoogleCalendar {
             Log.d("Fehler CheckGoogleCal","Fehler beim Aufteilen der String-Elemente!");
         }
         // step two : convert String array to list of String
-        List<String> fixedLenghtList = Arrays.asList(elements);
+        List<String> fixedLengthList = Arrays.asList(elements);
 
        // Log.i("test", String.valueOf(elements.length));
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
 
         //step four : check size and add new element
-        listOfString.add("-" + String.valueOf(pruefid) + "," + String.valueOf(googleid));
+        listOfString.add("-" + pruefid + "," + googleid);
 
         //step fifth : change Stringarray to String type
         String idsTOstring = "/";
@@ -91,7 +91,7 @@ public class CheckGoogleCalendar {
 
         //step six : add to database
 
-        mEditor.putString("IDs",String.valueOf(idsTOstring));
+        mEditor.putString("IDs",idsTOstring);
         mEditor.apply();
     }
 
@@ -121,7 +121,7 @@ public class CheckGoogleCalendar {
         for (int i = 1; i < listOfString.size(); i++) {
             // step six : split Prüfid und GoogleID
             String[] element = listOfString.get(i).split(",");
-            Log.i("check_Checkbool", element[0].toString());
+            Log.i("check_Checkbool", element[0]);
 
             if (element[0].equals(String.valueOf(pruefID))) {
                 //wenn prüfid vorhanden return false
@@ -347,10 +347,10 @@ public class CheckGoogleCalendar {
         String[] elementList = stringids.split("-");
 
         // step two : convert String array to list of String
-        List<String> fixedLenghtList = Arrays.asList(elementList);
+        List<String> fixedLengthList = Arrays.asList(elementList);
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
 
         //step fifth : change Stringarray to String type
         Log.i("check_Googlekalender", String.valueOf(listOfString.size()));

@@ -369,15 +369,6 @@ public class Terminefragment extends Fragment {
                         //Prüfperiode für die Offline-Verwendung speichern
                         mEditor = mSharedPreferencesPPeriode.edit();
 
-                        // Start Merlin Gürtler
-                        // Speichere das Start und Enddatum der Prüfperiode
-                        mEditor.putString("startDate", formatDate(String.valueOf(day))
-                                + "/" + formatDate(String.valueOf(month)) + "/" + formatDate(String.valueOf(year)));
-                        mEditor.putString("endDate", formatDate(String.valueOf(day2))
-                                + "/" + formatDate(String.valueOf(month2)) + "/" + formatDate(String.valueOf(year2)));
-                        mEditor.apply();
-                        // Ende Merlin Gürtler
-
                         String strJson
                                 = mSharedPreferencesPPeriode.getString("currentPeriode", "0");
                         if (strJson != null) {
@@ -387,6 +378,14 @@ public class Terminefragment extends Fragment {
                             else{
                                 mEditor.clear();
                                 mEditor.apply();
+                                // Start Merlin Gürtler
+                                // Speichere das Start und Enddatum der Prüfperiode
+                                mEditor.putString("startDate", formatDate(String.valueOf(day))
+                                        + "/" + formatDate(String.valueOf(month)) + "/" + formatDate(String.valueOf(year)));
+                                mEditor.putString("endDate", formatDate(String.valueOf(day2))
+                                        + "/" + formatDate(String.valueOf(month2)) + "/" + formatDate(String.valueOf(year2)));
+                                mEditor.apply();
+                                // Ende Merlin Gürtler
                                 mEditor.putString("currentPeriode", currentExamineDateFormatted);
                                 mEditor.apply();
                             }
