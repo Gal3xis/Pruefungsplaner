@@ -499,10 +499,8 @@ public class Optionen extends Fragment {
         String timeZone = TimeZone.getDefault().getID();
         event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
 
-        Uri baseUri = Uri.parse("content://calendar/events");
-
+        Uri baseUri = Uri.parse("content://com.android.calendar/events");
         getContext().getContentResolver().insert(baseUri, event);
-
 
         int result = 0;
         String[] projection = {"_id", "title"};

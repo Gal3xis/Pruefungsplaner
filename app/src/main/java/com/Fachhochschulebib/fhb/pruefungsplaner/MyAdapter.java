@@ -486,7 +486,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         event.put(CalendarContract.Events.HAS_ALARM, 0); // 0 for false, 1 for true
         String timeZone = TimeZone.getDefault().getID();
         event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone);
-        Uri baseUri = Uri.parse("content://calendar/events");
+        Uri baseUri = Uri.parse("content://com.android.calendar/events");
 
         context.getContentResolver().insert(baseUri, event);
 

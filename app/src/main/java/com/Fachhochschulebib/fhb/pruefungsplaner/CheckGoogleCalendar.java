@@ -170,7 +170,7 @@ public class CheckGoogleCalendar {
             Uri deleteUri = null;
             //delete eintrag mit eventID
 
-            Uri baseUri = Uri.parse("content://calendar/events");
+            Uri baseUri = Uri.parse("content://com.android.calendar/events");
 
             deleteUri = ContentUris.withAppendedId(baseUri, eventID);
             int rows = cr.delete(deleteUri, null, null);
@@ -253,7 +253,7 @@ public class CheckGoogleCalendar {
                                 calDate.getTimeInMillis() + (90 * 60000));
                     //uebergebeneModule.put(CalendarContract.Events.);
                     //Checkverbindung Eintrag
-                    Uri baseUri = Uri.parse("content://calendar/events");
+                    Uri baseUri = Uri.parse("content://com.android.calendar/events");
 
                     updateUri = ContentUris.withAppendedId(baseUri, eventID);
                     //variable zum anzeigen der geänderten werte
@@ -304,7 +304,7 @@ public class CheckGoogleCalendar {
 
                 long eventID = Long.parseLong(element[1]);
 
-                Uri baseUri = Uri.parse("content://calendar/events");
+                Uri baseUri = Uri.parse("content://com.android.calendar/events");
 
                 //wenn prüfid vorhanden lösche diese
                 Log.i("check_Checkbool", "Pid stimmt überein");
@@ -364,7 +364,7 @@ public class CheckGoogleCalendar {
 
                 long eventID = Long.parseLong(element[1]);
 
-                Uri baseUri = Uri.parse("content://calendar/events");
+                Uri baseUri = Uri.parse("content://com.android.calendar/events");
 
                 ContentValues values = new ContentValues();
 
