@@ -10,14 +10,17 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //////////////////////////////
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CalendarView;
 
@@ -66,9 +69,20 @@ public class table extends AppCompatActivity  {
         setSupportActionBar(header);
         header.setTitleTextColor(Color.WHITE);
 
+        InputMethodManager inputMethodManager =
+                (InputMethodManager) getBaseContext().getSystemService(
+                        Activity.INPUT_METHOD_SERVICE);
+
         header.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Merlin Gürtler schließe die Tastatur falls offen
+                try {
+                    inputMethodManager.hideSoftInputFromWindow(
+                            table.this.getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Log.d("Exception", "Keyboard not open");
+                }
                 // Änderung Merlin Gürtler
                 // Toggelt die Sichtbarkeit des Drawers
                 if(dl.isDrawerOpen(GravityCompat.START)) {
@@ -133,6 +147,13 @@ public class table extends AppCompatActivity  {
         nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                // Merlin Gürtler schließe die Tastatur falls offen
+                try {
+                    inputMethodManager.hideSoftInputFromWindow(
+                            table.this.getCurrentFocus().getWindowToken(), 0);
+                } catch (Exception e) {
+                    Log.d("Exception", "Keyboard not open");
+                }
                 //Fragmentmanager initialisierung
                 int id = item.getItemId();
                 ft = getSupportFragmentManager().beginTransaction();
@@ -287,6 +308,17 @@ public class table extends AppCompatActivity  {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            // Merlin Gürtler schließe die Tastatur falls offen
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getBaseContext().getSystemService(
+                            Activity.INPUT_METHOD_SERVICE);
+
+            try {
+                inputMethodManager.hideSoftInputFromWindow(
+                        table.this.getCurrentFocus().getWindowToken(), 0);
+            } catch (Exception e) {
+                Log.d("Exception", "Keyboard not open");
+            }
             ft = getSupportFragmentManager().beginTransaction();
             switch (item.getItemId()) {
                 case R.id.navigation_calender:
