@@ -18,6 +18,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
@@ -108,6 +109,7 @@ public class Optionen extends Fragment {
         Button btnGoogleloeschen = (Button) v.findViewById(R.id.btnCalClear);
         Button btnGoogleupdate = (Button) v.findViewById(R.id.btnGoogleUpdate);
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
+        Button dataProtection = (Button) v.findViewById(R.id.dataProtection);
         //holder.zahl1 = position;
 
         SharedPreferences serverAdresse
@@ -280,6 +282,14 @@ public class Optionen extends Fragment {
             }
         });
          */
+
+        dataProtection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+                startActivity(browserIntent);
+            }
+        });
 
         //interne DB löschen
         btnDb.setOnClickListener(new View.OnClickListener() {

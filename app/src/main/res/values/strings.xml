@@ -28,6 +28,7 @@
     <string name="settings_del_cal">Kalender Einträge löschen&#160;</string>
     <string name="settings_act_cal">Kalender aktualisieren</string>
     <string name="settings_sync_cal">Synchronisation Kalender</string>
+    <string name="settings_data_protection">Datenschutzerklärung</string>
 
     <!-- Navigation -->
     <string name="title_calender">Termine</string>
