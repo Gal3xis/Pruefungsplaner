@@ -18,11 +18,9 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //////////////////////////////
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -51,6 +49,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
+
+import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
 
 public class Optionen extends Fragment {
@@ -109,7 +109,7 @@ public class Optionen extends Fragment {
         Button btnGoogleloeschen = (Button) v.findViewById(R.id.btnCalClear);
         Button btnGoogleupdate = (Button) v.findViewById(R.id.btnGoogleUpdate);
         Switch SWgooglecalender = (Switch) v.findViewById(R.id.switch2);
-        Button dataProtection = (Button) v.findViewById(R.id.dataProtection);
+        Button privacyDeclaration = (Button) v.findViewById(R.id.privacyDeclaration);
         //holder.zahl1 = position;
 
         SharedPreferences serverAdresse
@@ -283,11 +283,12 @@ public class Optionen extends Fragment {
         });
          */
 
-        dataProtection.setOnClickListener(new View.OnClickListener() {
+        privacyDeclaration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
-                startActivity(browserIntent);
+                ft = getActivity().getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.frame_placeholder, new PrivacyDeclarationFragment());
+                ft.commit();
             }
         });
 
