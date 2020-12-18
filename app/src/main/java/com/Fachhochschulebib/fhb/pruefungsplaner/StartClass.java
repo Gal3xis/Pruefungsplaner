@@ -2,7 +2,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 
 import android.app.Application;
 
-// Globale Variable um den ersten App Start zu detektieren
+// An die App gebundene Variablen
 public class StartClass extends Application {
     private boolean appStarted;
     private boolean showNoProgressBar;

@@ -313,7 +313,7 @@ public class searchFragment extends Fragment {
 
                 }
 
-                // After the text changed the name is saved in
+                // After the text changed the name is saved in the List
                 // after the input the app iterate
                 // through the intern Database and select
                 // the dozent
@@ -344,7 +344,7 @@ public class searchFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // Start Merlin Gürtler
-                    // Close the Keyboard when an Item/Dozent is chosen for better UX
+                    // Schließe das Keyboard nachdem ein Dozent gewählt wurde
                     InputMethodManager inputMethodManager =
                             (InputMethodManager) getActivity().getSystemService(
                                     Activity.INPUT_METHOD_SERVICE);
@@ -423,14 +423,9 @@ public class searchFragment extends Fragment {
                                 sortedList.clear();
                                 ppeList = roomData.userDao().getEntriesByDate(dateForSearch.substring(0,10) + "%");
 
-                                for(TestPlanEntry entry: ppeList) {
-                                    sortedList.add(String.valueOf(entry.getID()));
-                                }
-
                                 database.userDao().searchAndReset(false);
-                                for (int i =0; i< sortedList.size();i++) {
-                                    // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
-                                    database.userDao().update2(true, Integer.parseInt(sortedList.get(i)));
+                                for(TestPlanEntry entry: ppeList) {
+                                    database.userDao().update2(true, Integer.parseInt(entry.getID()));
                                 }
                             }
                             else {
@@ -440,29 +435,21 @@ public class searchFragment extends Fragment {
                                 {
                                     sortedList.clear();
                                     ppeList = roomData.userDao().getEntriesByModule(courseModuleList.get(courseModuleList.size() - 1));
-                                    for(TestPlanEntry entry: ppeList) {
-                                        sortedList.add(String.valueOf(entry.getID()));
-                                    }
 
                                     database.userDao().searchAndReset(false);
-                                    for (int i =0; i< sortedList.size();i++) {
-                                        // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
-                                        database.userDao().update2(true, Integer.parseInt(sortedList.get(i)));
+                                    for(TestPlanEntry entry: ppeList) {
+                                        database.userDao().update2(true, Integer.parseInt(entry.getID()));
                                     }
+
                                 } else if(!profName.equals(getContext().getString(R.string.all))) {
-                                    sortedList .clear();
+                                    sortedList.clear();
                                     ppeList = roomData.userDao().getEntriesByProf("%" +
                                             acProf.getText().toString().trim() + "%");
 
-                                    for(int m = 0; m < ppeList.size(); m++) {
-                                        sortedList.add(String.valueOf(ppeList.get(m).getID()));
+                                    for(TestPlanEntry entry: ppeList) {
+                                        database.userDao().update2(true, Integer.parseInt(entry.getID()));
                                     }
 
-                                    database.userDao().searchAndReset(false);
-                                    for (int i =0; i< sortedList.size();i++) {
-                                        // Toast.makeText(getContext(),tableReturn().get(i), Toast.LENGTH_SHORT).show();
-                                        database.userDao().update2(true, Integer.parseInt(sortedList.get(i)));
-                                    }
                                 } else {
                                     // Ende Merlin Gürtler
                                     if (acProf.getText().toString().equals(getContext().getString(R.string.all))) {
