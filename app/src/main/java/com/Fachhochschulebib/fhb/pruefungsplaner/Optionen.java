@@ -35,6 +35,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
@@ -50,7 +51,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
 
 public class Optionen extends Fragment {
@@ -286,7 +286,7 @@ public class Optionen extends Fragment {
         privacyDeclaration.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frame_placeholder, new PrivacyDeclarationFragment());
                 ft.commit();
             }

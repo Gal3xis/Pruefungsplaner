@@ -33,6 +33,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
@@ -42,8 +44,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Pattern;
-
-import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
 public class searchFragment extends Fragment {
 
@@ -485,7 +485,7 @@ public class searchFragment extends Fragment {
                                 Log.d("Exception", "Keyboard not open");
                             }
 
-                            ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.frame_placeholder, new TermineFragmentSearch());
                             ft.commit();
                         }

@@ -23,8 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
-
-import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
+import androidx.fragment.app.FragmentTransaction;
 
 
 public class PrivacyDeclarationFragment extends Fragment {
@@ -43,7 +42,7 @@ public class PrivacyDeclarationFragment extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ft = getActivity().getSupportFragmentManager().beginTransaction();
+                FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.frame_placeholder, new Optionen());
                 ft.commit();
             }
