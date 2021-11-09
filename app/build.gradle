@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 30
@@ -55,5 +57,10 @@ dependencies {
 
     //noinspection GradleCompatible,GradleCompatible
     implementation 'com.google.android.material:material:1.2.1'
+    implementation "androidx.core:core-ktx:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
 
+}
+repositories {
+    mavenCentral()
 }

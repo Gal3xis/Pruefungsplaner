@@ -17,7 +17,8 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/BtnOk"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
@@ -50,7 +51,9 @@
             android:background="@android:color/transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+
             android:visibility="visible"
             tools:layout_editor_absoluteX="6dp"
             tools:layout_editor_absoluteY="37dp" />
