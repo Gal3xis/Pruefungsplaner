@@ -126,12 +126,9 @@ class MainActivity() : AppCompatActivity() {
 
         //aufrufen des startlayouts
         setContentView(R.layout.start)
-        /*buttonSpinner = findViewById(R.id.buttonForSpinner)*/ //TODO REMOVE
-        /*buttonOk = findViewById(R.id.buttonOk)*/ //TODO REMOVE
 
         // Start Merlin Gürtler
         //Komponenten  initialisieren für die Verwendung
-        /*recyclerView = findViewById<View>(R.id.recyclerViewChecklist) as RecyclerView*/ //TODO REMOVE
         recyclerViewChecklist.setHasFixedSize(true)
         //linear layout manager
         val layoutManager = LinearLayoutManager(applicationContext)
@@ -236,7 +233,7 @@ class MainActivity() : AppCompatActivity() {
 
                 // Skippe die erstauswahl, wenn schon ein Studiengang gewählt wurde
                 if (courseMain != "0" && !globalVariable.isChangeFaculty) {
-                    val mainWindow = Intent(applicationContext, table::class.java) //TODO Reference to Kotlin class after Converting table.java
+                    val mainWindow = Intent(applicationContext, table::class.java)
                     startActivityForResult(mainWindow, 0)
                 }
             }
@@ -347,7 +344,6 @@ class MainActivity() : AppCompatActivity() {
                                                                 applicationContext
                                                             )
                                                             recyclerViewChecklist.adapter = mAdapter
-                                                            /*val chooseCourse = findViewById<TextView>(R.id.chooseCourseId) TODO REMOVE*/
                                                             if (chooseCourseId.visibility != View.VISIBLE) {
                                                                 chooseCourseId.visibility =
                                                                     View.VISIBLE

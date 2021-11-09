@@ -35,6 +35,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
@@ -42,7 +44,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.Fachhochschulebib.fhb.pruefungsplaner.table.ft;
 
 public class ChoiceModulSearchFragment extends Fragment {
 
@@ -206,7 +207,7 @@ public class ChoiceModulSearchFragment extends Fragment {
                                 Log.d("Exception", "Keyboard not open");
                             }
 
-                            ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
                             ft.replace(R.id.frame_placeholder, new TermineFragmentSearch());
                             ft.commit();
                         }

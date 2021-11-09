@@ -1,4 +1,43 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner;
+package com.Fachhochschulebib.fhb.pruefungsplaner
+
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.RecyclerView
+import android.widget.CalendarView
+import androidx.drawerlayout.widget.DrawerLayout
+import com.google.android.material.navigation.NavigationView
+import android.content.SharedPreferences
+import android.os.Bundle
+import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import android.app.Activity
+import androidx.core.view.GravityCompat
+import com.Fachhochschulebib.fhb.pruefungsplaner.table
+import com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import android.os.Looper
+import com.Fachhochschulebib.fhb.pruefungsplaner.searchFragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.Favoritenfragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen
+import com.Fachhochschulebib.fhb.pruefungsplaner.ChoiceModulSearchFragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.FeedbackFragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.StartClass
+import android.content.Intent
+import android.graphics.Color
+import android.os.Handler
+import android.util.Log
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Button
+import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.FragmentTransaction
+import com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity
+import com.Fachhochschulebib.fhb.pruefungsplaner.AddCourseFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.lang.Exception
+
+//Alexander Lange Start
+import kotlinx.android.synthetic.main.hauptfenster.*
+//Alexander Lange End
 
 //////////////////////////////
 // Tabelle
@@ -9,103 +48,52 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //
 //////////////////////////////
-
-import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CalendarView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
-
-import java.util.List;
-
 // Eigentlich die Hauptklasse wurde noch nicht umgenannt
 // von hier werden die fragmente aufgerufen
-public class table extends AppCompatActivity  {
-    static public FragmentTransaction ft ;
-    private RecyclerView recyclerView;
-    private CalendarView calendar;
-    private Button btnSearch;
-    private DrawerLayout dl;
-    private NavigationView nv;
-    private Toolbar header;
+class table : AppCompatActivity() {
+    var mSharedPreferencesValidation: SharedPreferences? = null
+    var examineYear: String? = null
+    var currentExaminePeriode: String? = null
+    var returnCourse: String? = null
 
-    SharedPreferences mSharedPreferencesValidation;
-    String examineYear,
-            currentExaminePeriode, returnCourse;
     //Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
-
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.hauptfenster);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.hauptfenster)
 
         // Start Merlin Gürtler
         // registriert die Toolbar
-        header = (Toolbar) findViewById(R.id.header);
-        setSupportActionBar(header);
-        header.setTitleTextColor(Color.WHITE);
-
-        InputMethodManager inputMethodManager =
-                (InputMethodManager) getBaseContext().getSystemService(
-                        Activity.INPUT_METHOD_SERVICE);
-
-        header.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Merlin Gürtler schließe die Tastatur falls offen
-                try {
-                    inputMethodManager.hideSoftInputFromWindow(
-                            table.this.getCurrentFocus().getWindowToken(), 0);
-                } catch (Exception e) {
-                    Log.d("Exception", "Keyboard not open");
-                }
-                // Änderung Merlin Gürtler
-                // Toggelt die Sichtbarkeit des Drawers
-                if(dl.isDrawerOpen(GravityCompat.START)) {
-                    dl.closeDrawer(GravityCompat.START);
-                } else {
-                    dl.openDrawer(GravityCompat.START);
-                }
+        setSupportActionBar(header)
+        header.setTitleTextColor(Color.WHITE)
+        val inputMethodManager = baseContext.getSystemService(
+            INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+        header.setNavigationOnClickListener { // Merlin Gürtler schließe die Tastatur falls offen
+            try {
+                inputMethodManager.hideSoftInputFromWindow(
+                    this@table.currentFocus!!.windowToken, 0
+                )
+            } catch (e: Exception) {
+                Log.d("Exception", "Keyboard not open")
             }
-        });
+            // Änderung Merlin Gürtler
+            // Toggelt die Sichtbarkeit des Drawers
+            if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+                drawer_layout.closeDrawer(GravityCompat.START)
+            } else {
+                drawer_layout.openDrawer(GravityCompat.START)
+            }
+        }
 
 
         // Nun aus Shared Preferences
-        mSharedPreferencesValidation
-                = table.this.getSharedPreferences("validation", 0);
-
-        examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
-        currentExaminePeriode = mSharedPreferencesValidation.getString("currentPeriode", "0");
-        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0");
+        val mSharedPreferencesValidation = getSharedPreferences("validation", 0)
+        examineYear = mSharedPreferencesValidation.getString("examineYear", "0")
+        currentExaminePeriode = mSharedPreferencesValidation.getString("currentPeriode", "0")
+        returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0")
         // Ende Merlin Gürtler
 
-        dl = findViewById(R.id.drawer_layout);
-
-        nv = findViewById(R.id.nav_view);
         /*
         if (!nv.isFocused())
         {
@@ -144,251 +132,210 @@ public class table extends AppCompatActivity  {
 
 
         //Drawer Navigation Menü mit den Menüpunkten
-        nv.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // Merlin Gürtler schließe die Tastatur falls offen
-                try {
-                    inputMethodManager.hideSoftInputFromWindow(
-                            table.this.getCurrentFocus().getWindowToken(), 0);
-                } catch (Exception e) {
-                    Log.d("Exception", "Keyboard not open");
-                }
-                //Fragmentmanager initialisierung
-                int id = item.getItemId();
-                ft = getSupportFragmentManager().beginTransaction();
-                switch(id)
-                {
-                    case R.id.navigation_calender:
-                        //Menüpunkt termine
-                        header.setTitle(getApplicationContext().getString(R.string.title_calender));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        //dl.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new Terminefragment());
-                        ft.commit();
-                        return true;
-
-                    case R.id.navigation_medication:
-                        //Menüpunkt Suche
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                String validation
-                                        = examineYear + returnCourse + currentExaminePeriode;
-                                AppDatabase rommData
-                                        = AppDatabase.getAppDatabase(getApplicationContext());
-                                List<TestPlanEntry> ppeList
-                                        = rommData.userDao().getEntriesByValidation(validation);
-
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        header.setTitle(getApplicationContext().getString(R.string.title_search));
-                                        recyclerView.setVisibility(View.INVISIBLE);
-                                        calendar.setVisibility(View.GONE);
-                                        btnSearch.setVisibility(View.GONE);
-                                        dl.closeDrawer(GravityCompat.START);
-
-
-                                        //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
-                                        if (ppeList.size() < 2) {
-                                        }else{
-                                            ft.replace(R.id.frame_placeholder, new searchFragment());
-                                            ft.commit();
-                                        }
-                                    }
-                                });
-                            }
-                        }).start();
-
-                        return true;
-                    case R.id.navigation_diary:
-                        header.setTitle(getApplicationContext().getString(R.string.title_exam));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new Favoritenfragment());
-                        ft.commit();
-
-                        return true;
-
-                    case R.id.navigation_settings:
-                        header.setTitle(getApplicationContext().getString(R.string.title_settings));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new Optionen());
-                        ft.commit();
-
-                        return true;
-
-                    // Start Merlin Gürtler
-                    case R.id.navigation_electiveModule:
-                        header.setTitle(getApplicationContext().getString(R.string.title_electiveModule));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new ChoiceModulSearchFragment());
-                        ft.commit();
-
-                        return true;
-
-                    // Start Merlin Gürtler
-                    case R.id.navigation_feedback:
-                        header.setTitle(getApplicationContext().getString(R.string.title_feedback));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new FeedbackFragment());
-                        ft.commit();
-
-                        return true;
-
-                    case R.id.navigation_changeFaculty:
-                        header.setTitle(getApplicationContext().getString(R.string.title_changeFaculty));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        // globale Variable, damit die Fakultät gewechselt werden kann
-                        final StartClass globalVariable = (StartClass) getApplicationContext();
-                        globalVariable.setChangeFaculty(true);
-                        Intent myIntent = new Intent(recyclerView.getContext(), MainActivity.class);
-                        recyclerView.getContext().startActivity(myIntent);
-
-                        return true;
-
-                    case R.id.navigation_addCourse:
-                        header.setTitle(getApplicationContext().getString(R.string.title_changeCourse));
-                        recyclerView.setVisibility(View.INVISIBLE);
-                        calendar.setVisibility(View.GONE);
-                        btnSearch.setVisibility(View.GONE);
-                        dl.closeDrawer(GravityCompat.START);
-                        ft.replace(R.id.frame_placeholder, new AddCourseFragment());
-                        ft.commit();
-
-                        return true;
-                    // Ende Merlin Gürtler
-                    default:
-                        return true;
-                }
-
+        nav_view.setNavigationItemSelectedListener{ item ->
+            // Merlin Gürtler schließe die Tastatur falls offen
+            try {
+                inputMethodManager.hideSoftInputFromWindow(
+                    this@table.currentFocus!!.windowToken, 0
+                )
+            } catch (e: Exception) {
+                Log.d("Exception", "Keyboard not open")
             }
+            //Fragmentmanager initialisierung
+            val id = item.itemId
+            val ft = supportFragmentManager.beginTransaction()
+            when (id) {
+                R.id.navigation_calender -> {
+                    //Menüpunkt termine
+                    header.title = applicationContext.getString(R.string.title_calender)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    //dl.setVisibility(View.GONE);
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    ft.replace(R.id.frame_placeholder, Terminefragment())
+                    ft.commit()
+                    true
+                }
+                R.id.navigation_medication -> {
+                    //Menüpunkt Suche
+                    //TODO Change to Coroutine
+                    Thread {
+                        val validation = examineYear + returnCourse + currentExaminePeriode
+                        val rommData = AppDatabase.getAppDatabase(applicationContext)
+                        val ppeList = rommData.userDao().getEntriesByValidation(validation)
+                        Handler(Looper.getMainLooper()).post {
+                            header.title = applicationContext.getString(R.string.title_search)
+                            recyclerView4.visibility = View.INVISIBLE
+                            caCalender.visibility = View.GONE
+                            btnDatum.visibility = View.GONE
+                            drawer_layout.closeDrawer(GravityCompat.START)
 
-        });
+
+                            //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
+                            if (ppeList.size < 2) {
+                            } else {
+                                ft.replace(R.id.frame_placeholder, searchFragment())
+                                ft.commit()
+                            }
+                        }
+                    }.start()
+                    true
+                }
+                R.id.navigation_diary -> {
+                    header.title = applicationContext.getString(R.string.title_exam)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    ft.replace(R.id.frame_placeholder, Favoritenfragment())
+                    ft.commit()
+                    true
+                }
+                R.id.navigation_settings -> {
+                    header.title = applicationContext.getString(R.string.title_settings)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    ft.replace(R.id.frame_placeholder, Optionen())
+                    ft.commit()
+                    true
+                }
+                R.id.navigation_electiveModule -> {
+                    header.title = applicationContext.getString(R.string.title_electiveModule)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    ft.replace(R.id.frame_placeholder, ChoiceModulSearchFragment())
+                    ft.commit()
+                    true
+                }
+                R.id.navigation_feedback -> {
+                    header.title = applicationContext.getString(R.string.title_feedback)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    ft.replace(R.id.frame_placeholder, FeedbackFragment())
+                    ft.commit()
+                    true
+                }
+                R.id.navigation_changeFaculty -> {
+                    header.title = applicationContext.getString(R.string.title_changeFaculty)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    // globale Variable, damit die Fakultät gewechselt werden kann
+                    val globalVariable = applicationContext as StartClass
+                    globalVariable.isChangeFaculty = true
+                    val myIntent = Intent(recyclerView4.context, MainActivity::class.java)
+                    recyclerView4.context.startActivity(myIntent)
+                    true
+                }
+                R.id.navigation_addCourse -> {
+                    header.title = applicationContext.getString(R.string.title_changeCourse)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    drawer_layout.closeDrawer(GravityCompat.START)
+                    ft.replace(R.id.frame_placeholder, AddCourseFragment())
+                    ft.commit()
+                    true
+                }
+                else -> true
+            }
+        }
 
 
         //Userinterface Komponenten initialisieren
-        BottomNavigationView navigation
-                = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView4);
-        recyclerView.setVisibility(View.VISIBLE);
-        calendar = (CalendarView) findViewById(R.id.caCalender);
-        btnSearch = (Button) findViewById(R.id.btnDatum);
-        recyclerView.setVisibility(View.INVISIBLE);
-        calendar.setVisibility(View.GONE);
-        btnSearch.setVisibility(View.GONE);
-        ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_placeholder, new Terminefragment());
-        ft.commit();
-
+        val navigation = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        val ft = supportFragmentManager.beginTransaction()
+        ft.replace(R.id.frame_placeholder, Terminefragment())
+        ft.commit()
     }
 
     //navigation mit den menuepunkten Bottom
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            // Merlin Gürtler schließe die Tastatur falls offen
-            InputMethodManager inputMethodManager =
-                    (InputMethodManager) getBaseContext().getSystemService(
-                            Activity.INPUT_METHOD_SERVICE);
-
+    private val mOnNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item -> // Merlin Gürtler schließe die Tastatur falls offen
+            val inputMethodManager = baseContext.getSystemService(
+                INPUT_METHOD_SERVICE
+            ) as InputMethodManager
             try {
                 inputMethodManager.hideSoftInputFromWindow(
-                        table.this.getCurrentFocus().getWindowToken(), 0);
-            } catch (Exception e) {
-                Log.d("Exception", "Keyboard not open");
+                    this@table.currentFocus!!.windowToken, 0
+                )
+            } catch (e: Exception) {
+                Log.d("Exception", "Keyboard not open")
             }
-            ft = getSupportFragmentManager().beginTransaction();
-            switch (item.getItemId()) {
-                case R.id.navigation_calender:
+            val ft = supportFragmentManager.beginTransaction()
+            when (item.itemId) {
+                R.id.navigation_calender -> {
                     //fragment fuer das "terminefragment" layout
-                    header.setTitle(getApplicationContext().getString(R.string.title_calender));
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    calendar.setVisibility(View.GONE);
-                    btnSearch.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new Terminefragment());
+                    header.title = applicationContext.getString(R.string.title_calender)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    ft.replace(R.id.frame_placeholder, Terminefragment())
                     //ft.addToBackStack(null);
-                    ft.commit();
-                    return true;
-
-                case R.id.navigation_medication:
+                    ft.commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_medication -> {
                     //fragment fuer das "activity_suche" layout
-                    header.setTitle(getApplicationContext().getString(R.string.title_search));
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    calendar.setVisibility(View.GONE);
-                    btnSearch.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new searchFragment());
+                    header.title = applicationContext.getString(R.string.title_search)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    ft.replace(R.id.frame_placeholder, searchFragment())
                     //ft.addToBackStack("suche");
-                    ft.commit();
-                    return true;
-
-                case R.id.navigation_diary:
+                    ft.commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_diary -> {
                     //fragment fuer das "favoriten" layout
-                    header.setTitle(getApplicationContext().getString(R.string.title_exam));
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    calendar.setVisibility(View.GONE);
-                    btnSearch.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new Favoritenfragment());
+                    header.title = applicationContext.getString(R.string.title_exam)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    ft.replace(R.id.frame_placeholder, Favoritenfragment())
                     //ft.addToBackStack(null);
-                    ft.commit();
-                    return true;
-
-                case R.id.navigation_settings:
+                    ft.commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_settings -> {
                     //fragment fuer das "Optionen" layout
-                    header.setTitle(getApplicationContext().getString(R.string.title_settings));
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    calendar.setVisibility(View.GONE);
-                    btnSearch.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new Optionen());
+                    header.title = applicationContext.getString(R.string.title_settings)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    ft.replace(R.id.frame_placeholder, Optionen())
                     //ft.addToBackStack(null);
-                    ft.commit();
-                    return true;
-                // Start Merlin Gürtler
-                case R.id.navigation_electiveModule:
-                    header.setTitle(getApplicationContext().getString(R.string.title_electiveModule));
-                    recyclerView.setVisibility(View.INVISIBLE);
-                    calendar.setVisibility(View.GONE);
-                    btnSearch.setVisibility(View.GONE);
-                    ft.replace(R.id.frame_placeholder, new ChoiceModulSearchFragment());
-                    ft.commit();
-
-
-                    return true;
-                // Ende Merlin Gürtler
+                    ft.commit()
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.navigation_electiveModule -> {
+                    header.title = applicationContext.getString(R.string.title_electiveModule)
+                    recyclerView4.visibility = View.INVISIBLE
+                    caCalender.visibility = View.GONE
+                    btnDatum.visibility = View.GONE
+                    ft.replace(R.id.frame_placeholder, ChoiceModulSearchFragment())
+                    ft.commit()
+                    return@OnNavigationItemSelectedListener true
+                }
             }
-            return false;
+            false
         }
-    };
 
-    @Override
-    public void onBackPressed() {
-        if (getFragmentManager().getBackStackEntryCount() > 0) {
-            getFragmentManager().popBackStack();
-
+    override fun onBackPressed() {
+        if (fragmentManager.backStackEntryCount > 0) {
+            fragmentManager.popBackStack()
         } else {
-            setResult(0);
-            finish();
+            setResult(0)
+            finish()
         }
     }
 }
