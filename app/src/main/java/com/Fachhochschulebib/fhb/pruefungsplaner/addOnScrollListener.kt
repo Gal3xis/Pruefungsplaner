@@ -13,35 +13,27 @@
 //
 //
 //////////////////////////////
+package com.Fachhochschulebib.fhb.pruefungsplaner
 
-package com.Fachhochschulebib.fhb.pruefungsplaner;
-
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
 //überprüfung ob im RecyclerView gescrollt wird.
 //wird von den Klasse myAdapter abgefragt
 //dient zur überprüfung bei scrollen ob ein Prüfitem mit geöffneten Tab "mehr informationen" geschlossen werden kann
-public class addOnScrollListener extends RecyclerView.OnScrollListener {
-    public void CustomScrollListener() {
-    }
-
-    public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        switch (newState) {
-            case RecyclerView.SCROLL_STATE_IDLE:
-                // System.out.println("The RecyclerView is not scrolling");
-                break;
-            case RecyclerView.SCROLL_STATE_DRAGGING:
-                // System.out.println("Scrolling now");
-                break;
-            case RecyclerView.SCROLL_STATE_SETTLING:
-                // System.out.println("Scroll Settling");
-                break;
-
+class addOnScrollListener : RecyclerView.OnScrollListener() {
+    fun CustomScrollListener() {} //TODO Remove?
+    override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+        when (newState) {
+            RecyclerView.SCROLL_STATE_IDLE -> {
+            }
+            RecyclerView.SCROLL_STATE_DRAGGING -> {
+            }
+            RecyclerView.SCROLL_STATE_SETTLING -> {
+            }
         }
-
     }
 
-    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+    override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
         if (dx > 0) {
             // System.out.println("Scrolled Right");
         } else if (dx < 0) {
@@ -49,7 +41,6 @@ public class addOnScrollListener extends RecyclerView.OnScrollListener {
         } else {
             // System.out.println("No Horizontal Scrolled");
         }
-
         if (dy > 0) {
             // System.out.println("Scrolled Downwards");
         } else if (dy < 0) {

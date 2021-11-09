@@ -1,4 +1,35 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner;
+package com.Fachhochschulebib.fhb.pruefungsplaner
+
+import android.content.Context
+import androidx.recyclerview.widget.RecyclerView
+import com.Fachhochschulebib.fhb.pruefungsplaner.CheckListAdapter
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
+import android.os.Bundle
+import android.content.SharedPreferences
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
+import android.os.Looper
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
+import android.widget.Toast
+import android.content.Intent
+import android.os.Handler
+import android.view.View
+import androidx.fragment.app.Fragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.table
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import java.util.ArrayList
+
+//Alexander Lange Start
+import kotlinx.android.synthetic.main.choose_courses.*
+//Alexander Lange End
+
+
 
 //////////////////////////////
 // TerminefragmentSuche
@@ -15,192 +46,140 @@ package com.Fachhochschulebib.fhb.pruefungsplaner;
 //
 //
 //////////////////////////////
+class AddCourseFragment() : Fragment() {
+    private var recyclerView: RecyclerView? = null
+    var mAdapter: CheckListAdapter? = null
+    var courseChosen: MutableList<Boolean> = ArrayList()
+    var courseName: MutableList<String> = ArrayList()
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-
-import android.os.Handler;
-import android.os.Looper;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
-
-
-public class AddCourseFragment extends Fragment {
-    private RecyclerView recyclerView;
-    CheckListAdapter mAdapter;
-    List<Boolean> courseChosen = new ArrayList<>();
-    List<String> courseName = new ArrayList<String>();
-    AppDatabase database;
-
-    public void onCreate(Bundle savedInstanceState) {
-        database = AppDatabase.getAppDatabase(getContext());
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val database = AppDatabase.getAppDatabase(context)
+        //TODO Change to Coroutine
+        Thread(object : Runnable {
+            override fun run() {
                 // Erhalte die gewählte Fakultät aus den Shared Preferences
-                SharedPreferences sharedPreferencesFacultyEditor =
-                        getContext().
-                                getSharedPreferences("validation",0);
-
-                String faculty = sharedPreferencesFacultyEditor.getString("returnFaculty", "0");
+                val sharedPreferencesFacultyEditor = context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+                val faculty = sharedPreferencesFacultyEditor?.getString("returnFaculty", "0")
 
                 // Fülle die Recylcerview
-                List<Courses> courses =
-                        database.userDao().getAllCoursesByFacultyId(faculty);
-
-                for(Courses cours: courses) {
-                    courseName.add(cours.getCourseName());
-                    courseChosen.add(cours.getChoosen());
+                val courses = database.userDao().getAllCoursesByFacultyId(faculty)
+                for (cours: Courses in courses) {
+                    courseName.add(cours.courseName)
+                    courseChosen.add(cours.choosen)
                 }
-
-                mAdapter = new CheckListAdapter(courseName,
-                        courseChosen,
-                        getActivity().getApplicationContext());
-
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        recyclerView.setAdapter(mAdapter);
-                    }
-                });
+                mAdapter = CheckListAdapter(
+                    courseName,
+                    courseChosen,
+                    activity?.applicationContext
+                )
+                Handler(Looper.getMainLooper()).post(Runnable { recyclerView?.adapter = mAdapter })
             }
-        }).start();
-
-        super.onCreate(savedInstanceState);
+        }).start()
+        super.onCreate(savedInstanceState)
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.choose_courses, container, false);
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.choose_courses, container, false)
+        val database = AppDatabase.getAppDatabase(context)
 
         //Komponenten  initialisieren für die Verwendung
-        recyclerView = (RecyclerView) v.findViewById(R.id.recyclerViewChecklist);
-        recyclerView.setHasFixedSize(true);
+        /*TODO Remove recyclerView = v.findViewById<View>(R.id.recyclerViewChecklist) as RecyclerView*/
+        recyclerViewChecklist.setHasFixedSize(true)
         //linear layout manager
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-
-        v.findViewById(R.id.buttonOk).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+        val layoutManager = LinearLayoutManager(context)
+        recyclerViewChecklist.layoutManager = layoutManager
+        buttonOk.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                //TODO Change to Coroutine
+                Thread(object : Runnable {
+                    override fun run() {
                         // Aktualisiere die Studiengänge
-                        for(int i = 0; i < courseChosen.size(); i++) {
-                            database.userDao().updateCourse(courseName.get(i),
-                                    courseChosen.get(i));
+                        for (i in courseChosen.indices) {
+                            database?.userDao()?.updateCourse(
+                                courseName[i],
+                                courseChosen[i]
+                            )
                         }
 
                         // die Retrofitdaten aus den Shared Preferences
-                        SharedPreferences mSharedPreferencesPPServerAdress
-                                = AddCourseFragment.this.getContext().getSharedPreferences("Server_Address", MODE_PRIVATE);
-
-                        String relativePPlanURL
-                                = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0");
-
-                        String serverAddress
-                                = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0");
-
-                        SharedPreferences mSharedPreferencesCurrentTermin
-                                = AddCourseFragment.this.getContext()
-                                .getSharedPreferences("examineTermin", 0);
-
-                        String currentDate
-                                = mSharedPreferencesCurrentTermin.getString("currentTermin", "0");
-
-
-                        SharedPreferences mSharedPreferencesValidation
-                                = AddCourseFragment.
-                                this.getContext().getSharedPreferences("validation", 0);
-
-                        String examineYear = mSharedPreferencesValidation.getString("examineYear", "0");
-                        String currentExamine = mSharedPreferencesValidation.getString("currentPeriode", "0");
-
-                        List <Courses> courses = database.userDao().getAllCourses();
+                        val mSharedPreferencesPPServerAdress = this@AddCourseFragment.context
+                            ?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+                        val relativePPlanURL =
+                            mSharedPreferencesPPServerAdress?.getString("ServerRelUrlPath", "0")
+                        val serverAddress =
+                            mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
+                        val mSharedPreferencesCurrentTermin = this@AddCourseFragment.context
+                            ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
+                        val currentDate =
+                            mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
+                        val mSharedPreferencesValidation = this@AddCourseFragment.context
+                            ?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+                        val examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
+                        val currentExamine =
+                            mSharedPreferencesValidation?.getString("currentPeriode", "0")
+                        val courses = database.userDao().allCourses
 
                         // aktualsiere die db Einträge
-
-                        JSONArray courseIds = new JSONArray();
-
-                        String courseName;
-
-                        for(Courses course: courses) {
+                        val courseIds = JSONArray()
+                        var courseName: String
+                        for (course: Courses in courses) {
                             try {
-                                courseName = course.getCourseName();
-                                if(!course.getChoosen()) {
+                                courseName = course.courseName
+                                if (!course.choosen) {
                                     // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                                    List<TestPlanEntry> toDelete = database.userDao().getEntriesByCourseName(courseName, false);
-                                    database.userDao().deleteEntry(toDelete);
+                                    val toDelete = database?.userDao()
+                                        ?.getEntriesByCourseName(courseName, false)
+                                    database?.userDao()?.deleteEntry(toDelete)
                                 }
-                                if(database.userDao().getOneEntryByName(courseName, false) == null && course.getChoosen()) {
-                                    JSONObject idJson = new JSONObject();
-                                    idJson.put("ID", course.getSgid());
-                                    courseIds.put(idJson);
+                                if (database?.userDao()?.getOneEntryByName(
+                                        courseName,
+                                        false
+                                    ) == null && course.choosen
+                                ) {
+                                    val idJson = JSONObject()
+                                    idJson.put("ID", course.sgid)
+                                    courseIds.put(idJson)
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                            } catch (e: JSONException) {
+                                e.printStackTrace()
                             }
                         }
-
-                        RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
+                        val retrofit = RetrofitConnect(relativePPlanURL)
                         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-
-                        if(courseIds.toString().length() > 2) {
-                            retrofit.UpdateUnkownCourses(
-                                    getContext(),
-                                    database,
-                                    examineYear,
-                                    currentExamine,
-                                    currentDate,
-                                    serverAddress,
-                                    courseIds.toString());
+                        if (courseIds.toString().length > 2) {
+                            retrofit.UpdateUnkownCourses<Any>(
+                                context,
+                                database,
+                                examineYear,
+                                currentExamine,
+                                currentDate,
+                                serverAddress,
+                                courseIds.toString()
+                            )
                         }
-
-                        retrofit.setUserCourses(getContext(), database,
-                                serverAddress);
-
-                        new Handler(Looper.getMainLooper()).post(new Runnable() {
-                            @Override
-                            public void run() {
+                        retrofit.setUserCourses(
+                            context, database,
+                            serverAddress
+                        )
+                        Handler(Looper.getMainLooper()).post(object : Runnable {
+                            override fun run() {
                                 // Feedback nach Update
-                                Toast.makeText(v.getContext(),
-                                        v.getContext().getString(R.string.courseActualisation),
-                                        Toast.LENGTH_SHORT).show();
-
-                                Intent mainWindow = new Intent(v.getContext(), table.class);
-                                startActivity(mainWindow);
+                                Toast.makeText(
+                                    v.context,
+                                    v.context.getString(R.string.courseActualisation),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                val mainWindow = Intent(v.context, table::class.java)
+                                startActivity(mainWindow)
                             }
-                        });
+                        })
                     }
-                }).start();
+                }).start()
             }
-        });
-
-        return v;
+        })
+        return v
     }
 }

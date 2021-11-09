@@ -13,254 +13,229 @@
 //
 //
 //////////////////////////////
+package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.content.*
+import android.net.Uri
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import android.provider.CalendarContract
+import android.util.Log
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
+import java.lang.Exception
+import java.util.*
+import kotlin.collections.ArrayList
 
-package com.Fachhochschulebib.fhb.pruefungsplaner;
-import android.content.ContentResolver;
-import android.content.ContentUris;
-import android.content.ContentValues;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.CalendarContract;
-import android.util.Log;
+class CheckGoogleCalendar {
+    private var pruefID = 0
+    private var googleID = 0
+    private var context: Context? = null
 
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-
-public class CheckGoogleCalendar {
-
-    private int pruefID;
-    private int googleID;
-    private Context context;
     //private String[] ids = new String[100];
-
-
-    public void setCtx (Context cx){
-        context = cx;
+    fun setCtx(cx: Context?) {
+        context = cx
     }
 
-
     //Mehtode um Prüfid und Google Kalender Id zu speichern
-    public void insertCal(int pruefid, int googleid){
+    fun insertCal(pruefid: Int, googleid: Int) {
 
-       //Variablen
-        pruefID = pruefid;
-        googleID = googleid;
+        //Variablen
+        pruefID = pruefid
+        googleID = googleid
 
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences
-                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
-        String stringids = mSharedPreferences.getString("IDs","");
+        val mSharedPreferences = context?.getSharedPreferences("GoogleID-und-PruefID13", 0)
+        val mEditor = mSharedPreferences?.edit()
+        val stringids = mSharedPreferences?.getString("IDs", "")
 
         // step one : converting comma separate String to array of String
-        String[] elements = null;
+        var elements: Array<String?>? = null
         try {
-            elements = stringids.split("/");
-        }catch (Exception e){
-            Log.d("Fehler CheckGoogleCal","Fehler beim Aufteilen der String-Elemente!");
+            elements = stringids?.split("/")?.toTypedArray()
+        } catch (e: Exception) {
+            Log.d("Fehler CheckGoogleCal", "Fehler beim Aufteilen der String-Elemente!")
         }
         // step two : convert String array to list of String
-        List<String> fixedLengthList = Arrays.asList(elements);
+        val fixedLengthList = elements?.toMutableList()
 
-       // Log.i("test", String.valueOf(elements.length));
+        // Log.i("test", String.valueOf(elements.length));
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
+        val listOfString = ArrayList(fixedLengthList)
 
         //step four : check size and add new element
-        listOfString.add("-" + pruefid + "," + googleid);
+        listOfString.add("-$pruefid,$googleid")
 
         //step fifth : change Stringarray to String type
-        String idsTOstring = "/";
-        for(int i = 0; i < listOfString.size();i++)
-        {
-            idsTOstring = idsTOstring + listOfString.get(i);
+        var idsTOstring = "/"
+        for (i in listOfString.indices) {
+            idsTOstring = idsTOstring + listOfString[i]
         }
 
         //Log.i("test", String.valueOf(idsTOstring));
 
         //step six : add to database
-
-        mEditor.putString("IDs",idsTOstring);
-        mEditor.apply();
+        mEditor?.putString("IDs", idsTOstring)
+        mEditor?.apply()
     }
 
     //Methode zum überprüfen ob der eintrag im Googlekalender vorhanden ist
-    public boolean checkCal(int pruefid) {
+    fun checkCal(pruefid: Int): Boolean {
         //Variablen
-        pruefID = pruefid;
+        pruefID = pruefid
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences
-                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-        String stringids = mSharedPreferences.getString("IDs", "");
+        val mSharedPreferences = context?.getSharedPreferences("GoogleID-und-PruefID13", 0)
+        val stringids = mSharedPreferences?.getString("IDs", "")
 
         // step one : converting comma separate String to array of String
-        String[] elementList = stringids.split("-");
+        val elementList = stringids?.split("-")?.toTypedArray()
 
         // step two : convert String array to list of String
-        List<String> fixedLengthList = Arrays.asList(elementList);
+        val fixedLengthList = elementList?.toMutableList()
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
+        val listOfString = ArrayList(fixedLengthList)
 
         //step fifth : change Stringarray to String type
-        Log.i("check_Googlekalender", String.valueOf(listOfString.size()));
+        Log.i("check_Googlekalender", listOfString.size.toString())
 
         //String idsTOstring = null;
-        for (int i = 1; i < listOfString.size(); i++) {
+        for (i in 1 until listOfString.size) {
             // step six : split Prüfid und GoogleID
-            String[] element = listOfString.get(i).split(",");
-            Log.i("check_Checkbool", element[0]);
-
-            if (element[0].equals(String.valueOf(pruefID))) {
+            val element = listOfString[i]?.split(",")?.toTypedArray()
+            Log.i("check_Checkbool", element?.get(0)?:"No Element")
+            if (element?.get(0) == pruefID.toString()) {
                 //wenn prüfid vorhanden return false
-                Log.i("check_Checkbool", "Pid stimmt überein");
-
-                return false;
+                Log.i("check_Checkbool", "Pid stimmt überein")
+                return false
             }
         }
 
         //wenn prüfid nicht vorhanden --> return true
-        return true;
+        return true
     }
 
-
     //alle bisherigen Google Kalender einträge löschen
-    public void clearCal()
-    {
+    fun clearCal() {
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences
-                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-        SharedPreferences.Editor mEditor = mSharedPreferences.edit();
-        String stringids = mSharedPreferences.getString("IDs", "");
+        val mSharedPreferences = context?.getSharedPreferences("GoogleID-und-PruefID13", Context.MODE_PRIVATE)
+        val mEditor = mSharedPreferences?.edit()
+        val stringids = mSharedPreferences?.getString("IDs", "")
 
         // step one : converting comma separate String to array of String
-        String[] elementList = stringids.split("-");
+        val elementList = stringids?.split("-")?.toTypedArray()
 
         // step two : convert String array to list of String
-        List<String> fixedLengthList = Arrays.asList(elementList);
+        val fixedLengthList = elementList?.toMutableList()
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
+        val listOfString = ArrayList(fixedLengthList)
 
 
         //hier werden die einträge aus dem google Kalender gelöscht
-        for (int i = 1; i < listOfString.size(); i++) {
+        for (i in 1 until listOfString.size) {
             // step six : split Prüfid und GoogleID
-            String[] element = listOfString.get(i).split(",");
+            val element = listOfString[i].split(",").toTypedArray()
             //Google Calendar einträge löschen
             //output tag
-            String DEBUG_TAG = "MyActivity";
+            val DEBUG_TAG = "MyActivity"
             //element[1] enthält die googleid
-            long eventID = Long.parseLong(element[1]);
+            val eventID = element.get(1).toLong()
             //getContentResolver wird benötigt zum zugriff auf die Kalender API
-            ContentResolver cr = context.getContentResolver();
-            Uri deleteUri = null;
+            val cr = context?.contentResolver
+            var deleteUri: Uri? = null
             //delete eintrag mit eventID
-
-            Uri baseUri = Uri.parse("content://com.android.calendar/events");
-
-            deleteUri = ContentUris.withAppendedId(baseUri, eventID);
-            int rows = cr.delete(deleteUri, null, null);
+            val baseUri = Uri.parse("content://com.android.calendar/events")
+            deleteUri = ContentUris.withAppendedId(baseUri, eventID)
+            val rows = cr?.delete(deleteUri, null, null)
             //outputlog for Debug
-            Log.i(DEBUG_TAG, "Rows deleted: " + rows);
-
+            Log.i(DEBUG_TAG, "Rows deleted: $rows")
         }
         //step six : reset Database
-        mEditor.putString("IDs","");
-        mEditor.apply();
+        mEditor?.putString("IDs", "")
+        mEditor?.apply()
     }
 
     //Google Kalender Checkverbindung Methode
-    public void updateCal()
-    {
+    fun updateCal() {
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences googleEntry
-                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-        String stringids = googleEntry.getString("IDs", "");
+        val googleEntry = context?.getSharedPreferences("GoogleID-und-PruefID13", Context.MODE_PRIVATE)
+        val stringids = googleEntry?.getString("IDs", "")
 
         // step one : converting comma separate String to array of String
-        String[] elementsList = stringids.split("-");
-
-        Log.i("userID", String.valueOf(elementsList.length));
+        val elementsList = stringids?.split("-")?.toTypedArray()
+        Log.i("userID", elementsList?.size?.toString()?:"No Element")
         // step two : convert String array to list of String
-        List<String> fixedLengthList = Arrays.asList(elementsList);
+        val fixedLengthList = elementsList?.toMutableList()
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
+        val listOfString = ArrayList(fixedLengthList)
 
         //step four: Database connect
-        List<TestPlanEntry> ppeList = databaseConnect();
+        val ppeList = databaseConnect()
 
         //step fifth: Schleifen zum vergleichen
-        Log.i("userID", String.valueOf(listOfString.size()));
-        for (int i = 1; i < listOfString.size(); i++) {
+        Log.i("userID", listOfString.size.toString())
+        for (i in 1 until listOfString.size) {
             //Variable mit Element[0] prüfplanID und element[1] Google Calendar id
-            String[] element = listOfString.get(i).split(",");
-            Log.i("userID", Arrays.toString(element));
-            Log.i("elemnt[0}", String.valueOf(element[0]));
-            for (TestPlanEntry entry: ppeList) {
+            val element = listOfString[i].split(",").toTypedArray()
+            Log.i("userID", Arrays.toString(element))
+            Log.i("elemnt[0}", element[0])
+            for (entry in ppeList) {
                 // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
                 // ist die GoogleCalendar Id für den gespeicherten eintrag
-                Log.i("userID2", entry.getID());
-                if(entry.getID().equals(element[0])) {
+                Log.i("userID2", entry.id)
+                if (entry.id == element[0]) {
                     //output tag
-                    String DEBUG_TAG = "MyActivity";
+                    val DEBUG_TAG = "MyActivity"
                     //eventID ist die Google calendar Id
-                    long eventID = Long.parseLong(element[1]);
+                    val eventID = element[1].toLong()
                     //Klasse für das updaten von werten
-                    ContentResolver cr = context.getContentResolver();
-                    ContentValues values = new ContentValues();
-                    Uri updateUri;
+                    val cr = context?.contentResolver
+                    val values = ContentValues()
+                    var updateUri: Uri
                     //Datum und Uhrzeit aufteilen.
                     // Sieht so aus wie 22-01-2019 10:00 Uhr
                     // es wird nach dem Leerzeichen getrennt
                     //trennen von datum und Uhrzeit
-                    String[] s = entry.getDate().split(" ");
+                    val s = entry.date.split(" ").toTypedArray()
                     //print Datum
                     //aufteilen von tag, monat und jahr.
                     //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
-                    String[] ss = s[0].split("-");
+                    val ss = s[0].split("-").toTypedArray()
                     //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
-                    int time1 = Integer.parseInt(s[1].substring(0, 2));
-                    int time2 = Integer.parseInt(s[1].substring(4, 5));
+                    val time1 = s[1].substring(0, 2).toInt()
+                    val time2 = s[1].substring(4, 5).toInt()
                     // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, entry.getModule());
-                    values.put(CalendarContract.Events.EVENT_LOCATION,
-                               "Fachhochschule Bielefeld Update");
-                    values.put(CalendarContract.Events.DESCRIPTION, "");
+                    values.put(CalendarContract.Events.TITLE, entry.module)
+                    values.put(
+                        CalendarContract.Events.EVENT_LOCATION,
+                        "Fachhochschule Bielefeld Update"
+                    )
+                    values.put(CalendarContract.Events.DESCRIPTION, "")
                     //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
-                    GregorianCalendar calDate = new GregorianCalendar(
-                            Integer.parseInt(ss[0]),
-                            Integer.parseInt(ss[1]) - 1,
-                            Integer.parseInt(ss[2]),
-                            time1, time2);
-                    values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                    values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
-                    values.put( CalendarContract.Events.DTEND,
-                                calDate.getTimeInMillis() + (90 * 60000));
+                    val calDate = GregorianCalendar(
+                        ss[0].toInt(),
+                        ss[1].toInt() - 1, ss[2].toInt(),
+                        time1, time2
+                    )
+                    values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                    values.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)
+                    values.put(
+                        CalendarContract.Events.DTEND,
+                        calDate.timeInMillis + 90 * 60000
+                    )
                     //uebergebeneModule.put(CalendarContract.Events.);
                     //Checkverbindung Eintrag
-                    Uri baseUri = Uri.parse("content://com.android.calendar/events");
-
-                    updateUri = ContentUris.withAppendedId(baseUri, eventID);
+                    val baseUri = Uri.parse("content://com.android.calendar/events")
+                    updateUri = ContentUris.withAppendedId(baseUri, eventID)
                     //variable zum anzeigen der geänderten werte
-                    int rows = cr.update(updateUri, values, null, null);
+                    val rows = cr?.update(updateUri, values, null, null)
 
                     //testausgabe
-                    Log.i(DEBUG_TAG, "Rows updated: 240 " + rows);
+                    Log.i(DEBUG_TAG, "Rows updated: 240 $rows")
                 }
             }
         }
@@ -268,144 +243,135 @@ public class CheckGoogleCalendar {
 
     // Start Merlin Gürtler
     //Methode zum entfernen eines Kalendereintrages
-    public void deleteEntry(int pruefid) {
+    fun deleteEntry(pruefid: Int) {
 
         //Variablen
-        pruefID = pruefid;
+        pruefID = pruefid
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences
-                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-
-        String stringids = mSharedPreferences.getString("IDs", "");
+        val mSharedPreferences = context?.getSharedPreferences("GoogleID-und-PruefID13", 0)
+        val stringids = mSharedPreferences?.getString("IDs", "")
 
         // step one : converting comma separate String to array of String
-        String[] elementList = stringids.split("-");
+        val elementList = stringids?.split("-")?.toTypedArray()
 
         // step two : convert String array to list of String
-        List<String> fixedLenghtList = Arrays.asList(elementList);
+        val fixedLenghtList = elementList?.toMutableList()
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLenghtList);
+        val listOfString = ArrayList(fixedLenghtList)
 
         //step fifth : change Stringarray to String type
-        Log.i("check_Googlekalender", String.valueOf(listOfString.size()));
+        Log.i("check_Googlekalender", listOfString.size.toString())
         //String idsTOstring = null;
-        for (int i = 1; i < listOfString.size(); i++) {
+        for (i in 1 until listOfString.size) {
             // step six : split Prüfid und GoogleID
-            String[] element = listOfString.get(i).split(",");
-            if (element[0].equals(String.valueOf(pruefID))) {
+            val element = listOfString[i].split(",").toTypedArray()
+            if (element[0] == pruefID.toString()) {
                 //output tag
-                String DEBUG_TAG = "MyActivity";
+                val DEBUG_TAG = "MyActivity"
 
                 //getContentResolver wird benötigt zum zugriff auf die Kalender API
-                ContentResolver cr = context.getContentResolver();
-                Uri deleteUri = null;
-
-                long eventID = Long.parseLong(element[1]);
-
-                Uri baseUri = Uri.parse("content://com.android.calendar/events");
+                val cr = context?.contentResolver
+                var deleteUri: Uri? = null
+                val eventID = element[1].toLong()
+                val baseUri = Uri.parse("content://com.android.calendar/events")
 
                 //wenn prüfid vorhanden lösche diese
-                Log.i("check_Checkbool", "Pid stimmt überein");
-                deleteUri = ContentUris.withAppendedId(baseUri, eventID);
-                int rows = cr.delete(deleteUri, null, null);
-                Log.i(DEBUG_TAG, "Rows deleted: 240 " + rows);
-
+                Log.i("check_Checkbool", "Pid stimmt überein")
+                deleteUri = ContentUris.withAppendedId(baseUri, eventID)
+                val rows = cr?.delete(deleteUri, null, null)
+                Log.i(DEBUG_TAG, "Rows deleted: 240 $rows")
             }
         }
-
     }
 
-    public TestPlanEntry getFavoritePruefung(String id){
-        AppDatabase database2 = AppDatabase.getAppDatabase(context);
+    fun getFavoritePruefung(id: String?): TestPlanEntry {
+        val database2 = AppDatabase.getAppDatabase(context)
         // Erhalte die Prüfung die geupdated werden soll
-        return(database2.userDao().getEntryById(id));
+        return database2.userDao().getEntryById(id)
     }
-
 
     // Ende Merlin Gürtler
-
-    public List<TestPlanEntry> databaseConnect(){
-        AppDatabase database2 = AppDatabase.getAppDatabase(context);
+    fun databaseConnect(): List<TestPlanEntry> {
+        val database2 = AppDatabase.getAppDatabase(context)
         // Änderun Merlin Gürtler
         // Nicht alle Einträge, um Iterationen zu sparen
-        return(database2.userDao().getFavorites(true));
+        return database2.userDao().getFavorites(true)
     }
 
-    public void updateCalendarEntry(int pruefid) {
+    fun updateCalendarEntry(pruefid: Int) {
         //Variablen
-        pruefID = pruefid;
+        pruefID = pruefid
 
         //Creating editor to store uebergebeneModule to shared preferences
-        SharedPreferences mSharedPreferences
-                = context.getSharedPreferences("GoogleID-und-PruefID13", 0);
-
-        String stringids = mSharedPreferences.getString("IDs", "");
+        val mSharedPreferences = context?.getSharedPreferences("GoogleID-und-PruefID13", Context.MODE_PRIVATE)
+        val stringids = mSharedPreferences?.getString("IDs", "")
 
         // step one : converting comma separate String to array of String
-        String[] elementList = stringids.split("-");
+        val elementList = stringids?.split("-")?.toTypedArray()
 
         // step two : convert String array to list of String
-        List<String> fixedLengthList = Arrays.asList(elementList);
+        val fixedLengthList = elementList?.toMutableList()
 
         // step three : copy fixed list to an ArrayList
-        ArrayList<String> listOfString = new ArrayList<String>(fixedLengthList);
+        val listOfString = ArrayList(fixedLengthList)
 
         //step fifth : change Stringarray to String type
-        Log.i("check_Googlekalender", String.valueOf(listOfString.size()));
+        Log.i("check_Googlekalender", listOfString.size.toString())
         //String idsTOstring = null;
-        for (int i = 1; i < listOfString.size(); i++) {
+        for (i in 1 until listOfString.size) {
             // step six : split Prüfid und GoogleID
-            String[] element = listOfString.get(i).split(",");
-            if (element[0].equals(String.valueOf(pruefID))) {
+            val element = listOfString[i].split(",").toTypedArray()
+            if (element[0] == pruefID.toString()) {
                 //output tag
-                String DEBUG_TAG = "MyActivity";
-
-                long eventID = Long.parseLong(element[1]);
-
-                Uri baseUri = Uri.parse("content://com.android.calendar/events");
-
-                ContentValues values = new ContentValues();
-
-                TestPlanEntry favoriteExam = getFavoritePruefung(String.valueOf(pruefID));
+                val DEBUG_TAG = "MyActivity"
+                val eventID = element[1].toLong()
+                val baseUri = Uri.parse("content://com.android.calendar/events")
+                val values = ContentValues()
+                val favoriteExam = getFavoritePruefung(pruefID.toString())
 
                 //Datum und Uhrzeit aufteilen.
                 // Sieht so aus wie 22-01-2019 10:00 Uhr
                 // es wird nach dem Leerzeichen getrennt
                 //trennen von datum und Uhrzeit
-                String[] s = favoriteExam.getDate().split(" ");
+                val s = favoriteExam.date.split(" ").toTypedArray()
                 //print Datum
                 //aufteilen von tag, monat und jahr.
                 //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
-                String[] ss = s[0].split("-");
+                val ss = s[0].split("-").toTypedArray()
                 //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
-                int time1 = Integer.parseInt(s[1].substring(0, 2));
-                int time2 = Integer.parseInt(s[1].substring(4, 5));
+                val time1 = s[1].substring(0, 2).toInt()
+                val time2 = s[1].substring(4, 5).toInt()
 
                 // The new title for the updatet event
-                values.put(CalendarContract.Events.TITLE, favoriteExam.getModule());
-                values.put(CalendarContract.Events.EVENT_LOCATION,
-                        "Fachhochschule Bielefeld");
-                values.put(CalendarContract.Events.DESCRIPTION, "");
+                values.put(CalendarContract.Events.TITLE, favoriteExam.module)
+                values.put(
+                    CalendarContract.Events.EVENT_LOCATION,
+                    "Fachhochschule Bielefeld"
+                )
+                values.put(CalendarContract.Events.DESCRIPTION, "")
                 //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
-                GregorianCalendar calDate = new GregorianCalendar(
-                        Integer.parseInt(ss[0]),
-                        Integer.parseInt(ss[1]) - 1,
-                        Integer.parseInt(ss[2]),
-                        time1, time2);
-                values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false);
-                values.put(CalendarContract.Events.DTSTART, calDate.getTimeInMillis());
-                values.put( CalendarContract.Events.DTEND,
-                        calDate.getTimeInMillis() + (90 * 60000));
+                val calDate = GregorianCalendar(
+                    ss[0].toInt(),
+                    ss[1].toInt() - 1, ss[2].toInt(),
+                    time1, time2
+                )
+                values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                values.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)
+                values.put(
+                    CalendarContract.Events.DTEND,
+                    calDate.timeInMillis + 90 * 60000
+                )
 
                 //wenn prüfid vorhanden update das event
-                Log.i("check_Checkbool", "Pid stimmt überein");
-                Uri updateUri = ContentUris.withAppendedId(baseUri, eventID);
-                int rows = context.getContentResolver().update(updateUri, values, null,
-                        null);
-                Log.i(DEBUG_TAG, "Rows updated: 240 " + rows);
-
+                Log.i("check_Checkbool", "Pid stimmt überein")
+                val updateUri = ContentUris.withAppendedId(baseUri, eventID)
+                val rows = context?.contentResolver?.update(
+                    updateUri, values, null,
+                    null
+                )
+                Log.i(DEBUG_TAG, "Rows updated: 240 $rows")
             }
         }
     }
