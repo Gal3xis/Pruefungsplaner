@@ -1,225 +1,242 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="25dp">
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/txtmessage"
-        android:layout_width="235dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="336dp"
-        android:layout_marginBottom="103dp"
-        android:textSize="16sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/BtnOk"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="0dp"
-        android:layout_height="496dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
-        android:orientation="vertical"
-        android:padding="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
+    <!--
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="385dp"
+            android:id="@+id/txtmessage"
+            android:layout_width="235dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:text="@string/choose_module"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="6dp"
-            tools:layout_editor_absoluteY="16dp" />
-
-        <Spinner
-            android:id="@+id/spStudiengang"
-            android:background="@android:color/transparent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:textSize="16sp"
             android:visibility="visible"
-            tools:layout_editor_absoluteX="6dp"
-            tools:layout_editor_absoluteY="37dp" />
+            tools:text="Test"
+            android:textColor="#000000"
+            />
+    -->
+    <TableLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:shrinkColumns="*"
+        android:stretchColumns="*">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:text="@string/choose_prof"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="81dp" />
-
-        <AutoCompleteTextView
-            android:id="@+id/acProfessor"
-            android:layout_width="403dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:hint="@string/all"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorLink="@color/colorPrimary"
-            android:textSize="20sp"
-            android:theme="@style/AutoCompleteStyle"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="101dp" />
-
-        <TextView
-            android:id="@+id/daySearch"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/search_date"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="5sp"
-            android:textSize="20sp"/>
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:text="@string/semester_ui"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="133dp" />
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_span="1"
+                android:gravity="center_vertical"
+                android:text="@string/choose_module"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="33dp"
-            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btns1"
-                android:layout_width="29sp"
-                android:layout_height="25sp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="1"
-                android:textColor="#eeeeee"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
+            <Spinner
+                android:id="@+id/spStudiengang"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_span="2"
+                tools:entries="@array/TestArray" />
+        </TableRow>
 
-            <Button
-                android:id="@+id/btns2"
-                android:layout_width="29dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="2"
-                android:textColor="#eeeeee"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
-
-            <Button
-                android:id="@+id/btns3"
-                android:layout_width="29dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="3"
-                android:textColor="#eeeeee"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
-
-            <Button
-                android:id="@+id/btns4"
-                android:layout_width="29dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="4"
-                android:textColor="#eeeeee"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
-
-            <Button
-                android:id="@+id/btns5"
-                android:layout_width="29dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="5"
-                android:textColor="#eeeeee"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
-
-            <Button
-                android:id="@+id/btns6"
-                android:layout_width="29dp"
-                android:layout_height="25dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginBottom="47dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="6"
-                android:textColor="#eeeeee"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtmessage" />
-
-        </LinearLayout>
-
-        <Spinner
-            android:id="@+id/spSemester"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="153dp" />
+            android:layout_height="wrap_content">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_height="50dp"
+                android:layout_span="1"
+                android:gravity="center_vertical"
+                android:text="@string/choose_prof"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/BtnOk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="240dp"
-        android:background="@drawable/button_rounded_corners"
-        android:text="@string/ok"
-        android:textColor="#eeeeee"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.907"
-        app:layout_constraintStart_toStartOf="parent" />
+            <AutoCompleteTextView
+                android:id="@+id/acProfessor"
+                android:layout_width="match_parent"
+                android:layout_span="2"
+                android:hint="@string/all"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorLink="@color/colorPrimary"
+                android:textSize="20sp"
+                android:theme="@style/AutoCompleteStyle"
 
+                />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/daySearch"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="@string/search_date"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/activity_suche_daySearchTV"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:textSize="20sp"
+                tools:text="01.01.1970" />
+
+            <ImageButton
+                android:layout_height="50dp"
+
+                android:background="transparent"
+                android:src="@drawable/ic_calendar" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="@string/semester_ui"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:layout_span="2"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="4"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="5"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="6"
+                        android:textSize="20sp" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/BtnOk"
+                android:layout_marginTop="20dp"
+                android:layout_span="3"
+                android:background="@drawable/button_rounded_corners"
+                android:text="@string/activity_suche_searchBtn_text"
+                android:textColor="#ffffff"
+
+                />
+        </TableRow>
+
+    </TableLayout>
+</RelativeLayout>

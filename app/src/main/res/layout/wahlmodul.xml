@@ -1,85 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:layout_editor_absoluteY="25dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_width="0dp"
-        android:layout_height="496dp"
-        android:layout_marginStart="2dp"
-        android:layout_marginLeft="2dp"
-        android:layout_marginTop="68dp"
-        android:layout_marginEnd="2dp"
-        android:layout_marginRight="2dp"
-        android:orientation="vertical"
-        android:padding="2dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="5dp"
+        android:shrinkColumns="1"
+        android:stretchColumns="*">
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="385dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:text="@string/choose_course2"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="6dp"
-            tools:layout_editor_absoluteY="16dp" />
-
-        <Spinner
-            android:id="@+id/spStudiengang"
-            android:background="@android:color/transparent"
+        <TableRow
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:visibility="visible"
-            tools:layout_editor_absoluteX="6dp"
-            tools:layout_editor_absoluteY="37dp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:text="Name des Wahlmoduls:"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="81dp" />
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="@string/choose_course2"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
 
-        <AutoCompleteTextView
-            android:id="@+id/wahlModulName"
-            android:layout_width="403dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5sp"
-            android:hint="@string/all"
-            android:singleLine="true"
-            android:textColor="@android:color/white"
-            android:textColorLink="@color/colorPrimary"
-            android:textSize="20sp"
-            android:theme="@style/AutoCompleteStyle"
-            tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="101dp" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/BtnOk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="272dp"
-        android:background="@drawable/button_rounded_corners"
-        android:text="@string/search"
-        android:textColor="#eeeeee"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.907"
-        app:layout_constraintStart_toStartOf="parent" />
+            <Spinner
+                android:id="@+id/spStudiengang"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                tools:entries="@array/TestArray" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:text="@string/wahlmodul_wahlmodul_TV"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <AutoCompleteTextView
+                android:id="@+id/wahlModulName"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="@string/all"
+                android:singleLine="true"
+                android:textColor="@android:color/white"
+                android:textColorLink="@color/colorPrimary"
+                android:textSize="20sp"
+                android:theme="@style/AutoCompleteStyle" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/BtnOk"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_span="2"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button_rounded_corners"
+                android:text="@string/search"
+                android:textColor="#ffffff" />
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>
