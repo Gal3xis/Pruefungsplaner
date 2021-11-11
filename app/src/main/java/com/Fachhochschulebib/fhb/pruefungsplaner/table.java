@@ -66,7 +66,7 @@ public class table extends AppCompatActivity  {
         // Start Merlin Gürtler
         // registriert die Toolbar
         header = (Toolbar) findViewById(R.id.header);
-        setSupportActionBar(header);
+        // TODO setSupportActionBar(header);
         header.setTitleTextColor(Color.WHITE);
 
         InputMethodManager inputMethodManager =
@@ -195,6 +195,9 @@ public class table extends AppCompatActivity  {
 
                                         //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
                                         if (ppeList.size() < 2) {
+                                            //TODO
+                                            ft.replace(R.id.frame_placeholder, new searchFragment());
+                                            ft.commit();
                                         }else{
                                             ft.replace(R.id.frame_placeholder, new searchFragment());
                                             ft.commit();

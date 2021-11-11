@@ -20,9 +20,10 @@
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
         android:shrinkColumns="*"
-        android:stretchColumns="*">
+        android:stretchColumns="*"
+        android:layout_marginTop="50dp"
+        >
 
         <TableRow
             android:layout_width="match_parent"
@@ -97,7 +98,7 @@
             <ImageButton
                 android:layout_height="50dp"
 
-                android:background="transparent"
+                android:background="@android:color/transparent"
                 android:src="@drawable/ic_calendar" />
 
         </TableRow>

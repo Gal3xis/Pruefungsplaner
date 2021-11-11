@@ -7,7 +7,7 @@
     tools:layout_editor_absoluteY="25dp"
     android:orientation="vertical"
     >
-<!--
+
     <CalendarView
         android:id="@+id/caCalender"
         android:layout_width="0dp"
@@ -34,7 +34,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:visibility="invisible"/>
--->
+
     <TextView
         android:id="@+id/currentPeriode"
         android:layout_height="wrap_content"

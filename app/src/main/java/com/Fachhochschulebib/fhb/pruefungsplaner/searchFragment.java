@@ -171,6 +171,8 @@ public class searchFragment extends Fragment {
 
         //Initialiseren der UI Komponente
         //Spinners spinner = new Spinners();
+        /*TODO Change with Checkboxes
+        final Button btnSemester1 = (Button) v.findViewById(R.id.btns1);
         final Button btnSemester1 = (Button) v.findViewById(R.id.btns1);
         final Button btnSemester2 = (Button) v.findViewById(R.id.btns2);
         final Button btnSemester3 = (Button) v.findViewById(R.id.btns3);
@@ -185,7 +187,7 @@ public class searchFragment extends Fragment {
         registerButton(btnSemester4,4);
         registerButton(btnSemester5,5);
         registerButton(btnSemester6,6);
-        // Ende Merlin Gürtler
+        // Ende Merlin Gürtler*/
 
         //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen
         List<String> spinnerModuleArrayList = new ArrayList<String>();

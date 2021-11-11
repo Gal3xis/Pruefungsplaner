@@ -19,6 +19,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -83,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 // Erstelle Shared Pref für die anderen Fragmente
                 SharedPreferences sharedPrefCourseValidation =
                         getApplicationContext().
-                                getSharedPreferences("validation",0);
+                                getSharedPreferences("validation", 0);
 
                 SharedPreferences.Editor editorStudiengangValidation =
                         sharedPrefCourseValidation.edit();
@@ -98,12 +100,12 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         RetrofitConnect retrofit = new RetrofitConnect(relativePPlanURL);
                         // Überprüfe ob die App schonmal gestartet wurde
-                        if(database.userDao().getUuid() == null) {
+                        if (database.userDao().getUuid() == null) {
                             // Sende nur ans Backend wenn die App wirklich zum ersten mal
                             // gestartet wurde
                             retrofit.firstStart(getApplicationContext(), database,
                                     serverAddress);
-                        }else {
+                        } else {
                             retrofit.setUserCourses(getApplicationContext(), database, serverAddress);
                         }
                     }
@@ -124,11 +126,26 @@ public class MainActivity extends AppCompatActivity {
     }
     // Ende Merlin Gürtler
 
+    //Start Alexander Lange
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.action_menu,menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        return true;
+    }
+
+    //End Alexander Lange
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = new Intent(getApplicationContext(),table.class);
+        startActivityForResult(intent,0);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final Context context = getBaseContext();
 
@@ -177,8 +194,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Kalender:: aktuelles Jahr --> Bestimmung der Prüfphase (WiSe, SoSe)
         Calendar calendar = Calendar.getInstance();
-        int calendarMonth = calendar.get(Calendar.MONTH );
-        Log.d("Output Monat",String.valueOf(calendarMonth));
+        int calendarMonth = calendar.get(Calendar.MONTH);
+        Log.d("Output Monat", String.valueOf(calendarMonth));
 
         // Start Merlin Gürtler
         //Anzahl der Elemente
@@ -192,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             //second parameter is necessary ie.,Value to return if this preference does not exist.
         }
         //Wenn Verbindung zum Server nicht möglich, dann Daten aus der Datenbank nehmen
-        catch(Exception e) {
+        catch (Exception e) {
             if (strJson != null) {
                 try {
                     jsonArrayFacultys = new JSONArray(strJson);
@@ -204,14 +221,14 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                 } catch (Exception b) {
-                    Log.d("Datenbankfehler","Keine Daten in der Datenbank vorhanden!");
+                    Log.d("Datenbankfehler", "Keine Daten in der Datenbank vorhanden!");
                 }
             }
         }
     }
 
     //Aufruf in onCreate()
-    public void checkConnection(){
+    public void checkConnection() {
         pingUrl(serverAddress + relativePPlanURL + "entity.faculty");
         // Start Merlin Gürtler
         final StartClass globalVariable = (StartClass) getApplicationContext();
@@ -233,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 Uuid uuid = database.userDao().getUuid();
-                if(!globalVariable.getAppStarted() && uuid != null && !globalVariable.isChangeFaculty()) {
+                if (!globalVariable.getAppStarted() && uuid != null && !globalVariable.isChangeFaculty()) {
                     globalVariable.setAppStarted(true);
                     retrofit.anotherStart(getApplicationContext(), database,
                             serverAddress);
@@ -247,7 +264,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
 
                 // Skippe die erstauswahl, wenn schon ein Studiengang gewählt wurde
-                if(!courseMain.equals("0") && !globalVariable.isChangeFaculty()) {
+                if (!courseMain.equals("0") && !globalVariable.isChangeFaculty()) {
                     Intent mainWindow = new Intent(getApplicationContext(), table.class);
                     startActivityForResult(mainWindow, 0);
                 }
@@ -258,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void NoConnection(){
+    public void NoConnection() {
         Toast.makeText(getApplicationContext(),
                 getApplicationContext().getString(R.string.noConnection),
                 Toast.LENGTH_SHORT).show();
@@ -266,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //Übernahme der Fakultätsnamen in die Spinner-Komponente.
-    public void facNamesToSpinner(){
+    public void facNamesToSpinner() {
         MainActivity.this.runOnUiThread(new Runnable() {
             public void run() {
                 /* Toast.makeText(getBaseContext(), "Prüfungen wurden aktualisiert",
@@ -283,9 +300,9 @@ public class MainActivity extends AppCompatActivity {
                         AlertDialog.Builder chooseFaculty = new AlertDialog.Builder(MainActivity.this,
                                 R.style.customAlertDialog);
 
-                        String[] faculties = new String [facultyName.size()];
+                        String[] faculties = new String[facultyName.size()];
 
-                        for(int i = 0; i < facultyName.size(); i++) {
+                        for (int i = 0; i < facultyName.size(); i++) {
                             faculties[i] = facultyName.get(i);
                         }
 
@@ -293,11 +310,10 @@ public class MainActivity extends AppCompatActivity {
                         chooseFaculty.setItems(faculties, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                for (int i = 0; i < facultyName.size(); i++)
-                                {
+                                for (int i = 0; i < facultyName.size(); i++) {
                                     if (faculties[which]
                                             .equals(facultyName.get(i))) {
-                                        try{
+                                        try {
                                             JSONObject object = jsonArrayFacultys.getJSONObject(i);
                                             returnFaculty = object.get("fbid").toString();
                                             Log.d("Output Fakultaet",
@@ -305,7 +321,7 @@ public class MainActivity extends AppCompatActivity {
                                             // Erstelle Shared Pref für die anderen Fragmente
                                             SharedPreferences sharedPrefFacultyValidation =
                                                     getApplicationContext().
-                                                            getSharedPreferences("validation",0);
+                                                            getSharedPreferences("validation", 0);
 
                                             SharedPreferences.Editor editorFacultyValidation =
                                                     sharedPrefFacultyValidation.edit();
@@ -323,7 +339,7 @@ public class MainActivity extends AppCompatActivity {
                                                     courseChosen.clear();
                                                     courseName.clear();
 
-                                                    for(Courses course: courses) {
+                                                    for (Courses course : courses) {
                                                         courseName.add(course.getCourseName());
                                                         courseChosen.add(course.getChoosen());
                                                     }
@@ -332,7 +348,7 @@ public class MainActivity extends AppCompatActivity {
                                                         @Override
                                                         public void run() {
                                                             // schneidet ab dem Leerzeichen ab, da sonst nicht genug platz ist
-                                                            if(faculties[which].contains(" ")) {
+                                                            if (faculties[which].contains(" ")) {
                                                                 buttonSpinner.setText(faculties[which].substring
                                                                         (0, faculties[which].indexOf(' ')));
                                                             } else {
@@ -347,30 +363,29 @@ public class MainActivity extends AppCompatActivity {
 
                                                             TextView chooseCourse = findViewById(R.id.chooseCourseId);
 
-                                                            if(chooseCourse.getVisibility() != View.VISIBLE) {
+                                                            if (chooseCourse.getVisibility() != View.VISIBLE) {
                                                                 chooseCourse.setVisibility(View.VISIBLE);
                                                             }
 
-                                                            if(courseName.size() == 0) {
-                                                                if(buttonOk.getVisibility() == View.VISIBLE) {
+                                                            if (courseName.size() == 0) {
+                                                                if (buttonOk.getVisibility() == View.VISIBLE) {
                                                                     buttonOk.setVisibility(View.INVISIBLE);
                                                                 }
                                                                 chooseCourse.setText(R.string.no_course);
                                                                 chooseCourse.setTextColor(Color.parseColor("#ffa500"));
                                                             } else {
-                                                                if(buttonOk.getVisibility() != View.VISIBLE) {
+                                                                if (buttonOk.getVisibility() != View.VISIBLE) {
                                                                     buttonOk.setVisibility(View.VISIBLE);
                                                                 }
                                                                 chooseCourse.setText(R.string.choose_course);
                                                                 chooseCourse.setTextColor(Color.parseColor("#eeeeee"));
-                                                            } }
+                                                            }
+                                                        }
 
                                                     });
                                                 }
                                             }).start();
-                                        }
-                                        catch (Exception e)
-                                        {
+                                        } catch (Exception e) {
                                             Log.d("uebergabeAnSpinner",
                                                     "Fehler: Parsen von 'uebergabeAnSpinner'");
                                         }
@@ -406,19 +421,19 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 // prüfe ob mindesten ein Studiengang favorisiert wurde
-                                for(Boolean chosen: courseChosen) {
-                                    if(chosen) {
+                                for (Boolean chosen : courseChosen) {
+                                    if (chosen) {
                                         oneFavorite[0] = true;
                                         break;
                                     }
                                 }
-                                if(oneFavorite[0]) {
+                                if (oneFavorite[0]) {
                                     // aktualisiere die db
 
-                                    for(int i = 0; i < courseChosen.size(); i++) {
+                                    for (int i = 0; i < courseChosen.size(); i++) {
                                         database.userDao().updateCourse(courseName.get(i),
                                                 courseChosen.get(i));
-                                        if(courseChosen.get(i)) {
+                                        if (courseChosen.get(i)) {
                                             favoriteCourses.add(courseName.get(i));
                                         }
                                     }
@@ -427,14 +442,14 @@ public class MainActivity extends AppCompatActivity {
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        if(oneFavorite[0]) {
-                                            if(favoriteCourses.size() == 1) {
+                                        if (oneFavorite[0]) {
+                                            if (favoriteCourses.size() == 1) {
                                                 addMainCourse(favoriteCourses.get(0));
                                             } else {
 
-                                                String[] courses = new String [favoriteCourses.size()];
+                                                String[] courses = new String[favoriteCourses.size()];
 
-                                                for(int i = 0; i < favoriteCourses.size(); i++) {
+                                                for (int i = 0; i < favoriteCourses.size(); i++) {
                                                     courses[i] = favoriteCourses.get(i);
                                                 }
 
@@ -458,7 +473,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
 
                                         } else {
-                                            Toast.makeText(v.getContext(),v.getContext().getString(R.string.favorite_one_course), Toast.LENGTH_SHORT)
+                                            Toast.makeText(v.getContext(), v.getContext().getString(R.string.favorite_one_course), Toast.LENGTH_SHORT)
                                                     .show();
                                         }
 
@@ -514,7 +529,7 @@ public class MainActivity extends AppCompatActivity {
                 Iterator x = jsonObj.keys();
                 JSONArray jsonArray = new JSONArray();
 
-                while (x.hasNext()){
+                while (x.hasNext()) {
                     String key = (String) x.next();
                     jsonArray.put(jsonObj.get(key));
                 }
@@ -529,11 +544,11 @@ public class MainActivity extends AppCompatActivity {
 
                 String convertedToString = receivesFacultys.toString();
                 String deletedCling
-                        = convertedToString.substring(1,convertedToString.length()-1);
+                        = convertedToString.substring(1, convertedToString.length() - 1);
                 //konvertieren zu JSONArray
                 jsonArrayFacultys = new JSONArray(deletedCling);
 
-                for(int i = 0; i< jsonArrayFacultys.length(); i++) {
+                for (int i = 0; i < jsonArrayFacultys.length(); i++) {
                     JSONObject json = jsonArrayFacultys.getJSONObject(i);
                     facultyName.add(json.get("facName").toString());
                 }
@@ -552,28 +567,25 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 facNamesToSpinner();
-                Log.d("Output checkFakultaet","abgeschlossen");
+                Log.d("Output checkFakultaet", "abgeschlossen");
 
             }
             /*  Wenn keine Verbindung zum Server dann catch Zweig und Daten
                 aus den Shared Preferences benutzen
-             */
-            catch (final Exception e)
-            {
+             */ catch (final Exception e) {
                 String strFacultys
-                        = sharedPrefsFaculty.getString("faculty","0");
+                        = sharedPrefsFaculty.getString("faculty", "0");
                 //Log.d("Output 426",strFakultaet);
                 if (strFacultys != null) {
-                    try{
+                    try {
                         jsonArrayFacultys = new JSONArray(strFacultys);
-                        for(int i = 0; i< jsonArrayFacultys.length(); i++) {
+                        for (int i = 0; i < jsonArrayFacultys.length(); i++) {
                             JSONObject json = jsonArrayFacultys.getJSONObject(i);
                             facultyName.add(json.get("facName").toString());
                             facNamesToSpinner();
                         }
 
-                    }catch (Exception b)
-                    {
+                    } catch (Exception b) {
                         Log.d("uebergabeAnSpinner",
                                 "Fehler beim Parsen des Fakultätsnamen.");
                     }
@@ -589,8 +601,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     Handler handler = new Handler(msg -> {
-        if(msg.arg1==1)
-        {
+        if (msg.arg1 == 1) {
             Toast.makeText(getApplicationContext(),
                     getApplicationContext().getString(R.string.noConnection),
                     Toast.LENGTH_SHORT).show();
