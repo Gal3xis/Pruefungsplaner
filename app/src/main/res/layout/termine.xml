@@ -9,7 +9,9 @@
     android:paddingBottom="2dp"
     android:screenOrientation="portrait"
     tools:layout_editor_absoluteY="25dp"
-    tools:onClick="onClickdd">
+    tools:onClick="onClickdd"
+    android:layout_marginTop="4dp"
+    >
 
     <LinearLayout
         android:id="@+id/linearLayout6"
@@ -22,7 +24,8 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        >
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -30,7 +33,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_color_border"
             android:orientation="vertical"
-            android:visibility="visible">
+            android:visibility="visible"
+            android:backgroundTint="#555"
+            >
 
             <Button
                 android:id="@+id/button7"
@@ -40,7 +45,9 @@
                 android:minHeight="0dp"
                 android:text="@string/date_ui"
                 android:textColor="#fffeee"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:backgroundTint="#222"
+                />
 
             <LinearLayout
                 android:id="@+id/linearLayout2"
@@ -52,7 +59,8 @@
                 app:layout_constraintBottom_toTopOf="@+id/firstLine"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/firstLine">
+                app:layout_constraintTop_toTopOf="@+id/firstLine"
+                >
 
                 <ImageView
                     android:id="@+id/icon"
@@ -82,7 +90,7 @@
                         android:gravity="center_vertical"
                         android:paddingBottom="0dp"
                         android:scrollbars="horizontal|vertical"
-                        android:textColor="#111111"
+                        android:textColor="#eee"
                         android:textSize="19sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/secondLine"
@@ -102,7 +110,7 @@
                         android:layout_marginRight="0dp"
                         android:layout_marginBottom="0dp"
                         android:layout_toRightOf="@id/icon"
-                        android:textColor="#111111"
+                        android:textColor="#eee"
                         android:gravity="center_vertical"
                         android:paddingTop="0dp"
                         android:textSize="16sp"
@@ -119,7 +127,7 @@
                         android:layout_above="@id/secondLine"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentRight="true"
-                        android:textColor="#111111"
+                        android:textColor="#eee"
                         android:layout_marginTop="0dp"
                         android:layout_marginEnd="6dp"
                         android:layout_marginRight="0dp"
@@ -130,7 +138,8 @@
                         android:textSize="16sp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="@+id/firstLine" />
+                        app:layout_constraintTop_toTopOf="@+id/firstLine"
+                        />
 
                 </LinearLayout>
 

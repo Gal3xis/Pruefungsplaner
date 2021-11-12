@@ -57,6 +57,7 @@ public class table extends AppCompatActivity  {
     //aufruf der starteinstelllungen
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

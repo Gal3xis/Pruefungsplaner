@@ -154,6 +154,26 @@ public class Terminefragment extends Fragment {
         });
     }
 
+    //TODO REMOVE
+    private TestPlanEntry CreateRandomEntry(){
+        TestPlanEntry entry = new TestPlanEntry();
+        entry.setDate("10.11.2021");
+        entry.setCourse("Embedded Systems");
+        entry.setID("-1");
+        entry.setChoosen(false);
+        entry.setColor("#00ff00");
+        entry.setExamForm("Schriftlich");
+        entry.setFavorit(false);
+        entry.setFirstExaminer("Grünwoldt");
+        entry.setModule("Embedded Systems");
+        entry.setRoom("F108");
+        entry.setSecondExaminer("Schenck");
+        entry.setSemester("4");
+        entry.setStatus("Status");
+        entry.setValidation("valid");
+        return entry;
+    }
+
 
     // Ende Merlin Gürtler
 
