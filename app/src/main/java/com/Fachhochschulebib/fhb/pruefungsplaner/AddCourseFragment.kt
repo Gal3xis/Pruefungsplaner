@@ -70,7 +70,7 @@ class AddCourseFragment() : Fragment() {
                 mAdapter = CheckListAdapter(
                     courseName,
                     courseChosen,
-                    activity?.applicationContext
+                    activity?.applicationContext!!
                 )
                 Handler(Looper.getMainLooper()).post(Runnable { recyclerView?.adapter = mAdapter })
             }

@@ -25,8 +25,7 @@ import android.view.View
 
 class RecyclerItemClickListener(
     context: Context?, //überprüfung welches item geklickt wurde
-    private val mListener: (Any, Any) -> Unit
-) : OnItemTouchListener {
+    private val mListener: OnItemClickListener?): RecyclerView.OnItemTouchListener {
     interface OnItemClickListener {
         fun onItemClick(view: View?, position: Int)
     }
