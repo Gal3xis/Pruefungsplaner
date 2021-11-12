@@ -53,6 +53,10 @@ class Optionen() : Fragment() {
     var mSharedPreferencesCurrentTermin: SharedPreferences? = null
     private var currentTermin: String? = null
 
+    companion object{
+        val idList: List<String> = ArrayList()
+    }
+
     //DONE: 08/2020 LG
     var serverAddress: String? = null
     var relativePPlanURL: String? = null
@@ -122,13 +126,13 @@ class Optionen() : Fragment() {
         var i: Int
         save = false
         i = 0
-        while (i < response?.length()?:0) {
+        while (i < response?.length() ?: 0) {
             run {
                 try {
                     if ((response?.get(i).toString() == "1")) {
                         switch2.setChecked(true)
                         save = true
-                    }else{
+                    } else {
                         switch2.setChecked(false)
                         save = false
                     }
@@ -484,7 +488,4 @@ class Optionen() : Fragment() {
         return (result)
     }
 
-    companion object {
-        var idList: List<String> = ArrayList()
-    }
 }
