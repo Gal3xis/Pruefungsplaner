@@ -135,12 +135,64 @@ class Terminefragment : Fragment() {
 
     // Ende Merlin Gürtler
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
+
+    }
+
+    /*
+    class LongOperation extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            List<TestPlanEntry> ppeList
+                    = Terminefragment.this.database.userDao().getEntriesByValidation(validation);
+            if (ppeList.size() < 1) {
+                for (int c = 0; c < 1000; c++) {
+                    try {
+                        Thread.sleep(3000);
+                        if (RetrofitConnect.checkTransmission) {
+                            return "Executed";
+                        }
+                    } catch (InterruptedException e) {
+                        Thread.interrupted();
+                    }
+                }
+            }
+            return "null";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            AdapterPassed();
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
+     */
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.terminefragment, container, false)
+
+
+        return v
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        //From OnCreate
         // Start Merlin Gürtler
         //Zugriffrechte für den GoogleKalender
         //Id für den Google Kalender
         val callbackId = 42
-
+        val v = view
         //Wert1: ID Google Kalender, Wert2: Rechte fürs Lesen, Wert3: Rechte fürs schreiben)
         checkPermission(
             callbackId,
@@ -448,51 +500,8 @@ class Terminefragment : Fragment() {
         // LongOperation asynctask = new LongOperation();
 
         // asynctask.execute("");
-        super.onCreate(savedInstanceState)
-    }
 
-    /*
-    class LongOperation extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected String doInBackground(String... params) {
-            List<TestPlanEntry> ppeList
-                    = Terminefragment.this.database.userDao().getEntriesByValidation(validation);
-            if (ppeList.size() < 1) {
-                for (int c = 0; c < 1000; c++) {
-                    try {
-                        Thread.sleep(3000);
-                        if (RetrofitConnect.checkTransmission) {
-                            return "Executed";
-                        }
-                    } catch (InterruptedException e) {
-                        Thread.interrupted();
-                    }
-                }
-            }
-            return "null";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            AdapterPassed();
-        }
-
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-        }
-    }
-     */
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.terminefragment, container, false)
-
+        //From onCreateView
         //hinzufügen von recycleview
         //TODO REMOVE recyclerView = v.findViewById<View>(R.id.recyclerView4) as RecyclerView
         //TODO REMOVE currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
@@ -502,7 +511,7 @@ class Terminefragment : Fragment() {
         if (strJson != "0") {
             currentPeriode?.text = strJson
         }
-        recyclerView4.visibility = View.VISIBLE
+        recyclerView4?.visibility = View.VISIBLE
 
         // use this setting to
         // improve performance if you know that changes
@@ -541,16 +550,16 @@ class Terminefragment : Fragment() {
                                     try {
                                         val txtSecondScreen2 =
                                             holder?.findViewById<View>(R.id.txtSecondscreen) as TextView
-                                        if (txtSecondScreen2.visibility == View.VISIBLE) {
-                                            txtSecondScreen2.visibility = View.GONE
+                                        if (txtSecondScreen2?.visibility == View.VISIBLE) {
+                                            txtSecondScreen2?.visibility = View.GONE
                                         }
                                     } catch (e: Exception) {
                                         Log.d("ERROR", "NOT IN VIEW PORT $e")
                                     }
                                 }
                                 // Ende Merlin Gürtler
-                                txtSecondscreen.visibility = View.VISIBLE
-                                txtSecondscreen.text = mAdapter?.giveString(position)
+                                txtSecondscreen?.visibility = View.VISIBLE
+                                txtSecondscreen?.text = mAdapter?.giveString(position)
                             }
                         }
 
@@ -584,8 +593,8 @@ class Terminefragment : Fragment() {
             // der zweite Screen zu geklappt
             override fun onChildViewDetachedFromWindow(view: View) {
                 //TODO REMOVE val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
-                if (txtSecondscreen.visibility == View.VISIBLE) {
-                    txtSecondscreen.visibility = View.GONE
+                if (txtSecondscreen?.visibility == View.VISIBLE) {
+                    txtSecondscreen?.visibility = View.GONE
                 }
             }
         })
@@ -602,7 +611,7 @@ class Terminefragment : Fragment() {
 
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
-        btnDatum.setOnClickListener(object : View.OnClickListener {
+        btnDatum?.setOnClickListener(object : View.OnClickListener {
             var save = true
             override fun onClick(v: View) {
                 if (!save) {
@@ -683,7 +692,7 @@ class Terminefragment : Fragment() {
                 }
             }
         })
-        return v
+
     }
 
     fun AdapterPassed() {

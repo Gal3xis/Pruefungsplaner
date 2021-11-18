@@ -61,7 +61,7 @@ class table : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.hauptfenster)
-
+        Log.d("table","Test") //TODO REMOVE
         // Start Merlin Gürtler
         // registriert die Toolbar
         setSupportActionBar(header)
@@ -147,10 +147,10 @@ class table : AppCompatActivity() {
             when (id) {
                 R.id.navigation_calender -> {
                     //Menüpunkt termine
-                    header.title = applicationContext.getString(R.string.title_calender)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_calender)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     //dl.setVisibility(View.GONE);
                     drawer_layout.closeDrawer(GravityCompat.START)
                     ft.replace(R.id.frame_placeholder, Terminefragment())
@@ -165,10 +165,10 @@ class table : AppCompatActivity() {
                         val rommData = AppDatabase.getAppDatabase(applicationContext)
                         val ppeList = rommData?.userDao()?.getEntriesByValidation(validation)
                         Handler(Looper.getMainLooper()).post {
-                            header.title = applicationContext.getString(R.string.title_search)
-                            recyclerView4.visibility = View.INVISIBLE
-                            caCalender.visibility = View.GONE
-                            btnDatum.visibility = View.GONE
+                            header?.title = applicationContext.getString(R.string.title_search)
+                            recyclerView4?.visibility = View.INVISIBLE
+                            caCalender?.visibility = View.GONE
+                            btnDatum?.visibility = View.GONE
                             drawer_layout.closeDrawer(GravityCompat.START)
 
 
@@ -183,50 +183,50 @@ class table : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_diary -> {
-                    header.title = applicationContext.getString(R.string.title_exam)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_exam)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     ft.replace(R.id.frame_placeholder, Favoritenfragment())
                     ft.commit()
                     true
                 }
                 R.id.navigation_settings -> {
-                    header.title = applicationContext.getString(R.string.title_settings)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_settings)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     ft.replace(R.id.frame_placeholder, Optionen())
                     ft.commit()
                     true
                 }
                 R.id.navigation_electiveModule -> {
-                    header.title = applicationContext.getString(R.string.title_electiveModule)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_electiveModule)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     ft.replace(R.id.frame_placeholder, ChoiceModulSearchFragment())
                     ft.commit()
                     true
                 }
                 R.id.navigation_feedback -> {
-                    header.title = applicationContext.getString(R.string.title_feedback)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_feedback)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     ft.replace(R.id.frame_placeholder, FeedbackFragment())
                     ft.commit()
                     true
                 }
                 R.id.navigation_changeFaculty -> {
-                    header.title = applicationContext.getString(R.string.title_changeFaculty)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_changeFaculty)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     // globale Variable, damit die Fakultät gewechselt werden kann
                     val globalVariable = applicationContext as StartClass
@@ -236,10 +236,10 @@ class table : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_addCourse -> {
-                    header.title = applicationContext.getString(R.string.title_changeCourse)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_changeCourse)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     ft.replace(R.id.frame_placeholder, AddCourseFragment())
                     ft.commit()
@@ -275,10 +275,10 @@ class table : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_calender -> {
                     //fragment fuer das "terminefragment" layout
-                    header.title = applicationContext.getString(R.string.title_calender)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_calender)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     ft.replace(R.id.frame_placeholder, Terminefragment())
                     //ft.addToBackStack(null);
                     ft.commit()
@@ -286,10 +286,10 @@ class table : AppCompatActivity() {
                 }
                 R.id.navigation_medication -> {
                     //fragment fuer das "activity_suche" layout
-                    header.title = applicationContext.getString(R.string.title_search)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_search)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     ft.replace(R.id.frame_placeholder, searchFragment())
                     //ft.addToBackStack("suche");
                     ft.commit()
@@ -297,10 +297,10 @@ class table : AppCompatActivity() {
                 }
                 R.id.navigation_diary -> {
                     //fragment fuer das "favoriten" layout
-                    header.title = applicationContext.getString(R.string.title_exam)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_exam)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     ft.replace(R.id.frame_placeholder, Favoritenfragment())
                     //ft.addToBackStack(null);
                     ft.commit()
@@ -308,20 +308,20 @@ class table : AppCompatActivity() {
                 }
                 R.id.navigation_settings -> {
                     //fragment fuer das "Optionen" layout
-                    header.title = applicationContext.getString(R.string.title_settings)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_settings)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     ft.replace(R.id.frame_placeholder, Optionen())
                     //ft.addToBackStack(null);
                     ft.commit()
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_electiveModule -> {
-                    header.title = applicationContext.getString(R.string.title_electiveModule)
-                    recyclerView4.visibility = View.INVISIBLE
-                    caCalender.visibility = View.GONE
-                    btnDatum.visibility = View.GONE
+                    header?.title = applicationContext.getString(R.string.title_electiveModule)
+                    recyclerView4?.visibility = View.INVISIBLE
+                    caCalender?.visibility = View.GONE
+                    btnDatum?.visibility = View.GONE
                     ft.replace(R.id.frame_placeholder, ChoiceModulSearchFragment())
                     ft.commit()
                     return@OnNavigationItemSelectedListener true

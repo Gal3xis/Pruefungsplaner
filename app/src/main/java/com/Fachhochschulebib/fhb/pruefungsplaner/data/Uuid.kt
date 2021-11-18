@@ -9,5 +9,6 @@ import androidx.room.Entity
 class Uuid {
     @PrimaryKey
     @ColumnInfo(name = "uuid")
+    @NonNull
     var uuid: String? = null
 }

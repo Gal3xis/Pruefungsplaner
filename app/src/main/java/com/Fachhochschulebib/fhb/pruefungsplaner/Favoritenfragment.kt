@@ -60,7 +60,7 @@ class Favoritenfragment : Fragment() {
         //TODO REMOVE val btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
         //TODO REMOVE val currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
         currentPeriode.visibility = View.INVISIBLE
-        caCalender.visibility = View.GONE
+        //caCalender.visibility = View.GONE
         val courses: MutableList<String> = ArrayList()
         val profnames: MutableList<String> = ArrayList()
         val dates: MutableList<String> = ArrayList()

@@ -108,6 +108,7 @@ class MainActivity() : AppCompatActivity() {
                     }
                 }).start()
                 val mainWindow = Intent(applicationContext, table::class.java)
+                System.out.println("Test1")//TODO REMOVE
                 startActivityForResult(mainWindow, 0)
             }
         }).start()
@@ -126,8 +127,6 @@ class MainActivity() : AppCompatActivity() {
     // Ende Merlin Gürtler
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity","Test")
-        startActivityForResult(Intent(this,table::class.java),2)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val context = baseContext
 
