@@ -44,6 +44,7 @@ import java.util.*
 
 //Alexander Lange Start
 import kotlinx.android.synthetic.main.start.*
+
 //Alexander Lange End
 
 //////////////////////////////
@@ -78,7 +79,7 @@ class MainActivity() : AppCompatActivity() {
             override fun run() {
                 // hole die Studiengang ID aus der DB
                 val database = AppDatabase.getAppDatabase(baseContext)
-                returnCourse = database.userDao().getIdCourse(choosenCourse)
+                returnCourse = database?.userDao()?.getIdCourse(choosenCourse)
 
                 // Erstelle Shared Pref für die anderen Fragmente
                 val sharedPrefCourseValidation =
@@ -91,15 +92,17 @@ class MainActivity() : AppCompatActivity() {
                 //TODO Change to Coroutine
                 // Thread für die Uuid
                 Thread(Runnable {
-                    val retrofit = RetrofitConnect(relativePPlanURL)
+                    val retrofit = RetrofitConnect(relativePPlanURL ?: "")
                     // Überprüfe ob die App schonmal gestartet wurde
-                    if (database.userDao().uuid == null) {
+                    if (database?.userDao()?.uuid == null) {
                         // Sende nur ans Backend wenn die App wirklich zum ersten mal
                         // gestartet wurde
-                        retrofit.firstStart(
-                            applicationContext, database,
-                            serverAddress
-                        )
+                        if (database != null) {
+                            retrofit.firstStart(
+                                applicationContext, database,
+                                serverAddress
+                            )
+                        }
                     } else {
                         retrofit.setUserCourses(applicationContext, database, serverAddress)
                     }
@@ -118,9 +121,13 @@ class MainActivity() : AppCompatActivity() {
         }
     }
 
+    //TODO FIX
+
     // Ende Merlin Gürtler
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.d("MainActivity","Test")
+        startActivityForResult(Intent(this,table::class.java),2)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val context = baseContext
 
@@ -133,7 +140,8 @@ class MainActivity() : AppCompatActivity() {
         //linear layout manager
         val layoutManager = LinearLayoutManager(applicationContext)
         recyclerViewChecklist.layoutManager = layoutManager
-        val mSharedPreferencesValidation = application.getSharedPreferences("validation", Context.MODE_PRIVATE)
+        val mSharedPreferencesValidation =
+            application.getSharedPreferences("validation", Context.MODE_PRIVATE)
         courseMain = mSharedPreferencesValidation.getString("selectedCourse", "0")
         // Ende Merlin Gürtler
         val mSharedPreferencesPPServerAdress =
@@ -198,7 +206,7 @@ class MainActivity() : AppCompatActivity() {
         pingUrl(serverAddress + relativePPlanURL + "entity.faculty")
         // Start Merlin Gürtler
         val globalVariable = applicationContext as StartClass
-        val retrofit = RetrofitConnect(relativePPlanURL)
+        val retrofit = RetrofitConnect(relativePPlanURL ?: "")
 
         // initialisierung db
         val database = AppDatabase.getAppDatabase(baseContext)
@@ -207,7 +215,9 @@ class MainActivity() : AppCompatActivity() {
         // Thread für die Studiengänge
         Thread(object : Runnable {
             override fun run() {
-                retrofit.getCourses(application, database, serverAddress)
+                if (database != null) {
+                    retrofit.getCourses(application, database, serverAddress)
+                }
             }
         }).start()
 
@@ -215,7 +225,7 @@ class MainActivity() : AppCompatActivity() {
         // Thread für die UUid
         Thread(object : Runnable {
             override fun run() {
-                val uuid = database.userDao().uuid
+                val uuid = database?.userDao()?.uuid
                 if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
                     globalVariable.appStarted = true
                     retrofit.anotherStart(
@@ -285,7 +295,7 @@ class MainActivity() : AppCompatActivity() {
                                             returnFaculty = `object`["fbid"].toString()
                                             Log.d(
                                                 "Output Fakultaet",
-                                                returnFaculty?:"No Faculty"
+                                                returnFaculty ?: "No Faculty"
                                             )
                                             // Erstelle Shared Pref für die anderen Fragmente
                                             val sharedPrefFacultyValidation =
@@ -309,21 +319,27 @@ class MainActivity() : AppCompatActivity() {
                                                         baseContext
                                                     )
                                                     val courses =
-                                                        database.userDao().getAllCoursesByFacultyId(
-                                                            returnFaculty
-                                                        )
+                                                        database?.userDao()
+                                                            ?.getAllCoursesByFacultyId(
+                                                                returnFaculty
+                                                            )
                                                     //TODO Change to MAP?
                                                     courseChosen.clear()
                                                     courseName.clear()
-                                                    for (course: Courses in courses) {
-                                                        courseName.add(course.courseName)
-                                                        courseChosen.add(course.choosen)
+                                                    if (courses != null) {
+                                                        for (course in courses) {
+                                                            courseName.add(course?.courseName ?: "")
+                                                            courseChosen.add(
+                                                                course?.choosen ?: false
+                                                            )
+                                                        }
                                                     }
                                                     Handler(Looper.getMainLooper()).post(object :
                                                         Runnable {
                                                         override fun run() {
                                                             // schneidet ab dem Leerzeichen ab, da sonst nicht genug platz ist
-                                                            val faculty = faculties[which]?:"No Faculty"//Alexander Lange
+                                                            val faculty = faculties[which]
+                                                                ?: "No Faculty"//Alexander Lange
                                                             if (faculty.contains(" ")) {
                                                                 buttonForSpinner.text =
                                                                     faculty
@@ -415,7 +431,7 @@ class MainActivity() : AppCompatActivity() {
                                 if (oneFavorite) {
                                     // aktualisiere die db
                                     for (i in courseChosen.indices) {
-                                        database.userDao().updateCourse(
+                                        database?.userDao()?.updateCourse(
                                             courseName[i],
                                             courseChosen[i]
                                         )

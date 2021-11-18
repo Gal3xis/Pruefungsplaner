@@ -53,7 +53,7 @@ class AddCourseFragment() : Fragment() {
     var courseName: MutableList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        val database = AppDatabase.getAppDatabase(context)
+        val database = AppDatabase.getAppDatabase(context!!)
         //TODO Change to Coroutine
         Thread(object : Runnable {
             override fun run() {
@@ -62,10 +62,12 @@ class AddCourseFragment() : Fragment() {
                 val faculty = sharedPreferencesFacultyEditor?.getString("returnFaculty", "0")
 
                 // Fülle die Recylcerview
-                val courses = database.userDao().getAllCoursesByFacultyId(faculty)
-                for (cours: Courses in courses) {
-                    courseName.add(cours.courseName)
-                    courseChosen.add(cours.choosen)
+                val courses = database?.userDao()?.getAllCoursesByFacultyId(faculty)
+                if (courses != null) {
+                    for (cours in courses) {
+                        courseName.add(cours?.courseName?:"")
+                        courseChosen.add(cours?.choosen?:false)
+                    }
                 }
                 mAdapter = CheckListAdapter(
                     courseName,
@@ -83,7 +85,7 @@ class AddCourseFragment() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.choose_courses, container, false)
-        val database = AppDatabase.getAppDatabase(context)
+        val database = AppDatabase.getAppDatabase(context!!)
 
         //Komponenten  initialisieren für die Verwendung
         /*TODO Remove recyclerView = v.findViewById<View>(R.id.recyclerViewChecklist) as RecyclerView*/
@@ -120,48 +122,50 @@ class AddCourseFragment() : Fragment() {
                         val examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
                         val currentExamine =
                             mSharedPreferencesValidation?.getString("currentPeriode", "0")
-                        val courses = database.userDao().allCourses
+                        val courses = database?.userDao()?.allCourses
 
                         // aktualsiere die db Einträge
                         val courseIds = JSONArray()
                         var courseName: String
-                        for (course: Courses in courses) {
-                            try {
-                                courseName = course.courseName
-                                if (!course.choosen) {
-                                    // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                                    val toDelete = database?.userDao()
-                                        ?.getEntriesByCourseName(courseName, false)
-                                    database?.userDao()?.deleteEntry(toDelete)
+                        if (courses != null) {
+                            for (course in courses) {
+                                try {
+                                    courseName = course?.courseName?:""
+                                    if (!course?.choosen!!) {
+                                        // lösche nicht die Einträge der gewählten Studiengänge und Favorit
+                                        val toDelete = database?.userDao()
+                                            ?.getEntriesByCourseName(courseName, false)
+                                        database?.userDao()?.deleteEntry(toDelete)
+                                    }
+                                    if (database?.userDao()?.getOneEntryByName(
+                                            courseName,
+                                            false
+                                        ) == null && course.choosen!!
+                                    ) {
+                                        val idJson = JSONObject()
+                                        idJson.put("ID", course.sgid)
+                                        courseIds.put(idJson)
+                                    }
+                                } catch (e: JSONException) {
+                                    e.printStackTrace()
                                 }
-                                if (database?.userDao()?.getOneEntryByName(
-                                        courseName,
-                                        false
-                                    ) == null && course.choosen
-                                ) {
-                                    val idJson = JSONObject()
-                                    idJson.put("ID", course.sgid)
-                                    courseIds.put(idJson)
-                                }
-                            } catch (e: JSONException) {
-                                e.printStackTrace()
                             }
                         }
-                        val retrofit = RetrofitConnect(relativePPlanURL)
+                        val retrofit = RetrofitConnect(relativePPlanURL!!)
                         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
                         if (courseIds.toString().length > 2) {
-                            retrofit.UpdateUnkownCourses<Any>(
-                                context,
-                                database,
-                                examineYear,
-                                currentExamine,
-                                currentDate,
-                                serverAddress,
+                            retrofit.UpdateUnkownCourses(
+                                context!!,
+                                database!!,
+                                examineYear!!,
+                                currentExamine!!,
+                                currentDate!!,
+                                serverAddress!!,
                                 courseIds.toString()
                             )
                         }
                         retrofit.setUserCourses(
-                            context, database,
+                            context!!, database!!,
                             serverAddress
                         )
                         Handler(Looper.getMainLooper()).post(object : Runnable {

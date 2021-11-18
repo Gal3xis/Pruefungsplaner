@@ -163,7 +163,7 @@ class table : AppCompatActivity() {
                     Thread {
                         val validation = examineYear + returnCourse + currentExaminePeriode
                         val rommData = AppDatabase.getAppDatabase(applicationContext)
-                        val ppeList = rommData.userDao().getEntriesByValidation(validation)
+                        val ppeList = rommData?.userDao()?.getEntriesByValidation(validation)
                         Handler(Looper.getMainLooper()).post {
                             header.title = applicationContext.getString(R.string.title_search)
                             recyclerView4.visibility = View.INVISIBLE
@@ -173,7 +173,7 @@ class table : AppCompatActivity() {
 
 
                             //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
-                            if (ppeList.size < 2) {
+                            if (ppeList?.size?:0 < 2) {
                             } else {
                                 ft.replace(R.id.frame_placeholder, searchFragment())
                                 ft.commit()

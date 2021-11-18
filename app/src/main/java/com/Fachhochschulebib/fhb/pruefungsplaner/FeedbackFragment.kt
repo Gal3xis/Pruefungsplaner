@@ -60,17 +60,19 @@ class FeedbackFragment : Fragment() {
             serverAddress = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0")
             relativePPlanURL = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0")
             //retrofit auruf
-            val retrofit = RetrofitConnect(relativePPlanURL)
+            val retrofit = RetrofitConnect(relativePPlanURL?:"")
 
             // Initialisiere die Datenbank
             val datenbank = AppDatabase.getAppDatabase(v.context)
             Thread {
                 // Übergebe die Daten an Retrofit
-                retrofit.sendFeedBack(
-                    v.context, datenbank, serverAddress,
-                    ratingBarUsability.rating, ratingBarFuntions.rating,
-                    ratingBarStability.rating, feedBackInput.text.toString()
-                )
+                if (datenbank != null) {
+                    retrofit.sendFeedBack(
+                        v.context, datenbank, serverAddress,
+                        ratingBarUsability.rating, ratingBarFuntions.rating,
+                        ratingBarStability.rating, feedBackInput.text.toString()
+                    )
+                }
                 Handler(Looper.getMainLooper()).post { // Sende eine Nachricht nachdem senden des Feedbacks
                     Toast.makeText(
                         v.context,

@@ -110,8 +110,8 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
             }
 
             //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context)
-            val selectedEntry = database.userDao().getEntryById(planId[position])
+            val database = AppDatabase.getAppDatabase(context!!)
+            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
             // Überprüfung, ob Prüfitem favorisiert wurde
             //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -120,16 +120,16 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
             Handler(Looper.getMainLooper()).post {
                 if (position >= 0) {
                     val pruefid = planId[position].toInt()
-                    if (Integer.valueOf(selectedEntry.id) == pruefid) {
+                    if (Integer.valueOf(selectedEntry?.id) == pruefid) {
                         // Start Merlin Gürtler
                         // Setze die Farbe des Icons
-                        holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry.color))
+                        holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry?.color))
 
                         //if (eintrag.getStatus().equals("final")) {
                         //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
                         //}
                         // Ende Merlin Gürtler
-                        if (selectedEntry.favorit) {
+                        if (selectedEntry?.favorit == true) {
                             holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))
                             // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                         }
@@ -237,15 +237,15 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
             favcheck = false
 
             //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context)
-            val selectedEntry = database.userDao().getEntryById(planId[position])
+            val database = AppDatabase.getAppDatabase(context!!)
+            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
             //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
             // Toast.LENGTH_SHORT).show();
-            if (selectedEntry.favorit) {
-                database.userDao()
-                    .update(false, planId[position].toInt())
+            if (selectedEntry?.favorit == true) {
+                database?.userDao()
+                    ?.update(false, planId[position].toInt())
             }
             Handler(Looper.getMainLooper()).post {
                 // Start Merlin Gürtler
@@ -269,8 +269,8 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
             favcheck = false
 
             //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context)
-            val selectedEntry = database.userDao().getEntryById(planId[position])
+            val database = AppDatabase.getAppDatabase(context!!)
+            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
             //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
@@ -278,13 +278,13 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
 
             //Speichern des Prüfitem als Favorit
             // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-            if (!selectedEntry.favorit) {
-                database.userDao()
-                    .update(true, planId[position].toInt())
+            if (selectedEntry?.favorit==false) {
+                database?.userDao()
+                    ?.update(true, planId[position].toInt())
             }
             Handler(Looper.getMainLooper()).post {
                 val pruefid = planId[position].toInt()
-                if (Integer.valueOf(selectedEntry.id) == pruefid) {
+                if (Integer.valueOf(selectedEntry?.id) == pruefid) {
                     holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))
                     // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                 }
@@ -365,15 +365,15 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
         favcheck = false
 
         //Datenbank und Pruefplan laden
-        val database = AppDatabase.getAppDatabase(context)
-        val selectedEntry = database.userDao().getEntryById(planId[position])
+        val database = AppDatabase.getAppDatabase(context!!)
+        val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
         //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
         //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
         // Toast.LENGTH_SHORT).show();
 
         // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-        save = selectedEntry.favorit
+        save = selectedEntry?.favorit == true
         return save
     }
 

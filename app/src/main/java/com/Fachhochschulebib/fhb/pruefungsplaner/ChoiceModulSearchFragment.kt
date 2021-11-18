@@ -40,8 +40,8 @@ import kotlinx.android.synthetic.main.wahlmodul.*
 //
 //////////////////////////////
 class ChoiceModulSearchFragment : Fragment() {
-    private val database = AppDatabase.getAppDatabase(context)
-    var ppeList: List<TestPlanEntry>? = null
+    private val database = AppDatabase.getAppDatabase(context!!)
+    var ppeList: List<TestPlanEntry?>? = null
     private var selectedCourseSpinner: String? = null
     private var modulName: String? = null
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,7 +58,7 @@ class ChoiceModulSearchFragment : Fragment() {
         //TODO REMOVEval editChoiceModul = v.findViewById<AutoCompleteTextView>(R.id.wahlModulName)
 
         // Studiengang auswahl
-        val courseArrayList: MutableList<String> = ArrayList()
+        val courseArrayList: MutableList<String?> = ArrayList()
         courseArrayList.add(0, v.context.getString(R.string.all_cours))
 
         // Design für den Spinner
@@ -72,10 +72,10 @@ class ChoiceModulSearchFragment : Fragment() {
         modulName = context?.getString(R.string.all)
         //TODO Change to Coroutine
         Thread {
-            val modulNameArrayList = database.userDao().moduleOrdered
+            val modulNameArrayList:MutableList<String?> = database?.userDao()?.moduleOrdered?.toMutableList()!!
             val adapterModuleAutoComplete =
                 ArrayAdapter(v.context, android.R.layout.simple_list_item_1, modulNameArrayList)
-            courseArrayList.addAll(database.userDao().getChoosenCourse(true))
+            courseArrayList.addAll(database?.userDao()?.getChoosenCourse(true)!!)
             Handler(Looper.getMainLooper()).post {
                 wahlModulName.setAdapter(adapterModuleAutoComplete)
                 // spStudiengang.setAdapter(adapterStudiengang);
@@ -138,14 +138,13 @@ class ChoiceModulSearchFragment : Fragment() {
                             R.string.all
                         )
                     ) {
-                        ppeList = database.userDao()
-                            .getEntriesByModule("%" + modulName?.trim { it <= ' ' } + "%")
+                        ppeList = database?.userDao()?.getEntriesByModule("%" + modulName?.trim { it <= ' ' } + "%")
 
                         // Alles eingegeben
                     } else if (selectedCourseSpinner != context?.getString(R.string.all_cours)
                         && modulName != context?.getString(R.string.all)
                     ) {
-                        ppeList = database.userDao().getEntriesWithCourseAndModule("%" +
+                        ppeList = database?.userDao()?.getEntriesWithCourseAndModule("%" +
                                 modulName?.trim { it <= ' ' } + "%", selectedCourseSpinner)
 
                         // Nur ein Studiengang ausgewählt
@@ -153,14 +152,14 @@ class ChoiceModulSearchFragment : Fragment() {
                         && modulName == context?.getString(R.string.all)
                     ) {
                         ppeList =
-                            database.userDao().getEntriesWithCourseOrdered(selectedCourseSpinner)
+                            database?.userDao()?.getEntriesWithCourseOrdered(selectedCourseSpinner)
                     }
 
 
                     // Setze die gewählten Daten in der DB
-                    database.userDao().searchAndReset(false)
+                    database?.userDao()?.searchAndReset(false)
                     for (entry in ppeList!!) {
-                        database.userDao().update2(true, entry.id.toInt())
+                        database?.userDao()?.update2(true, entry?.id?.toInt()?:0)
                     }
 
                     // Merlin Gürtler

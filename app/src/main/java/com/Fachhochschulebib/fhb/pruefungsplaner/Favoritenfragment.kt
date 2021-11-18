@@ -39,7 +39,7 @@ class Favoritenfragment : Fragment() {
     var check: MutableList<Boolean> = ArrayList()
 
     // Datenbank initialisierung
-    var roomdaten = AppDatabase.getAppDatabase(context)
+    var roomdaten = AppDatabase.getAppDatabase(context!!)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -74,25 +74,27 @@ class Favoritenfragment : Fragment() {
         enableSwipeToDelete()
         //TODO CHANGE TO COROUTINE
         Thread {
-            val ppeList = roomdaten.userDao().getFavorites(true)
+            val ppeList = roomdaten?.userDao()?.getFavorites(true)
 
             // Abfrage ob Prüfungen favorisiert wurden
             // Favorisierte Prüfungen für die Anzeige vorbereiten
-            for (entry in ppeList) {
-                courses.add(
-                    entry.module + " "
-                            + entry.course
-                )
-                profnames.add(
-                    entry.firstExaminer + " "
-                            + entry.secondExaminer + " "
-                            + entry.semester
-                )
-                dates.add(entry.date)
-                examNo.add(entry.id)
-                room.add(entry.room)
-                form.add(entry.examForm)
-                check.add(true)
+            if (ppeList != null) {
+                for (entry in ppeList) {
+                    courses.add(
+                        entry?.module + " "
+                                + entry?.course
+                    )
+                    profnames.add(
+                        entry?.firstExaminer + " "
+                                + entry?.secondExaminer + " "
+                                + entry?.semester
+                    )
+                    dates.add(entry?.date?:"")
+                    examNo.add(entry?.id?:"")
+                    room.add(entry?.room?:"")
+                    form.add(entry?.examForm?:"")
+                    check.add(true)
+                }
             }
 
             // definiere adapter

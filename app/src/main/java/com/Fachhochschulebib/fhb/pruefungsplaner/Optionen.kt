@@ -158,36 +158,38 @@ class Optionen() : Fragment() {
                             response?.put("1")
                             mEditorGoogleCalendar.putString("jsondata2", response.toString())
                             mEditorGoogleCalendar.apply()
-                            val database = AppDatabase.getAppDatabase(context)
-                            val ppeList = database.userDao().getFavorites(true)
+                            val database = AppDatabase.getAppDatabase(context!!)
+                            val ppeList = database?.userDao()?.getFavorites(true)
                             val googlecal = CheckGoogleCalendar()
                             googlecal.setCtx(context)
-                            for (entry: TestPlanEntry in ppeList) {
-                                val id = entry.id
+                            if (ppeList != null) {
+                                for (entry in ppeList) {
+                                    val id = entry?.id
 
-                                //überprüfung von ein/aus Google Kalender
-                                if (googlecal.checkCal(id.toInt())) {
-                                    //ermitteln von benötigten Variablen
-                                    val splitDateAndTime = entry.date.split(" ").toTypedArray()
-                                    val splitDayMonthYear =
-                                        splitDateAndTime[0].split("-").toTypedArray()
-                                    course = entry.course
-                                    course = course + " " + entry.module
-                                    val timeStart = splitDateAndTime[1].substring(0, 2).toInt()
-                                    val timeEnd = splitDateAndTime[1].substring(4, 5).toInt()
-                                    calDate = GregorianCalendar(
-                                        splitDayMonthYear[0].toInt(),
-                                        splitDayMonthYear[1].toInt() - 1,
-                                        splitDayMonthYear[2].toInt(),
-                                        timeStart,
-                                        timeEnd
-                                    )
+                                    //überprüfung von ein/aus Google Kalender
+                                    if (googlecal.checkCal(id?.toInt()?:0)) {
+                                        //ermitteln von benötigten Variablen
+                                        val splitDateAndTime = entry?.date?.split(" ")?.toTypedArray()
+                                        val splitDayMonthYear =
+                                            splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
+                                        course = entry?.course
+                                        course = course + " " + entry?.module
+                                        val timeStart = splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
+                                        val timeEnd = splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
+                                        calDate = GregorianCalendar(
+                                            splitDayMonthYear?.get(0)?.toInt()?:0,
+                                            splitDayMonthYear?.get(1)?.toInt()?:1 - 1,
+                                            splitDayMonthYear?.get(2)?.toInt()?:0,
+                                            timeStart?:0,
+                                            timeEnd?:0
+                                        )
 
-                                    //Methode zum Speichern im Kalender
-                                    val calendarid = calendarID(course)
+                                        //Methode zum Speichern im Kalender
+                                        val calendarid = calendarID(course)
 
-                                    //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                                    googlecal.insertCal(id.toInt(), calendarid)
+                                        //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
+                                        googlecal.insertCal(id?.toInt()?:0, calendarid)
+                                    }
                                 }
                             }
                             if (!isChecked) {
@@ -265,20 +267,22 @@ class Optionen() : Fragment() {
                     override fun run() {
                         val database = AppDatabase.getAppDatabase(v.context)
                         Log.d("Test", "Lokale DB löschen.")
-                        database.userDao().deleteTestPlanEntryAll()
+                        database?.userDao()?.deleteTestPlanEntryAll()
 
                         // Start Merlin Gürtler
 
                         // Update nachdem löschen
-                        val retrofit = RetrofitConnect(relativePPlanURL)
-                        retrofit.RetrofitWebAccess<Any>(
-                            context,
-                            database,
-                            examineYear,
-                            currentExaminePeriod,
-                            currentTermin,
-                            serverAddress
-                        )
+                        val retrofit = RetrofitConnect(relativePPlanURL?:"")
+                        if (database != null) {
+                            retrofit.RetrofitWebAccess(
+                                context!!,
+                                database,
+                                examineYear!!,
+                                currentExaminePeriod!!,
+                                currentTermin!!,
+                                serverAddress!!
+                            )
+                        }
                         // Ende Merlin Gürtler
                         Handler(Looper.getMainLooper()).post(object : Runnable {
                             override fun run() {
@@ -333,11 +337,13 @@ class Optionen() : Fragment() {
                 Thread(object : Runnable {
                     override fun run() {
                         val database = AppDatabase.getAppDatabase(v.context)
-                        val ppeList = database.userDao().getFavorites(true)
-                        for (entry: TestPlanEntry in ppeList) {
-                            Log.d("Test Favoriten löschen.", entry.id.toString())
-                            database.userDao()
-                                .update(false, entry.id.toInt())
+                        val ppeList = database?.userDao()?.getFavorites(true)
+                        if (ppeList != null) {
+                            for (entry in ppeList) {
+                                Log.d("Test Favoriten löschen.", entry?.id?.toString()?:"")
+                                database?.userDao()
+                                    ?.update(false, entry?.id?.toInt()?:0)
+                            }
                         }
                         Handler(Looper.getMainLooper()).post(object : Runnable {
                             override fun run() {
@@ -380,20 +386,20 @@ class Optionen() : Fragment() {
     fun updateCheckPlan() {
         Thread(object : Runnable {
             override fun run() {
-                val database = AppDatabase.getAppDatabase(context)
+                val database = AppDatabase.getAppDatabase(context!!)
 
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
                 //retrofit auruf
-                val retrofit = RetrofitConnect(relativePPlanURL)
+                val retrofit = RetrofitConnect(relativePPlanURL?:"")
                 retrofit.retroUpdate(
-                    context,
-                    database,
-                    examineYear,
-                    currentExaminePeriod,
-                    currentTermin,
+                    context!!,
+                    database!!,
+                    examineYear!!,
+                    currentExaminePeriod!!,
+                    currentTermin!!,
                     serverAddress
                 )
 

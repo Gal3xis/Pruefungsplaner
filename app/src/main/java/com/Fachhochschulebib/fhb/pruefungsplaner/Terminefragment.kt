@@ -102,20 +102,20 @@ class Terminefragment : Fragment() {
         if (ppeList != null) {
             for (entry in ppeList) {
                 moduleAndCourseList.add(
-                    """${entry.module}
-     ${entry.course}"""
+                    """${entry?.module}
+     ${entry?.course}"""
                 )
                 examinerAndSemester.add(
-                    entry.firstExaminer
-                            + " " + entry.secondExaminer
-                            + " " + entry.semester + " "
+                    entry?.firstExaminer
+                            + " " + entry?.secondExaminer
+                            + " " + entry?.semester + " "
                 )
-                dateList.add(entry.date)
-                moduleList.add(entry.module)
-                idList.add(entry.id)
-                formList.add(entry.examForm)
-                roomList.add(entry.room)
-                statusMessage.add(entry.hint)
+                dateList.add(entry?.date?:"")
+                moduleList.add(entry?.module?:"")
+                idList.add(entry?.id?:"")
+                formList.add(entry?.examForm?:"")
+                roomList.add(entry?.room?:"")
+                statusMessage.add(entry?.hint?:"")
                 checkList.add(true)
             }
         } // define an adapter
@@ -150,7 +150,7 @@ class Terminefragment : Fragment() {
         mSharedPreferencesValidation = this@Terminefragment.context
             ?.getSharedPreferences("validation", 0)
         val courseMain = mSharedPreferencesValidation?.getString("selectedCourse", "0")
-        database = AppDatabase.getAppDatabase(this.context)
+        database = AppDatabase.getAppDatabase(this.context!!)
         val globalVariable = this.context?.applicationContext as StartClass
         if (!globalVariable.isShowNoProgressBar || globalVariable.isChangeFaculty) {
             globalVariable.isShowNoProgressBar = true
@@ -176,7 +176,7 @@ class Terminefragment : Fragment() {
             val mSharedPreferencesExamineYear = this@Terminefragment.context
                 ?.getSharedPreferences("examineTermin", 0)
             val currentExamineYear = mSharedPreferencesExamineYear?.getString("currentTermin", "0")
-            val retrofit = RetrofitConnect(relativePPlanURL)
+            val retrofit = RetrofitConnect(relativePPlanURL?:"")
 
             // Thread um die Prüfperiode zu aktualisieren
             //TODO CHANGE TO COROUTINE
@@ -364,21 +364,22 @@ class Terminefragment : Fragment() {
                     || currentExamineYearThread != database?.userDao()?.termin
                 ) {
                     database?.userDao()?.deleteTestPlanEntryAll()
-                    retrofit.RetrofitWebAccess<Any>(
-                        this@Terminefragment.context,
-                        database,
-                        examineYearThread,
-                        currentExaminePeriodThread,
-                        currentExamineYearThread,
-                        serverAddress
+                    retrofit.RetrofitWebAccess(
+                        this@Terminefragment.context!!,
+                        database!!,
+                        examineYearThread!!,
+                        currentExaminePeriodThread!!,
+                        currentExamineYearThread!!,
+                        serverAddress!!
                     )
                     3000
                 } else {
                     retrofit.retroUpdate(
-                        this@Terminefragment.context, database,
-                        examineYearThread,
-                        currentExaminePeriodThread,
-                        currentExamineYearThread,
+                        this@Terminefragment.context!!,
+                        database!!,
+                        examineYearThread!!,
+                        currentExaminePeriodThread!!,
+                        currentExamineYearThread!!,
                         serverAddress
                     )
                     2000
@@ -409,18 +410,18 @@ class Terminefragment : Fragment() {
                 if (courses != null) {
                     for (course in courses) {
                         try {
-                            courseName = course.courseName
-                            if (!course.choosen) {
+                            courseName = course?.courseName?:""
+                            if (course?.choosen==false) {
                                 // lösche nicht die Einträge der gewählten Studiengänge und Favorit
                                 val toDelete =
                                     database?.userDao()?.getEntriesByCourseName(courseName, false)
                                 database?.userDao()?.deleteEntry(toDelete)
                             }
                             if (database?.userDao()
-                                    ?.getOneEntryByName(courseName, false) == null && course.choosen
+                                    ?.getOneEntryByName(courseName, false) == null && course?.choosen == true
                             ) {
                                 val idJson = JSONObject()
-                                idJson.put("ID", course.sgid)
+                                idJson.put("ID", course?.sgid)
                                 courseIds.put(idJson)
                             }
                         } catch (e: JSONException) {
@@ -431,13 +432,13 @@ class Terminefragment : Fragment() {
 
                 // > 2 da auch bei einem leeren Json Array [] gesetzt werden
                 if (courseIds.toString().length > 2) {
-                    retrofit.UpdateUnkownCourses<Any>(
-                        context,
-                        database,
-                        examineYear,
-                        currentExaminePeriod,
-                        currentExamineYear,
-                        serverAddress,
+                    retrofit.UpdateUnkownCourses(
+                        context!!,
+                        database!!,
+                        examineYear!!,
+                        currentExaminePeriod!!,
+                        currentExamineYear!!,
+                        serverAddress!!,
                         courseIds.toString()
                     )
                 }
@@ -617,7 +618,7 @@ class Terminefragment : Fragment() {
                      */caCalender?.setOnDateChangeListener { view, year, month, dayOfMonth ->
                         //TODO CHANGE TO COROUTINE
                         Thread { //Datenbank
-                            val ppeList = database!!.userDao().getEntriesByValidation(validation)
+                            val ppeList = database?.userDao()?.getEntriesByValidation(validation)
 
                             //unnötige Werte entfernen
                             month2 = if (month < 9) {
@@ -633,28 +634,30 @@ class Terminefragment : Fragment() {
                             year2 = year.toString()
                             date = "$year2-$month2-$day2"
                             ClearLists()
-                            for (entry in ppeList) {
-                                val date2 = entry.date.split(" ").toTypedArray()
+                            if (ppeList != null) {
+                                for (entry in ppeList) {
+                                    val date2 = entry?.date?.split(" ")?.toTypedArray()
 
-                                /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
-                                                                            Kalender datum übereinstimmt
-                                                                         */if (date2[0] == date) {
-                                    moduleAndCourseList.add(
-                                        """${entry.module}
- ${entry.course}"""
-                                    )
-                                    examinerAndSemester.add(
-                                        entry.firstExaminer
-                                                + " " + entry.secondExaminer
-                                                + " " + entry.semester + " "
-                                    )
-                                    dateList.add(entry.date)
-                                    moduleList.add(entry.module)
-                                    idList.add(entry.id)
-                                    formList.add(entry.examForm)
-                                    roomList.add(entry.room)
-                                    statusMessage.add(entry.hint)
-                                    checkList.add(true)
+                                    /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
+                                                                                                    Kalender datum übereinstimmt
+                                                                                                 */if (date2?.get(0) ?: 0 == date) {
+                                        moduleAndCourseList.add(
+                                            """${entry?.module}
+                         ${entry?.course}"""
+                                        )
+                                        examinerAndSemester.add(
+                                            entry?.firstExaminer
+                                                    + " " + entry?.secondExaminer
+                                                    + " " + entry?.semester + " "
+                                        )
+                                        dateList.add(entry?.date?:"")
+                                        moduleList.add(entry?.module?:"")
+                                        idList.add(entry?.id?:"")
+                                        formList.add(entry?.examForm?:"")
+                                        roomList.add(entry?.room?:"")
+                                        statusMessage.add(entry?.hint?:"")
+                                        checkList.add(true)
+                                    }
                                 }
                             } // define an adapter
 

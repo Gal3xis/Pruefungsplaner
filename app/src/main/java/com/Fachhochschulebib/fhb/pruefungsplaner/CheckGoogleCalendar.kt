@@ -183,59 +183,62 @@ class CheckGoogleCalendar {
             val element = listOfString[i].split(",").toTypedArray()
             Log.i("userID", Arrays.toString(element))
             Log.i("elemnt[0}", element[0])
-            for (entry in ppeList) {
-                // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
-                // ist die GoogleCalendar Id für den gespeicherten eintrag
-                Log.i("userID2", entry.id)
-                if (entry.id == element[0]) {
-                    //output tag
-                    val DEBUG_TAG = "MyActivity"
-                    //eventID ist die Google calendar Id
-                    val eventID = element[1].toLong()
-                    //Klasse für das updaten von werten
-                    val cr = context?.contentResolver
-                    val values = ContentValues()
-                    var updateUri: Uri
-                    //Datum und Uhrzeit aufteilen.
-                    // Sieht so aus wie 22-01-2019 10:00 Uhr
-                    // es wird nach dem Leerzeichen getrennt
-                    //trennen von datum und Uhrzeit
-                    val s = entry.date.split(" ").toTypedArray()
-                    //print Datum
-                    //aufteilen von tag, monat und jahr.
-                    //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
-                    val ss = s[0].split("-").toTypedArray()
-                    //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
-                    val time1 = s[1].substring(0, 2).toInt()
-                    val time2 = s[1].substring(4, 5).toInt()
-                    // The new title for the updatet event
-                    values.put(CalendarContract.Events.TITLE, entry.module)
-                    values.put(
-                        CalendarContract.Events.EVENT_LOCATION,
-                        "Fachhochschule Bielefeld Update"
-                    )
-                    values.put(CalendarContract.Events.DESCRIPTION, "")
-                    //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
-                    val calDate = GregorianCalendar(
-                        ss[0].toInt(),
-                        ss[1].toInt() - 1, ss[2].toInt(),
-                        time1, time2
-                    )
-                    values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
-                    values.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)
-                    values.put(
-                        CalendarContract.Events.DTEND,
-                        calDate.timeInMillis + 90 * 60000
-                    )
-                    //uebergebeneModule.put(CalendarContract.Events.);
-                    //Checkverbindung Eintrag
-                    val baseUri = Uri.parse("content://com.android.calendar/events")
-                    updateUri = ContentUris.withAppendedId(baseUri, eventID)
-                    //variable zum anzeigen der geänderten werte
-                    val rows = cr?.update(updateUri, values, null, null)
+            if (ppeList != null) {
+                for (entry in ppeList) {
+                    // wenn id  gleich id vom google Calendar dann get element[1] dieser id, element[1]
+                    // ist die GoogleCalendar Id für den gespeicherten eintrag
+                    Log.i("userID2", entry?.id?:"-1")
+                    if (entry?.id == element[0]) {
+                        //output tag
+                        val DEBUG_TAG = "MyActivity"
+                        //eventID ist die Google calendar Id
+                        val eventID = element[1].toLong()
+                        //Klasse für das updaten von werten
+                        val cr = context?.contentResolver
+                        val values = ContentValues()
+                        var updateUri: Uri
+                        //Datum und Uhrzeit aufteilen.
+                        // Sieht so aus wie 22-01-2019 10:00 Uhr
+                        // es wird nach dem Leerzeichen getrennt
+                        //trennen von datum und Uhrzeit
+                        val s = entry.date?.split(" ")?.toTypedArray()
+                        //print Datum
+                        //aufteilen von tag, monat und jahr.
+                        //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
+                        val ss = s?.get(0)?.split("-")?.toTypedArray()
+                        //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
+                        val time1 = s?.get(1)?.substring(0, 2)?.toInt()
+                        val time2 = s?.get(1)?.substring(4, 5)?.toInt()
+                        // The new title for the updatet event
+                        values.put(CalendarContract.Events.TITLE, entry.module)
+                        values.put(
+                            CalendarContract.Events.EVENT_LOCATION,
+                            "Fachhochschule Bielefeld Update"
+                        )
+                        values.put(CalendarContract.Events.DESCRIPTION, "")
+                        //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
+                        val calDate = GregorianCalendar(
+                            ss?.get(0)?.toInt()?:0,
+                            ss?.get(1)?.toInt()?:1 - 1,
+                            ss?.get(2)?.toInt()?:0,
+                            time1?:0, time2?:0
+                        )
+                        values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
+                        values.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)
+                        values.put(
+                            CalendarContract.Events.DTEND,
+                            calDate.timeInMillis + 90 * 60000
+                        )
+                        //uebergebeneModule.put(CalendarContract.Events.);
+                        //Checkverbindung Eintrag
+                        val baseUri = Uri.parse("content://com.android.calendar/events")
+                        updateUri = ContentUris.withAppendedId(baseUri, eventID)
+                        //variable zum anzeigen der geänderten werte
+                        val rows = cr?.update(updateUri, values, null, null)
 
-                    //testausgabe
-                    Log.i(DEBUG_TAG, "Rows updated: 240 $rows")
+                        //testausgabe
+                        Log.i(DEBUG_TAG, "Rows updated: 240 $rows")
+                    }
                 }
             }
         }
@@ -286,18 +289,18 @@ class CheckGoogleCalendar {
         }
     }
 
-    fun getFavoritePruefung(id: String?): TestPlanEntry {
-        val database2 = AppDatabase.getAppDatabase(context)
+    fun getFavoritePruefung(id: String?): TestPlanEntry? {
+        val database2 = AppDatabase.getAppDatabase(context!!)
         // Erhalte die Prüfung die geupdated werden soll
-        return database2.userDao().getEntryById(id)
+        return database2?.userDao()?.getEntryById(id)
     }
 
     // Ende Merlin Gürtler
-    fun databaseConnect(): List<TestPlanEntry> {
-        val database2 = AppDatabase.getAppDatabase(context)
+    fun databaseConnect(): List<TestPlanEntry?>? {
+        val database2 = AppDatabase.getAppDatabase(context!!)
         // Änderun Merlin Gürtler
         // Nicht alle Einträge, um Iterationen zu sparen
-        return database2.userDao().getFavorites(true)
+        return database2?.userDao()?.getFavorites(true)
     }
 
     fun updateCalendarEntry(pruefid: Int) {
@@ -335,17 +338,17 @@ class CheckGoogleCalendar {
                 // Sieht so aus wie 22-01-2019 10:00 Uhr
                 // es wird nach dem Leerzeichen getrennt
                 //trennen von datum und Uhrzeit
-                val s = favoriteExam.date.split(" ").toTypedArray()
+                val s = favoriteExam?.date?.split(" ")?.toTypedArray()
                 //print Datum
                 //aufteilen von tag, monat und jahr.
                 //sieht aus wie 22-01-2019 aufgeteilt in ss[0] =  22 ,ss[1] = 01, ss[2] = 2019
-                val ss = s[0].split("-").toTypedArray()
+                val ss = s?.get(0)?.split("-")?.toTypedArray()
                 //aufteilen von der Uhrzeit Stunden der prüfung und Minuten der prüfung
-                val time1 = s[1].substring(0, 2).toInt()
-                val time2 = s[1].substring(4, 5).toInt()
+                val time1 = s?.get(1)?.substring(0, 2)?.toInt()
+                val time2 = s?.get(1)?.substring(4, 5)?.toInt()
 
                 // The new title for the updatet event
-                values.put(CalendarContract.Events.TITLE, favoriteExam.module)
+                values.put(CalendarContract.Events.TITLE, favoriteExam?.module)
                 values.put(
                     CalendarContract.Events.EVENT_LOCATION,
                     "Fachhochschule Bielefeld"
@@ -353,9 +356,10 @@ class CheckGoogleCalendar {
                 values.put(CalendarContract.Events.DESCRIPTION, "")
                 //umwandeln von Datum und uhrzeit in GregorianCalender für eine leichtere weiterverarbeitung
                 val calDate = GregorianCalendar(
-                    ss[0].toInt(),
-                    ss[1].toInt() - 1, ss[2].toInt(),
-                    time1, time2
+                    ss?.get(0)?.toInt()?:0,
+                    ss?.get(1)?.toInt()?:1 - 1,
+                    ss?.get(2)?.toInt()?:0,
+                    time1?:0, time2?:0
                 )
                 values.put(CalendarContract.EXTRA_EVENT_ALL_DAY, false)
                 values.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)

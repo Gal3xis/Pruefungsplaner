@@ -52,8 +52,8 @@ class searchFragment : Fragment() {
     var returnCourse: String? = null
     var validation: String? = null
     var ppeList: List<TestPlanEntry?> = ArrayList<TestPlanEntry?>()
-    private val database = AppDatabase.getAppDatabase(context)
-    var roomData = AppDatabase.getAppDatabase(context)
+    private val database = AppDatabase.getAppDatabase(context!!)
+    var roomData = AppDatabase.getAppDatabase(context!!)
 
     // Start Merlin Gürtler
     // Funktion um die Führende 0 hinzuzufügen
@@ -118,9 +118,10 @@ class searchFragment : Fragment() {
         val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "0")
 
         // Start Merlin Gürtler
+        //TODO Make Coroutine
         Thread { // Erstelle Validierung und starte DB Abfrage
             validation = examineYear + returnCourse + currentExaminePeriod
-            ppeList = roomData.userDao().getEntriesByValidation(validation)
+            ppeList = roomData?.userDao()?.getEntriesByValidation(validation)!!
             // Ende Merlin Gürtler
 
             //Überprüfung, ob ein Semester-Button geklickt wurde
@@ -176,17 +177,16 @@ class searchFragment : Fragment() {
             Thread {
                 //Spinner-Aufruf und Spinner mit Werten füllen
                 spinnerModuleArrayList.addAll(
-                    roomData.userDao().getModuleWithCourseDistinct(selectedCourse)
+                    (roomData!!.userDao()!!.getModuleWithCourseDistinct(selectedCourse)?:"") as Collection<String>
                 )
                 val spinnerProfArrayList =
-                    roomData.userDao().getFirstExaminerDistinct(selectedCourse)
-
+                    roomData?.userDao()?.getFirstExaminerDistinct(selectedCourse)
 
                 // Für das AutoComplete
                 val adapterProfAutoComplete = ArrayAdapter(
                     v.context,
                     android.R.layout.simple_list_item_1,
-                    spinnerProfArrayList
+                    spinnerProfArrayList?: mutableListOf()
                 )
 
                 //Grafische Ausgabe dropdown
@@ -373,11 +373,11 @@ class searchFragment : Fragment() {
                 Thread {
                     if (dateForSearch != null) {
                         sortedList.clear()
-                        ppeList = roomData.userDao()
-                            .getEntriesByDate(dateForSearch?.substring(0, 10) + "%")
-                        database.userDao().searchAndReset(false)
+                        ppeList = roomData?.userDao()
+                            ?.getEntriesByDate(dateForSearch?.substring(0, 10) + "%")?: mutableListOf()
+                        database?.userDao()?.searchAndReset(false)
                         for (entry in ppeList) {
-                            database.userDao().update2(true, entry?.id?.toInt() ?: -1)
+                            database?.userDao()?.update2(true, entry?.id?.toInt() ?: -1)
                         }
                     } else {
                         if (profName == context!!.getString(R.string.all) && courseModuleList[courseModuleList.size - 1].toString() != context!!.getString(
@@ -385,18 +385,18 @@ class searchFragment : Fragment() {
                             )
                         ) {
                             sortedList.clear()
-                            ppeList = roomData.userDao()
-                                .getEntriesByModule(courseModuleList[courseModuleList.size - 1])
-                            database.userDao().searchAndReset(false)
+                            ppeList = roomData?.userDao()
+                                ?.getEntriesByModule(courseModuleList[courseModuleList.size - 1])?: mutableListOf()
+                            database?.userDao()?.searchAndReset(false)
                             for (entry in ppeList) {
-                                database.userDao().update2(true, entry!!.id.toInt())
+                                database?.userDao()?.update2(true, entry?.id?.toInt()?:0)
                             }
                         } else if (profName != context!!.getString(R.string.all)) {
                             sortedList.clear()
-                            ppeList = roomData.userDao().getEntriesByProf("%" +
-                                    acProfessor.text.toString().trim { it <= ' ' } + "%")
+                            ppeList = roomData?.userDao()?.getEntriesByProf("%" +
+                                    acProfessor.text.toString().trim { it <= ' ' } + "%")?: mutableListOf()
                             for (entry in ppeList) {
-                                database.userDao().update2(true, entry?.id?.toInt() ?: -1)
+                                database?.userDao()?.update2(true, entry?.id?.toInt() ?: -1)
                             }
                         } else {
                             // Ende Merlin Gürtler
@@ -409,15 +409,15 @@ class searchFragment : Fragment() {
                                     a++
                                 }
                             }
-                            database.userDao().searchAndReset(false)
+                            database?.userDao()?.searchAndReset(false)
                             val ppeList = AppDatabase.getAppDatabase(v.context)
-                                .userDao().getEntriesByValidation(validation)
+                                ?.userDao()?.getEntriesByValidation(validation)
                             for (i in tableReturn().indices) {
                                 // Toast.makeText(getContext(),tableReturn().get(i),
                                 // Toast.LENGTH_SHORT).show();
                                 if (tableReturn()[i]?.toInt() != null) {
-                                    database.userDao()
-                                        .update2(true, ppeList[tableReturn()[i]!!.toInt()].id.toInt())
+                                    database?.userDao()
+                                        ?.update2(true, ppeList?.get(tableReturn()[i]?.toInt()?:0)?.id?.toInt()?:0)
                                 }
                             }
                         }

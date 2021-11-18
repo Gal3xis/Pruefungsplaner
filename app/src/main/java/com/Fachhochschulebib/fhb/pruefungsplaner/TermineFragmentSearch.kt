@@ -124,8 +124,8 @@ class TermineFragmentSearch : Fragment() {
                     caCalender.visibility = View.VISIBLE
                     caCalender.setOnDateChangeListener { view, year, month, dayOfMonth ->
                         Thread {
-                            val roomData = AppDatabase.getAppDatabase(context)
-                            val ppeList = roomData.userDao().getAllChoosen(true)
+                            val roomData = AppDatabase.getAppDatabase(context!!)
+                            val ppeList = roomData?.userDao()?.getAllChoosen(true)
                             ClearLists()
 
                             //Creating editor to store uebergebeneModule to shared preferences
@@ -141,25 +141,27 @@ class TermineFragmentSearch : Fragment() {
                             }
                             year2 = year.toString()
                             date = "$year2-$month2-$day2"
-                            for (entry in ppeList) {
-                                val date2 = entry.date.split(" ").toTypedArray()
-                                if (date2[0] == date) {
-                                    moduleAndCourseList.add(
-                                        """${entry.module}
- ${entry.course}"""
-                                    )
-                                    examinerAndSemester.add(
-                                        entry.firstExaminer
-                                                + " " + entry.secondExaminer
-                                                + " " + entry.semester + " "
-                                    )
-                                    dateList.add(entry.date)
-                                    moduleList.add(entry.module)
-                                    idList.add(entry.id)
-                                    formList.add(entry.examForm)
-                                    roomList.add(entry.room)
-                                    statusList.add(entry.hint)
-                                    checkList.add(true)
+                            if (ppeList != null) {
+                                for (entry in ppeList) {
+                                    val date2 = entry?.date?.split(" ")?.toTypedArray()
+                                    if (date2?.get(0) ?: 0 == date) {
+                                        moduleAndCourseList.add(
+                                            """${entry?.module}
+                         ${entry?.course}"""
+                                        )
+                                        examinerAndSemester.add(
+                                            entry?.firstExaminer
+                                                    + " " + entry?.secondExaminer
+                                                    + " " + entry?.semester + " "
+                                        )
+                                        dateList.add(entry?.date?:"")
+                                        moduleList.add(entry?.module?:"")
+                                        idList.add(entry?.id?:"")
+                                        formList.add(entry?.examForm?:"")
+                                        roomList.add(entry?.room?:"")
+                                        statusList.add(entry?.hint?:"")
+                                        checkList.add(true)
+                                    }
                                 }
                             }
                             // define an adapter
@@ -248,37 +250,41 @@ class TermineFragmentSearch : Fragment() {
     fun adapterPassed() {
         //TODO CHANGE TO COROUTINE
         Thread { //Datenbank initialisieren
-            val database = AppDatabase.getAppDatabase(context)
+            val database = AppDatabase.getAppDatabase(context!!)
 
             // Änderung Merlin Gürtler
             // List<Pruefplan> pruefplandaten = datenbank.userDao().getEntriesByValidation(validation);
             // Für die Suche von Modulen
-            val ppeList = database.userDao().getAllChoosen(true)
+            val ppeList = database?.userDao()?.getAllChoosen(true)
             // Ende Änderung Merlin Gürtler
             ClearLists()
-            for (i in ppeList.indices) {
+            for (i in ppeList?.indices!!) {
                 valuesToShowList.add(i)
             }
 
             //Variablen mit Werten aus der lokalen Datenbank füllen
             for (i in valuesToShowList.indices) {
                 moduleAndCourseList.add(
-                    """${ppeList[valuesToShowList[i]].module}
- """ + ppeList[Integer.valueOf(
-                        valuesToShowList[i]
-                    )].course
+                    """${ppeList?.get(valuesToShowList[i])?.module}
+ """ + ppeList?.get(
+     Integer.valueOf(
+         valuesToShowList[i]
+     )
+                    )?.course
                 )
                 examinerAndSemester.add(
-                    ppeList[valuesToShowList[i]].firstExaminer + " " + ppeList[Integer.valueOf(
-                        valuesToShowList[i]
-                    )].secondExaminer + " " + ppeList[Integer.valueOf(valuesToShowList[i])].semester + " "
+                    ppeList?.get(valuesToShowList[i])?.firstExaminer + " " + ppeList?.get(
+                        Integer.valueOf(
+                            valuesToShowList[i]
+                        )
+                    )?.secondExaminer + " " + ppeList?.get(Integer.valueOf(valuesToShowList[i]))?.semester + " "
                 )
-                dateList.add(ppeList[valuesToShowList[i]].date)
-                moduleList.add(ppeList[valuesToShowList[i]].module)
-                idList.add(ppeList[valuesToShowList[i]].id)
-                formList.add(ppeList[valuesToShowList[i]].examForm)
-                roomList.add(ppeList[valuesToShowList[i]].room)
-                statusList.add(ppeList[valuesToShowList[i]].hint)
+                dateList.add(ppeList?.get(valuesToShowList[i])?.date?:"")
+                moduleList.add(ppeList?.get(valuesToShowList[i])?.module?:"")
+                idList.add(ppeList?.get(valuesToShowList[i])?.id?:"")
+                formList.add(ppeList?.get(valuesToShowList[i])?.examForm ?:"")
+                roomList.add(ppeList?.get(valuesToShowList[i])?.room?:"")
+                statusList.add(ppeList?.get(valuesToShowList[i])?.hint?:"")
                 checkList.add(true)
             }
 

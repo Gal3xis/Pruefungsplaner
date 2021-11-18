@@ -197,20 +197,22 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
     private fun deleteItemThread(position: Int) {
         //TODO CHANGE TO COROUTINE
         Thread {
-            val database = AppDatabase.getAppDatabase(context)
-            val ppeList = database.userDao().getFavorites(true)
+            val database = AppDatabase.getAppDatabase(context!!)
+            val ppeList = database?.userDao()?.getFavorites(true)
             // second parameter is necessary ie.,
             // Value to return if this preference does not exist.
-            for (entry in ppeList) {
-                if (entry.id == ppIdList[position]) {
-                    database.userDao()
-                        .update(false, Integer.valueOf(ppIdList[position]))
+            if (ppeList != null) {
+                for (entry in ppeList) {
+                    if (entry?.id == ppIdList[position]) {
+                        database?.userDao()
+                            ?.update(false, Integer.valueOf(ppIdList[position]))
 
-                    //Entferne den Eintrag aus dem Calendar falls vorhanden
-                    val cal = CheckGoogleCalendar()
-                    cal.setCtx(context)
-                    if (!cal.checkCal(ppIdList[position].toInt())) {
-                        cal.deleteEntry(ppIdList[position].toInt())
+                        //Entferne den Eintrag aus dem Calendar falls vorhanden
+                        val cal = CheckGoogleCalendar()
+                        cal.setCtx(context)
+                        if (!cal.checkCal(ppIdList[position].toInt())) {
+                            cal.deleteEntry(ppIdList[position].toInt())
+                        }
                     }
                 }
             }
