@@ -23,6 +23,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,7 +57,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect;
 public class MainActivity extends AppCompatActivity {
     CheckListAdapter mAdapter;
     private RecyclerView recyclerView;
-
     private Button buttonSpinner;
     private Button buttonOk;
     public static String returnCourse = null;
@@ -130,6 +131,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.action_menu,menu);
+        SearchView searchView =(SearchView) menu.findItem(R.id.menu_item_search).getActionView();
+        ImageView searchIcon=
+                searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
+
+        // To change color of close button, use:
+        // ImageView searchCloseIcon = (ImageView)searchView
+        //        .findViewById(androidx.appcompat.R.id.search_close_btn);
+
+        searchIcon.setColorFilter(getResources().getColor(android.R.color.white),
+                android.graphics.PorterDuff.Mode.SRC_IN);
+        System.out.println(searchView);
         return true;
     }
 
@@ -148,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent,0);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         final Context context = getBaseContext();
+
 
         //aufrufen des startlayouts
         setContentView(R.layout.start);

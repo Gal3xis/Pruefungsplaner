@@ -18,11 +18,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -67,7 +72,7 @@ public class table extends AppCompatActivity  {
         // Start Merlin Gürtler
         // registriert die Toolbar
         header = (Toolbar) findViewById(R.id.header);
-        // TODO setSupportActionBar(header);
+        setSupportActionBar(header);
         header.setTitleTextColor(Color.WHITE);
 
         InputMethodManager inputMethodManager =
@@ -395,4 +400,21 @@ public class table extends AppCompatActivity  {
             finish();
         }
     }
+
+    //Start Alexander Lange
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.action_menu,menu);
+
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+
+        return true;
+    }
+
+    //End Alexander Lange
 }

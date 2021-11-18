@@ -48,6 +48,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
+            <!--TODO Change Link Color-->
             <AutoCompleteTextView
                 android:id="@+id/wahlModulName"
                 android:layout_width="match_parent"
@@ -55,7 +56,7 @@
                 android:hint="@string/all"
                 android:singleLine="true"
                 android:textColor="@android:color/white"
-                android:textColorLink="@color/colorPrimary"
+                android:textColorLink="#000"
                 android:textSize="20sp"
                 android:theme="@style/AutoCompleteStyle" />
         </TableRow>

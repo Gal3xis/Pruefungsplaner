@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorOnPrimaryDark" format="reference"/>
+
+    <attr name="colorPrimaryLight" format="reference"/>
+    <attr name="colorOnPrimaryLight" format="reference"/>
+
+    <attr name="colorOnAccent" format="reference"/>
+
+    <attr name="colorPrimaryText" format="reference"/>
+    <attr name="colorSecondaryText" format="reference"/>
+
+    <attr name="colorDivider" format="reference"/>
+
+    <attr name="colorBackground" format="reference"/>
+
+    <attr name="colorChecked" format="reference"/>
+    <attr name="colorUnchecked" format="reference"/>
+</resources>

@@ -36,7 +36,7 @@
                 android:layout_span="1"
                 android:gravity="center_vertical"
                 android:text="@string/choose_module"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorPrimaryText"
                 android:textSize="20sp" />
 
 
@@ -58,7 +58,7 @@
                 android:layout_span="1"
                 android:gravity="center_vertical"
                 android:text="@string/choose_prof"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorPrimaryText"
                 android:textSize="20sp" />
 
             <AutoCompleteTextView
@@ -67,8 +67,8 @@
                 android:layout_span="2"
                 android:hint="@string/all"
                 android:singleLine="true"
-                android:textColor="@android:color/white"
-                android:textColorLink="@color/colorPrimary"
+                android:textColor="?attr/colorPrimaryText"
+                android:textColorLink="?attr/colorAccent"
                 android:textSize="20sp"
                 android:theme="@style/AutoCompleteStyle"
 
@@ -85,7 +85,7 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:text="@string/search_date"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorPrimaryText"
                 android:textSize="20sp" />
 
             <TextView
@@ -93,13 +93,15 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:textSize="20sp"
+                android:textColor="?attr/colorSecondaryText"
                 tools:text="01.01.1970" />
 
             <ImageButton
                 android:layout_height="50dp"
-
                 android:background="@android:color/transparent"
-                android:src="@drawable/ic_calendar" />
+                android:src="@drawable/ic_calendar"
+                android:tint="?attr/colorPrimaryText"
+                />
 
         </TableRow>
 
@@ -112,7 +114,7 @@
                 android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:text="@string/semester_ui"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorPrimaryText"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -133,7 +135,9 @@
 
                     <CheckBox
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?attr/colorPrimaryText"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -150,7 +154,9 @@
 
                     <CheckBox
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?attr/colorPrimaryText"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -167,7 +173,9 @@
 
                     <CheckBox
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?attr/colorPrimaryText"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -184,7 +192,9 @@
 
                     <CheckBox
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?attr/colorPrimaryText"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -201,7 +211,9 @@
 
                     <CheckBox
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?attr/colorPrimaryText"
+                        />
                 </LinearLayout>
 
                 <LinearLayout
@@ -218,7 +230,9 @@
 
                     <CheckBox
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:buttonTint="?attr/colorPrimaryText"
+                        />
                 </LinearLayout>
             </LinearLayout>
 
@@ -234,8 +248,9 @@
                 android:layout_span="3"
                 android:background="@drawable/button_rounded_corners"
                 android:text="@string/activity_suche_searchBtn_text"
-                android:textColor="#ffffff"
-
+                android:backgroundTintMode="src_in"
+                android:backgroundTint="?attr/colorAccent"
+                android:textColor="?attr/colorOnAccent"
                 />
         </TableRow>
 

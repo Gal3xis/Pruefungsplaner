@@ -123,6 +123,22 @@
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
 
+            <Switch
+                android:id="@+id/darkMode"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="2dp"
+                android:layout_weight="1"
+                android:background="@drawable/button_rounded_corners2"
+                android:padding="10dp"
+                android:text="Dark Mode"
+                android:textAppearance="@style/spinnerDropDownItemStyle"
+                android:textAlignment="center"
+                android:textColor="#eeeeee"
+                android:textSize="18sp"/>
+
         </LinearLayout>
 
         <ImageView

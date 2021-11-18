@@ -34,6 +34,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase;
@@ -102,6 +103,21 @@ public class Optionen extends Fragment {
 
 
         });
+
+        //Start Alexander Lange
+        //Dark mode Switch
+        Switch sw_darkMode = v.findViewById(R.id.darkMode);
+        sw_darkMode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    return;
+                }
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
+        });
+        //End Alexander Lange
 
         //layout Komponenten
         Button btnDb = (Button) v.findViewById(R.id.btnDB);
