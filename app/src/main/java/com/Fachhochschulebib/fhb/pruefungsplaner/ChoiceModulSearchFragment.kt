@@ -40,7 +40,7 @@ import kotlinx.android.synthetic.main.wahlmodul.*
 //
 //////////////////////////////
 class ChoiceModulSearchFragment : Fragment() {
-    private val database = AppDatabase.getAppDatabase(context!!)
+    private var database:AppDatabase? = null
     var ppeList: List<TestPlanEntry?>? = null
     private var selectedCourseSpinner: String? = null
     private var modulName: String? = null
@@ -48,23 +48,20 @@ class ChoiceModulSearchFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.wahlmodul, container, false)
-        //TODO REMOVEval spCourse = v.findViewById<Spinner>(R.id.spStudiengang)
-        //Todo removeval searchBtn = v.findViewById<Button>(R.id.BtnOk)
-        //TODO REMOVEval editChoiceModul = v.findViewById<AutoCompleteTextView>(R.id.wahlModulName)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
 
-        // Studiengang auswahl
+        //From onCreateView
+        database = AppDatabase.getAppDatabase(context!!)
+
         val courseArrayList: MutableList<String?> = ArrayList()
-        courseArrayList.add(0, v.context.getString(R.string.all_cours))
+        courseArrayList.add(0, view.context.getString(R.string.all_cours))
 
         // Design für den Spinner
         // Hier schon setzen für ein besseres UI
         val adapterCourse = ArrayAdapter(
-            v.context, R.layout.simple_spinner_item, courseArrayList
+            view.context, R.layout.simple_spinner_item, courseArrayList
         )
         adapterCourse.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spStudiengang.adapter = adapterCourse
@@ -74,7 +71,7 @@ class ChoiceModulSearchFragment : Fragment() {
         Thread {
             val modulNameArrayList:MutableList<String?> = database?.userDao()?.moduleOrdered?.toMutableList()!!
             val adapterModuleAutoComplete =
-                ArrayAdapter(v.context, android.R.layout.simple_list_item_1, modulNameArrayList)
+                ArrayAdapter(view.context, android.R.layout.simple_list_item_1, modulNameArrayList)
             courseArrayList.addAll(database?.userDao()?.getChoosenCourse(true)!!)
             Handler(Looper.getMainLooper()).post {
                 wahlModulName.setAdapter(adapterModuleAutoComplete)
@@ -194,6 +191,19 @@ class ChoiceModulSearchFragment : Fragment() {
                 }
             }.start()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.wahlmodul, container, false)
+        //TODO REMOVEval spCourse = v.findViewById<Spinner>(R.id.spStudiengang)
+        //Todo removeval searchBtn = v.findViewById<Button>(R.id.BtnOk)
+        //TODO REMOVEval editChoiceModul = v.findViewById<AutoCompleteTextView>(R.id.wahlModulName)
+
+        // Studiengang auswahl
+
         return v
     }
 }

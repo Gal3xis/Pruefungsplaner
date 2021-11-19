@@ -63,6 +63,13 @@ class TermineFragmentSearch : Fragment() {
     var mAdapter: MyAdapter? = null
     var valuesToShowList: MutableList<Int> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
         // Start Merlin Gürtler
         // Nun aus Shared Preferences
         mSharedPreferencesValidation = this@TermineFragmentSearch.context
@@ -72,16 +79,8 @@ class TermineFragmentSearch : Fragment() {
         returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
         validation = examineYear + returnCourse + currentExaminePeriod
         // Ende Merlin Gürtler
-        super.onCreate(savedInstanceState)
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.terminefragment, container, false)
-
-
+        //From onCreateView
         //hinzufügen von recycleview
         //TODO REMOVE recyclerView = v.findViewById<View>(R.id.recyclerView4) as RecyclerView
         //TODO REMOVE val currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
@@ -97,7 +96,7 @@ class TermineFragmentSearch : Fragment() {
         recyclerView4.setHasFixedSize(true)
 
         // use a linear layout manager
-        val layoutManager = LinearLayoutManager(v.context)
+        val layoutManager = LinearLayoutManager(view.context)
         recyclerView4.layoutManager = layoutManager
         mLayout = recyclerView4.layoutManager
 
@@ -106,7 +105,7 @@ class TermineFragmentSearch : Fragment() {
         // recyclerView = (RecyclerView) v.findViewById(R.id.recyclerView4);
         // recyclerView.setVisibility(View.VISIBLE);
         //TODO REMOVE calendar = v.findViewById<View>(R.id.caCalender) as CalendarView
-        val btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
+        val btnSearch = view.findViewById<View>(R.id.btnDatum) as Button
         adapterPassed()
         caCalender.visibility = View.GONE
         //btnsuche clicklistener überprüft, ob der "Kalender öffnen" - Button angetippt wurde
@@ -244,6 +243,16 @@ class TermineFragmentSearch : Fragment() {
             }
         })
         // Ende Merlin Gürtler
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.terminefragment, container, false)
+
+
+
         return v
     }
 

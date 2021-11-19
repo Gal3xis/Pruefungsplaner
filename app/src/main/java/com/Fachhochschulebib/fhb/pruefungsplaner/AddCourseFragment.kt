@@ -53,6 +53,12 @@ class AddCourseFragment() : Fragment() {
     var courseName: MutableList<String> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
         val database = AppDatabase.getAppDatabase(context!!)
         //TODO Change to Coroutine
         Thread(object : Runnable {
@@ -77,16 +83,8 @@ class AddCourseFragment() : Fragment() {
                 Handler(Looper.getMainLooper()).post(Runnable { recyclerView?.adapter = mAdapter })
             }
         }).start()
-        super.onCreate(savedInstanceState)
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.choose_courses, container, false)
-        val database = AppDatabase.getAppDatabase(context!!)
-
+        //From onCreateView
         //Komponenten  initialisieren für die Verwendung
         /*TODO Remove recyclerView = v.findViewById<View>(R.id.recyclerViewChecklist) as RecyclerView*/
         recyclerViewChecklist.setHasFixedSize(true)
@@ -184,6 +182,14 @@ class AddCourseFragment() : Fragment() {
                 }).start()
             }
         })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.choose_courses, container, false)
+
         return v
     }
 }

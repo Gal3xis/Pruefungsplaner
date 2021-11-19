@@ -42,48 +42,56 @@ class FeedbackFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.feedback, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
 
+        //From onCreateView
         // Die UI Komponenten
         //TODO REMOVE val ratingBarUsability = v.findViewById<RatingBar>(R.id.ratingBarUsability)
         //TODO REMOVE val ratingBarStability = v.findViewById<RatingBar>(R.id.ratingBarStability)
         //TODO REMOVE val ratingBarFunctions = v.findViewById<RatingBar>(R.id.ratingBarFuntions)
         //TODO REMOVE val feedBackInput = v.findViewById<TextView>(R.id.feedBackInput)
         //TODO REMOVE val buttonSend = v.findViewById<Button>(R.id.buttonSend)
-        buttonSend.setOnClickListener { v ->
+        buttonSend.setOnClickListener { view ->
             val mSharedPreferencesPPServerAdress =
-                v.context.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+                view.context.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
             serverAddress = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0")
             relativePPlanURL = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0")
             //retrofit auruf
             val retrofit = RetrofitConnect(relativePPlanURL?:"")
 
             // Initialisiere die Datenbank
-            val datenbank = AppDatabase.getAppDatabase(v.context)
+            val datenbank = AppDatabase.getAppDatabase(view.context)
             Thread {
                 // Übergebe die Daten an Retrofit
                 if (datenbank != null) {
                     retrofit.sendFeedBack(
-                        v.context, datenbank, serverAddress,
+                        view.context, datenbank, serverAddress,
                         ratingBarUsability.rating, ratingBarFuntions.rating,
                         ratingBarStability.rating, feedBackInput.text.toString()
                     )
                 }
                 Handler(Looper.getMainLooper()).post { // Sende eine Nachricht nachdem senden des Feedbacks
                     Toast.makeText(
-                        v.context,
-                        v.context.getString(R.string.sendedFeedBack),
+                        view.context,
+                        view.context.getString(R.string.sendedFeedBack),
                         Toast.LENGTH_SHORT
                     ).show()
-                    val mainWindow = Intent(v.context, table::class.java)
+                    val mainWindow = Intent(view.context, table::class.java)
                     startActivity(mainWindow)
                 }
             }.start()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.feedback, container, false)
+
+
         return v
     }
 }

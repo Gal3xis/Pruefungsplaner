@@ -53,7 +53,7 @@ class Optionen() : Fragment() {
     var mSharedPreferencesCurrentTermin: SharedPreferences? = null
     private var currentTermin: String? = null
 
-    companion object{
+    companion object {
         val idList: List<String> = ArrayList()
     }
 
@@ -67,22 +67,15 @@ class Optionen() : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
 
-        // Start Merlin Gürtler
-        // Nun aus Shared Preferences
-        val mSharedPreferencesValidation = container?.context?.getSharedPreferences("validation", 0)
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        // Ende Merlin Gürtler
-        val v = inflater.inflate(R.layout.optionfragment, container, false)
+        //From onCreateView
+
 
         //Button zum updaten der Prüfungen
-        val btngo2 = v.findViewById<View>(R.id.btnupdate) as Button
+        val btngo2 = view.findViewById<View>(R.id.btnupdate) as Button
         btngo2.setOnClickListener(View.OnClickListener {
             val validation = examineYear + returnCourse + currentExaminePeriod
             updatePlan(validation)
@@ -96,10 +89,10 @@ class Optionen() : Fragment() {
         //TODO REMOVE val SWgooglecalender = v.findViewById<View>(R.id.switch2) as Switch
         //TODO REMOVE val privacyDeclaration = v.findViewById<View>(R.id.privacyDeclaration) as Button
         //holder.zahl1 = position;
-        val serverAdresse = v.context.getSharedPreferences("json8", 0)
+        val serverAdresse = view.context.getSharedPreferences("json8", 0)
         //Creating editor to store uebergebeneModule to shared preferences
         val mEditorGoogleCalendar = serverAdresse.edit()
-        val mSharedPreferencesPPServerAddress = v.context.getSharedPreferences("Server_Address", 0)
+        val mSharedPreferencesPPServerAddress = view.context.getSharedPreferences("Server_Address", 0)
         //Creating editor to store uebergebeneModule to shared preferences
 
         //------------------------------------------------------------------
@@ -109,7 +102,7 @@ class Optionen() : Fragment() {
         //------------------------------------------------------------------
 
         //----------------------------------------------------------------------------------------
-        val mSharedPreferencesCurrentTermin = v.context
+        val mSharedPreferencesCurrentTermin = view.context
             .getSharedPreferences("examineTermin", 0)
         currentTermin = mSharedPreferencesCurrentTermin.getString("currentTermin", "0")
         //----------------------------------------------------------------------------------------
@@ -167,28 +160,31 @@ class Optionen() : Fragment() {
                                     val id = entry?.id
 
                                     //überprüfung von ein/aus Google Kalender
-                                    if (googlecal.checkCal(id?.toInt()?:0)) {
+                                    if (googlecal.checkCal(id?.toInt() ?: 0)) {
                                         //ermitteln von benötigten Variablen
-                                        val splitDateAndTime = entry?.date?.split(" ")?.toTypedArray()
+                                        val splitDateAndTime =
+                                            entry?.date?.split(" ")?.toTypedArray()
                                         val splitDayMonthYear =
                                             splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
                                         course = entry?.course
                                         course = course + " " + entry?.module
-                                        val timeStart = splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
-                                        val timeEnd = splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
+                                        val timeStart =
+                                            splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
+                                        val timeEnd =
+                                            splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
                                         calDate = GregorianCalendar(
-                                            splitDayMonthYear?.get(0)?.toInt()?:0,
-                                            splitDayMonthYear?.get(1)?.toInt()?:1 - 1,
-                                            splitDayMonthYear?.get(2)?.toInt()?:0,
-                                            timeStart?:0,
-                                            timeEnd?:0
+                                            splitDayMonthYear?.get(0)?.toInt() ?: 0,
+                                            splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
+                                            splitDayMonthYear?.get(2)?.toInt() ?: 0,
+                                            timeStart ?: 0,
+                                            timeEnd ?: 0
                                         )
 
                                         //Methode zum Speichern im Kalender
                                         val calendarid = calendarID(course)
 
                                         //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                                        googlecal.insertCal(id?.toInt()?:0, calendarid)
+                                        googlecal.insertCal(id?.toInt() ?: 0, calendarid)
                                     }
                                 }
                             }
@@ -199,8 +195,8 @@ class Optionen() : Fragment() {
                             Handler(Looper.getMainLooper()).post(object : Runnable {
                                 override fun run() {
                                     Toast.makeText(
-                                        v.context,
-                                        v.context.getString(R.string.add_calendar),
+                                        view.context,
+                                        view.context.getString(R.string.add_calendar),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -272,7 +268,7 @@ class Optionen() : Fragment() {
                         // Start Merlin Gürtler
 
                         // Update nachdem löschen
-                        val retrofit = RetrofitConnect(relativePPlanURL?:"")
+                        val retrofit = RetrofitConnect(relativePPlanURL ?: "")
                         if (database != null) {
                             retrofit.RetrofitWebAccess(
                                 context!!,
@@ -340,9 +336,9 @@ class Optionen() : Fragment() {
                         val ppeList = database?.userDao()?.getFavorites(true)
                         if (ppeList != null) {
                             for (entry in ppeList) {
-                                Log.d("Test Favoriten löschen.", entry?.id?.toString()?:"")
+                                Log.d("Test Favoriten löschen.", entry?.id?.toString() ?: "")
                                 database?.userDao()
-                                    ?.update(false, entry?.id?.toInt()?:0)
+                                    ?.update(false, entry?.id?.toInt() ?: 0)
                             }
                         }
                         Handler(Looper.getMainLooper()).post(object : Runnable {
@@ -359,6 +355,21 @@ class Optionen() : Fragment() {
                 }).start()
             }
         })
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.optionfragment, container, false)
+        // Start Merlin Gürtler
+        // Nun aus Shared Preferences
+        val mSharedPreferencesValidation = container?.context?.getSharedPreferences("validation", 0)
+        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
+        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
+        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
+        // Ende Merlin Gürtler
+
         return v
     }
 
@@ -393,7 +404,7 @@ class Optionen() : Fragment() {
                 //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
                 //retrofit auruf
-                val retrofit = RetrofitConnect(relativePPlanURL?:"")
+                val retrofit = RetrofitConnect(relativePPlanURL ?: "")
                 retrofit.retroUpdate(
                     context!!,
                     database!!,

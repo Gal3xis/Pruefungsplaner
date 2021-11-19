@@ -30,17 +30,25 @@ class PrivacyDeclarationFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.privacy_declaration, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
+
+        //From onCreateView
         //TODO REMOVE val okButton = v.findViewById<Button>(R.id.privacyDeclarationButton)
         privacyDeclarationButton.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
             ft?.replace(R.id.frame_placeholder, Optionen())
             ft?.commit()
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.privacy_declaration, container, false)
+
         return v
     }
 }

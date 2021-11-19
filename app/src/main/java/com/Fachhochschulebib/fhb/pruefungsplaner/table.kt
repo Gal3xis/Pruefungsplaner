@@ -29,6 +29,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.AddCourseFragment
@@ -290,6 +291,7 @@ class table : AppCompatActivity() {
                     recyclerView4?.visibility = View.INVISIBLE
                     caCalender?.visibility = View.GONE
                     btnDatum?.visibility = View.GONE
+
                     ft.replace(R.id.frame_placeholder, searchFragment())
                     //ft.addToBackStack("suche");
                     ft.commit()

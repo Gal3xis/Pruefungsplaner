@@ -39,22 +39,22 @@ class Favoritenfragment : Fragment() {
     var check: MutableList<Boolean> = ArrayList()
 
     // Datenbank initialisierung
-    var roomdaten = AppDatabase.getAppDatabase(context!!)
+    var roomdaten: AppDatabase? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.terminefragment, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
 
+        //From onCreateView
+        roomdaten = AppDatabase.getAppDatabase(context!!)
         //Komponenten  initialisieren für die Verwendung
         //TODO REMOVE recyclerView = v.findViewById<View>(R.id.recyclerView4) as RecyclerView
         recyclerView4?.setHasFixedSize(true)
         //linear layout manager
-        val layoutManager = LinearLayoutManager(v.context)
+        val layoutManager = LinearLayoutManager(view.context)
         recyclerView4?.layoutManager = layoutManager
         //TODO REMOVE val calendar = v.findViewById<View>(R.id.caCalender) as CalendarView
         //TODO REMOVE val btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
@@ -89,10 +89,10 @@ class Favoritenfragment : Fragment() {
                                 + entry?.secondExaminer + " "
                                 + entry?.semester
                     )
-                    dates.add(entry?.date?:"")
-                    examNo.add(entry?.id?:"")
-                    room.add(entry?.room?:"")
-                    form.add(entry?.examForm?:"")
+                    dates.add(entry?.date ?: "")
+                    examNo.add(entry?.id ?: "")
+                    room.add(entry?.room ?: "")
+                    form.add(entry?.examForm ?: "")
                     check.add(true)
                 }
             }
@@ -176,6 +176,15 @@ class Favoritenfragment : Fragment() {
             })
 
         // Ende Merlin Gürtler
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val v = inflater.inflate(R.layout.terminefragment, container, false)
+
+
         return v
     }
 

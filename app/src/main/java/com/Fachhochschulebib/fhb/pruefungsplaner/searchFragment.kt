@@ -50,10 +50,11 @@ class searchFragment : Fragment() {
     var examineYear: String? = null
     var currentExaminePeriod: String? = null
     var returnCourse: String? = null
+    var selectedCourse:String? =null
     var validation: String? = null
     var ppeList: List<TestPlanEntry?> = ArrayList<TestPlanEntry?>()
-    private val database = AppDatabase.getAppDatabase(context!!)
-    var roomData = AppDatabase.getAppDatabase(context!!)
+    private var database:AppDatabase? = null
+    var roomData:AppDatabase? = null
 
     // Start Merlin Gürtler
     // Funktion um die Führende 0 hinzuzufügen
@@ -102,21 +103,12 @@ class searchFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        profName = context!!.getString(R.string.all)
-
-        // Nun aus Shared Preferences
-        // Hole die Werte für die Validierung
-        val mSharedPreferencesValidation =
-            container?.context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "0")
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        //From onCreate
+        database = AppDatabase.getAppDatabase(context!!)
+        roomData = AppDatabase.getAppDatabase(context!!)
+        //From onCreateView
         // Start Merlin Gürtler
         //TODO Make Coroutine
         Thread { // Erstelle Validierung und starte DB Abfrage
@@ -138,7 +130,6 @@ class searchFragment : Fragment() {
                 i++
             }
         }.start()
-        val v = inflater.inflate(R.layout.activity_suche, container, false)
         //setContentView(R.layout.hauptfenster);
         //TODO REMOVE val acProf = v.findViewById<View>(R.id.acProfessor) as AutoCompleteTextView
         //TODO REMOVE val spCourseModule = v.findViewById<View>(R.id.spStudiengang) as Spinner
@@ -169,7 +160,7 @@ class searchFragment : Fragment() {
         // Auswahl Module
         // Hier schon setzen für ein besseres UI
         val adapterModule = ArrayAdapter(
-            v.context, R.layout.simple_spinner_item, spinnerModuleArrayList
+            view.context, R.layout.simple_spinner_item, spinnerModuleArrayList
         )
         spStudiengang.adapter = adapterModule
         try {
@@ -184,7 +175,7 @@ class searchFragment : Fragment() {
 
                 // Für das AutoComplete
                 val adapterProfAutoComplete = ArrayAdapter(
-                    v.context,
+                    view.context,
                     android.R.layout.simple_list_item_1,
                     spinnerProfArrayList?: mutableListOf()
                 )
@@ -209,7 +200,7 @@ class searchFragment : Fragment() {
 
 
             // Start Merlin Gürtler
-            val searchDate = v.findViewById<TextView>(R.id.daySearch)
+            val searchDate = view.findViewById<TextView>(R.id.daySearch)
             searchDate.setOnClickListener {
                 val sharedPrefCurrentPeriode =
                     context?.getSharedPreferences("currentPeriode", Context.MODE_PRIVATE)
@@ -235,21 +226,21 @@ class searchFragment : Fragment() {
 
                 val picker = DatePickerDialog(
                     context!!,
-                R.style.ProgressStyle,
-                DatePickerDialog.OnDateSetListener{
-                 view, year, monthOfYear, dayOfMonth ->
-                searchDate.text = (formatDate(dayOfMonth.toString())
-                            + "." + formatDate(monthOfYear.toString())
-                            + "." + formatDate(year.toString()))
+                    R.style.ProgressStyle,
+                    DatePickerDialog.OnDateSetListener{
+                            view, year, monthOfYear, dayOfMonth ->
+                        searchDate.text = (formatDate(dayOfMonth.toString())
+                                + "." + formatDate(monthOfYear.toString())
+                                + "." + formatDate(year.toString()))
 
-                    // Das Datum für die Abfrage
-                    val selectedDate = Calendar.getInstance()
-                    selectedDate[Calendar.YEAR] = year
-                    selectedDate[Calendar.MONTH] = monthOfYear
-                    selectedDate[Calendar.DAY_OF_MONTH] = dayOfMonth
-                    val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-                    dateForSearch = targetFormat.format(selectedDate.time)
-                }, year?:0, month?:0, day?:0)
+                        // Das Datum für die Abfrage
+                        val selectedDate = Calendar.getInstance()
+                        selectedDate[Calendar.YEAR] = year
+                        selectedDate[Calendar.MONTH] = monthOfYear
+                        selectedDate[Calendar.DAY_OF_MONTH] = dayOfMonth
+                        val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                        dateForSearch = targetFormat.format(selectedDate.time)
+                    }, year?:0, month?:0, day?:0)
                 // Setze das Start- und Enddatum
                 picker.datePicker.minDate = startDateForPicker?.timeInMillis ?: 0
                 picker.datePicker.maxDate = endDateForPicker?.timeInMillis ?: 0
@@ -443,6 +434,26 @@ class searchFragment : Fragment() {
         } catch (e: Exception) {
             Log.d("Fehler sucheFragment", "Fehler beim Ermitteln der Module")
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        profName = context!!.getString(R.string.all)
+
+        // Nun aus Shared Preferences
+        // Hole die Werte für die Validierung
+        val mSharedPreferencesValidation =
+            container?.context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
+        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
+        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
+        selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "0")
+
+
+        val v = inflater.inflate(R.layout.activity_suche, container, false)
+
         return v
     }
 
