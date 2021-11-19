@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Pruefungsplaner</string>
     <string name="server_adress">http://85.214.233.224:8080/</string>
-    <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
+    <string name="server_url">MeinPruefplan/resources/org.fh.ppv.</string>
 
     <!-- Ui -->
     <string name="currentPeriod">Die akutelle Phase konnte nicht geladen werden</string>
