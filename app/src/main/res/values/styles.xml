@@ -48,6 +48,23 @@
         <item name="colorBackground">@color/Theme2.colorBackground</item>
     </style>
 
+    <!-- Alert Dialog -->
+    <style name="AlertDialog.Filter" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <!-- Background Color-->
+        <item name="android:background">?attr/colorPrimary</item>
+        <!-- Text Color for title and message -->
+        <item name="colorOnSurface">?attr/colorOnPrimary</item>
+        <!-- Style for positive button -->
+        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
+        <!-- Style for negative button -->
+    </style>
+
+    <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button">
+        <!-- text color for the button -->
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <!-- Background tint for the button -->
+        <item name="backgroundTint">?attr/colorPrimary</item>
+    </style>
 
     <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
 

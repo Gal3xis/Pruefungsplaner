@@ -1,6 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.Manifest
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
@@ -11,8 +12,6 @@ import android.os.Looper
 import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import org.json.XML
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
@@ -21,7 +20,7 @@ import androidx.core.content.ContextCompat
 import android.content.pm.PackageManager
 import android.os.Handler
 import android.util.Log
-import android.view.View
+import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.termine.*
@@ -133,11 +132,12 @@ class Terminefragment : Fragment() {
         Handler(Looper.getMainLooper()).post { recyclerView4?.adapter = mAdapter }
     }
 
+
+
     // Ende Merlin Gürtler
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
+        setHasOptionsMenu(true)
     }
 
     /*

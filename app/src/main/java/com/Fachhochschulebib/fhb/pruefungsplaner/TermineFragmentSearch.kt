@@ -1,18 +1,17 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.app.AlertDialog
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.recyclerview.widget.RecyclerView
 import android.os.Bundle
 import android.os.Handler
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import android.util.Log
-import android.view.View
+import android.view.*
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
@@ -65,6 +64,30 @@ class TermineFragmentSearch : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.action_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        super.onOptionsItemSelected(item)
+        when(item.itemId)
+        {
+            R.id.menu_item_filter-> OpenFilterMenu()
+        }
+
+        return true
+    }
+
+    private fun OpenFilterMenu() {
+        val view = layoutInflater.inflate(R.layout.layout_dialog_filter,null)
+        val dialog = AlertDialog.Builder(context)
+            .setView(view)
+            .create()
+        dialog.show()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

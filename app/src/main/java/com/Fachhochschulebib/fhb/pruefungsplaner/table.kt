@@ -9,6 +9,8 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.table
 import com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment
@@ -25,9 +27,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Handler
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -38,6 +45,9 @@ import java.lang.Exception
 
 //Alexander Lange Start
 import kotlinx.android.synthetic.main.hauptfenster.*
+import java.text.SimpleDateFormat
+import java.util.*
+
 //Alexander Lange End
 
 //////////////////////////////
@@ -56,6 +66,45 @@ class table : AppCompatActivity() {
     var examineYear: String? = null
     var currentExaminePeriode: String? = null
     var returnCourse: String? = null
+
+    //Start Alexander Lange
+    override fun onCreateOptionsMenu(menu: Menu):Boolean {
+        menuInflater.inflate(R.menu.action_menu, menu);
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return (when(item.itemId) {
+            R.id.menu_item_filter -> {
+                OpenFilterMenu()
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        })
+    }
+
+    private fun OpenFilterMenu() {
+        val view = layoutInflater.inflate(R.layout.layout_dialog_filter,null,false)
+
+        val imgbtn_date = view.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
+        val tv_date = view.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
+
+        val calendar =  Calendar.getInstance()
+        val local = Locale.getDefault()
+        val sdf = SimpleDateFormat("dd.MM.yyyy",local)
+
+        tv_date.text = sdf.format(calendar.time)
+
+        val dialog = AlertDialog.Builder(this,R.style.AlertDialog_Filter)
+            .setTitle("Filter")
+            .setPositiveButton("Ok",null)
+            .setNegativeButton("Cancel",null)
+            .setView(view)
+            .create()
+        dialog.show()
+    }
+    //End Alexander Lange
 
     //Loginhandler login = new Loginhandler();
     //aufruf der starteinstelllungen
