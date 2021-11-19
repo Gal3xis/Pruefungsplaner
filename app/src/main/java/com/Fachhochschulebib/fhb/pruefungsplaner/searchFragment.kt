@@ -144,12 +144,14 @@ class searchFragment : Fragment() {
         //TODO REMOVE val btnSemester6 = v.findViewById<View>(R.id.btns6) as Button
 
         // Start Merlin Gürtler
+        /* TODO Implement Checkboxes
         registerButton(btns1, 1)
         registerButton(btns2, 2)
         registerButton(btns3, 3)
         registerButton(btns4, 4)
         registerButton(btns5, 5)
         registerButton(btns6, 6)
+        */
         // Ende Merlin Gürtler
 
         //Auswahlmöglichkeit "Klicken um Modul zu wählen" hinzufügen

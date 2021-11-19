@@ -80,22 +80,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <Button
-                        android:id="@+id/btnDatum"
-                        android:layout_width="match_parent"
-                        android:layout_height="26dp"
-                        android:background="#50333333"
-                        android:text="@string/open_calendar"
-                        android:textColor="#bbbbbb" />
-
-                    <CalendarView
-                        android:id="@+id/caCalender"
-                        android:layout_width="match_parent"
-                        android:layout_height="292dp"
-
-                        android:background="#dddddd"
-                        android:visibility="visible" />
-
                     <LinearLayout
                         android:id="@+id/linearLayout"
                         android:layout_width="match_parent"

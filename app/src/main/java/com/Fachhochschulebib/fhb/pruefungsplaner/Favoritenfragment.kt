@@ -34,7 +34,6 @@ import kotlinx.android.synthetic.main.terminefragment.*
 //
 //////////////////////////////
 class Favoritenfragment : Fragment() {
-    private var recyclerView: RecyclerView? = null
     var mAdapter: MyAdapterfavorits? = null
     var check: MutableList<Boolean> = ArrayList()
 
@@ -59,15 +58,15 @@ class Favoritenfragment : Fragment() {
         //TODO REMOVE val calendar = v.findViewById<View>(R.id.caCalender) as CalendarView
         //TODO REMOVE val btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
         //TODO REMOVE val currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
-        currentPeriode.visibility = View.INVISIBLE
-        //caCalender.visibility = View.GONE
+        currentPeriode.visibility = View.GONE
+        caCalender.visibility = View.GONE
         val courses: MutableList<String> = ArrayList()
         val profnames: MutableList<String> = ArrayList()
         val dates: MutableList<String> = ArrayList()
         val examNo: MutableList<String> = ArrayList()
         val room: MutableList<String> = ArrayList()
         val form: MutableList<String> = ArrayList()
-        btnDatum.visibility = View.INVISIBLE
+        btnDatum.visibility = View.GONE
 
         // Merlin Gürtler
         // Aktiviert den swipe listener
@@ -100,16 +99,16 @@ class Favoritenfragment : Fragment() {
             // definiere adapter
             // übergabe der variablen an den Recyclerview Adapter, für die darstellung
             mAdapter = MyAdapterfavorits(courses, profnames, dates, examNo, room, form)
-            Handler(Looper.getMainLooper()).post { recyclerView?.adapter = mAdapter }
+            Handler(Looper.getMainLooper()).post { recyclerView4?.adapter = mAdapter }
         }.start()
         //TODO CHECK IF CORRECT
-        recyclerView?.addOnItemTouchListener(
+        recyclerView4?.addOnItemTouchListener(
             RecyclerItemClickListener(activity,
                 object : RecyclerItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
                         //TODO REMOVE val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
                         val viewItem =
-                            recyclerView?.layoutManager?.findViewByPosition(position as Int)
+                            recyclerView4?.layoutManager?.findViewByPosition(position as Int)
                         val layoutinformationen =
                             viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
 
@@ -122,8 +121,8 @@ class Favoritenfragment : Fragment() {
                             } else {
 
                                 // Start Merlin Gürtler
-                                for (i in 0 until recyclerView!!.childCount) {
-                                    val holder = recyclerView!!.layoutManager!!
+                                for (i in 0 until recyclerView4?.childCount!!) {
+                                    val holder = recyclerView4?.layoutManager!!
                                         .findViewByPosition(i)
                                     // Try and Catch, da die App crasht
                                     // wenn das Element nicht im View Port ist
@@ -160,7 +159,7 @@ class Favoritenfragment : Fragment() {
         )
 
         // Start Merlin Gürtler
-        recyclerView?.addOnChildAttachStateChangeListener(
+        recyclerView4?.addOnChildAttachStateChangeListener(
             object :
                 OnChildAttachStateChangeListener {
                 override fun onChildViewAttachedToWindow(view: View) {}
@@ -204,7 +203,7 @@ class Favoritenfragment : Fragment() {
 
             // Setzt den Listener
             val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
-            itemTouchhelper.attachToRecyclerView(recyclerView)
+            itemTouchhelper.attachToRecyclerView(recyclerView4)
         } catch (e: Exception) {
             Log.d("Error", "Orientation error$e")
         }

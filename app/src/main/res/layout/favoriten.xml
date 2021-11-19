@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="1dp"
-    android:background="@drawable/rounded_color_border"
-    android:paddingBottom="2dp">
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp"
+    android:paddingBottom="2dp"
+    android:screenOrientation="portrait"
+    android:layout_marginTop="4dp">
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/linearLayout2"
@@ -24,10 +24,7 @@
             android:layout_marginBottom="0dp"
             android:orientation="horizontal"
             android:paddingBottom="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/firstLine"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/firstLine">
+            android:background="?attr/colorPrimaryLight">
 
             <ImageView
                 android:id="@+id/icon"
@@ -40,7 +37,8 @@
 
             <LinearLayout
                 android:id="@+id/LinearLayout5"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="0.7"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
@@ -56,12 +54,8 @@
                     android:gravity="center_vertical"
                     android:paddingBottom="0dp"
                     android:scrollbars="horizontal|vertical"
-                    android:textColor="#111111"
-                    android:textSize="19sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/secondLine"
-                    app:layout_constraintStart_toStartOf="@+id/secondLine"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:textColor="?attr/colorOnPrimaryLight"
+                    android:textSize="19sp"/>
 
                 <TextView
                     android:id="@+id/secondLine"
@@ -71,18 +65,16 @@
                     android:layout_above="@id/secondLine"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
-                    android:textColor="#111111"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="6dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginBottom="0dp"
                     android:layout_toRightOf="@id/icon"
+                    android:textColor="?attr/colorOnPrimaryLight"
                     android:gravity="center_vertical"
                     android:paddingTop="0dp"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/firstLine" />
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/thirdLine"
@@ -92,18 +84,15 @@
                     android:layout_above="@id/secondLine"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
+                    android:textColor="?attr/colorOnPrimaryLight"
                     android:layout_marginTop="0dp"
                     android:layout_marginEnd="6dp"
                     android:layout_marginRight="0dp"
                     android:layout_marginBottom="0dp"
-                    android:textColor="#111111"
                     android:layout_toRightOf="@id/icon"
                     android:gravity="center_vertical"
                     android:paddingTop="0dp"
-                    android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/firstLine" />
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 
@@ -113,12 +102,10 @@
             android:id="@+id/txtSecondscreen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:background="@drawable/button_rounded_corners"
             android:baselineAligned="false"
-            android:maxHeight="200dp"
             android:padding="5dp"
             android:textColor="#eeeeee"
             android:visibility="gone" />
     </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
