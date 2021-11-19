@@ -7,7 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    tools:openDrawer="start">
+
+    >
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
@@ -25,6 +26,7 @@
                 android:layout_height="47dp"
                 android:background="@drawable/nav_background"
                 app:layout_constraintTop_toTopOf="parent"
+                app:menu="@menu/action_menu"
                 app:navigationIcon="@drawable/ic_baseline_menu"
                 app:title="@string/title_calender" />
 

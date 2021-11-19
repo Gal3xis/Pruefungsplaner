@@ -1,24 +1,24 @@
 <resources>
     <string name="app_name">Pruefungsplaner</string>
     <string name="server_adress">http://85.214.233.224:8080/</string>
-    <string name="server_url">MeinPruefplan/resources/org.fh.ppv.</string>
+    <string name="server_url">PruefplanverwaltungRestIF/resources/org.fh.ppv.</string>
 
     <!-- Ui -->
     <string name="currentPeriod">Die akutelle Phase konnte nicht geladen werden</string>
     <string name="favorite_one_course">Bitte favorisieren Sie mindestens einen Studiengang</string>
     <string name="favorite_main_course">Sie können Ihren Hauptstudiengang nicht abwählen</string>
     <string name="choose_main">Wählen Sie Ihren Hauptstudiengang</string>
-    <string name="choose_module">Modulauswahl (aktueller Prüftermin):</string>
+    <string name="choose_module">Modul:</string>
     <string name="choose_faculty">Fachbereich auswählen</string>
     <string name="choose_course">Wählen Sie Ihre Studiengänge:</string>
     <string name="no_course">Keine Studiengänge vorhanden</string>
-    <string name="choose_course2">Studiengang auswählen:</string>
-    <string name="choose_prof">Prüferauswahl:</string>
+    <string name="choose_course2">Studiengang:</string>
+    <string name="choose_prof">Prüfer:</string>
     <string name="semester_ui">Semester:</string>
     <string name="ok">Ok</string>
     <string name="plan">PRÜFPLAN</string>
     <string name="search">Suche</string>
-    <string name="search_date">Hier klicken um einen Tag zu wählen</string>
+    <string name="search_date">Tag:</string>
     <string name="open_calendar">Kalender öffnen</string>
     <string name="date_ui">Datum</string>
     <string name="server">&#160;&#160;&#160;Serveradresse:</string>
@@ -32,7 +32,7 @@
 
     <!-- Navigation -->
     <string name="title_calender">Termine</string>
-    <string name="title_search">Suche</string>
+    <string name="title_search">Erweiterte Suche</string>
     <string name="title_exam">Prüfungen</string>
     <string name="title_settings">Optionen</string>
     <string name="title_electiveModule">Wahlmodule</string>
@@ -111,4 +111,22 @@
 
         At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
     </string>
+    <string name="action_menu_item_search">Search</string>
+    <string name="action_menu_item_settings">Einstellungen</string>
+    <string name="activity_suche_searchBtn_text">Suchen</string>
+    <string name="wahlmodul_wahlmodul_TV">Wahlmodul:</string>
+
+
+    <string-array name="TestArray">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+        <item>Entry 4</item>
+        <item>Entry 5</item>
+        <item>Entry 6</item>
+        <item>Entry 7</item>
+        <item>Entry 8</item>
+        <item>Entry 9</item>
+        <item>Entry 10</item>
+    </string-array>
 </resources>

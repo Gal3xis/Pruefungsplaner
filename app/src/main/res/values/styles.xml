@@ -1,17 +1,53 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.AppTheme_1" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">#708090</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/Theme1.colorPrimary</item>
+        <item name="colorOnPrimary">@color/Theme1.colorOnPrimary</item>
+
+        <item name="colorPrimaryDark">@color/Theme1.colorPrimaryDark</item>
+        <item name="colorOnPrimaryDark">@color/Theme1.colorOnPrimaryDark</item>
+
+        <item name="colorPrimaryLight">@color/Theme1.colorPrimaryLight</item>
+        <item name="colorOnPrimaryLight">@color/Theme1.colorOnPrimaryLight</item>
+
+        <item name="colorAccent">@color/Theme1.colorAccent</item>
+        <item name="colorOnAccent">@color/Theme1.colorOnAccent</item>
+
+        <item name="colorPrimaryText">@color/Theme1.colorPrimaryText</item>
+        <item name="colorSecondaryText">@color/Theme1.colorSecondaryText</item>
+
+        <item name="colorDivider">@color/Theme1.colorDivider</item>
+
+        <item name="colorBackground">@color/Theme1.colorBackground</item>
+
+        <item name="colorChecked">@color/Theme1.colorPrimary</item>
+        <item name="colorUnchecked">@color/Theme1.colorAccent</item>
     </style>
 
-    <style name="AppTheme.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
+    <style name="Theme.AppTheme_2" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/Theme2.colorPrimary</item>
+        <item name="colorOnPrimary">@color/Theme2.colorOnPrimary</item>
+
+        <item name="colorPrimaryDark">@color/Theme2.colorPrimaryDark</item>
+        <item name="colorOnPrimaryDark">@color/Theme2.colorOnPrimaryDark</item>
+
+        <item name="colorPrimaryLight">@color/Theme2.colorPrimaryLight</item>
+        <item name="colorOnPrimaryLight">@color/Theme2.colorOnPrimaryLight</item>
+
+        <item name="colorAccent">@color/Theme2.colorAccent</item>
+        <item name="colorOnAccent">@color/Theme2.colorOnAccent</item>
+
+        <item name="colorPrimaryText">@color/Theme2.colorPrimaryText</item>
+        <item name="colorSecondaryText">@color/Theme2.colorSecondaryText</item>
+
+        <item name="colorDivider">@color/Theme2.colorDivider</item>
+
+        <item name="colorBackground">@color/Theme2.colorBackground</item>
     </style>
+
 
     <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
 
@@ -26,17 +62,15 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ProgressStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">@color/Theme1.colorPrimary</item>
     </style>
 
     <style name="AutoCompleteStyle">
-        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorAccent">@color/Theme1.colorPrimary</item>
     </style>
 
-    <style
-        parent="@android:style/Theme.Dialog"
-        name="customAlertDialog">
-        <item name="android:background">@color/colorAppTheme</item>
+    <style name="customAlertDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:background">@color/Theme1.colorBackground</item>
         <item name="textColorAlertDialogListItem">@android:color/white</item>
         <item name="android:textSize">20dp</item>
         <item name="android:windowNoTitle">true</item>

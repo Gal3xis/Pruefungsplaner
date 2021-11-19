@@ -4,21 +4,21 @@
     <color name="Theme1.colorPrimary">#009688</color>
     <color name="Theme1.colorOnPrimary">#fff</color>
 
-    <color name="Theme1.colorPrimaryDark">#00796B</color>
+    <color name="Theme1.colorPrimaryDark">#1E4945</color>
     <color name="Theme1.colorOnPrimaryDark">#fff</color>
 
-    <color name="Theme1.colorPrimaryLight">#B2DFDB</color>
+    <color name="Theme1.colorPrimaryLight">#00796B</color>
     <color name="Theme1.colorOnPrimaryLight">#000</color>
 
     <color name="Theme1.colorAccent">#00BCD4</color>
     <color name="Theme1.colorOnAccent">#FFFFFF</color>
 
-    <color name="Theme1.colorPrimaryText">#212121</color>
-    <color name="Theme1.colorSecondaryText">#757575</color>
+    <color name="Theme1.colorPrimaryText">#fff</color>
+    <color name="Theme1.colorSecondaryText">#666</color>
 
     <color name="Theme1.colorDivider">#BDBDBD</color>
 
-    <color name="Theme1.colorBackground">#fff</color>
+    <color name="Theme1.colorBackground">#333</color>
 
     <!-- Theme 2 -->
     <color name="Theme2.colorPrimary">#F44336</color>
@@ -33,10 +33,10 @@
     <color name="Theme2.colorAccent">#FF9800</color>
     <color name="Theme2.colorOnAccent">#000</color>
 
-    <color name="Theme2.colorPrimaryText">#212121</color>
-    <color name="Theme2.colorSecondaryText">#757575</color>
+    <color name="Theme2.colorPrimaryText">#fff</color>
+    <color name="Theme2.colorSecondaryText">#666</color>
 
     <color name="Theme2.colorDivider">#BDBDBD</color>
 
-    <color name="Theme2.colorBackground">#fff</color>
+    <color name="Theme2.colorBackground">#333</color>
 </resources>
