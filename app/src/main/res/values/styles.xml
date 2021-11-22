@@ -87,8 +87,8 @@
     </style>
 
     <style name="customAlertDialog" parent="@android:style/Theme.Dialog">
-        <item name="android:background">@color/Theme1.colorBackground</item>
-        <item name="textColorAlertDialogListItem">@android:color/white</item>
+        <item name="android:background">?attr/colorPrimaryDark</item>
+        <item name="textColorAlertDialogListItem">?attr/colorOnPrimaryDark</item>
         <item name="android:textSize">20dp</item>
         <item name="android:windowNoTitle">true</item>
     </style>

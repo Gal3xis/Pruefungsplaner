@@ -59,14 +59,13 @@ class Favoritenfragment : Fragment() {
         //TODO REMOVE val btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
         //TODO REMOVE val currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
         currentPeriode.visibility = View.GONE
-        caCalender.visibility = View.GONE
+
         val courses: MutableList<String> = ArrayList()
         val profnames: MutableList<String> = ArrayList()
         val dates: MutableList<String> = ArrayList()
         val examNo: MutableList<String> = ArrayList()
         val room: MutableList<String> = ArrayList()
         val form: MutableList<String> = ArrayList()
-        btnDatum.visibility = View.GONE
 
         // Merlin Gürtler
         // Aktiviert den swipe listener

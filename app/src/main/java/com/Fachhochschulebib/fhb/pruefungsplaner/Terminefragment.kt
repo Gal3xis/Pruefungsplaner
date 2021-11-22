@@ -607,92 +607,9 @@ class Terminefragment : Fragment() {
         //initialisieren der UI-Komponenten
         //TODO REMOVE calendar = v.findViewById<View>(R.id.caCalender) as CalendarView
         //TODO REMOVE btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
-        caCalender?.visibility = View.GONE
 
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
-        btnDatum?.setOnClickListener(object : View.OnClickListener {
-            var save = true
-            override fun onClick(v: View) {
-                if (!save) {
-                    caCalender?.visibility = View.GONE
-                    AdapterPassed()
-                    save = true
-                } else {
-                    //Kalender wurde eingeschalet
-                    caCalender?.visibility = View.VISIBLE
-
-                    /*  Es werden durch setOnDateChangeListener nur Prüfungen
-                        mit dem ausgewählten Datum angezeigt
-                     */caCalender?.setOnDateChangeListener { view, year, month, dayOfMonth ->
-                        //TODO CHANGE TO COROUTINE
-                        Thread { //Datenbank
-                            val ppeList = database?.userDao()?.getEntriesByValidation(validation)
-
-                            //unnötige Werte entfernen
-                            month2 = if (month < 9) {
-                                "0" + (month + 1).toString()
-                            } else {
-                                (month + 1).toString()
-                            }
-                            day2 = if (dayOfMonth < 10) {
-                                "0$dayOfMonth"
-                            } else {
-                                dayOfMonth.toString()
-                            }
-                            year2 = year.toString()
-                            date = "$year2-$month2-$day2"
-                            ClearLists()
-                            if (ppeList != null) {
-                                for (entry in ppeList) {
-                                    val date2 = entry?.date?.split(" ")?.toTypedArray()
-
-                                    /*  Überprüfung ob das Prüfitem Datum mit dem ausgewählten
-                                                                                                    Kalender datum übereinstimmt
-                                                                                                 */if (date2?.get(0) ?: 0 == date) {
-                                        moduleAndCourseList.add(
-                                            """${entry?.module}
-                         ${entry?.course}"""
-                                        )
-                                        examinerAndSemester.add(
-                                            entry?.firstExaminer
-                                                    + " " + entry?.secondExaminer
-                                                    + " " + entry?.semester + " "
-                                        )
-                                        dateList.add(entry?.date?:"")
-                                        moduleList.add(entry?.module?:"")
-                                        idList.add(entry?.id?:"")
-                                        formList.add(entry?.examForm?:"")
-                                        roomList.add(entry?.room?:"")
-                                        statusMessage.add(entry?.hint?:"")
-                                        checkList.add(true)
-                                    }
-                                }
-                            } // define an adapter
-
-                            //Adapter mit Werten füllen
-                            mAdapter = MyAdapter(
-                                moduleAndCourseList,
-                                examinerAndSemester,
-                                dateList,
-                                moduleList,
-                                idList,
-                                formList,
-                                mLayout,
-                                roomList,
-                                statusMessage
-                            )
-                            //Anzeigen
-                            Handler(Looper.getMainLooper()).post {
-                                recyclerView4?.adapter = mAdapter
-                            }
-                        }.start()
-                    }
-                    save = false
-                }
-            }
-        })
-
     }
 
     fun AdapterPassed() {

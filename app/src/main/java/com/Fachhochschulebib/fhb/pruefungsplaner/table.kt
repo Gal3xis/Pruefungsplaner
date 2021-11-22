@@ -1,50 +1,29 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
-import android.widget.CalendarView
-import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.navigation.NavigationView
 import android.content.SharedPreferences
 import android.os.Bundle
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import android.app.Activity
 import android.app.AlertDialog
-import android.content.DialogInterface
+import android.content.Context
 import androidx.core.view.GravityCompat
-import com.Fachhochschulebib.fhb.pruefungsplaner.table
-import com.Fachhochschulebib.fhb.pruefungsplaner.Terminefragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import android.os.Looper
-import com.Fachhochschulebib.fhb.pruefungsplaner.searchFragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.Favoritenfragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen
-import com.Fachhochschulebib.fhb.pruefungsplaner.ChoiceModulSearchFragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.FeedbackFragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.StartClass
 import android.content.Intent
 import android.graphics.Color
 import android.os.Handler
 import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
-import com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity
-import com.Fachhochschulebib.fhb.pruefungsplaner.AddCourseFragment
+import android.widget.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.lang.Exception
 
 //Alexander Lange Start
 import kotlinx.android.synthetic.main.hauptfenster.*
+import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,13 +47,13 @@ class table : AppCompatActivity() {
     var returnCourse: String? = null
 
     //Start Alexander Lange
-    override fun onCreateOptionsMenu(menu: Menu):Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.action_menu, menu);
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return (when(item.itemId) {
+        return (when (item.itemId) {
             R.id.menu_item_filter -> {
                 OpenFilterMenu()
                 true
@@ -84,34 +63,292 @@ class table : AppCompatActivity() {
         })
     }
 
-    private fun OpenFilterMenu() {
-        val view = layoutInflater.inflate(R.layout.layout_dialog_filter,null,false)
+    private object Filter {
+        var modulName: String? = null
+            set(value) {
+                field = value
+                modulNameChanged()
+            }
+        var courseName: String? = null
+            set(value) {
+                field = value
+                courseNameChanged()
+            }
 
+        var facultyId: String? = null
+            set(value) {
+                field = value
+                facultyIdChanged()
+            }
+
+        var datum: Date? = null
+            set(value) {
+                field = value
+                dateChanged()
+            }
+
+        private fun modulNameChanged() {
+            Log.d("Filter","Modul changed")
+            for (i in onModulNameChangedListener) {
+                i.invoke()
+            }
+        }
+
+        private fun courseNameChanged() {
+            Log.d("Filter","Course changed")
+            for (i in onCourseNameChangedListener) {
+                i.invoke()
+            }
+        }
+
+        private fun facultyIdChanged() {
+            Log.d("Filter","Faculty changed")
+            for (i in onFacultyIdChangedListener) {
+                i.invoke()
+            }
+        }
+
+        private fun dateChanged() {
+            for (i in onDateChangedListener) {
+                i.invoke()
+            }
+        }
+
+        var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
+        var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
+        var onFacultyIdChangedListener: MutableList<() -> Unit> = mutableListOf()
+        var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
+    }
+
+    private fun UpdateCourseFilter(context: Context, sp_course: Spinner) {
+        try {
+            var sp_course_adapter: ArrayAdapter<String>? = null
+            Thread(object : Runnable {
+                override fun run() {
+                    val list: MutableList<String?>? =
+                        mutableListOf<String?>("Alle")//TODO extract String
+                    val database = AppDatabase.getAppDatabase(context)
+                    if (list != null) {
+                        val courses =
+                            database?.userDao()?.getAllCoursesByFacultyId(Filter.facultyId)
+                        if (courses != null) {
+                            for (course in courses) {
+                                list.add(course?.courseName)
+                            }
+                        }
+                    }
+                    if (list?.size ?: 0 > 0) {
+                        sp_course_adapter = ArrayAdapter<String>(
+                            context,
+                            android.R.layout.simple_spinner_dropdown_item,
+                            list!!
+                        )
+                    }
+                    Handler(Looper.getMainLooper()).post {
+                        sp_course.adapter = sp_course_adapter
+                    }
+                }
+            }).start()
+        } catch (ex: Exception) {
+            System.err.println(ex.stackTrace)
+        }
+    }
+
+    private fun UpdateFacultyFilter(context: Context, sp_faculty: Spinner) {
+        try {
+            var sp_faculty_adapter: ArrayAdapter<String>? = null
+            Thread(object : Runnable {
+                override fun run() {
+                    val list = mutableListOf<String?>("Alle")//TODO extract String
+                    val sharedPrefsFaculty: SharedPreferences =
+                        context.getSharedPreferences("faculty", Context.MODE_PRIVATE)
+                    val strFacultys = sharedPrefsFaculty.getString("faculty", "0")
+                    if (strFacultys != null) {
+                        try {
+                            val jsonArrayFacultys: JSONArray? = JSONArray(strFacultys)
+                            var i: Int = 0
+                            while (i < jsonArrayFacultys?.length() ?: 0) {
+                                val json: JSONObject? = jsonArrayFacultys?.getJSONObject(i)
+                                list.add(json?.get("facName").toString())
+                                i++
+                            }
+                            sp_faculty_adapter = ArrayAdapter<String>(
+                                context,
+                                android.R.layout.simple_spinner_dropdown_item,
+                                list
+                            )
+                        } catch (b: Exception) {
+                            Log.d(
+                                "uebergabeAnSpinner",
+                                "Fehler beim Parsen des Fakultätsnamen."
+                            )
+                        }
+                    }
+                    Handler(Looper.getMainLooper()).post {
+                        sp_faculty.adapter = sp_faculty_adapter
+                    }
+                }
+            }).start()
+        } catch (ex: Exception) {
+            System.err.println(ex.stackTrace)
+        }
+    }
+
+    private fun UpdateModulFilter(context: Context, sp_modul: Spinner) {
+        try {
+            var sp_modul_adapter: ArrayAdapter<String>? = null
+            Thread(object : Runnable {
+                override fun run() {
+                    val database = AppDatabase.getAppDatabase(context)
+                    val list: MutableList<String?> = mutableListOf("Alle")
+                    val modules = database?.userDao()?.getEntriesByCourseName(Filter.courseName)
+                    if(modules!=null){
+                        for (i in modules){
+                            list.add(i?.module)
+                        }
+                    }
+                    if (list.size > 0) {
+                        sp_modul_adapter = ArrayAdapter<String>(
+                            context,
+                            android.R.layout.simple_spinner_dropdown_item,
+                            list
+                        )
+                    }
+
+                    Handler(Looper.getMainLooper()).post(object : Runnable {
+                        override fun run() {
+                            sp_modul.adapter = sp_modul_adapter
+
+                        }
+                    })
+                }
+            }).start()
+        } catch (ex: Exception) {
+            Log.e("UpdateModuleFilter",ex.stackTraceToString())
+        }
+    }
+
+    private fun OpenFilterMenu() {
+        val view = layoutInflater.inflate(R.layout.layout_dialog_filter, null, false)
+        val context = this
+
+        //View-Components
         val imgbtn_date = view.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
         val tv_date = view.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
+        val sp_modul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
+        val sp_course = view.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
+        val sp_faculty = view.findViewById<Spinner>(R.id.layout_dialog_filter_faculty_sp)
 
-        val calendar =  Calendar.getInstance()
+        Filter.onFacultyIdChangedListener.add { UpdateCourseFilter(context, sp_course) }
+        Filter.onCourseNameChangedListener.add { UpdateModulFilter(context, sp_modul) }
+
+        sp_faculty.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
+                Log.d("sp_studiengang", "Selected new item")
+                val sharedPrefsFaculty: SharedPreferences =
+                    context.getSharedPreferences("faculty", Context.MODE_PRIVATE)
+                val strFacultys = sharedPrefsFaculty.getString("faculty", "0")
+                if (strFacultys != null) {
+                    try {
+                        val jsonArrayFacultys: JSONArray? = JSONArray(strFacultys)
+                        for (i in 0 until (jsonArrayFacultys?.length() ?: 0)) {
+                            val json = jsonArrayFacultys?.getJSONObject(i)
+                            val facName = json?.get("facName").toString()
+                            val selectedFaculty =sp_faculty.selectedItem.toString()
+                            if (facName.equals(selectedFaculty)) {
+                                Filter.facultyId = json?.get("fbid").toString()
+                                break
+                            }
+                        }
+                    } catch (b: Exception) {
+                        Log.d(
+                            "uebergabeAnSpinner",
+                            "Fehler beim Parsen des Fakultätsnamen."
+                        )
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                Log.d("sp_studiengang", "Nothing selected")
+            }
+        }
+
+        sp_course.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                try {
+                    Thread(object:Runnable{
+                        override fun run() {
+                            val database = AppDatabase.getAppDatabase(context)
+                            val selectedCourse = sp_course.selectedItem.toString()
+                            Filter.courseName = selectedCourse
+                        }
+                    }).start()
+
+                } catch (ex: Exception) {
+                    Log.e("UpdateCourseFilter",ex.stackTraceToString())
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Filter.courseName = null
+            }
+        }
+
+        sp_modul.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                Filter.modulName = sp_modul.selectedItem.toString()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Filter.modulName = null
+            }
+        }
+
+        UpdateModulFilter(context, sp_modul)
+        UpdateCourseFilter(context, sp_course)
+        UpdateFacultyFilter(context, sp_faculty)
+
+        //Time Management
+        val calendar = Calendar.getInstance()
         val local = Locale.getDefault()
-        val sdf = SimpleDateFormat("dd.MM.yyyy",local)
+        val sdf = SimpleDateFormat("dd.MM.yyyy", local)
 
         tv_date.text = sdf.format(calendar.time)
 
-        val dialog = AlertDialog.Builder(this,R.style.AlertDialog_Filter)
+        val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
             .setTitle("Filter")
-            .setPositiveButton("Ok",null)
-            .setNegativeButton("Cancel",null)
+            .setPositiveButton("Ok", null)
+            .setNegativeButton("Cancel", null)
             .setView(view)
             .create()
         dialog.show()
     }
-    //End Alexander Lange
+
+//End Alexander Lange
 
     //Loginhandler login = new Loginhandler();
-    //aufruf der starteinstelllungen
+//aufruf der starteinstelllungen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.hauptfenster)
-        Log.d("table","Test") //TODO REMOVE
+        Log.d("table", "Test") //TODO REMOVE
         // Start Merlin Gürtler
         // registriert die Toolbar
         setSupportActionBar(header)
@@ -140,7 +377,8 @@ class table : AppCompatActivity() {
         // Nun aus Shared Preferences
         val mSharedPreferencesValidation = getSharedPreferences("validation", 0)
         examineYear = mSharedPreferencesValidation.getString("examineYear", "0")
-        currentExaminePeriode = mSharedPreferencesValidation.getString("currentPeriode", "0")
+        currentExaminePeriode =
+            mSharedPreferencesValidation.getString("currentPeriode", "0")
         returnCourse = mSharedPreferencesValidation.getString("returnCourse", "0")
         // Ende Merlin Gürtler
 
@@ -182,7 +420,7 @@ class table : AppCompatActivity() {
 
 
         //Drawer Navigation Menü mit den Menüpunkten
-        nav_view.setNavigationItemSelectedListener{ item ->
+        nav_view.setNavigationItemSelectedListener { item ->
             // Merlin Gürtler schließe die Tastatur falls offen
             try {
                 inputMethodManager.hideSoftInputFromWindow(
@@ -213,9 +451,11 @@ class table : AppCompatActivity() {
                     Thread {
                         val validation = examineYear + returnCourse + currentExaminePeriode
                         val rommData = AppDatabase.getAppDatabase(applicationContext)
-                        val ppeList = rommData?.userDao()?.getEntriesByValidation(validation)
+                        val ppeList =
+                            rommData?.userDao()?.getEntriesByValidation(validation)
                         Handler(Looper.getMainLooper()).post {
-                            header?.title = applicationContext.getString(R.string.title_search)
+                            header?.title =
+                                applicationContext.getString(R.string.title_search)
                             recyclerView4?.visibility = View.INVISIBLE
                             //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                             //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -223,7 +463,7 @@ class table : AppCompatActivity() {
 
 
                             //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
-                            if (ppeList?.size?:0 < 2) {
+                            if (ppeList?.size ?: 0 < 2) {
                             } else {
                                 ft.replace(R.id.frame_placeholder, searchFragment())
                                 ft.commit()
@@ -253,7 +493,8 @@ class table : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_electiveModule -> {
-                    header?.title = applicationContext.getString(R.string.title_electiveModule)
+                    header?.title =
+                        applicationContext.getString(R.string.title_electiveModule)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -273,7 +514,8 @@ class table : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_changeFaculty -> {
-                    header?.title = applicationContext.getString(R.string.title_changeFaculty)
+                    header?.title =
+                        applicationContext.getString(R.string.title_changeFaculty)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -286,7 +528,8 @@ class table : AppCompatActivity() {
                     true
                 }
                 R.id.navigation_addCourse -> {
-                    header?.title = applicationContext.getString(R.string.title_changeCourse)
+                    header?.title =
+                        applicationContext.getString(R.string.title_changeCourse)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -309,7 +552,8 @@ class table : AppCompatActivity() {
     }
 
     //navigation mit den menuepunkten Bottom
-    private val mOnNavigationItemSelectedListener =
+    private
+    val mOnNavigationItemSelectedListener =
         BottomNavigationView.OnNavigationItemSelectedListener { item -> // Merlin Gürtler schließe die Tastatur falls offen
             val inputMethodManager = baseContext.getSystemService(
                 INPUT_METHOD_SERVICE
@@ -325,7 +569,8 @@ class table : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_calender -> {
                     //fragment fuer das "terminefragment" layout
-                    header?.title = applicationContext.getString(R.string.title_calender)
+                    header?.title =
+                        applicationContext.getString(R.string.title_calender)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -337,7 +582,8 @@ class table : AppCompatActivity() {
                 //TODO Remove
                 R.id.navigation_medication -> {
                     //fragment fuer das "activity_suche" layout
-                    header?.title = applicationContext.getString(R.string.title_search)
+                    header?.title =
+                        applicationContext.getString(R.string.title_search)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -349,7 +595,8 @@ class table : AppCompatActivity() {
                 }
                 R.id.navigation_diary -> {
                     //fragment fuer das "favoriten" layout
-                    header?.title = applicationContext.getString(R.string.title_exam)
+                    header?.title =
+                        applicationContext.getString(R.string.title_exam)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -360,7 +607,8 @@ class table : AppCompatActivity() {
                 }
                 R.id.navigation_settings -> {
                     //fragment fuer das "Optionen" layout
-                    header?.title = applicationContext.getString(R.string.title_settings)
+                    header?.title =
+                        applicationContext.getString(R.string.title_settings)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
@@ -370,7 +618,8 @@ class table : AppCompatActivity() {
                     return@OnNavigationItemSelectedListener true
                 }
                 R.id.navigation_electiveModule -> {
-                    header?.title = applicationContext.getString(R.string.title_electiveModule)
+                    header?.title =
+                        applicationContext.getString(R.string.title_electiveModule)
                     recyclerView4?.visibility = View.INVISIBLE
                     //TODO Check if needed or remove:caCalender?.visibility = View.GONE
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE

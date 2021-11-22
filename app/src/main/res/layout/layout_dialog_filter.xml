@@ -1,41 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    tools:background="?attr/colorPrimary"
+    android:padding="20dp"
     >
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
         <TableLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+
+            <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/layout_dialogue_filter_modul_tv"
+                android:textSize="20sp"
+                android:textColor="?attr/colorOnPrimary"
+                />
+
+                <Spinner
+                    android:id="@+id/layout_dialog_filter_modul_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </TableRow>
+            <TableRow>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/layout_dialogue_filter_course_tv"
+                android:textSize="20sp"
+                android:textColor="?attr/colorOnPrimary"
+                />
+
+                <Spinner
+                    android:id="@+id/layout_dialog_filter_course_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    />
+            </TableRow>
+
             <TableRow>
 
                 <TextView
-                    android:id="@+id/layout_dialog_filter_date_tv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    tools:text="01.01.1970"
+                    android:text="@string/layout_dialogue_filter_faculty_tv"
                     android:textColor="?attr/colorOnPrimary"
-                    />
+                    android:textSize="20sp" />
 
-                <ImageButton
-                    android:id="@+id/layout_dialog_filter_date_ib"
+                <Spinner
+                    android:id="@+id/layout_dialog_filter_faculty_sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </TableRow>
+
+            <TableRow>
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Tag:"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:layout_marginStart="10dp"
-                    app:srcCompat="@drawable/ic_calendar"
-                    app:tint="?attr/colorOnPrimary"
-                    android:textAlignment="center"
-                    />
+                    >
+
+                    <TextView
+                        android:id="@+id/layout_dialog_filter_date_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="?attr/colorOnPrimary"
+                        android:textSize="20sp"
+                        tools:text="01.01.1970" />
+
+                    <ImageButton
+                        android:id="@+id/layout_dialog_filter_date_ib"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:background="@android:color/transparent"
+                        android:textAlignment="center"
+                        app:srcCompat="@drawable/ic_calendar"
+                        app:tint="?attr/colorOnPrimary" />
+
+                </LinearLayout>
+
             </TableRow>
 
         </TableLayout>

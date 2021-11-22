@@ -115,6 +115,9 @@
     <string name="action_menu_item_settings">Einstellungen</string>
     <string name="activity_suche_searchBtn_text">Suchen</string>
     <string name="wahlmodul_wahlmodul_TV">Wahlmodul:</string>
+    <string name="layout_dialogue_filter_modul_tv">Modul:</string>
+    <string name="layout_dialogue_filter_course_tv">Studiengang:</string>
+    <string name="layout_dialogue_filter_faculty_tv">Fakultät:</string>
 
 
     <string-array name="TestArray">

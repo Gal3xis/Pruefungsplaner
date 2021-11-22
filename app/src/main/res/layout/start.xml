@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/nav_background"
+    android:background="?attr/colorPrimary"
     tools:layout_editor_absoluteY="25dp">
 
 
@@ -41,11 +41,12 @@
         android:layout_marginStart="28dp"
         android:layout_marginEnd="28dp"
         android:background="@drawable/button_rounded_corners"
+        android:backgroundTint="?attr/colorPrimaryDark"
+        android:backgroundTintMode="src_in"
         android:paddingLeft="30dp"
         android:paddingTop="10dp"
         android:paddingRight="10dp"
         android:paddingBottom="10dp"
-        android:popupBackground="@drawable/button_rounded_corners"
         android:text="@string/choose_faculty"
         android:textColor="#eeeeee"
         android:textSize="20sp"
@@ -62,9 +63,10 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="11dp"
         android:text="@string/choose_course"
-        android:textColor="#eeeeee"
+        android:textColor="?attr/colorOnPrimary"
         android:textSize="20sp"
         android:visibility="invisible"
+        tools:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewChecklist"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,7 +84,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonForSpinner"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        />
 
     <Button
         android:id="@+id/buttonOk"
@@ -90,8 +93,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:background="@drawable/button_rounded_corners"
+        android:backgroundTint="?attr/colorPrimaryDark"
+        android:backgroundTintMode="src_in"
         android:text="@string/ok"
-        android:textColor="#eeeeee"
+        android:textColor="?attr/colorOnPrimaryDark"
         android:textSize="16sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -1,5 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.CheckListAdapter
@@ -28,6 +29,8 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.Fachhochschulebib.fhb.pruefungsplaner.R.attr.colorOnPrimary
+import com.Fachhochschulebib.fhb.pruefungsplaner.Utils.getColorFromAttr
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -44,6 +47,7 @@ import java.util.*
 
 //Alexander Lange Start
 import kotlinx.android.synthetic.main.start.*
+import org.w3c.dom.Attr
 
 //Alexander Lange End
 
@@ -108,7 +112,6 @@ class MainActivity() : AppCompatActivity() {
                     }
                 }).start()
                 val mainWindow = Intent(applicationContext, table::class.java)
-                System.out.println("Test1")//TODO REMOVE
                 startActivityForResult(mainWindow, 0)
             }
         }).start()
@@ -174,8 +177,7 @@ class MainActivity() : AppCompatActivity() {
         // Start Merlin Gürtler
         //Anzahl der Elemente
         //Adapter-Aufruf
-        val sharedPrefPruefPeriode =
-            applicationContext.getSharedPreferences("periode", MODE_PRIVATE)
+        val sharedPrefPruefPeriode = applicationContext.getSharedPreferences("periode", MODE_PRIVATE)
         val strJson = sharedPrefPruefPeriode.getString("currentPeriode", "0")
         try {
             checkConnection()
@@ -371,9 +373,7 @@ class MainActivity() : AppCompatActivity() {
                                                                 }
                                                                 chooseCourseId.setText(R.string.no_course)
                                                                 chooseCourseId.setTextColor(
-                                                                    Color.parseColor(
-                                                                        "#ffa500"
-                                                                    )
+                                                                    getColorFromAttr(colorOnPrimary,theme)
                                                                 )
                                                             } else {
                                                                 if (buttonOk!!.visibility != View.VISIBLE) {
@@ -382,10 +382,9 @@ class MainActivity() : AppCompatActivity() {
                                                                 }
                                                                 chooseCourseId.setText(R.string.choose_course)
                                                                 chooseCourseId.setTextColor(
-                                                                    Color.parseColor(
-                                                                        "#eeeeee"
-                                                                    )
+                                                                        getColorFromAttr(colorOnPrimary,theme)
                                                                 )
+                                                                System.out.println(colorOnPrimary.toString())
                                                             }
                                                         }
                                                     })
