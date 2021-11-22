@@ -63,46 +63,50 @@ class table : AppCompatActivity() {
         })
     }
 
-    private object Filter {
+    object Filter {
         var modulName: String? = null
             set(value) {
                 field = value
                 modulNameChanged()
+                filterChanged()
             }
         var courseName: String? = null
             set(value) {
                 field = value
                 courseNameChanged()
+                filterChanged()
             }
 
         var facultyId: String? = null
             set(value) {
                 field = value
                 facultyIdChanged()
+                filterChanged()
             }
 
         var datum: Date? = null
             set(value) {
                 field = value
                 dateChanged()
+                filterChanged()
             }
 
         private fun modulNameChanged() {
-            Log.d("Filter","Modul changed")
+            Log.d("Filter", "Modul changed")
             for (i in onModulNameChangedListener) {
                 i.invoke()
             }
         }
 
         private fun courseNameChanged() {
-            Log.d("Filter","Course changed")
+            Log.d("Filter", "Course changed")
             for (i in onCourseNameChangedListener) {
                 i.invoke()
             }
         }
 
         private fun facultyIdChanged() {
-            Log.d("Filter","Faculty changed")
+            Log.d("Filter", "Faculty changed")
             for (i in onFacultyIdChangedListener) {
                 i.invoke()
             }
@@ -114,10 +118,53 @@ class table : AppCompatActivity() {
             }
         }
 
+        private fun filterChanged(){
+            for (i in onFilterChangedListener) {
+                i.invoke()
+            }
+        }
+
         var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onFacultyIdChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
+        var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
+    }
+
+    private fun InitFilterSpinner(context: Context,sp_faculty: Spinner,sp_course: Spinner,sp_modul: Spinner){
+
+        UpdateModulFilter(context, sp_modul)
+        UpdateCourseFilter(context, sp_course)
+        UpdateFacultyFilter(context, sp_faculty)
+
+        var i = 0
+        val sharedPrefsFaculty: SharedPreferences =
+            context.getSharedPreferences("faculty", Context.MODE_PRIVATE)
+        val strFacultys = sharedPrefsFaculty.getString("faculty", "0")
+        var jsonArrayFacultys = JSONArray(strFacultys)
+
+
+
+        Handler(Looper.getMainLooper()).post{
+            while(i < jsonArrayFacultys?.length()?:0){
+                if(jsonArrayFacultys?.getJSONObject(i)?.get("fbid")?.equals(Filter.facultyId) == true)
+                {
+                    val sp_faculty_adapter:ArrayAdapter<String>? = sp_faculty.adapter as ArrayAdapter<String>?
+                    sp_faculty.setSelection(sp_faculty_adapter?.getPosition(
+                        jsonArrayFacultys!!.getJSONObject(i).get("facName").toString())?:0)
+                }
+                i++
+            }
+
+            val sp_course_adapter:ArrayAdapter<String>? = sp_course.adapter as ArrayAdapter<String>?
+            sp_course_adapter?.getPosition(Filter.courseName)
+                ?.let { sp_course.setSelection(it) }
+
+
+            val sp_modul_adapter:ArrayAdapter<String>? = sp_modul.adapter as ArrayAdapter<String>?
+            sp_modul_adapter?.getPosition(Filter.modulName)
+                ?.let { sp_modul.setSelection(it) }
+        }
     }
 
     private fun UpdateCourseFilter(context: Context, sp_course: Spinner) {
@@ -156,6 +203,7 @@ class table : AppCompatActivity() {
 
     private fun UpdateFacultyFilter(context: Context, sp_faculty: Spinner) {
         try {
+            var jsonArrayFacultys: JSONArray? = null
             var sp_faculty_adapter: ArrayAdapter<String>? = null
             Thread(object : Runnable {
                 override fun run() {
@@ -165,7 +213,7 @@ class table : AppCompatActivity() {
                     val strFacultys = sharedPrefsFaculty.getString("faculty", "0")
                     if (strFacultys != null) {
                         try {
-                            val jsonArrayFacultys: JSONArray? = JSONArray(strFacultys)
+                            jsonArrayFacultys = JSONArray(strFacultys)
                             var i: Int = 0
                             while (i < jsonArrayFacultys?.length() ?: 0) {
                                 val json: JSONObject? = jsonArrayFacultys?.getJSONObject(i)
@@ -202,8 +250,8 @@ class table : AppCompatActivity() {
                     val database = AppDatabase.getAppDatabase(context)
                     val list: MutableList<String?> = mutableListOf("Alle")
                     val modules = database?.userDao()?.getEntriesByCourseName(Filter.courseName)
-                    if(modules!=null){
-                        for (i in modules){
+                    if (modules != null) {
+                        for (i in modules) {
                             list.add(i?.module)
                         }
                     }
@@ -218,13 +266,12 @@ class table : AppCompatActivity() {
                     Handler(Looper.getMainLooper()).post(object : Runnable {
                         override fun run() {
                             sp_modul.adapter = sp_modul_adapter
-
                         }
                     })
                 }
             }).start()
         } catch (ex: Exception) {
-            Log.e("UpdateModuleFilter",ex.stackTraceToString())
+            Log.e("UpdateModuleFilter", ex.stackTraceToString())
         }
     }
 
@@ -258,9 +305,9 @@ class table : AppCompatActivity() {
                         for (i in 0 until (jsonArrayFacultys?.length() ?: 0)) {
                             val json = jsonArrayFacultys?.getJSONObject(i)
                             val facName = json?.get("facName").toString()
-                            val selectedFaculty =sp_faculty.selectedItem.toString()
+                            val selectedFaculty = sp_faculty.selectedItem.toString()
                             if (facName.equals(selectedFaculty)) {
-                                Filter.facultyId = json?.get("fbid").toString()
+                                Filter.facultyId = if(position==0)null else json?.get("fbid").toString()
                                 break
                             }
                         }
@@ -287,16 +334,16 @@ class table : AppCompatActivity() {
                 id: Long
             ) {
                 try {
-                    Thread(object:Runnable{
+                    Thread(object : Runnable {
                         override fun run() {
                             val database = AppDatabase.getAppDatabase(context)
                             val selectedCourse = sp_course.selectedItem.toString()
-                            Filter.courseName = selectedCourse
+                            Filter.courseName =if(position==0)null else  selectedCourse
                         }
                     }).start()
 
                 } catch (ex: Exception) {
-                    Log.e("UpdateCourseFilter",ex.stackTraceToString())
+                    Log.e("UpdateCourseFilter", ex.stackTraceToString())
                 }
             }
 
@@ -313,7 +360,7 @@ class table : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                Filter.modulName = sp_modul.selectedItem.toString()
+                Filter.modulName =if(position==0)null else sp_modul.selectedItem.toString()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -321,9 +368,7 @@ class table : AppCompatActivity() {
             }
         }
 
-        UpdateModulFilter(context, sp_modul)
-        UpdateCourseFilter(context, sp_course)
-        UpdateFacultyFilter(context, sp_faculty)
+        InitFilterSpinner(context,sp_faculty,sp_course,sp_modul)
 
         //Time Management
         val calendar = Calendar.getInstance()

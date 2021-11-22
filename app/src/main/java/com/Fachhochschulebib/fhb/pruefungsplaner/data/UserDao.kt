@@ -99,6 +99,11 @@ interface UserDao {
     @get:Query("SELECT course FROM TestPlanEntry")
     val course: List<String?>?
 
+    //TODO Alexander Lange Start
+    @Query("SELECT facultyId FROM Courses WHERE couresName =:courseName")
+    fun getFacultyByCourse(courseName: String?): String?
+    //TODO Alexander Lange End
+
     @Insert
     fun insertAll(vararg testPlanEntries: TestPlanEntry?)
 

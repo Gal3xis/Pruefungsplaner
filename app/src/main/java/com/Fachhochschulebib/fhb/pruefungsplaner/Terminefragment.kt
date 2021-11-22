@@ -21,8 +21,10 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.util.Log
 import android.view.*
+import android.widget.Filter
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.terminefragment.*
 import org.json.JSONArray
@@ -87,6 +89,29 @@ class Terminefragment : Fragment() {
         return dateToFormat
     }
 
+    private fun validateFilter(entry: TestPlanEntry?): Boolean {
+        val database = AppDatabase.getAppDatabase(context!!)
+        val modulName:String? = table.Filter.modulName
+        val courseName:String? = table.Filter.courseName
+        val facultyID:String? = table.Filter.facultyId
+        if (entry == null) {
+            return false
+        }
+        if (!entry.module.equals(table.Filter.modulName ?: entry.module)) {
+            return false
+        }
+        if (!entry.course.equals(table.Filter.courseName ?: entry.course)) {
+            return false
+        }
+        if (table.Filter.facultyId != null) {
+            val facultyId =database?.userDao()?.getFacultyByCourse(entry.course)
+            if (facultyId?.equals(table.Filter.facultyId) != true) {
+                return false
+            }
+        }
+        return true
+    }
+
     // Ende Merlin Gürtler
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getEntriesByValidation(validation);
     // Start Merlin Gürtler
@@ -96,10 +121,15 @@ class Terminefragment : Fragment() {
         currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
         returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
         validation = examineYear + returnCourse + currentExaminePeriod
-        val ppeList = database?.userDao()?.getEntriesByValidation(validation)
+        //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
+        val ppeList = database?.userDao()?.allEntries
+        Log.d("validation",ppeList?.size.toString())//TODO REMVOE
         ClearLists()
         if (ppeList != null) {
             for (entry in ppeList) {
+                if (!validateFilter(entry)) {
+                    continue
+                }
                 moduleAndCourseList.add(
                     """${entry?.module}
      ${entry?.course}"""
@@ -109,12 +139,12 @@ class Terminefragment : Fragment() {
                             + " " + entry?.secondExaminer
                             + " " + entry?.semester + " "
                 )
-                dateList.add(entry?.date?:"")
-                moduleList.add(entry?.module?:"")
-                idList.add(entry?.id?:"")
-                formList.add(entry?.examForm?:"")
-                roomList.add(entry?.room?:"")
-                statusMessage.add(entry?.hint?:"")
+                dateList.add(entry?.date ?: "")
+                moduleList.add(entry?.module ?: "")
+                idList.add(entry?.id ?: "")
+                formList.add(entry?.examForm ?: "")
+                roomList.add(entry?.room ?: "")
+                statusMessage.add(entry?.hint ?: "")
                 checkList.add(true)
             }
         } // define an adapter
@@ -131,7 +161,6 @@ class Terminefragment : Fragment() {
         )
         Handler(Looper.getMainLooper()).post { recyclerView4?.adapter = mAdapter }
     }
-
 
 
     // Ende Merlin Gürtler
@@ -228,7 +257,7 @@ class Terminefragment : Fragment() {
             val mSharedPreferencesExamineYear = this@Terminefragment.context
                 ?.getSharedPreferences("examineTermin", 0)
             val currentExamineYear = mSharedPreferencesExamineYear?.getString("currentTermin", "0")
-            val retrofit = RetrofitConnect(relativePPlanURL?:"")
+            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
 
             // Thread um die Prüfperiode zu aktualisieren
             //TODO CHANGE TO COROUTINE
@@ -323,7 +352,7 @@ class Terminefragment : Fragment() {
                         // die Fakultäts id wird noch mit der gewählten Fakultät verglichen
                         if (currentDate.before(lastDayPp) && facultyId == facultyIdDB) break
                     }
-                    examineWeek = currentExamineDate?.get("PPWochen")?.toString()?.toInt()?:1
+                    examineWeek = currentExamineDate?.get("PPWochen")?.toString()?.toInt() ?: 1
                     //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
                     //-------------------------------------------------------------------
                     //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
@@ -462,15 +491,18 @@ class Terminefragment : Fragment() {
                 if (courses != null) {
                     for (course in courses) {
                         try {
-                            courseName = course?.courseName?:""
-                            if (course?.choosen==false) {
+                            courseName = course?.courseName ?: ""
+                            if (course?.choosen == false) {
                                 // lösche nicht die Einträge der gewählten Studiengänge und Favorit
                                 val toDelete =
                                     database?.userDao()?.getEntriesByCourseName(courseName, false)
                                 database?.userDao()?.deleteEntry(toDelete)
                             }
                             if (database?.userDao()
-                                    ?.getOneEntryByName(courseName, false) == null && course?.choosen == true
+                                    ?.getOneEntryByName(
+                                        courseName,
+                                        false
+                                    ) == null && course?.choosen == true
                             ) {
                                 val idJson = JSONObject()
                                 idJson.put("ID", course?.sgid)
@@ -542,7 +574,7 @@ class Terminefragment : Fragment() {
                                 checkList[position] = false
                             } else {
                                 // Start Merlin Gürtler
-                                for (i in 0 until (recyclerView4?.childCount?:0)) {
+                                for (i in 0 until (recyclerView4?.childCount ?: 0)) {
                                     val holder =
                                         recyclerView4?.layoutManager?.findViewByPosition(i)
                                     // Try and Catch, da die App crasht
@@ -610,6 +642,17 @@ class Terminefragment : Fragment() {
 
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
+        //TODO Alexander Lange Start
+        table.Filter.onFilterChangedListener.add {
+            Thread(object:Runnable{
+                override fun run() {
+                    createAdapter()
+                }
+            }).start()
+        }
+        //TODO Alexander Lange End
+
+
     }
 
     fun AdapterPassed() {

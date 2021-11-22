@@ -11,20 +11,14 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.model
 
 import android.content.Context
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
-import android.content.SharedPreferences
 import android.util.Log
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface
 import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUuid
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonCourse
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
 import org.json.JSONArray
 import org.json.JSONException
@@ -346,8 +340,8 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         val urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress)
 
         // Erhalte die gewählte Fakultät aus den Shared Preferences
-        val sahredPreferencesFacultyValidation = ctx.getSharedPreferences("validation", 0)
-        val faculty = sahredPreferencesFacultyValidation.getString("returnFaculty", "0")
+        val sharedPreferencesFacultyValidation = ctx.getSharedPreferences("validation", 0)
+        val faculty = sharedPreferencesFacultyValidation.getString("returnFaculty", "0")
 
         //uebergabe der parameter an die Adresse
         val adresse = relativePPlanUrl + "entity.user/firstStart/" +

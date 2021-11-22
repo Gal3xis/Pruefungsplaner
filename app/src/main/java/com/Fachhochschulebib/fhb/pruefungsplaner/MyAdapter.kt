@@ -18,8 +18,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Handler
 import android.provider.CalendarContract
+import android.util.Log
 import android.view.View
 import android.widget.*
+import java.lang.Exception
 import java.util.*
 
 //////////////////////////////
@@ -74,117 +76,131 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
 
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val name = modules[position]
+        try {
+            val name = modules[position]
 
-        // Start Merlin Gürtler
-        // erhalte den ausgewählten Studiengang
-        val sharedPreferencesSelectedCourse =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-        val selectedCourse = sharedPreferencesSelectedCourse?.getString("selectedCourse", "0")
-            ?.split(" ")?.toTypedArray()
-        val colorElectiveModule = "#7FFFD4"
-        val course = name.split(" ").toTypedArray()
+            // Start Merlin Gürtler
+            // erhalte den ausgewählten Studiengang
+            val sharedPreferencesSelectedCourse =
+                context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+            val selectedCourse = sharedPreferencesSelectedCourse?.getString("selectedCourse", "0")
+                ?.split(" ")?.toTypedArray()
+            val colorElectiveModule = "#7FFFD4"
+            val course = name.split(" ").toTypedArray()
 
-        // Ende Merlin Gürtler
-        if (selectedCourse?.get(selectedCourse.size - 1) != course?.get(course.size - 1)) {
-            // Lege die Farben für die Wahlmodule fest
-            val backGroundGradient = GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(
-                    Color.parseColor(colorElectiveModule),
-                    Color.parseColor(colorElectiveModule)
+            // Ende Merlin Gürtler
+            if (selectedCourse?.get(selectedCourse.size - 1) != course?.get(course.size - 1)) {
+                // Lege die Farben für die Wahlmodule fest
+                val backGroundGradient = GradientDrawable(
+                    GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(
+                        Color.parseColor(colorElectiveModule),
+                        Color.parseColor(colorElectiveModule)
+                    )
                 )
-            )
-            backGroundGradient.cornerRadius = 40f
-            val sdk = Build.VERSION.SDK_INT
-            if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                holder.layout.setBackgroundDrawable(backGroundGradient)
-            } else {
-                holder.layout.background = backGroundGradient
-            }
-        }
-        //TODO Change to COROUTINE
-        Thread {
-            moduleName = ""
-            for (b in 0 until course.size - 1) {
-                moduleName = moduleName + " " + course[b]
-            }
-
-            //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context!!)
-            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
-
-            // Überprüfung, ob Prüfitem favorisiert wurde
-            //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-            //                  Toast.LENGTH_SHORT).show();
-            save = false
-            Handler(Looper.getMainLooper()).post {
-                if (position >= 0) {
-                    val pruefid = planId[position].toInt()
-                    if (Integer.valueOf(selectedEntry?.id) == pruefid) {
-                        // Start Merlin Gürtler
-                        // Setze die Farbe des Icons
-                        holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry?.color))
-
-                        //if (eintrag.getStatus().equals("final")) {
-                        //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
-                        //}
-                        // Ende Merlin Gürtler
-                        if (selectedEntry?.favorit == true) {
-                            holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))
-                            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                backGroundGradient.cornerRadius = 40f
+                val sdk = Build.VERSION.SDK_INT
+                if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
+                    holder.layout.setBackgroundDrawable(backGroundGradient)
+                } else {
+                    holder.layout.background = backGroundGradient
                 }
             }
-        }.start()
-        holder.txtHeader.text = name
-
-        // Start Merlin Gürtler
-        // Gibt die Statusmeldung aus
-        holder.statusIcon.setOnClickListener { v: View ->
-            Toast.makeText(
-                v.context,
-                statusHintList[position],
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        // Ende Merlin Gürtler
-        holder.ivicon.setOnClickListener { v: View? ->
+            //TODO Change to COROUTINE
             Thread {
-                val isFavorite = checkFavorite(position)
-                // toggelt den Favoriten
-                if (!isFavorite) {
-                    addToFavorites(position, holder)
-                } else {
-                    deleteFromFavorites(position, holder)
+                moduleName = ""
+                for (b in 0 until course.size - 1) {
+                    moduleName = moduleName + " " + course[b]
+                }
+
+                //Datenbank und Pruefplan laden
+                val database = AppDatabase.getAppDatabase(context!!)
+                val selectedEntry = database?.userDao()?.getEntryById(planId[position])
+
+                // Überprüfung, ob Prüfitem favorisiert wurde
+                //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
+                //                  Toast.LENGTH_SHORT).show();
+                save = false
+                Handler(Looper.getMainLooper()).post {
+                    try {
+                        if (position >= 0) {
+                            Log.d("Handler", position.toString())//TODO REMOVE
+                            Log.d("Handler", planId.size.toString())
+                            //planId.forEach { Log.d("Handler",it.toString()) }
+                            val pruefid = planId[position]?.toInt()
+                            if (Integer.valueOf(selectedEntry?.id) == pruefid) {
+                                // Start Merlin Gürtler
+                                // Setze die Farbe des Icons
+                                holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry?.color))
+
+                                //if (eintrag.getStatus().equals("final")) {
+                                //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
+                                //}
+                                // Ende Merlin Gürtler
+                                if (selectedEntry?.favorit == true) {
+                                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))
+                                    // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    } catch (ex: Exception) {
+                        Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
+                    }
+
                 }
             }.start()
-        }
+            holder.txtHeader.text = name
 
-        //Aufteilung nach verschiedenen Tagen
-        val splitDay = date[position].split(" ").toTypedArray()
-        if (position > 0) {
-            val splitDayBefore = date[position - 1].split(" ").toTypedArray()
-
-            //Vergleich der beiden Tage
-            //wenn ungleich, dann blaue box mit Datumseintrag
-            if (splitDay[0] == splitDayBefore[0]) {
-                holder.button.height = 0
+            // Start Merlin Gürtler
+            // Gibt die Statusmeldung aus
+            holder.statusIcon.setOnClickListener { v: View ->
+                Toast.makeText(
+                    v.context,
+                    statusHintList[position],
+                    Toast.LENGTH_SHORT
+                ).show()
             }
+            // Ende Merlin Gürtler
+            holder.ivicon.setOnClickListener { v: View? ->
+                Thread {
+                    val isFavorite = checkFavorite(position)
+                    // toggelt den Favoriten
+                    if (!isFavorite) {
+                        addToFavorites(position, holder)
+                    } else {
+                        deleteFromFavorites(position, holder)
+                    }
+                }.start()
+            }
+
+            //Aufteilung nach verschiedenen Tagen
+            val splitDay = date[position].split(" ").toTypedArray()
+            if (position > 0) {
+                val splitDayBefore = date[position - 1].split(" ").toTypedArray()
+
+                //Vergleich der beiden Tage
+                //wenn ungleich, dann blaue box mit Datumseintrag
+                if (splitDay[0] == splitDayBefore[0]) {
+                    holder.button.height = 0
+                }
+            }
+
+            //Darstellen der Werte in der Prüfitem Komponente
+            val splitMonthDayYear = splitDay[0].split("-").toTypedArray()
+            holder.txtthirdline.text =
+                context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
+            holder.button.text = (splitMonthDayYear[2] + "."
+                    + splitMonthDayYear[1] + "."
+                    + splitMonthDayYear[0])
+            val splitExaminerAndSemester = examinerAndSemester[position].split(" ").toTypedArray()
+            holder.txtFooter.text = (context!!.getString(R.string.prof)
+                    + splitExaminerAndSemester[0] + ", "
+                    + splitExaminerAndSemester[1]
+                    + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
+            //holder.txtthirdline.setText("Semester: " + Semester5.toString());
+        } catch (ex: Exception) {
+            Log.d("MyAdapter.kt-onBindViewHolder",ex.stackTraceToString())
         }
 
-        //Darstellen der Werte in der Prüfitem Komponente
-        val splitMonthDayYear = splitDay[0].split("-").toTypedArray()
-        holder.txtthirdline.text = context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
-        holder.button.text = (splitMonthDayYear[2] + "."
-                + splitMonthDayYear[1] + "."
-                + splitMonthDayYear[0])
-        val splitExaminerAndSemester = examinerAndSemester[position].split(" ").toTypedArray()
-        holder.txtFooter.text = (context!!.getString(R.string.prof)
-                + splitExaminerAndSemester[0] + ", "
-                + splitExaminerAndSemester[1]
-                + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
-        //holder.txtthirdline.setText("Semester: " + Semester5.toString());
     }
 
     //Methode zum Darstellen der "weiteren Informationen"
@@ -278,7 +294,7 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
 
             //Speichern des Prüfitem als Favorit
             // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-            if (selectedEntry?.favorit==false) {
+            if (selectedEntry?.favorit == false) {
                 database?.userDao()
                     ?.update(true, planId[position].toInt())
             }
