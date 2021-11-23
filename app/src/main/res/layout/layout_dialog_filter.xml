@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="350dp"
     android:layout_height="wrap_content"
     tools:background="?attr/colorPrimary"
     android:padding="20dp"
@@ -16,61 +17,70 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-
             <TableRow>
+
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/layout_dialogue_filter_faculty_tv"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+                <Spinner
+                    android:id="@+id/layout_dialog_filter_faculty_sp"
+                    style="@style/AlertDialog.Filter.Spinner"
+                    tools:listitem="Testsdfasdkzjufasdjlkhfhasukljdhf"
+
+                    />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/layout_dialogue_filter_course_tv"
+                    android:textSize="15sp"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:layout_gravity="center_vertical"
+
+                    />
+
+                <Spinner
+                    android:id="@+id/layout_dialog_filter_course_sp"
+                    style="@style/AlertDialog.Filter.Spinner"
+                    />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:text="@string/layout_dialogue_filter_modul_tv"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textColor="?attr/colorOnPrimary"
+                android:layout_gravity="center_vertical"
+
                 />
 
                 <Spinner
                     android:id="@+id/layout_dialog_filter_modul_sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
-            </TableRow>
-            <TableRow>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/layout_dialogue_filter_course_tv"
-                android:textSize="20sp"
-                android:textColor="?attr/colorOnPrimary"
-                />
-
-                <Spinner
-                    android:id="@+id/layout_dialog_filter_course_sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/AlertDialog.Filter.Spinner"
                     />
             </TableRow>
 
-            <TableRow>
+
+
+
+            <TableRow android:layout_marginTop="10dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/layout_dialogue_filter_faculty_tv"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="20sp" />
-
-                <Spinner
-                    android:id="@+id/layout_dialog_filter_faculty_sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </TableRow>
-
-            <TableRow>
-
-                <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:text="Tag:"
                     android:textColor="?attr/colorOnPrimary"
-                    android:textSize="20sp" />
+                    android:textSize="15sp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -84,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="?attr/colorOnPrimary"
-                        android:textSize="20sp"
+                        android:textSize="15sp"
                         tools:text="01.01.1970" />
 
                     <ImageButton
@@ -98,6 +108,33 @@
                         app:tint="?attr/colorOnPrimary" />
 
                 </LinearLayout>
+
+            </TableRow>
+
+            <TableRow>
+                <Button
+                    android:id="@+id/layout_dialog_filter_userFilter_btn"
+                    android:layout_span="2"
+                    android:background="@drawable/button_rounded_corners"
+                    android:backgroundTint="@color/Theme1.colorAccent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/layout_dialog_filter_userFilter_btn_text"
+                    android:textColor="?attr/colorOnAccent"
+                    />
+
+            </TableRow>
+            <TableRow>
+                <Button
+                    android:id="@+id/layout_dialog_filter_reset_btn"
+                    android:layout_span="2"
+                    android:background="@drawable/button_rounded_corners"
+                    android:backgroundTint="@color/Theme1.colorAccent"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/layout_dialog_filter_reset_btn_text"
+                    android:textColor="?attr/colorOnAccent"
+                    />
 
             </TableRow>
 

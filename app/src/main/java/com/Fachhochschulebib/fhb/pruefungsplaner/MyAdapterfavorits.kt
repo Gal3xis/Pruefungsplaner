@@ -50,9 +50,14 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
     }
 
     fun remove(position: Int) {
-        moduleAndCourseList.removeAt(position)
-        notifyItemRemoved(position)
-        deleteItemThread(position)
+        try {
+            moduleAndCourseList.removeAt(position)
+            notifyItemRemoved(position)
+            deleteItemThread(position)
+        }catch (ex:Exception){
+            Log.e("MyAdapterfavorits.kt-remove",ex.stackTraceToString())
+        }
+
     }
 
     // Create new views (invoked by the layout manager)

@@ -107,19 +107,25 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
             }
             //TODO Change to COROUTINE
             Thread {
-                moduleName = ""
-                for (b in 0 until course.size - 1) {
-                    moduleName = moduleName + " " + course[b]
+                var database:AppDatabase?=null
+                var selectedEntry:TestPlanEntry?=null
+                try {
+                    moduleName = ""
+                    for (b in 0 until course.size - 1) {
+                        moduleName = moduleName + " " + course[b]
+                    }
+
+                    //Datenbank und Pruefplan laden
+                    database = AppDatabase.getAppDatabase(context!!)
+                    selectedEntry = database?.userDao()?.getEntryById(planId[position])
+
+                    // Überprüfung, ob Prüfitem favorisiert wurde
+                    //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
+                    //                  Toast.LENGTH_SHORT).show();
+                    save = false
+                }catch (ex:Exception){
+                    Log.d("MyAdapter.kt-onBindViewHolder",ex.stackTraceToString())
                 }
-
-                //Datenbank und Pruefplan laden
-                val database = AppDatabase.getAppDatabase(context!!)
-                val selectedEntry = database?.userDao()?.getEntryById(planId[position])
-
-                // Überprüfung, ob Prüfitem favorisiert wurde
-                //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-                //                  Toast.LENGTH_SHORT).show();
-                save = false
                 Handler(Looper.getMainLooper()).post {
                     try {
                         if (position >= 0) {

@@ -118,6 +118,8 @@
     <string name="layout_dialogue_filter_modul_tv">Modul:</string>
     <string name="layout_dialogue_filter_course_tv">Studiengang:</string>
     <string name="layout_dialogue_filter_faculty_tv">Fakultät:</string>
+    <string name="layout_dialog_filter_reset_btn_text">Reset</string>
+    <string name="layout_dialog_filter_userFilter_btn_text">Mein Studiengang</string>
 
 
     <string-array name="TestArray">

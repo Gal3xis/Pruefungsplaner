@@ -1,7 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.Manifest
-import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
@@ -21,10 +20,8 @@ import android.content.pm.PackageManager
 import android.os.Handler
 import android.util.Log
 import android.view.*
-import android.widget.Filter
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.terminefragment.*
 import org.json.JSONArray
@@ -78,6 +75,9 @@ class Terminefragment : Fragment() {
     var mAdapter: MyAdapter? = null
     private var mLayout: RecyclerView.LayoutManager? = null
     var database: AppDatabase? = null
+    //TODO Alexander Lange Start
+    var filterChangeListenerPosition:Int?=null
+    //TODO Alexander Lange End
 
     // Start Merlin Gürtler
     // Funktion um die Führende 0 hinzuzufügen
@@ -87,29 +87,6 @@ class Terminefragment : Fragment() {
             dateToFormat = "0$dateToFormat"
         }
         return dateToFormat
-    }
-
-    private fun validateFilter(entry: TestPlanEntry?): Boolean {
-        val database = AppDatabase.getAppDatabase(context!!)
-        val modulName:String? = table.Filter.modulName
-        val courseName:String? = table.Filter.courseName
-        val facultyID:String? = table.Filter.facultyId
-        if (entry == null) {
-            return false
-        }
-        if (!entry.module.equals(table.Filter.modulName ?: entry.module)) {
-            return false
-        }
-        if (!entry.course.equals(table.Filter.courseName ?: entry.course)) {
-            return false
-        }
-        if (table.Filter.facultyId != null) {
-            val facultyId =database?.userDao()?.getFacultyByCourse(entry.course)
-            if (facultyId?.equals(table.Filter.facultyId) != true) {
-                return false
-            }
-        }
-        return true
     }
 
     // Ende Merlin Gürtler
@@ -127,7 +104,7 @@ class Terminefragment : Fragment() {
         ClearLists()
         if (ppeList != null) {
             for (entry in ppeList) {
-                if (!validateFilter(entry)) {
+                if (!table.Filter.validateFilter(context,entry)) {
                     continue
                 }
                 moduleAndCourseList.add(
@@ -643,16 +620,28 @@ class Terminefragment : Fragment() {
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
         //TODO Alexander Lange Start
-        table.Filter.onFilterChangedListener.add {
-            Thread(object:Runnable{
-                override fun run() {
-                    createAdapter()
-                }
-            }).start()
-        }
+        table.Filter.onFilterChangedListener.add {OnFilterChanged()}
+        filterChangeListenerPosition = table.Filter.onFilterChangedListener.size-1
         //TODO Alexander Lange End
 
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if(filterChangeListenerPosition!=null){
+            table.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+        }
+    }
+
+
+    fun OnFilterChanged(){
+        Thread(object:Runnable{
+            override fun run() {
+                createAdapter()
+                Log.d("Terminefragment.kt-OnFilterChanged","Updated Filter")
+            }
+        }).start()
     }
 
     fun AdapterPassed() {
