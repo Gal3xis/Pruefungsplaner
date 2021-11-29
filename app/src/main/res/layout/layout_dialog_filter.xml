@@ -113,19 +113,6 @@
 
             <TableRow>
                 <Button
-                    android:id="@+id/layout_dialog_filter_userFilter_btn"
-                    android:layout_span="2"
-                    android:background="@drawable/button_rounded_corners"
-                    android:backgroundTint="@color/Theme1.colorAccent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/layout_dialog_filter_userFilter_btn_text"
-                    android:textColor="?attr/colorOnAccent"
-                    />
-
-            </TableRow>
-            <TableRow>
-                <Button
                     android:id="@+id/layout_dialog_filter_reset_btn"
                     android:layout_span="2"
                     android:background="@drawable/button_rounded_corners"

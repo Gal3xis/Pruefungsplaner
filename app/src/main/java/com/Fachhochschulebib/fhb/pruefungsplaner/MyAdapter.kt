@@ -211,46 +211,52 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
 
     //Methode zum Darstellen der "weiteren Informationen"
     fun giveString(position: Int): String {
-        val name = modules[position]
-        val course = name.split(" ").toTypedArray()
-        moduleName = ""
-        var b: Int
-        b = 0
-        while (b < course.size - 1) {
-            moduleName = moduleName + " " + course[b]
-            b++
-        }
-        val room2 = roomAdapter[position]
-        val division1 = date[position].split(" ").toTypedArray()
-        val division2 = division1[0].split("-").toTypedArray()
-        //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-        val sa = examinerAndSemester[position].split(" ").toTypedArray()
+        try {
+            val name = modules[position]
+            val course = name.split(" ").toTypedArray()
+            moduleName = ""
+            var b: Int
+            b = 0
+            while (b < course.size - 1) {
+                moduleName = moduleName + " " + course[b]
+                b++
+            }
+            val room2 = roomAdapter[position]
+            val division1 = date[position].split(" ").toTypedArray()
+            val division2 = division1[0].split("-").toTypedArray()
+            //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
+            val sa = examinerAndSemester[position].split(" ").toTypedArray()
 
-        //String mit dem Inhalt für weitere Informationen
-        return """${context!!.getString(R.string.information)}${context!!.getString(R.string.course)}${course[course.size - 1]}${
-            context!!.getString(
-                R.string.modul
-            )
-        }$moduleName${context!!.getString(R.string.firstProf)}${sa[0]}${context!!.getString(R.string.secondProf)}${sa[1]}${
-            context!!.getString(
-                R.string.date
-            )
-        }${division2[2]}.${division2[1]}.${division2[0]}${context!!.getString(R.string.clockTime)}${
-            division1[1].substring(
-                0,
-                5
-            )
-        }${context!!.getString(R.string.clock)}${context!!.getString(R.string.room)}$room2${
-            context!!.getString(
-                R.string.form
-            )
-        }${examForm[position]}
+            //String mit dem Inhalt für weitere Informationen
+            return """${context!!.getString(R.string.information)}${context!!.getString(R.string.course)}${course[course.size - 1]}${
+                context!!.getString(
+                    R.string.modul
+                )
+            }$moduleName${context!!.getString(R.string.firstProf)}${sa[0]}${context!!.getString(R.string.secondProf)}${sa[1]}${
+                context!!.getString(
+                    R.string.date
+                )
+            }${division2[2]}.${division2[1]}.${division2[0]}${context!!.getString(R.string.clockTime)}${
+                division1[1].substring(
+                    0,
+                    5
+                )
+            }${context!!.getString(R.string.clock)}${context!!.getString(R.string.room)}$room2${
+                context!!.getString(
+                    R.string.form
+                )
+            }${examForm[position]}
  
  
  
  
  
  """
+        }catch (ex:Exception){
+            Log.e("MyAdapter.kt-giveStrtng:",ex.stackTraceToString())
+            return ""
+        }
+
     }
 
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
@@ -384,19 +390,25 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
     }
 
     fun checkFavorite(position: Int): Boolean {
-        favcheck = false
+        try {
+            favcheck = false
 
-        //Datenbank und Pruefplan laden
-        val database = AppDatabase.getAppDatabase(context!!)
-        val selectedEntry = database?.userDao()?.getEntryById(planId[position])
+            //Datenbank und Pruefplan laden
+            val database = AppDatabase.getAppDatabase(context!!)
+            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
-        //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-        //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-        // Toast.LENGTH_SHORT).show();
+            //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
+            //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
+            // Toast.LENGTH_SHORT).show();
 
-        // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-        save = selectedEntry?.favorit == true
-        return save
+            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
+            save = selectedEntry?.favorit == true
+            return save
+        }catch (ex:Exception){
+            Log.e("MyAdapter.kt-checkFavorite:",ex.stackTraceToString())
+            return false
+        }
+
     }
 
     //Item anzahl

@@ -31,9 +31,9 @@
     <string name="settings_privacy_declaration">Datenschutzerklärung</string>
 
     <!-- Navigation -->
-    <string name="title_calender">Termine</string>
+    <string name="title_calender">Alle Prüfungen</string>
     <string name="title_search">Erweiterte Suche</string>
-    <string name="title_exam">Prüfungen</string>
+    <string name="title_exam">Meine Prüfungen</string>
     <string name="title_settings">Optionen</string>
     <string name="title_electiveModule">Wahlmodule</string>
     <string name="title_changeCourse">Studiengänge hinzufügen</string>
@@ -118,7 +118,7 @@
     <string name="layout_dialogue_filter_modul_tv">Modul:</string>
     <string name="layout_dialogue_filter_course_tv">Studiengang:</string>
     <string name="layout_dialogue_filter_faculty_tv">Fakultät:</string>
-    <string name="layout_dialog_filter_reset_btn_text">Reset</string>
+    <string name="layout_dialog_filter_reset_btn_text">Clear</string>
     <string name="layout_dialog_filter_userFilter_btn_text">Mein Studiengang</string>
 
 

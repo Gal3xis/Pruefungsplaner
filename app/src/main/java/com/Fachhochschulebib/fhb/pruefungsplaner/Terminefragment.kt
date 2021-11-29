@@ -60,14 +60,8 @@ class Terminefragment : Fragment() {
     var checkList: MutableList<Boolean> = ArrayList()
 
     //Variablen
-    var moduleAndCourseList: MutableList<String> = ArrayList()
-    var examinerAndSemester: MutableList<String> = ArrayList()
-    var dateList: MutableList<String> = ArrayList()
-    var moduleList: MutableList<String> = ArrayList()
-    var idList: MutableList<String> = ArrayList()
-    var formList: MutableList<String> = ArrayList()
-    var roomList: MutableList<String> = ArrayList()
-    var statusMessage: MutableList<String> = ArrayList()
+
+
     var mSharedPreferencesValidation: SharedPreferences? = null
     var examineYear: String? = null
     var currentExaminePeriod: String? = null
@@ -93,6 +87,16 @@ class Terminefragment : Fragment() {
     // List<PruefplanEintrag> ppeList = datenbank.userDao().getEntriesByValidation(validation);
     // Start Merlin Gürtler
     private fun createAdapter() {
+        val moduleAndCourseList: MutableList<String> = ArrayList()
+        val examinerAndSemester: MutableList<String> = ArrayList()
+        val dateList: MutableList<String> = ArrayList()
+        val moduleList: MutableList<String> = ArrayList()
+        val idList: MutableList<String> = ArrayList()
+        val formList: MutableList<String> = ArrayList()
+        val roomList: MutableList<String> = ArrayList()
+        var statusMessage: MutableList<String> = ArrayList()
+
+
         // Nun aus Shared Preferences
         examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
         currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
@@ -101,7 +105,6 @@ class Terminefragment : Fragment() {
         //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
         val ppeList = database?.userDao()?.allEntries
         Log.d("validation",ppeList?.size.toString())//TODO REMVOE
-        ClearLists()
         if (ppeList != null) {
             for (entry in ppeList) {
                 if (!table.Filter.validateFilter(context,entry)) {
@@ -657,17 +660,6 @@ class Terminefragment : Fragment() {
         //Datenbankaufruf
     }
 
-    fun ClearLists() {
-        moduleAndCourseList.clear()
-        examinerAndSemester.clear()
-        dateList.clear()
-        moduleList.clear()
-        idList.clear()
-        formList.clear()
-        roomList.clear()
-        statusMessage.clear()
-        checkList.clear()
-    }
 
     // Start Merlin Gürtler
     private fun enableSwipeToDelete() {

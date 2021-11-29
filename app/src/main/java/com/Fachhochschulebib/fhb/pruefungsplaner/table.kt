@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
@@ -189,31 +190,18 @@ class table : AppCompatActivity() {
         var onResetListener: MutableList<() -> Unit> = mutableListOf()
     }
 
-    fun UserFilter(context: Context, sp_faculty: Spinner, sp_course: Spinner) {
+    fun UserFilter(context: Context) {
         val sp_valid = getSharedPreferences("validation", Context.MODE_PRIVATE)
         val sp_fac = getSharedPreferences("faculty", Context.MODE_PRIVATE)
         val fac_id = sp_valid.getString("returnFaculty", null)
-        val fac_names = sp_fac.getString("faculty", null)
-        var fac_sel: String? = null
-        var cou_sel: String? = null
 
-        val jsonArrayFacultys = JSONArray(fac_names)
-        var i: Int = 0
-        while (i < jsonArrayFacultys?.length() ?: 0) {
-            val json: JSONObject? = jsonArrayFacultys?.getJSONObject(i)
-            if (json?.get("fbid").toString().equals(fac_id)) {
-                fac_sel = json?.get("facName").toString()
-                break
-            }
-            i++
-        }
-        cou_sel = sp_valid.getString("selectedCourse", null)
+        Filter.locked = true
+        Filter.facultyId = fac_id
+        Filter.locked = false
 
-        sp_faculty.setSelection(fac_sel)
-        sp_course.setSelection(cou_sel)
+        val cou_sel = sp_valid.getString("selectedCourse", null)
 
-        //UpdateFacultyFilter(context, sp_faculty)
-        //UpdateCourseFilter(context, sp_course)
+        Filter.courseName = cou_sel
     }
 
     private fun UpdateCourseFilter(context: Context, sp_course: Spinner) {
@@ -467,7 +455,6 @@ class table : AppCompatActivity() {
 
         //View-Components
         val imgbtn_date = view.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
-        val btn_userFilter = view.findViewById<Button>(R.id.layout_dialog_filter_userFilter_btn)
         val btn_reset = view.findViewById<Button>(R.id.layout_dialog_filter_reset_btn)
         val tv_date = view.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
         val sp_modul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
@@ -516,10 +503,10 @@ class table : AppCompatActivity() {
         tv_date.text = sdf.format(calendar.time)
 
         btn_reset?.setOnClickListener { table.Filter.reset() }
-        btn_userFilter?.setOnClickListener { UserFilter(context, sp_faculty, sp_course) }
         val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
             .setTitle("Filter")
             .setPositiveButton("Ok", null)
+            .setNegativeButton("Reset",DialogInterface.OnClickListener { dialog, which ->  UserFilter(context)})
             .setView(view)
             .create()
         dialog.show()
@@ -733,6 +720,11 @@ class table : AppCompatActivity() {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.frame_placeholder, Terminefragment())
         ft.commit()
+
+
+        //TODO Alexander Lange Start
+        UserFilter(applicationContext)
+        //TODO Alexander Lange End
     }
 
     //navigation mit den menuepunkten Bottom

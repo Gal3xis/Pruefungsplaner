@@ -10,9 +10,5 @@
         android:icon="@drawable/favoriten_nav"
         android:title="@string/title_exam"/>
 
-    <item
-        android:id="@+id/navigation_electiveModule"
-        android:icon="@drawable/ic_elective"
-        android:title="@string/title_electiveModule"/>
 
 </menu>
