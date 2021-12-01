@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    tools:background="?attr/colorPrimary"
+    tools:background="?attr/colorPrimaryDark"
     android:padding="20dp"
     >
 
@@ -116,7 +116,7 @@
                     android:id="@+id/layout_dialog_filter_reset_btn"
                     android:layout_span="2"
                     android:background="@drawable/button_rounded_corners"
-                    android:backgroundTint="@color/Theme1.colorAccent"
+                    android:backgroundTint="?attr/colorAccent"
                     android:layout_height="40dp"
                     android:layout_marginTop="20dp"
                     android:text="@string/layout_dialog_filter_reset_btn_text"

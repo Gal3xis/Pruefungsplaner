@@ -120,6 +120,10 @@
     <string name="layout_dialogue_filter_faculty_tv">Fakultät:</string>
     <string name="layout_dialog_filter_reset_btn_text">Clear</string>
     <string name="layout_dialog_filter_userFilter_btn_text">Mein Studiengang</string>
+    <string name="optionfragment_header_design">Design</string>
+    <string name="optionfragment_header_calendar">Kalender</string>
+    <string name="optionenfragment_darkmode">Dark Mode:</string>
+    <string name="optionenfragment_theme">Theme:</string>
 
 
     <string-array name="TestArray">

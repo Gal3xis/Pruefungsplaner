@@ -1,26 +1,32 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import android.widget.CompoundButton
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
 import android.os.Looper
-import android.widget.Toast
 import com.Fachhochschulebib.fhb.pruefungsplaner.PrivacyDeclarationFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.ContentValues
+import android.content.Context
+import android.content.res.Resources
+import android.graphics.Color
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
-import android.widget.Button
-import android.widget.Switch
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import org.json.JSONArray
@@ -29,6 +35,9 @@ import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import androidx.core.app.ActivityCompat.recreate
+import kotlinx.android.synthetic.main.optionfragment.view.*
+
 
 //////////////////////////////
 // Optionen
@@ -72,7 +81,34 @@ class Optionen() : Fragment() {
         //From onCreate
 
         //From onCreateView
+        //TODO Implement Settings Preferences
+        //TODO Alexander Lange Start
+        /*if (night_mode.equals(AppCompatDelegate.MODE_NIGHT_YES)) {
+            darkMode?.isSelected = true
+        }*/
 
+        theme.onItemSelectedListener = object :
+            AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View, position: Int, id: Long
+            ) {
+                when (position) {
+                    0 -> view.context.theme.applyStyle(R.style.Theme_AppTheme_1,true)
+                    1 -> view.context.theme.applyStyle(R.style.Theme_AppTheme_2,true)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // write code to perform some action
+            }
+        }
+
+        val theme1 = Theme(R.style.Theme_AppTheme_1,view)
+        val theme2 = Theme(R.style.Theme_AppTheme_2,view)
+        val adapter = ThemeAdapter(view.context,R.layout.layout_theme_spinner_row,mutableListOf(theme1,theme2))
+        theme.adapter = adapter
+        //TODO Alexander Lange End
 
         //Button zum updaten der Prüfungen
         val btngo2 = view.findViewById<View>(R.id.btnupdate) as Button
@@ -92,7 +128,8 @@ class Optionen() : Fragment() {
         val serverAdresse = view.context.getSharedPreferences("json8", 0)
         //Creating editor to store uebergebeneModule to shared preferences
         val mEditorGoogleCalendar = serverAdresse.edit()
-        val mSharedPreferencesPPServerAddress = view.context.getSharedPreferences("Server_Address", 0)
+        val mSharedPreferencesPPServerAddress =
+            view.context.getSharedPreferences("Server_Address", 0)
         //Creating editor to store uebergebeneModule to shared preferences
 
         //------------------------------------------------------------------
@@ -206,6 +243,20 @@ class Optionen() : Fragment() {
                 }).start()
             }
         })
+
+        //Start Alexander Lange
+        //Dark mode Switch
+
+        //Start Alexander Lange
+        //Dark mode Switch
+        darkMode.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b ->
+            if (b) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                return@OnCheckedChangeListener
+            }
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        })
+        //End Alexander Lange
 
         //Change Listener für die Serveradresse
         //speichert den neu eingegebenen Wert
@@ -369,7 +420,6 @@ class Optionen() : Fragment() {
         currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
         returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
         // Ende Merlin Gürtler
-
         return v
     }
 

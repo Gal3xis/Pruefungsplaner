@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,21 +9,126 @@
     android:screenOrientation="portrait"
     tools:layout_editor_absoluteY="81dp">
 
-
-    <LinearLayout
-        android:id="@+id/linearLayout5"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/optionfragment_header_design"
+                    android:textColor="?attr/colorOnBackground" />
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/darkMode"
+                style="@style/OptionenFragment.Entry.Switch"
+                android:text="@string/optionenfragment_darkmode"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <TextView
+                style="@style/OptionenFragment.Entry.TextView"
+                android:text="@string/optionenfragment_theme">
+
+                <Spinner
+                    android:id="@+id/theme"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:background="@drawable/rounded_color_border"
+                    android:backgroundTint="@android:color/transparent"
+                    android:spinnerMode="dialog"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+            </TextView>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/optionfragment_header_calendar"
+                    android:textColor="?attr/colorOnBackground" />
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnCalClear"
+                style="@style/OptionenFragment.Entry.Button"
+                android:text="@string/settings_del_cal" />
+
+            <Button
+                android:id="@+id/btnGoogleUpdate"
+                style="@style/OptionenFragment.Entry.Button"
+                android:text="@string/settings_act_cal"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/optionfragment_header_design"
+                    android:textColor="?attr/colorOnBackground" />
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btnFav"
@@ -67,33 +172,6 @@
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/btnCalClear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="@string/settings_del_cal"
-                android:textAppearance="@style/spinnerDropDownItemStyle"
-                android:textColor="#eeeeee"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/btnGoogleUpdate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:text="@string/settings_act_cal"
-                android:textAppearance="@style/spinnerDropDownItemStyle"
-                android:textColor="#eeeeee"
-                android:textSize="18sp" />
 
             <Switch
                 android:id="@+id/switch2"
@@ -123,33 +201,18 @@
                 android:textColor="#eeeeee"
                 android:textSize="18sp" />
 
-            <Switch
-                android:id="@+id/darkMode"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginBottom="2dp"
-                android:layout_weight="1"
-                android:background="@drawable/button_rounded_corners2"
-                android:padding="10dp"
-                android:text="Dark Mode"
-                android:textAppearance="@style/spinnerDropDownItemStyle"
-                android:textAlignment="center"
-                android:textColor="#eeeeee"
-                android:textSize="18sp"/>
 
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout5"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/fhb" />
         </LinearLayout>
+    </ScrollView>
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout5"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/fhb" />
+</RelativeLayout>
 
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>

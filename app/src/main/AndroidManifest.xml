@@ -15,7 +15,9 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AppTheme_1">
-        <activity android:name="com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity">
+        <activity android:name="com.Fachhochschulebib.fhb.pruefungsplaner.MainActivity"
+            android:configChanges="uiMode">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -25,7 +27,9 @@
             android:name="com.Fachhochschulebib.fhb.pruefungsplaner.table"
             android:label="@string/title_activity_recycleview_tabelle"
             android:windowSoftInputMode="adjustResize"
-            android:theme="@style/Theme.AppTheme_1" />
+            android:theme="@style/Theme.AppTheme_1"
+            android:configChanges="uiMode"
+            />
     </application>
 
 </manifest>
