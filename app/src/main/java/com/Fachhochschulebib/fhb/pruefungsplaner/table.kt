@@ -419,7 +419,7 @@ class table : AppCompatActivity() {
                             position: Int,
                             id: Long
                         ) {
-                            (parent?.getChildAt(0) as TextView).setTextColor(
+                            (parent?.getChildAt(0) as TextView)?.setTextColor(
                                 Utils.getColorFromAttr(
                                     R.attr.colorOnPrimary,
                                     theme

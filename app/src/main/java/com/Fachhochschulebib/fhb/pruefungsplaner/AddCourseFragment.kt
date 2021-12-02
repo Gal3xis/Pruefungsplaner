@@ -52,14 +52,14 @@ class AddCourseFragment() : Fragment() {
     var courseChosen: MutableList<Boolean> = ArrayList()
     var courseName: MutableList<String> = ArrayList()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //From onCreate
+
+        //Create access to Room-Database
         val database = AppDatabase.getAppDatabase(context!!)
+
+
         //TODO Change to Coroutine
         Thread(object : Runnable {
             override fun run() {
