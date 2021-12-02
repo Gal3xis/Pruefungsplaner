@@ -25,9 +25,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.util.ArrayList
 
-//Alexander Lange Start
+//TODO Alexander Lange Start
 import kotlinx.android.synthetic.main.choose_courses.*
-//Alexander Lange End
+//TODO Alexander Lange End
 
 
 

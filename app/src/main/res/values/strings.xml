@@ -124,6 +124,8 @@
     <string name="optionfragment_header_calendar">Kalender</string>
     <string name="optionenfragment_darkmode">Dark Mode:</string>
     <string name="optionenfragment_theme">Theme:</string>
+    <string name="optionfragment_header_pruefungen">Prüfungen</string>
+    <string name="optionfragment_header_about">Über</string>
 
 
     <string-array name="TestArray">

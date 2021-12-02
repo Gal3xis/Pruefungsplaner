@@ -19,6 +19,7 @@
     <color name="Theme1.colorDivider">#BDBDBD</color>
 
     <color name="Theme1.colorBackground">#333</color>
+    <color name="Theme1.colorOnBackground">#fff</color>
 
     <!-- Theme 2 -->
     <color name="Theme2.colorPrimary">#F44336</color>
@@ -39,4 +40,6 @@
     <color name="Theme2.colorDivider">#BDBDBD</color>
 
     <color name="Theme2.colorBackground">#333</color>
+    <color name="Theme2.colorOnBackground">#fff</color>
+
 </resources>

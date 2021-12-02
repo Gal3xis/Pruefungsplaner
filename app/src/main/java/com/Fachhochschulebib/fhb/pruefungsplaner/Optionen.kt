@@ -94,8 +94,8 @@ class Optionen() : Fragment() {
                 view: View, position: Int, id: Long
             ) {
                 when (position) {
-                    0 -> view.context.theme.applyStyle(R.style.Theme_AppTheme_1,true)
-                    1 -> view.context.theme.applyStyle(R.style.Theme_AppTheme_2,true)
+                    0 -> view.context.theme.applyStyle(R.style.Theme_AppTheme_1,false)
+                    1 -> view.context.theme.applyStyle(R.style.Theme_AppTheme_2,false)
                 }
             }
 
