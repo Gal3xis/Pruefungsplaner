@@ -43,6 +43,13 @@ android {
                 ["org.jetbrains.dokka.base.DokkaBase": """{ "separateInheritedMembers": true}"""]
         )
     }
+    dokkaHtml.configure{
+        dokkaSourceSets{
+            named("main"){
+                includeNonPublic.set(true)
+            }
+        }
+    }
 }
 
 dependencies {

@@ -38,6 +38,7 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.*
+import java.lang.Runnable
 
 //////////////////////////////
 // Terminefragment
@@ -210,6 +211,7 @@ class Terminefragment : Fragment() {
 
     }
 
+
     /**
      * This Method is called when the fragment gets destroyed. Its the last called Method in the Fragment-Lifecycle.
      * It needs to remove the Filter-Callback from the table.kt-class so it will no longer update when the filter is changed.
@@ -291,7 +293,6 @@ class Terminefragment : Fragment() {
     // Ende Merlin Gürtler
 
 
-
     // Ende Merlin Gürtler
 
     /**
@@ -370,6 +371,7 @@ class Terminefragment : Fragment() {
                 }
             }
         })
+        createView()
     }
 
     /**
@@ -401,7 +403,11 @@ class Terminefragment : Fragment() {
                 updatePruefperiode()
                 updateRoomDatabase()
             }.invokeOnCompletion {
-                setPruefungszeitraum()
+                Handler(Looper.getMainLooper()).post(object : Runnable {
+                    override fun run() {
+                        createView()
+                    }
+                })
             }
         }
     }
@@ -412,7 +418,7 @@ class Terminefragment : Fragment() {
      * @since 1.5
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
-    suspend fun updateRoomDatabase() {
+    fun updateRoomDatabase() {
         val currentExamineYear = mSharedPreferencesExamineYear?.getString("currentTermin", "0")
         val retrofit = RetrofitConnect(relativePPlanURL!!)
         // IDs der zu aktualisierenden Kurse
@@ -487,7 +493,7 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     //TODO Shorten
-    suspend fun updatePruefperiode() {
+    fun updatePruefperiode() {
 
         val mEditor: SharedPreferences.Editor?
         val retrofit = RetrofitConnect(relativePPlanURL!!)
@@ -651,7 +657,6 @@ class Terminefragment : Fragment() {
             e.printStackTrace()
         }
         progressBar?.dismiss()
-        createAdapter()
     }
 
     /**
@@ -720,7 +725,7 @@ class Terminefragment : Fragment() {
      * @since 1.5
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
-    private fun createAdapter() {
+    private fun createView() {
         val moduleAndCourseList: MutableList<String> = ArrayList()
         val examinerAndSemester: MutableList<String> = ArrayList()
         val dateList: MutableList<String> = ArrayList()
@@ -731,49 +736,53 @@ class Terminefragment : Fragment() {
         var statusMessage: MutableList<String> = ArrayList()
 
 
-        // Nun aus Shared Preferences
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        validation = examineYear + returnCourse + currentExaminePeriod
-        //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
-        val ppeList = database?.userDao()?.allEntries
-        Log.d("validation", ppeList?.size.toString())//TODO REMVOE
-        if (ppeList != null) {
-            for (entry in ppeList) {
-                if (!table.Filter.validateFilter(context, entry)) {
-                    continue
-                }
-                moduleAndCourseList.add(
-                    """${entry?.module}
+        scope_io.launch {
+            examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
+            currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
+            returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
+            validation = examineYear + returnCourse + currentExaminePeriod
+            //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
+            val ppeList = database?.userDao()?.allEntries
+            Log.d("validation", ppeList?.size.toString())//TODO REMVOE
+            if (ppeList != null) {
+                for (entry in ppeList) {
+                    if (!table.Filter.validateFilter(context, entry)) {
+                        continue
+                    }
+                    moduleAndCourseList.add(
+                        """${entry?.module}
      ${entry?.course}"""
-                )
-                examinerAndSemester.add(
-                    entry?.firstExaminer
-                            + " " + entry?.secondExaminer
-                            + " " + entry?.semester + " "
-                )
-                dateList.add(entry?.date ?: "")
-                moduleList.add(entry?.module ?: "")
-                idList.add(entry?.id ?: "")
-                formList.add(entry?.examForm ?: "")
-                roomList.add(entry?.room ?: "")
-                statusMessage.add(entry?.hint ?: "")
-                checkList.add(true)
+                    )
+                    examinerAndSemester.add(
+                        entry?.firstExaminer
+                                + " " + entry?.secondExaminer
+                                + " " + entry?.semester + " "
+                    )
+                    dateList.add(entry?.date ?: "")
+                    moduleList.add(entry?.module ?: "")
+                    idList.add(entry?.id ?: "")
+                    formList.add(entry?.examForm ?: "")
+                    roomList.add(entry?.room ?: "")
+                    statusMessage.add(entry?.hint ?: "")
+                    checkList.add(true)
+                }
+            } // define an adapter
+            mAdapter = MyAdapter(
+                moduleAndCourseList,
+                examinerAndSemester,
+                dateList,
+                moduleList,
+                idList,
+                formList,
+                mLayout,
+                roomList,
+                statusMessage
+            )
+            Handler(Looper.getMainLooper()).post {
+                recyclerView4?.adapter = mAdapter
+                setPruefungszeitraum()
             }
-        } // define an adapter
-        mAdapter = MyAdapter(
-            moduleAndCourseList,
-            examinerAndSemester,
-            dateList,
-            moduleList,
-            idList,
-            formList,
-            mLayout,
-            roomList,
-            statusMessage
-        )
-        Handler(Looper.getMainLooper()).post { recyclerView4?.adapter = mAdapter }
+        }
     }
 
     /**
@@ -799,7 +808,7 @@ class Terminefragment : Fragment() {
      */
     fun OnFilterChanged() {
         scope_io.launch {
-            createAdapter()
+            createView()
             Log.d("Terminefragment.kt-OnFilterChanged", "Updated Filter")
         }
     }
@@ -821,7 +830,7 @@ class Terminefragment : Fragment() {
                 object : swipeListener(context!!, false) {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                         val position = viewHolder.adapterPosition
-                        var isFavorite:Boolean? = null
+                        var isFavorite: Boolean? = null
                         scope_ui.launch {
                             isFavorite = mAdapter?.checkFavorite(viewHolder.adapterPosition)
                         }.invokeOnCompletion {

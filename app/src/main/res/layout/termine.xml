@@ -53,14 +53,13 @@
                 android:paddingBottom="0dp"
                 android:background="?attr/colorPrimaryLight"
                 >
-
                 <ImageView
-                    android:id="@+id/icon"
+                    android:id="@+id/icon2"
                     android:layout_width="44dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="false"
-                    android:src="@android:drawable/ic_input_add"
-                    tools:onClick="@android:drawable/btn_star" />
+                    app:tint="#228B22"
+                    android:src="@android:drawable/radiobutton_off_background"/>
 
                 <LinearLayout
                     android:id="@+id/LinearLayout5"
@@ -128,12 +127,13 @@
                 </LinearLayout>
 
                 <ImageView
-                    android:id="@+id/icon2"
+                    android:id="@+id/icon"
                     android:layout_width="44dp"
                     android:layout_height="match_parent"
                     android:layout_alignParentTop="false"
-                    app:tint="#228B22"
-                    android:src="@android:drawable/radiobutton_off_background"/>
+                    android:src="@android:drawable/ic_input_add"
+                    tools:onClick="@android:drawable/btn_star" />
+
 
             </LinearLayout>
 
