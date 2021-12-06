@@ -109,11 +109,11 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ProgressStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
-        <item name="colorAccent">@color/Theme1.colorPrimary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
     <style name="AutoCompleteStyle">
-        <item name="colorAccent">@color/Theme1.colorPrimary</item>
+        <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
     <style name="customAlertDialog" parent="@android:style/Theme.Dialog">
@@ -126,5 +126,5 @@
     <style name="OptionenFragment"></style>
 
     <string name="Theme1_ThemeName">Green</string>
-    <string name="Theme2_ThemeName">Red</string>
+    <string name="Theme2_ThemeName">Blue</string>
 </resources>

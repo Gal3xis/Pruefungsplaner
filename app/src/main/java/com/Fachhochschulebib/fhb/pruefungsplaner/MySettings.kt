@@ -1,58 +1,47 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
-import android.content.SharedPreferences
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import android.os.Looper
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.graphics.Color
 import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.provider.CalendarContract
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.*
+import android.view.ViewGroup
+import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.annotation.StyleRes
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
+import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.android.synthetic.main.optionfragment.*
+import kotlinx.android.synthetic.main.optionfragment.btnCalClear
+import kotlinx.android.synthetic.main.optionfragment.btnDB
+import kotlinx.android.synthetic.main.optionfragment.btnFav
+import kotlinx.android.synthetic.main.optionfragment.btnGoogleUpdate
+import kotlinx.android.synthetic.main.optionfragment.btnupdate
+import kotlinx.android.synthetic.main.optionfragment.darkMode
+import kotlinx.android.synthetic.main.optionfragment.optionenfragment_save_btn
+import kotlinx.android.synthetic.main.optionfragment.privacyDeclaration
+import kotlinx.android.synthetic.main.optionfragment.switch2
 import org.json.JSONArray
 import org.json.JSONException
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
-import android.content.Intent.getIntent
 
-
-
-
-
-//////////////////////////////
-// Optionen
-//
-//
-//
-// autor:
-// inhalt:  Abfragen ob prüfungen zum Kalender hinzugefügt werden sollen  und Methoden zum löschen, aktualisieren der Datenbank
-// zugriffsdatum: 20.2.20
-//
-//
-//
-//
-//
-//
-//////////////////////////////
-/**
- * Class to maintain the Options-Fragment.
- *
- * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
- */
-class Optionen() : Fragment() {
+class MySettings : AppCompatActivity() {
     private var save = false
     private var response: JSONArray? = null
     private var calDate = GregorianCalendar()
@@ -77,6 +66,7 @@ class Optionen() : Fragment() {
     var currentExaminePeriod: String? = null
     var returnCourse: String? = null
 
+    var view:View?=null
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -90,31 +80,23 @@ class Optionen() : Fragment() {
      * @see Fragment.onCreate
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        applySettings()
         super.onCreate(savedInstanceState)
-        sharedPreferencesSettings = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        mSharedPreferencesCurrentTermin = context
-            ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
-        mSharedPreferencesPPServerAddress =
-            view?.context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
-        mSharedPreferencesValidation =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
 
-    }
+        setContentView(R.layout.activity_settings)
+        view = findViewById<View>(android.R.id.content)
 
-    /**
-     * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
-     * In this Method, the UI-Elements choose_course.xml-Layout are being initialized. This cannot be done in the onCreate()-Method,
-     * because the UI-Elements, which are directly accessed via synthetic imports
-     * are no instantiated in the onCreate()-Method yet.
-     *
-     * @since 1.5
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
-     * @see Fragment.onViewCreated
-     */
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+        sharedPreferencesSettings = getSharedPreferences("settings", Context.MODE_PRIVATE)
+        mSharedPreferencesCurrentTermin = getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
+        mSharedPreferencesPPServerAddress = getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+        mSharedPreferencesValidation = getSharedPreferences("validation", Context.MODE_PRIVATE)
+        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
+        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
+        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
 
-        initThemeSpinner(view)
+
+
+        initThemeSpinner()
         initDarkModeBtn()
 
         //Button zum updaten der Prüfungen
@@ -131,7 +113,7 @@ class Optionen() : Fragment() {
         //TODO REMOVE val SWgooglecalender = v.findViewById<View>(R.id.switch2) as Switch
         //TODO REMOVE val privacyDeclaration = v.findViewById<View>(R.id.privacyDeclaration) as Button
         //holder.zahl1 = position;
-        val serverAdresse = view.context.getSharedPreferences("json8", 0)
+        val serverAdresse = getSharedPreferences("json8", 0)
         //Creating editor to store uebergebeneModule to shared preferences
         val mEditorGoogleCalendar = serverAdresse.edit()
 
@@ -190,10 +172,10 @@ class Optionen() : Fragment() {
                             response?.put("1")
                             mEditorGoogleCalendar.putString("jsondata2", response.toString())
                             mEditorGoogleCalendar.apply()
-                            val database = AppDatabase.getAppDatabase(context!!)
+                            val database = AppDatabase.getAppDatabase(applicationContext)
                             val ppeList = database?.userDao()?.getFavorites(true)
                             val googlecal = CheckGoogleCalendar()
-                            googlecal.setCtx(context)
+                            googlecal.setCtx(applicationContext)
                             if (ppeList != null) {
                                 for (entry in ppeList) {
                                     val id = entry?.id
@@ -234,8 +216,8 @@ class Optionen() : Fragment() {
                             Handler(Looper.getMainLooper()).post(object : Runnable {
                                 override fun run() {
                                     Toast.makeText(
-                                        view.context,
-                                        view.context.getString(R.string.add_calendar),
+                                        applicationContext,
+                                        applicationContext.getString(R.string.add_calendar),
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
@@ -291,7 +273,7 @@ class Optionen() : Fragment() {
         });
          */privacyDeclaration.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                val ft = activity?.supportFragmentManager?.beginTransaction()
+                val ft = supportFragmentManager?.beginTransaction()
                 ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
                 ft?.commit()
             }
@@ -312,7 +294,7 @@ class Optionen() : Fragment() {
                         val retrofit = RetrofitConnect(relativePPlanURL ?: "")
                         if (database != null) {
                             retrofit.RetrofitWebAccess(
-                                context!!,
+                                applicationContext,
                                 database,
                                 examineYear!!,
                                 currentExaminePeriod!!,
@@ -404,26 +386,54 @@ class Optionen() : Fragment() {
         darkMode.isChecked = sharedPreferencesSettings?.getBoolean("darkmode",false)?:false
     }
 
-    private fun initThemeSpinner(view: View) {
-        val theme1 = Theme(R.style.Theme_AppTheme_1, view)
-        val theme2 = Theme(R.style.Theme_AppTheme_2, view)
+    private fun initThemeSpinner() {
+        if(view!=null)
+        {
+            val theme1 = Theme(R.style.Theme_AppTheme_1, view!!)
+            val theme2 = Theme(R.style.Theme_AppTheme_2, view!!)
 
-        val adapter = ThemeAdapter(
-            view.context,
-            R.layout.layout_theme_spinner_row,
-            mutableListOf(theme1, theme2)
-        )
-        theme?.adapter = adapter
-        val selectedPos: Int
-        val themeid = sharedPreferencesSettings?.getInt("themeid", 0)
-        when (themeid) {
-            R.style.Theme_AppTheme_2 -> selectedPos = 1
-            else -> selectedPos = 0
+            val adapter = ThemeAdapter(
+                applicationContext,
+                R.layout.layout_theme_spinner_row,
+                mutableListOf(theme1, theme2)
+            )
+            theme_spinner?.adapter = adapter
+            val selectedPos: Int
+            val themeid = sharedPreferencesSettings?.getInt("themeid", 0)
+            when (themeid) {
+                R.style.Theme_AppTheme_2 -> selectedPos = 1
+                else -> selectedPos = 0
+            }
+            theme_spinner?.setSelection(selectedPos)
+
+
+            //TODO Alexander Lange End
         }
-        theme?.setSelection(selectedPos)
+
+    }
 
 
-        //TODO Alexander Lange End
+    /**
+     * Applies Settings from sharedPreferences to the activity.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Optionen
+     */
+    private fun applySettings()
+    {
+        val sharedPreferencesSettings = getSharedPreferences("settings",Context.MODE_PRIVATE)
+
+        //Set Theme
+        sharedPreferencesSettings?.getInt("themeid",0)?.let {
+            theme.applyStyle(it,true)
+            Log.d("ThemeTest",it.toString())
+        }
+
+        //Set Darkmode
+        val darkMode = sharedPreferencesSettings.getBoolean("darkmode",false)
+        AppCompatDelegate.setDefaultNightMode(if(darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        Log.d("ThemeTest",darkMode.toString())
     }
 
     private fun setTheme(@StyleRes themeId: Int, view: View?) {
@@ -436,7 +446,7 @@ class Optionen() : Fragment() {
         val editor = sharedPreferencesSettings?.edit()
 
         //Theme
-        val position = theme.selectedItemPosition
+        val position = theme_spinner.selectedItemPosition
 
         when (position) {
             1 ->editor?.putInt("themeid", R.style.Theme_AppTheme_2)?.apply()
@@ -447,23 +457,10 @@ class Optionen() : Fragment() {
         editor?.putBoolean("darkmode",darkMode.isChecked)
         editor?.apply()
 
-        activity?.recreate()
-        //fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
+        startActivity(Intent(applicationContext,MainActivity::class.java))
+     //fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val v = inflater.inflate(R.layout.optionfragment, container, false)
-        // Start Merlin Gürtler
-        // Nun aus Shared Preferences
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        // Ende Merlin Gürtler
-        return v
-    }
 
     fun updatePlan(validation: String?) {
         val a = PingUrl(serverAddress)
@@ -471,11 +468,11 @@ class Optionen() : Fragment() {
 
     //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
     fun noConnection() {
-        activity?.runOnUiThread(object : Runnable {
+        runOnUiThread(object : Runnable {
             override fun run() {
                 Toast.makeText(
-                    context,
-                    context!!.getString(R.string.noConnection),
+                    applicationContext,
+                    applicationContext.getString(R.string.noConnection),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -489,7 +486,7 @@ class Optionen() : Fragment() {
     fun updateCheckPlan() {
         Thread(object : Runnable {
             override fun run() {
-                val database = AppDatabase.getAppDatabase(context!!)
+                val database = AppDatabase.getAppDatabase(applicationContext)
 
 
                 //Log.d("Test",String.valueOf(pruefplanDaten.size()));
@@ -498,7 +495,7 @@ class Optionen() : Fragment() {
                 //retrofit auruf
                 val retrofit = RetrofitConnect(relativePPlanURL ?: "")
                 retrofit.retroUpdate(
-                    context!!,
+                    applicationContext,
                     database!!,
                     examineYear!!,
                     currentExaminePeriod!!,
@@ -510,8 +507,8 @@ class Optionen() : Fragment() {
                 Handler(Looper.getMainLooper()).post(object : Runnable {
                     override fun run() {
                         Toast.makeText(
-                            context,
-                            context!!.getString(R.string.add_favorite),
+                            applicationContext,
+                            applicationContext.getString(R.string.add_favorite),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -549,14 +546,14 @@ class Optionen() : Fragment() {
     //Google Kalender einträge löschen
     fun deleteCalendar() {
         val cal = CheckGoogleCalendar()
-        cal.setCtx(context)
+        cal.setCtx(applicationContext)
         cal.clearCal()
     }
 
     //Google Kalender aktualisieren
     fun updateCalendar() {
         val cal = CheckGoogleCalendar()
-        cal.setCtx(context)
+        cal.setCtx(applicationContext)
         cal.updateCal()
     }
 
@@ -564,7 +561,7 @@ class Optionen() : Fragment() {
         val event = ContentValues()
         event.put(CalendarContract.Events.CALENDAR_ID, 2)
         event.put(CalendarContract.Events.TITLE, course)
-        event.put(CalendarContract.Events.DESCRIPTION, context!!.getString(R.string.fh_name))
+        event.put(CalendarContract.Events.DESCRIPTION, applicationContext.getString(R.string.fh_name))
         event.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)
         event.put(CalendarContract.Events.DTEND, calDate.timeInMillis + (90 * 60000))
         event.put(CalendarContract.Events.ALL_DAY, 0) // 0 for false, 1 for true
@@ -572,10 +569,10 @@ class Optionen() : Fragment() {
         val timeZone = TimeZone.getDefault().id
         event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
         val baseUri = Uri.parse("content://com.android.calendar/events")
-        context?.contentResolver?.insert(baseUri, event)
+        applicationContext.contentResolver?.insert(baseUri, event)
         var result = 0
         val projection = arrayOf("_id", "title")
-        val cursor = context?.contentResolver
+        val cursor = applicationContext?.contentResolver
             ?.query(
                 baseUri, null,
                 null, null, null
@@ -596,5 +593,4 @@ class Optionen() : Fragment() {
         }
         return (result)
     }
-
 }

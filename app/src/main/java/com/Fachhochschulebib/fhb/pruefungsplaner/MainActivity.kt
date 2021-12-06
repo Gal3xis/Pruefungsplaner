@@ -69,6 +69,7 @@ class MainActivity() : AppCompatActivity() {
     val courseChosen: MutableList<Boolean> = ArrayList()
     val courseName: MutableList<String> = ArrayList()
     val facultyName: MutableList<String> = ArrayList()
+    var sharedPreferencesSettings:SharedPreferences?=null
 
     // private Spinner spStudiengangMain;
     // List<String> idList = new ArrayList<String>();
@@ -130,6 +131,10 @@ class MainActivity() : AppCompatActivity() {
     // Ende Merlin Gürtler
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //Set Theme
+        sharedPreferencesSettings = getSharedPreferences("settings",Context.MODE_PRIVATE)
+        sharedPreferencesSettings?.getInt("themeid",0)?.let { theme.applyStyle(it,true) }
+
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val context = baseContext
 

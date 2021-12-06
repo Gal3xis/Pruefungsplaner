@@ -11,6 +11,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import android.content.Intent
 import android.graphics.Color
+import android.os.Build
 import android.os.Handler
 import android.provider.Settings
 import android.provider.Telephony
@@ -21,8 +22,11 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.IdRes
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.lang.Exception
 
@@ -36,6 +40,7 @@ import java.security.cert.PKIXRevocationChecker
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.ThreadPoolExecutor
+import kotlin.math.log
 
 //Alexander Lange End
 
@@ -294,7 +299,6 @@ class table : AppCompatActivity() {
     var sharedPrefsFaculty: SharedPreferences? = null
     var mSharedPreferencesValidation: SharedPreferences? = null
 
-
     var examineYear: String? = null
     var currentExaminePeriode: String? = null
     var returnCourse: String? = null
@@ -313,11 +317,22 @@ class table : AppCompatActivity() {
      * @see Fragment.onCreate
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        applySettings()
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.hauptfenster)
+
+
+        invalidateOptionsMenu()
+        supportInvalidateOptionsMenu()
+        drawer_layout.invalidate()
+        drawer_layout.refreshDrawableState()
+
         sharedPrefsFaculty = getSharedPreferences("faculty", Context.MODE_PRIVATE)
         mSharedPreferencesValidation = getSharedPreferences("validation", 0)
         database = AppDatabase.getAppDatabase(applicationContext)
+        header.invalidate()
         // Start Merlin Gürtler
         // registriert die Toolbar
         setSupportActionBar(header)
@@ -517,10 +532,9 @@ class table : AppCompatActivity() {
                     )
                 }
                 R.id.navigation_settings -> {
-                    changeFragment(
-                        applicationContext.getString(R.string.title_settings),
-                        Optionen()
-                    )
+                    val myIntent = Intent(recyclerView4.context, MySettings::class.java)
+                    recyclerView4.context.startActivity(myIntent)
+                    true
                 }
                 //TODO REMOVE ?
                 R.id.navigation_electiveModule -> {
@@ -596,6 +610,29 @@ class table : AppCompatActivity() {
                 else -> true
             }
         }
+    }
+
+    /**
+     * Applies Settings from sharedPreferences to the activity.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Optionen
+     */
+    private fun applySettings()
+    {
+        val sharedPreferencesSettings = getSharedPreferences("settings",Context.MODE_PRIVATE)
+
+        //Set Theme
+        sharedPreferencesSettings?.getInt("themeid",0)?.let {
+            theme.applyStyle(it,true)
+            Log.d("ThemeTest",it.toString())
+        }
+
+        //Set Darkmode
+        val darkMode = sharedPreferencesSettings.getBoolean("darkmode",false)
+        AppCompatDelegate.setDefaultNightMode(if(darkMode)AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        Log.d("ThemeTest",darkMode.toString())
     }
 
     /**
