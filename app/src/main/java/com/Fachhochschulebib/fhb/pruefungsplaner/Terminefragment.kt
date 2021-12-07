@@ -310,6 +310,8 @@ class Terminefragment : Fragment() {
         // of the RecyclerView
         recyclerView4?.setHasFixedSize(true)
 
+        termineFragment_swiperefres.setDistanceToTriggerSync(1000)
+
         termineFragment_swiperefres.setOnRefreshListener {
             val globalVariable = this.context?.applicationContext as StartClass
             globalVariable.isShowNoProgressBar = false
@@ -800,7 +802,14 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun setPruefungszeitraum() {
-        val strJson = mSharedPreferencesPPeriode?.getString("currentPeriode", "0")
+        val sdf_read = SimpleDateFormat("dd/MM/yyyy")
+        val start = sdf_read.parse(mSharedPreferencesPPeriode?.getString("startDate","0"))
+        val end = sdf_read.parse(mSharedPreferencesPPeriode?.getString("endDate","0"))
+
+        val sdf_write = SimpleDateFormat("dd.MM.yyyy")
+
+        val strJson = sdf_write.format(start) + "-" + sdf_write.format(end)
+        //TODO REMOVE val strJson = mSharedPreferencesPPeriode?.getString("currentPeriode", "0")
         if (strJson != "0") {
             currentPeriode?.text = strJson
         }

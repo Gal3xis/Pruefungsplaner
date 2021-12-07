@@ -80,7 +80,7 @@ class AddCourseFragment() : Fragment() {
                     courseChosen,
                     activity?.applicationContext!!
                 )
-                Handler(Looper.getMainLooper()).post(Runnable { recyclerView?.adapter = mAdapter })
+                Handler(Looper.getMainLooper()).post(Runnable { recyclerViewChecklist?.adapter = mAdapter })
             }
         }).start()
 

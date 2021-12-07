@@ -2,8 +2,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.ViewGroup
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
@@ -14,7 +12,6 @@ import android.net.Uri
 import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
-import android.view.View
 import android.widget.*
 import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
@@ -26,9 +23,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import android.content.Intent.getIntent
-
-
-
+import android.view.*
 
 
 //////////////////////////////
@@ -98,7 +93,6 @@ class Optionen() : Fragment() {
             view?.context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
         mSharedPreferencesValidation =
             context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-
     }
 
     /**
@@ -400,6 +394,24 @@ class Optionen() : Fragment() {
         optionenfragment_save_btn.setOnClickListener { save() }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        menu.clear()
+        inflater.inflate(R.menu.action_menu,menu)
+        menu.findItem(R.id.menu_item_save).isVisible = true
+        menu.findItem(R.id.menu_item_save)
+        menu.findItem(R.id.menu_item_filter).isVisible = false
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_item_save->{
+                save()
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun initDarkModeBtn() {
         darkMode.isChecked = sharedPreferencesSettings?.getBoolean("darkmode",false)?:false
     }
@@ -462,6 +474,7 @@ class Optionen() : Fragment() {
         currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
         returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
         // Ende Merlin Gürtler
+        setHasOptionsMenu(true)
         return v
     }
 

@@ -17,9 +17,6 @@
         android:theme="@style/Theme.AppTheme_1"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MySettings"
-            />
-        <activity
             android:name=".MainActivity"
             >
             <intent-filter>

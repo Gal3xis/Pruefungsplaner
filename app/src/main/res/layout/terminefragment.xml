@@ -1,37 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/termineFragment_Root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="50dp"
+    android:layout_marginTop="45dp"
     android:background="?attr/colorBackground"
     android:orientation="vertical">
 
+
     <TextView
         android:id="@+id/currentPeriode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:background="@drawable/background_timespan"
+        android:backgroundTint="?attr/colorPrimary"
+        android:maxLines="1"
         android:text="@string/currentPeriod"
-        android:textColor="?attr/colorPrimaryText"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="?attr/colorOnPrimary"
+        android:outlineProvider="bounds"
+        android:elevation="30dp"
         android:textSize="20sp" />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/termineFragment_swiperefres"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="55dp"
-        >
+        android:layout_marginBottom="55dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            tools:listitem="@layout/termine">
+            tools:listitem="@layout/termine"
+            android:paddingTop="20dp"
+            >
 
 
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-</LinearLayout>
+</RelativeLayout>

@@ -427,7 +427,10 @@ class table : AppCompatActivity() {
      * @see AppCompatActivity.onCreateOptionsMenu
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menu.clear()
         menuInflater.inflate(R.menu.action_menu, menu);
+        menu.findItem(R.id.menu_item_filter).isVisible = true
+        menu.findItem(R.id.menu_item_save).isVisible = false
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -458,9 +461,18 @@ class table : AppCompatActivity() {
     override fun onBackPressed() {
         if (fragmentManager.backStackEntryCount > 0) {
             fragmentManager.popBackStack()
+
         } else {
-            setResult(0)
-            finish()
+            AlertDialog.Builder(this)
+                .setMessage("App wirklich beenden?")//TODO Extract String
+                .setTitle("Beenden")
+                .setPositiveButton("Beenden", DialogInterface.OnClickListener { dialog, which ->
+                    setResult(0)
+                    finishAffinity()
+                })
+                .setNegativeButton("Cancel",null)
+                .create()
+                .show()
         }
     }
 
@@ -532,9 +544,10 @@ class table : AppCompatActivity() {
                     )
                 }
                 R.id.navigation_settings -> {
-                    val myIntent = Intent(recyclerView4.context, MySettings::class.java)
-                    recyclerView4.context.startActivity(myIntent)
-                    true
+                    changeFragment(
+                        applicationContext.getString(R.string.title_settings),
+                        Optionen()
+                    )
                 }
                 //TODO REMOVE ?
                 R.id.navigation_electiveModule -> {
@@ -619,20 +632,19 @@ class table : AppCompatActivity() {
      * @since 1.5
      * @see Optionen
      */
-    private fun applySettings()
-    {
-        val sharedPreferencesSettings = getSharedPreferences("settings",Context.MODE_PRIVATE)
+    private fun applySettings() {
+        val sharedPreferencesSettings = getSharedPreferences("settings", Context.MODE_PRIVATE)
 
         //Set Darkmode
-        val darkMode = sharedPreferencesSettings.getBoolean("darkmode",false)
-        AppCompatDelegate.setDefaultNightMode(if(darkMode)AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        val darkMode = sharedPreferencesSettings.getBoolean("darkmode", false)
+        AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 
-        Log.d("ThemeTest",darkMode.toString())
+        Log.d("ThemeTest", darkMode.toString())
 
         //Set Theme
-        sharedPreferencesSettings?.getInt("themeid",0)?.let {
-            theme.applyStyle(it,true)
-            Log.d("ThemeTest",it.toString())
+        sharedPreferencesSettings?.getInt("themeid", 0)?.let {
+            theme.applyStyle(it, true)
+            Log.d("ThemeTest", it.toString())
         }
 
     }
@@ -687,6 +699,7 @@ class table : AppCompatActivity() {
         UpdateCourseFilter(this, sp_course)
         UpdateFacultyFilter(this, sp_faculty)
         UpdateModulFilter(this, sp_modul)
+
         val calendar = Calendar.getInstance()
         val local = Locale.getDefault()
         val sdf = SimpleDateFormat("dd.MM.yyyy", local)
@@ -767,10 +780,10 @@ class table : AppCompatActivity() {
             scope_io.launch {
                 //Get Courses from Room-Database
                 val courses =
-                    database?.userDao()?.getAllCoursesByFacultyId(Filter.facultyId)
+                database?.userDao()?.getChoosenCourse(true)
                 //Create a list of Course-Names
                 courses?.forEach { course ->
-                    list.add(course?.courseName)
+                    list.add(course.toString())
                 }
                 //Create Spinneradapter from coursename-list
                 sp_course_adapter = ArrayAdapter<String>(

@@ -127,6 +127,7 @@
     <string name="optionfragment_header_pruefungen">Prüfungen</string>
     <string name="optionfragment_header_about">Über</string>
     <string name="optionenfragment_save_btn_text">Speichern</string>
+    <string name="choose_course_all_btn_text">Alle</string>
 
 
     <string-array name="TestArray">
