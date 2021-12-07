@@ -310,6 +310,14 @@ class Terminefragment : Fragment() {
         // of the RecyclerView
         recyclerView4?.setHasFixedSize(true)
 
+        termineFragment_swiperefres.setOnRefreshListener {
+            val globalVariable = this.context?.applicationContext as StartClass
+            globalVariable.isShowNoProgressBar = false
+            updateDataFromServer()
+            initRecyclerview()
+            termineFragment_swiperefres.isRefreshing = false
+        }
+
         //mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
         // use a linear layout manager
         val layoutManager = LinearLayoutManager(view?.context)

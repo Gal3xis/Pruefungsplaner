@@ -94,8 +94,6 @@ class MySettings : AppCompatActivity() {
         currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
         returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
 
-
-
         initThemeSpinner()
         initDarkModeBtn()
 

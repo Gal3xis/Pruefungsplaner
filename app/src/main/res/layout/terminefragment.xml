@@ -2,21 +2,25 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/termineFragment_Root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/termineFragment_Root"
     android:layout_marginTop="50dp"
     android:background="?attr/colorBackground"
-    >
+    android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/currentPeriode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/currentPeriod"
-            android:textColor="?attr/colorPrimaryText"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/currentPeriode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/currentPeriod"
+        android:textColor="?attr/colorPrimaryText"
+        android:textSize="20sp" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/termineFragment_swiperefres"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView4"
@@ -28,4 +32,5 @@
 
 
         </androidx.recyclerview.widget.RecyclerView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>
