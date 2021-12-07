@@ -623,16 +623,18 @@ class table : AppCompatActivity() {
     {
         val sharedPreferencesSettings = getSharedPreferences("settings",Context.MODE_PRIVATE)
 
+        //Set Darkmode
+        val darkMode = sharedPreferencesSettings.getBoolean("darkmode",false)
+        AppCompatDelegate.setDefaultNightMode(if(darkMode)AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+
+        Log.d("ThemeTest",darkMode.toString())
+
         //Set Theme
         sharedPreferencesSettings?.getInt("themeid",0)?.let {
             theme.applyStyle(it,true)
             Log.d("ThemeTest",it.toString())
         }
 
-        //Set Darkmode
-        val darkMode = sharedPreferencesSettings.getBoolean("darkmode",false)
-        AppCompatDelegate.setDefaultNightMode(if(darkMode)AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-        Log.d("ThemeTest",darkMode.toString())
     }
 
     /**

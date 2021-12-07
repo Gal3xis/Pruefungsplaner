@@ -454,8 +454,7 @@ class MySettings : AppCompatActivity() {
         //Darkmode
         editor?.putBoolean("darkmode",darkMode.isChecked)
         editor?.apply()
-
-        startActivity(Intent(applicationContext,MainActivity::class.java))
+        recreate()
      //fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
 

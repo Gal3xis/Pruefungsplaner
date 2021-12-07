@@ -21,7 +21,7 @@
             />
         <activity
             android:name=".MainActivity"
-            android:configChanges="uiMode">
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,7 +30,6 @@
         </activity>
         <activity
             android:name=".table"
-            android:configChanges="uiMode"
             android:label="@string/title_activity_recycleview_tabelle"
             android:theme="@style/Theme.AppTheme_1"
             android:windowSoftInputMode="adjustResize" />
