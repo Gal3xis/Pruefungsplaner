@@ -310,7 +310,7 @@ class Terminefragment : Fragment() {
         // of the RecyclerView
         recyclerView4?.setHasFixedSize(true)
 
-        termineFragment_swiperefres.setDistanceToTriggerSync(1000)
+        termineFragment_swiperefres.setDistanceToTriggerSync(800)
 
         termineFragment_swiperefres.setOnRefreshListener {
             val globalVariable = this.context?.applicationContext as StartClass
@@ -730,7 +730,7 @@ class Terminefragment : Fragment() {
 // List<PruefplanEintrag> ppeList = datenbank.userDao().getEntriesByValidation(validation);
     // Start Merlin Gürtler
     /**
-     * Gets the Entries from the Room-Database and added them to the Recyclerview.
+     * Gets the Entries from the Room-Database and adds them to the Recyclerview.
      *
      * @since 1.5
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)

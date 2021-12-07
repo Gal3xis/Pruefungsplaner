@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.app.AlertDialog
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import androidx.core.view.GravityCompat
@@ -267,6 +268,15 @@ class table : AppCompatActivity() {
                     return false
                 }
             }
+            if(this.datum!=null){
+                val sdf = SimpleDateFormat("yyyy-MM-dd")
+                val date = sdf.parse(entry.date)
+                val date2 = this.datum
+                if(!this.datum!!.atDay(date))
+                {
+                    return false
+                }
+            }
             return true
         }
 
@@ -298,6 +308,7 @@ class table : AppCompatActivity() {
 
     var sharedPrefsFaculty: SharedPreferences? = null
     var mSharedPreferencesValidation: SharedPreferences? = null
+    var sharedPreferencesPeriod: SharedPreferences? = null
 
     var examineYear: String? = null
     var currentExaminePeriode: String? = null
@@ -330,7 +341,8 @@ class table : AppCompatActivity() {
         drawer_layout.refreshDrawableState()
 
         sharedPrefsFaculty = getSharedPreferences("faculty", Context.MODE_PRIVATE)
-        mSharedPreferencesValidation = getSharedPreferences("validation", 0)
+        mSharedPreferencesValidation = getSharedPreferences("validation", Context.MODE_PRIVATE)
+        sharedPreferencesPeriod = getSharedPreferences("currentPeriode", Context.MODE_PRIVATE)
         database = AppDatabase.getAppDatabase(applicationContext)
         header.invalidate()
         // Start Merlin Gürtler
@@ -470,7 +482,7 @@ class table : AppCompatActivity() {
                     setResult(0)
                     finishAffinity()
                 })
-                .setNegativeButton("Cancel",null)
+                .setNegativeButton("Cancel", null)
                 .create()
                 .show()
         }
@@ -700,12 +712,6 @@ class table : AppCompatActivity() {
         UpdateFacultyFilter(this, sp_faculty)
         UpdateModulFilter(this, sp_modul)
 
-        val calendar = Calendar.getInstance()
-        val local = Locale.getDefault()
-        val sdf = SimpleDateFormat("dd.MM.yyyy", local)
-
-        tv_date.text = sdf.format(calendar.time)
-
         btn_reset?.setOnClickListener { table.Filter.reset() }
 
         //Sets filterhooks, so the menu dynamically changes when the filter changes
@@ -722,6 +728,19 @@ class table : AppCompatActivity() {
             UpdateFacultyFilter(this, sp_faculty)
             UpdateModulFilter(this, sp_modul)
         }
+
+        val now = Calendar.getInstance().time
+        Filter.onDateChangedListener.add {
+            tv_date.text = SimpleDateFormat("dd.MM.yyyy").format(Filter.datum ?: now)
+        }
+
+        setCalendarBtn(imgbtn_date)
+        Filter.datum = Filter.datum?:SimpleDateFormat("dd/MM/yyyy").parse(
+            sharedPreferencesPeriod?.getString(
+                "startDate",
+                "01/01/1990"
+            )?:"01/01/1990"
+        )
 
         //Create and open the dialog
         val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
@@ -780,7 +799,7 @@ class table : AppCompatActivity() {
             scope_io.launch {
                 //Get Courses from Room-Database
                 val courses =
-                database?.userDao()?.getChoosenCourse(true)
+                    database?.userDao()?.getChoosenCourse(true)
                 //Create a list of Course-Names
                 courses?.forEach { course ->
                     list.add(course.toString())
@@ -998,7 +1017,9 @@ class table : AppCompatActivity() {
             val list: MutableList<String?> = mutableListOf("Alle")
             scope_io.launch {
                 //Get filtered list of modules from room-database
-                val modules = database?.userDao()?.getEntriesByCourseName(Filter.courseName)
+                val modules =
+                    if (Filter.courseName == null) database?.userDao()?.allEntries else database?.userDao()
+                        ?.getEntriesByCourseName(Filter.courseName)
                 //Loop through modules and create list of modulnames
                 modules?.forEach { i ->
                     list.add(i?.module)
@@ -1066,6 +1087,72 @@ class table : AppCompatActivity() {
             //Should never been called
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Filter.modulName = null
+            }
+        }
+    }
+
+    /**
+     * Initilizes the Calendar-Button of the menu. If the user clicks the Button,
+     * he is navigated to a DatePicker-Dialog where he can set a day to filter
+     * the moduls.
+     *
+     * @param[btn_calendar] The Button which is shown in the menu.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Calendar
+     * @see DatePickerDialog
+     * @see Filter
+     */
+    private fun setCalendarBtn(btn_calendar:ImageButton){
+        //Get start-and enddate from sharedPrefs
+        val startDate: Date = SimpleDateFormat("dd/MM/yyyy").parse(
+            sharedPreferencesPeriod?.getString(
+                "startDate",
+                "01/01/1990"
+            )?:"01/01/1990"
+        )
+        val endDate: Date = SimpleDateFormat("dd/MM/yyyy").parse(
+            sharedPreferencesPeriod?.getString(
+                "endDate",
+                "01/01/1990"
+            )?:"01/01/1990"
+        )
+        val pickedDate = Filter.datum?:SimpleDateFormat("dd/MM/yyyy").parse(
+            sharedPreferencesPeriod?.getString(
+                "startDate",
+                "01/01/1990"
+            )?:"01/01/1990"
+        )
+        //Extract day,month and year from startDate as startParameter for the Calendar
+        val year: Int = SimpleDateFormat("yyyy").format(pickedDate).toInt()
+        val month: Int = SimpleDateFormat("MM").format(pickedDate).toInt()
+        val day: Int = SimpleDateFormat("dd").format(pickedDate).toInt()
+
+        btn_calendar.setOnClickListener {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                //Create DatePicker
+                val dialog = DatePickerDialog(
+                    this,
+                    DatePickerDialog.OnDateSetListener { view, pyear, pmonthOfYear, pdayOfMonth ->
+
+                        Log.d("DatePicker-YEAR", pyear.toString())
+                        Log.d("DatePicker-MONTH", pmonthOfYear.toString())
+                        Log.d("DatePicker-DAY", pdayOfMonth.toString())
+
+                        val date = Calendar.getInstance()
+                        date.set(pyear, pmonthOfYear, pdayOfMonth)
+                        Filter.datum = date.time
+                    },
+                    year,
+                    month - 1,
+                    day
+                )
+                dialog.datePicker.minDate = startDate.time
+                dialog.datePicker.maxDate = endDate.time
+                dialog?.show()
+
+            } else {
+                null
             }
         }
     }
