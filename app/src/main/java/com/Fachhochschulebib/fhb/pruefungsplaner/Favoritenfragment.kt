@@ -20,6 +20,10 @@ import java.lang.Exception
 import java.util.ArrayList
 
 import kotlinx.android.synthetic.main.terminefragment.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 //////////////////////////////
 // favoritenfragment
@@ -32,50 +36,96 @@ import kotlinx.android.synthetic.main.terminefragment.*
 //
 //
 //////////////////////////////
+/**
+ * Class for the Fragment, where the user can see his selected exams.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.5
+ * @see Fragment
+ */
 class Favoritenfragment : Fragment() {
+    val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
+
     var mAdapter: MyAdapterfavorits? = null
     var check: MutableList<Boolean> = ArrayList()
+
     //TODO Alexander Lange Start
-    var filterChangeListenerPosition:Int?=null
+    var filterChangeListenerPosition: Int? = null
+
     //TODO Alexander Lange End
     // Datenbank initialisierung
-    var roomdaten: AppDatabase? = null
+    var database: AppDatabase? = null
+
+    /**
+     * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
+     * In this Method, the global parameter which are independent of the UI get initialized,
+     * like the App-SharedPreferences and the reference to the Room-Database
+     *
+     * @since 1.5
+     *
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
+     * @see Fragment.onCreate
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        database = AppDatabase.getAppDatabase(context!!)
+
     }
 
+    /**
+     * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
+     *
+     * @since 1.5
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @see Fragment.onViewCreated
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //From onCreate
 
         //From onCreateView
-        createAdapter(view)
+        createAdapter()
         //Komponenten  initialisieren für die Verwendung
-
-        recyclerView4?.setHasFixedSize(true)
+        initRecyclerview()
         currentPeriode.visibility = View.GONE
-        //linear layout manager
-        val layoutManager = LinearLayoutManager(view.context)
-        recyclerView4?.layoutManager = layoutManager
         // Merlin Gürtler
         // Aktiviert den swipe listener
         enableSwipeToDelete()
-        //TODO CHECK IF CORRECT
+
+        // Ende Merlin Gürtler
+        //TODO Alexander Lange Start
+        MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged() }
+        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size - 1
+        //TODO Alexander Lange End
+    }
+
+    /**
+     * Initializes the recyclerview, that shows the selected courses.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun initRecyclerview() {
+        recyclerView4?.setHasFixedSize(true)
+        //linear layout manager
+        val layoutManager = LinearLayoutManager(view?.context)
+        recyclerView4?.layoutManager = layoutManager
         recyclerView4?.addOnItemTouchListener(
             RecyclerItemClickListener(activity,
                 object : RecyclerItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
-                        //TODO REMOVE val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
+                        val txtSecondScreen =
+                            view?.findViewById<View>(R.id.txtSecondscreen) as TextView
                         val viewItem =
                             recyclerView4?.layoutManager?.findViewByPosition(position as Int)
                         val layoutinformationen =
                             viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
-
-
                         //überprüfung ob das linear layout geklickt wurde
                         layoutinformationen.setOnClickListener {
-                            if (txtSecondscreen.visibility == View.VISIBLE) {
-                                txtSecondscreen.visibility = View.GONE
+                            if (txtSecondScreen.visibility == View.VISIBLE) {
+                                txtSecondScreen.visibility = View.GONE
                                 check[position as Int] = false
                             } else {
 
@@ -96,27 +146,14 @@ class Favoritenfragment : Fragment() {
                                     }
                                 }
                                 // Ende Merlin Gürtler
-                                txtSecondscreen.visibility = View.VISIBLE
-                                txtSecondscreen.text = mAdapter
+                                txtSecondScreen.visibility = View.VISIBLE
+                                txtSecondScreen.text = mAdapter
                                     ?.giveString(position)
                             }
                         }
-
-                        /*
-                                                try{
-                                                    if(check.get(position)) {
-                                                        txtSecondScreen.setVisibility(v.VISIBLE);
-                                                        txtSecondScreen.setText(((MyAdapterfavorits) mAdapter)
-                                                                       .giveString(position));
-                                                    }}
-                                                catch(Exception e){
-
-                                                }
-                                                 */
                     }
                 })
         )
-
         // Start Merlin Gürtler
         recyclerView4?.addOnChildAttachStateChangeListener(
             object :
@@ -126,52 +163,47 @@ class Favoritenfragment : Fragment() {
                 // Wenn ein Element den Viewport verlässt, wird
                 // der zweite Screen zu geklappt
                 override fun onChildViewDetachedFromWindow(view: View) {
-                    //TODO REMOVE val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
-                    if (txtSecondscreen.visibility == View.VISIBLE) { //TODO CHECK RIGHT IMPORT
-                        txtSecondscreen.visibility = View.GONE
+                    val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
+                    if (txtSecondScreen.visibility == View.VISIBLE) {
+                        txtSecondScreen.visibility = View.GONE
                     }
                 }
             })
-
-        // Ende Merlin Gürtler
-        //TODO Alexander Lange Start
-        MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged(view) }
-        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size-1
-        //TODO Alexander Lange End
     }
 
-
-
-    fun OnFilterChanged(view: View){
-        Thread(object:Runnable{
-            override fun run() {
-                createAdapter(view)
-                Log.d("Favoritenfragment.kt-OnFilterChanged","Updated Filter")
-            }
-        }).start()
+    /**
+     * Called, when the [MainActivity.Filter] of the [MainActivity]-Class changes.
+     * It recreates the recyclerview, so the user can see the new filtered items.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun OnFilterChanged() {
+        createAdapter()
     }
 
-    fun createAdapter(view: View){
-        roomdaten = AppDatabase.getAppDatabase(context!!)
-
+    /**
+     * Creates the adapter for the recyclerview. Loads the chosen exams from the Room-Database
+     * and passes them into an adapter for the recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun createAdapter() {
         val courses: MutableList<String> = ArrayList()
         val profnames: MutableList<String> = ArrayList()
         val dates: MutableList<String> = ArrayList()
         val examNo: MutableList<String> = ArrayList()
         val room: MutableList<String> = ArrayList()
         val form: MutableList<String> = ArrayList()
-
-
-        //TODO CHANGE TO COROUTINE
-        Thread {
-            val ppeList = roomdaten?.userDao()?.getFavorites(true)
+        scope_io.launch {
+            val ppeList = database?.userDao()?.getFavorites(true)
 
             // Abfrage ob Prüfungen favorisiert wurden
             // Favorisierte Prüfungen für die Anzeige vorbereiten
             if (ppeList != null) {
                 for (entry in ppeList) {
-                    if(!MainActivity.Filter.validateFilter(context,entry))
-                    {
+                    if (!MainActivity.Filter.validateFilter(context, entry)) {
                         continue
                     }
                     courses.add(
@@ -190,36 +222,55 @@ class Favoritenfragment : Fragment() {
                     check.add(true)
                 }
             }
-
             // definiere adapter
             // übergabe der variablen an den Recyclerview Adapter, für die darstellung
             mAdapter = MyAdapterfavorits(courses, profnames, dates, examNo, room, form)
             Handler(Looper.getMainLooper()).post {
-
                 recyclerView4?.adapter = mAdapter
             }
-        }.start()
+        }
     }
 
     //TODO Alexander Lange Start
+    /**
+     * Removes the listener, when this fragment is not longer visible.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Fragment.onDestroy
+     * @see MainActivity.Filter
+     */
     override fun onDestroy() {
         super.onDestroy()
-        if(filterChangeListenerPosition!=null){
+        if (filterChangeListenerPosition != null) {
             MainActivity.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
         }
     }
     //TODO Alexander Lange End
 
+    /**
+     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     *
+     * @return Returns the initialized view of this Fragment
+     * @since 1.5
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @see Fragment.onCreateView
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.terminefragment, container, false)
-
-
         return v
     }
 
+    /**
+     * Creates the swipe-gesture on the recyclerview,
+     * so the user can swipe to delete an entry from the list.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     // Start Merlin Gürtler
     private fun enableSwipeToDelete() {
         // try and catch, da es bei einer
