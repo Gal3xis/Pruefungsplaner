@@ -2,44 +2,44 @@
 <resources>
     <!-- Theme 1 -->
     <color name="Theme1.colorPrimary">#009688</color>
-    <color name="Theme1.colorOnPrimary">#aaa</color>
+    <color name="Theme1.colorOnPrimary">#ddd</color>
 
     <color name="Theme1.colorPrimaryDark">#303030</color>
-    <color name="Theme1.colorOnPrimaryDark">#aaa</color>
+    <color name="Theme1.colorOnPrimaryDark">#fff</color>
 
     <color name="Theme1.colorPrimaryLight">#404040</color>
-    <color name="Theme1.colorOnPrimaryLight">#aaa</color>
+    <color name="Theme1.colorOnPrimaryLight">#ddd</color>
 
     <color name="Theme1.colorAccent">#00BCD4</color>
-    <color name="Theme1.colorOnAccent">#aaa</color>
+    <color name="Theme1.colorOnAccent">#ddd</color>
 
     <color name="Theme1.colorPrimaryText">#fff</color>
-    <color name="Theme1.colorSecondaryText">#aaa</color>
+    <color name="Theme1.colorSecondaryText">#ddd</color>
 
     <color name="Theme1.colorDivider">#BDBDBD</color>
 
     <color name="Theme1.colorBackground">#202020</color>
-    <color name="Theme1.colorOnBackground">#aaa</color>
+    <color name="Theme1.colorOnBackground">#ddd</color>
 
     <!-- Theme 2 -->
     <color name="Theme2.colorPrimary">#3F51B5</color>
-    <color name="Theme2.colorOnPrimary">#aaa</color>
+    <color name="Theme2.colorOnPrimary">#ddd</color>
 
     <color name="Theme2.colorPrimaryDark">#303030</color>
-    <color name="Theme2.colorOnPrimaryDark">#aaa</color>
+    <color name="Theme2.colorOnPrimaryDark">#fff</color>
 
     <color name="Theme2.colorPrimaryLight">#404040</color>
-    <color name="Theme2.colorOnPrimaryLight">#aaa</color>
+    <color name="Theme2.colorOnPrimaryLight">#ddd</color>
 
     <color name="Theme2.colorAccent">#607D8B</color>
-    <color name="Theme2.colorOnAccent">#aaa</color>
+    <color name="Theme2.colorOnAccent">#ddd</color>
 
     <color name="Theme2.colorPrimaryText">#fff</color>
-    <color name="Theme2.colorSecondaryText">#aaa</color>
+    <color name="Theme2.colorSecondaryText">#ddd</color>
 
     <color name="Theme2.colorDivider">#BDBDBD</color>
 
     <color name="Theme2.colorBackground">#202020</color>
-    <color name="Theme2.colorOnBackground">#aaa</color>
+    <color name="Theme2.colorOnBackground">#ddd</color>
 
 </resources>

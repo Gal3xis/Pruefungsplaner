@@ -9,10 +9,15 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import android.widget.Toast
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Handler
 import android.view.View
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.feedback.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 //////////////////////////////
 // TerminefragmentSuche
@@ -29,39 +34,57 @@ import kotlinx.android.synthetic.main.feedback.*
 //
 //
 //////////////////////////////
+/**
+ * Lets the user give Feedback about the app.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh.bielefeld.de)
+ * @since 1.5
+ */
 class FeedbackFragment : Fragment() {
-    var serverAddress: String? = null
-    var relativePPlanURL: String? = null
+    val scope_io = CoroutineScope(CoroutineName("IO-Scope")+Dispatchers.IO)
+    var mSharedPreferencesPPServerAdress:SharedPreferences? = null
+
+    var database:AppDatabase? = null
+
+
+    /**
+     * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
+     * In this Method, the global parameter which are independent of the UI get initialized,
+     * like the App-SharedPreferences and the reference to the Room-Database
+     *
+     * @since 1.5
+     *
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
+     * @see Fragment.onCreate
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mSharedPreferencesPPServerAdress = view?.context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+        database = view?.context?.let { AppDatabase.getAppDatabase(it) }
     }
 
+    /**
+     * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
+
+     * @since 1.5
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @see Fragment.onViewCreated
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //From onCreate
 
         //From onCreateView
-        // Die UI Komponenten
-        //TODO REMOVE val ratingBarUsability = v.findViewById<RatingBar>(R.id.ratingBarUsability)
-        //TODO REMOVE val ratingBarStability = v.findViewById<RatingBar>(R.id.ratingBarStability)
-        //TODO REMOVE val ratingBarFunctions = v.findViewById<RatingBar>(R.id.ratingBarFuntions)
-        //TODO REMOVE val feedBackInput = v.findViewById<TextView>(R.id.feedBackInput)
-        //TODO REMOVE val buttonSend = v.findViewById<Button>(R.id.buttonSend)
         buttonSend.setOnClickListener { view ->
-            val mSharedPreferencesPPServerAdress =
-                view.context.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
-            serverAddress = mSharedPreferencesPPServerAdress.getString("ServerIPAddress", "0")
-            relativePPlanURL = mSharedPreferencesPPServerAdress.getString("ServerRelUrlPath", "0")
+            val serverAddress = mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
+            val relativePPlanURL = mSharedPreferencesPPServerAdress?.getString("ServerRelUrlPath", "0")
             //retrofit auruf
-            val retrofit = RetrofitConnect(relativePPlanURL?:"")
-
-            // Initialisiere die Datenbank
-            val datenbank = AppDatabase.getAppDatabase(view.context)
-            Thread {
-                // Übergebe die Daten an Retrofit
-                if (datenbank != null) {
+            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
+            scope_io.launch {
+                if (database != null) {
                     retrofit.sendFeedBack(
-                        view.context, datenbank, serverAddress,
+                        view.context, database!!, serverAddress,
                         ratingBarUsability.rating, ratingBarFuntions.rating,
                         ratingBarStability.rating, feedBackInput.text.toString()
                     )
@@ -75,17 +98,23 @@ class FeedbackFragment : Fragment() {
                     val mainWindow = Intent(view.context, MainActivity::class.java)
                     startActivity(mainWindow)
                 }
-            }.start()
+            }
         }
     }
 
+    /**
+     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     *
+     * @return Returns the initialized view of this Fragment
+     * @since 1.5
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @see Fragment.onCreateView
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.feedback, container, false)
-
-
         return v
     }
 }

@@ -115,6 +115,12 @@
         <item name="colorAccent">?attr/colorPrimary</item>
     </style>
 
+    <style name="AppTheme.RatingBar" parent="Theme.AppCompat">
+        <item name="android:progressTint">?attr/colorAccent</item>
+        <item name="android:progressBackgroundTint">?attr/colorPrimaryDark</item>
+        <item name="android:secondaryProgressTint">?attr/colorPrimary</item>
+    </style>
+
     <style name="AutoCompleteStyle">
         <item name="colorAccent">?attr/colorPrimary</item>
     </style>
