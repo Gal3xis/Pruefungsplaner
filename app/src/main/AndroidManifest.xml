@@ -17,7 +17,7 @@
         android:theme="@style/Theme.AppTheme_1"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".MainActivity"
+            android:name=".StartActivity"
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,7 +27,7 @@
         </activity>
         <activity
             android:launchMode="singleInstance"
-            android:name=".table"
+            android:name=".MainActivity"
             android:label="@string/title_activity_recycleview_tabelle"
             android:theme="@style/Theme.AppTheme_1"
             android:windowSoftInputMode="adjustResize" />

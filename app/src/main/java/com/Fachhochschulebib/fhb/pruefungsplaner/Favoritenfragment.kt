@@ -14,9 +14,7 @@ import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
-import com.Fachhochschulebib.fhb.pruefungsplaner.swipeListener
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.android.synthetic.main.favoriten.*
 import java.lang.Exception
 import java.util.ArrayList
@@ -137,8 +135,8 @@ class Favoritenfragment : Fragment() {
 
         // Ende Merlin Gürtler
         //TODO Alexander Lange Start
-        table.Filter.onFilterChangedListener.add { OnFilterChanged(view) }
-        filterChangeListenerPosition = table.Filter.onFilterChangedListener.size-1
+        MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged(view) }
+        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size-1
         //TODO Alexander Lange End
     }
 
@@ -172,7 +170,7 @@ class Favoritenfragment : Fragment() {
             // Favorisierte Prüfungen für die Anzeige vorbereiten
             if (ppeList != null) {
                 for (entry in ppeList) {
-                    if(!table.Filter.validateFilter(context,entry))
+                    if(!MainActivity.Filter.validateFilter(context,entry))
                     {
                         continue
                     }
@@ -207,7 +205,7 @@ class Favoritenfragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         if(filterChangeListenerPosition!=null){
-            table.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+            MainActivity.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
         }
     }
     //TODO Alexander Lange End

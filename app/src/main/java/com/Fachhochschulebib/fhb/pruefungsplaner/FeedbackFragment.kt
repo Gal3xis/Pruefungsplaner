@@ -1,13 +1,9 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import android.widget.RatingBar
-import android.widget.TextView
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
@@ -15,9 +11,7 @@ import android.widget.Toast
 import android.content.Intent
 import android.os.Handler
 import android.view.View
-import android.widget.Button
 import androidx.fragment.app.Fragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.table
 import kotlinx.android.synthetic.main.feedback.*
 
 //////////////////////////////
@@ -78,7 +72,7 @@ class FeedbackFragment : Fragment() {
                         view.context.getString(R.string.sendedFeedBack),
                         Toast.LENGTH_SHORT
                     ).show()
-                    val mainWindow = Intent(view.context, table::class.java)
+                    val mainWindow = Intent(view.context, MainActivity::class.java)
                     startActivity(mainWindow)
                 }
             }.start()

@@ -1,7 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Bundle
 import android.content.SharedPreferences
@@ -133,7 +132,7 @@ class AddCourseFragment() : Fragment() {
                                 v.context.getString(R.string.courseActualisation),
                                 Toast.LENGTH_SHORT
                             ).show()
-                            val mainWindow = Intent(v.context, table::class.java)
+                            val mainWindow = Intent(v.context, MainActivity::class.java)
                             startActivity(mainWindow)
                         }
                     })

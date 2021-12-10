@@ -201,8 +201,8 @@ class Terminefragment : Fragment() {
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
         //TODO Alexander Lange Start
-        table.Filter.onFilterChangedListener.add{OnFilterChanged()}
-        filterChangeListenerPosition = table.Filter.onFilterChangedListener.size-1
+        MainActivity.Filter.onFilterChangedListener.add{OnFilterChanged()}
+        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size-1
     //TODO Alexander Lange End
     }
 
@@ -218,8 +218,8 @@ class Terminefragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            if (filterChangeListenerPosition != null && table.Filter.onFilterChangedListener.size>=filterChangeListenerPosition!!) {
-                table.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+            if (filterChangeListenerPosition != null && MainActivity.Filter.onFilterChangedListener.size>=filterChangeListenerPosition!!) {
+                MainActivity.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
             }
 
         }catch (ex:Exception){
@@ -756,7 +756,7 @@ class Terminefragment : Fragment() {
             Log.d("validation", ppeList?.size.toString())//TODO REMVOE
             if (ppeList != null) {
                 for (entry in ppeList) {
-                    if (!table.Filter.validateFilter(context, entry)) {
+                    if (!MainActivity.Filter.validateFilter(context, entry)) {
                         continue
                     }
                     moduleAndCourseList.add(
@@ -820,8 +820,8 @@ class Terminefragment : Fragment() {
      *
      * @since 1.5
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
-     * @see table.Filter
-     * @see table.Filter.onFilterChangedListener
+     * @see MainActivity.Filter
+     * @see MainActivity.Filter.onFilterChangedListener
      */
     fun OnFilterChanged() {
         scope_io.launch {
