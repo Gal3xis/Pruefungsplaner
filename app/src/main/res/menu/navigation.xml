@@ -12,11 +12,6 @@
         android:title="@string/title_search"/>
 
     <item
-        android:id="@+id/navigation_diary"
-        android:icon="@drawable/favoriten_nav"
-        android:title="@string/title_exam"/>
-
-    <item
         android:id="@+id/navigation_changeFaculty"
         android:icon="@drawable/ic_change_course"
         android:title="@string/title_changeFaculty"/>

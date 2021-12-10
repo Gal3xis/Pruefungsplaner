@@ -18,6 +18,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import java.lang.Exception
@@ -478,6 +479,7 @@ class MainActivity : AppCompatActivity() {
         val inputMethodManager = baseContext.getSystemService(
             INPUT_METHOD_SERVICE
         ) as InputMethodManager
+
         //Drawer Navigation Menü mit den Menüpunkten
         //Set listener for NavigationDrawer
         nav_view.setNavigationItemSelectedListener { item ->
@@ -529,12 +531,6 @@ class MainActivity : AppCompatActivity() {
                     }.start()
                     true*/
                 }
-                R.id.navigation_diary -> {
-                    changeFragment(
-                        applicationContext.getString(R.string.title_exam),
-                        Favoritenfragment()
-                    )
-                }
                 R.id.navigation_settings -> {
                     changeFragment(
                         applicationContext.getString(R.string.title_settings),
@@ -581,6 +577,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initBottomNavigationView() {
         //Set listener for BottomNavigationView
+
         bottom_navigation.setOnNavigationItemSelectedListener { item -> // Merlin Gürtler schließe die Tastatur falls offen
             val inputMethodManager = baseContext.getSystemService(
                 INPUT_METHOD_SERVICE

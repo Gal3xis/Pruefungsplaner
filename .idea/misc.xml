@@ -27,7 +27,9 @@
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/terminefragment.xml" value="0.4697777777777778" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/menu/navigation_bottom.xml" value="0.26576576576576577" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_timespan.xml" value="0.184375" />
+        <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/bottom_navigation_item.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/button_rounded_corners.xml" value="0.19947916666666668" />
+        <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/button_rounded_corners2.xml" value="0.19947916666666668" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_themecolor.xml" value="0.19947916666666668" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/layout/activity_settings.xml" value="0.1" />
@@ -50,6 +52,7 @@
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/layout/wahlmodul.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/action_menu.xml" value="0.18333333333333332" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation_bottom.xml" value="0.1" />
       </map>
     </option>
   </component>

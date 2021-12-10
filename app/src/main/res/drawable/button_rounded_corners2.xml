@@ -5,10 +5,7 @@
     android:shape="rectangle">
 
 
-    <gradient
-        android:startColor="#333111"
-        android:endColor="#333333"
-        android:angle="90" />
+    <solid android:color="#fff"/>
 
 
     // The width and color of the border

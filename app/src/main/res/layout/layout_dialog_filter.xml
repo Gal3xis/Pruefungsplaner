@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="350dp"
     android:layout_height="wrap_content"
-    tools:background="?attr/colorPrimaryDark"
     android:padding="20dp"
-    >
+    tools:background="?attr/colorPrimaryDark">
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -22,11 +20,10 @@
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/layout_dialogue_filter_faculty_tv"
                     android:textColor="?attr/colorOnPrimary"
-                    android:textSize="15sp"
-                    android:layout_gravity="center_vertical"
-                    />
+                    android:textSize="15sp" />
 
                 <Spinner
                     android:id="@+id/layout_dialog_filter_faculty_sp"
@@ -37,40 +34,38 @@
             </TableRow>
 
             <TableRow android:layout_marginTop="10dp">
+
                 <TextView
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/layout_dialogue_filter_course_tv"
-                    android:textSize="15sp"
-                    android:textColor="?attr/colorOnPrimary"
                     android:layout_gravity="center_vertical"
+                    android:text="@string/layout_dialogue_filter_course_tv"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="15sp"
 
                     />
 
                 <Spinner
                     android:id="@+id/layout_dialog_filter_course_sp"
-                    style="@style/AlertDialog.Filter.Spinner"
-                    />
+                    style="@style/AlertDialog.Filter.Spinner" />
             </TableRow>
 
             <TableRow android:layout_marginTop="10dp">
-            <TextView
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="@string/layout_dialogue_filter_modul_tv"
-                android:textSize="15sp"
-                android:textColor="?attr/colorOnPrimary"
-                android:layout_gravity="center_vertical"
 
-                />
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/layout_dialogue_filter_modul_tv"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="15sp"
+
+                    />
 
                 <Spinner
                     android:id="@+id/layout_dialog_filter_modul_sp"
-                    style="@style/AlertDialog.Filter.Spinner"
-                    />
+                    style="@style/AlertDialog.Filter.Spinner" />
             </TableRow>
-
-
 
 
             <TableRow android:layout_marginTop="10dp">
@@ -85,9 +80,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginStart="10dp"
-                    >
+                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/layout_dialog_filter_date_tv"
@@ -111,17 +105,168 @@
 
             </TableRow>
 
+            <TableRow android:layout_marginTop="10dp">
+
+                <TextView
+                    android:text="Prüfer:"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp" />
+
+
+                <AutoCompleteTextView
+                    android:id="@+id/acProfessor"
+                    android:layout_width="match_parent"
+                    android:layout_span="2"
+                    android:hint="@string/all"
+                    android:singleLine="true"
+                    android:textColor="?attr/colorPrimaryText"
+                    android:textColorLink="?attr/colorAccent"
+                    android:textSize="20sp"
+                    android:theme="@style/AutoCompleteStyle"
+
+                    />
+            </TableRow>
+
+            <TableRow android:layout_marginTop="10dp">
+
+                <TextView
+                    android:text="Semester:"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp"
+                    android:layout_gravity="center_vertical"
+                    />
+
+                <LinearLayout
+                    android:layout_span="2"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="?attr/colorPrimaryText"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="2"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="?attr/colorPrimaryText"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="3"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="?attr/colorPrimaryText"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="4"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="?attr/colorPrimaryText"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="5"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="?attr/colorPrimaryText"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="6"
+                            android:textSize="20sp" />
+
+                        <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:buttonTint="?attr/colorPrimaryText"
+                            />
+                    </LinearLayout>
+                </LinearLayout>
+            </TableRow>
+
             <TableRow>
+
                 <Button
                     android:id="@+id/layout_dialog_filter_reset_btn"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="20dp"
                     android:layout_span="2"
                     android:background="@drawable/button_rounded_corners"
                     android:backgroundTint="?attr/colorAccent"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="20dp"
                     android:text="@string/layout_dialog_filter_reset_btn_text"
-                    android:textColor="?attr/colorOnAccent"
-                    />
+                    android:textColor="?attr/colorOnAccent" />
 
             </TableRow>
 
