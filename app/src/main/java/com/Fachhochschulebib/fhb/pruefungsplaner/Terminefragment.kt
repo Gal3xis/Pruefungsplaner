@@ -164,9 +164,6 @@ class Terminefragment : Fragment() {
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
-     * In this Method, the UI-Elements choose_course.xml-Layout are being initialized. This cannot be done in the onCreate()-Method,
-     * because the UI-Elements, which are directly accessed via synthetic imports
-     * are no instantiated in the onCreate()-Method yet.
      *
      * @since 1.5
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
