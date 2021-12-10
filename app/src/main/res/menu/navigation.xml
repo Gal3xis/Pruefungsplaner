@@ -17,11 +17,6 @@
         android:title="@string/title_exam"/>
 
     <item
-        android:id="@+id/navigation_electiveModule"
-        android:icon="@drawable/ic_elective"
-        android:title="@string/title_electiveModule"/>
-
-    <item
         android:id="@+id/navigation_changeFaculty"
         android:icon="@drawable/ic_change_course"
         android:title="@string/title_changeFaculty"/>

@@ -541,13 +541,6 @@ class MainActivity : AppCompatActivity() {
                         Optionen()
                     )
                 }
-                //TODO REMOVE ?
-                R.id.navigation_electiveModule -> {
-                    changeFragment(
-                        applicationContext.getString(R.string.title_electiveModule),
-                        ChoiceModulSearchFragment()
-                    )
-                }
                 R.id.navigation_feedback -> {
                     changeFragment(
                         applicationContext.getString(R.string.title_feedback),
