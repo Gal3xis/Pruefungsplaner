@@ -204,11 +204,9 @@ class Terminefragment : Fragment() {
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
         //TODO Alexander Lange Start
-        table.Filter.onFilterChangedListener.add { OnFilterChanged() }
-        filterChangeListenerPosition = table.Filter.onFilterChangedListener.size - 1
-        //TODO Alexander Lange End
-
-
+        table.Filter.onFilterChangedListener.add{OnFilterChanged()}
+        filterChangeListenerPosition = table.Filter.onFilterChangedListener.size-1
+    //TODO Alexander Lange End
     }
 
 
@@ -222,8 +220,13 @@ class Terminefragment : Fragment() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        if (filterChangeListenerPosition != null) {
-            table.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+        try {
+            if (filterChangeListenerPosition != null && table.Filter.onFilterChangedListener.size>=filterChangeListenerPosition!!) {
+                table.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+            }
+
+        }catch (ex:Exception){
+            Log.e("TermineFragment.onStop",ex.stackTraceToString())
         }
     }
 
@@ -326,23 +329,22 @@ class Terminefragment : Fragment() {
         recyclerView4?.layoutManager = layoutManager
         mLayout = recyclerView4?.layoutManager
         //AdapterPassed() TODO REMOVE
+
         recyclerView4?.addOnItemTouchListener(
             RecyclerItemClickListener(
                 activity,
                 object : RecyclerItemClickListener.OnItemClickListener {
                     override fun onItemClick(view: View?, position: Int) {
-                        //TODO REMOVE val txtSecondScreen =
-                        //TODO REMOVE view!!.findViewById<View>(R.id.txtSecondscreen) as TextView
                         val viewItem = recyclerView4?.layoutManager?.findViewByPosition(position)
                         val layout1 =
                             viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
-                        layout1?.setOnClickListener { v1: View? ->
+                        layout1.setOnClickListener { v1: View? ->
+                            val txtSecondScreen = view!!.findViewById<View>(R.id.txtSecondscreen) as TextView
                             Log.e("@@@@@", "" + position)
-                            if (txtSecondscreen?.visibility == View.VISIBLE) {
-                                txtSecondscreen?.visibility = View.GONE
+                            if (txtSecondScreen.visibility == View.VISIBLE) {
+                                txtSecondScreen.visibility = View.GONE
                                 checkList[position] = false
                             } else {
-                                // Start Merlin Gürtler
                                 for (i in 0 until (recyclerView4?.childCount ?: 0)) {
                                     val holder =
                                         recyclerView4?.layoutManager?.findViewByPosition(i)
@@ -359,8 +361,9 @@ class Terminefragment : Fragment() {
                                     }
                                 }
                                 // Ende Merlin Gürtler
-                                txtSecondscreen?.visibility = View.VISIBLE
-                                txtSecondscreen?.text = mAdapter?.giveString(position)
+                                txtSecondScreen.visibility = View.VISIBLE
+                                txtSecondScreen.text = mAdapter?.giveString(position)
+                                // Start Merlin Gürtler
                             }
                         }
                         //TODO CHECK REMOVE positionOld = position

@@ -21,6 +21,7 @@ import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.widget.*
+import kotlinx.android.synthetic.main.terminefragment.*
 import java.lang.Exception
 import java.util.*
 
@@ -433,13 +434,14 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
         val ivicon: ImageView
         val statusIcon: ImageView
         val button: Button
+        val txtSecondScreen:TextView
 
         init {
             ivicon = v.findViewById<View>(R.id.icon) as ImageView
             statusIcon = v.findViewById<View>(R.id.icon2) as ImageView
             txtHeader = v.findViewById<View>(R.id.firstLine) as TextView
             txtFooter = v.findViewById<View>(R.id.secondLine) as TextView
-            val txtSecondScreen = v.findViewById<View>(R.id.txtSecondscreen) as TextView
+            txtSecondScreen = v.findViewById<View>(R.id.txtSecondscreen) as TextView
             txtthirdline = v.findViewById<View>(R.id.thirdLine) as TextView
             button = v.findViewById<View>(R.id.button7) as Button
 

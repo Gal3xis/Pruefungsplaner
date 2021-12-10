@@ -32,4 +32,9 @@ fun Date.atDay(date:Date):Boolean{
 
     return date1.equals(date2)
 }
+
+fun MutableList<()->Unit>.append(value:()->Unit):Int{
+    this.add { value }
+    return this.size-1
+}
 //TODO Alexander Lange End

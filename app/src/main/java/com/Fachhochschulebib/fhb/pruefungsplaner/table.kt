@@ -2,18 +2,15 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import androidx.appcompat.app.AppCompatActivity
 import android.content.SharedPreferences
-import android.os.Bundle
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import android.os.Looper
 import android.content.Intent
 import android.graphics.Color
-import android.os.Build
-import android.os.Handler
+import android.os.*
 import android.provider.Settings
 import android.provider.Telephony
 import android.util.Log
@@ -268,12 +265,10 @@ class table : AppCompatActivity() {
                     return false
                 }
             }
-            if(this.datum!=null){
+            if (this.datum != null) {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
                 val date = sdf.parse(entry.date)
-                val date2 = this.datum
-                if(!this.datum!!.atDay(date))
-                {
+                if (!this.datum!!.atDay(date)) {
                     return false
                 }
             }
@@ -334,17 +329,11 @@ class table : AppCompatActivity() {
 
         setContentView(R.layout.hauptfenster)
 
-
-        invalidateOptionsMenu()
-        supportInvalidateOptionsMenu()
-        drawer_layout.invalidate()
-        drawer_layout.refreshDrawableState()
-
         sharedPrefsFaculty = getSharedPreferences("faculty", Context.MODE_PRIVATE)
         mSharedPreferencesValidation = getSharedPreferences("validation", Context.MODE_PRIVATE)
         sharedPreferencesPeriod = getSharedPreferences("currentPeriode", Context.MODE_PRIVATE)
         database = AppDatabase.getAppDatabase(applicationContext)
-        header.invalidate()
+
         // Start Merlin Gürtler
         // registriert die Toolbar
         setSupportActionBar(header)
@@ -731,17 +720,17 @@ class table : AppCompatActivity() {
 
         val now = Calendar.getInstance().time
         Filter.onDateChangedListener.add {
-            tv_date.text = SimpleDateFormat("dd.MM.yyyy").format(Filter.datum ?: now)
+            tv_date.text =
+                if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
+                    Filter.datum!!
+                )
         }
 
         setCalendarBtn(imgbtn_date)
-        Filter.datum = Filter.datum?:SimpleDateFormat("dd/MM/yyyy").parse(
-            sharedPreferencesPeriod?.getString(
-                "startDate",
-                "01/01/1990"
-            )?:"01/01/1990"
-        )
 
+        tv_date.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
+            Filter.datum!!
+        )
         //Create and open the dialog
         val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
             .setTitle("Filter")
@@ -1103,25 +1092,25 @@ class table : AppCompatActivity() {
      * @see DatePickerDialog
      * @see Filter
      */
-    private fun setCalendarBtn(btn_calendar:ImageButton){
+    private fun setCalendarBtn(btn_calendar: ImageButton) {
         //Get start-and enddate from sharedPrefs
         val startDate: Date = SimpleDateFormat("dd/MM/yyyy").parse(
             sharedPreferencesPeriod?.getString(
                 "startDate",
                 "01/01/1990"
-            )?:"01/01/1990"
+            ) ?: "01/01/1990"
         )
         val endDate: Date = SimpleDateFormat("dd/MM/yyyy").parse(
             sharedPreferencesPeriod?.getString(
                 "endDate",
                 "01/01/1990"
-            )?:"01/01/1990"
+            ) ?: "01/01/1990"
         )
-        val pickedDate = Filter.datum?:SimpleDateFormat("dd/MM/yyyy").parse(
+        val pickedDate = Filter.datum ?: SimpleDateFormat("dd/MM/yyyy").parse(
             sharedPreferencesPeriod?.getString(
                 "startDate",
                 "01/01/1990"
-            )?:"01/01/1990"
+            ) ?: "01/01/1990"
         )
         //Extract day,month and year from startDate as startParameter for the Calendar
         val year: Int = SimpleDateFormat("yyyy").format(pickedDate).toInt()
@@ -1149,7 +1138,13 @@ class table : AppCompatActivity() {
                 )
                 dialog.datePicker.minDate = startDate.time
                 dialog.datePicker.maxDate = endDate.time
-                dialog?.show()
+                dialog.setButton(
+                    DatePickerDialog.BUTTON_NEUTRAL,
+                    "Alle",
+                    { dialog, which ->
+                        Filter.datum = null
+                    })
+                dialog.show()
 
             } else {
                 null
