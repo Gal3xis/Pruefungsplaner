@@ -11,6 +11,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.content.Intent
 import android.graphics.Color
 import android.os.*
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -18,9 +20,10 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.view.MenuCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import kotlinx.android.synthetic.main.activity_suche.*
 import java.lang.Exception
 
 //Alexander Lange Start
@@ -31,6 +34,7 @@ import org.json.JSONObject
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 //Alexander Lange End
 
@@ -67,7 +71,7 @@ class MainActivity : AppCompatActivity() {
         /**
          * Parameter to lock the Filter.
          * If it is set to true, all listener are not going to be called when a value is changed.
-         * If it is set back to false, the filterChanged()-Method is called.
+         * If it is set back to false, the [filterChanged()]-Method is called.
          *
          * @author Alexander Lange
          * @since 1.5
@@ -83,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         /**
          * Parameter to Filter with the Modulename.
-         * Calls the onModuleNameChangedListener and the onFilterChangedListener.
+         * Calls the [onModuleNameChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
          * @since 1.5
@@ -102,7 +106,7 @@ class MainActivity : AppCompatActivity() {
 
         /**
          * Parameter to Filter with the Coursename.
-         * Calls the onCourseNameChangedListener and the onFilterChangedListener.
+         * Calls the [onCourseNameChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
          * @since 1.5
@@ -121,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
         /**
          * Parameter to Filter with the Faculty-Id.
-         * Calls the onFacultyIdChangedListener and the onFilterChangedListener.
+         * Calls the [onFacultyIdChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
          * @since 1.5
@@ -139,8 +143,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         /**
-         * Parameter to Filter with a specific date. (TODO Not implemented yet)
-         * Calls the onDateChangedListener and the onFilterChangedListener.
+         * Parameter to Filter with a specific date.
+         * Calls the [onDateChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
          * @since 1.5
@@ -156,6 +160,56 @@ class MainActivity : AppCompatActivity() {
                 dateChanged()
                 filterChanged()
             }
+
+        /**
+         * Parameter to filter with a specific examiner.
+         * Calls the [onExaminerChangedListener] and [onFilterChangedListener].
+         * @author Alexander Lange
+         * @since 1.5
+         * @see onExaminerChangedListener
+         * @see onFilterChangedListener
+         */
+        var examiner: String? = null
+            set(value) {
+                field = value
+                if (locked) {
+                    return
+                }
+                examinerChanged()
+                filterChanged()
+            }
+
+        /**
+         * Parameter to filter with a specific semester. (Value from 1 to 6)
+         *
+         * @author Alexander Lange
+         * @since 1.5
+         */
+        var semester: Array<Boolean> = arrayOf(true, true, true, true, true, true)
+            set(value) {
+                return
+            }
+
+        /**
+         * Public method to set the value for a specific semester.
+         * Calls the [onSemesterChangedListener] and the [onFilterChangedListener]
+         * @param[pSemester] The semester to set the value.
+         * @param[active] If the semester is checked or not.
+         * @author Alexander Lange
+         * @since 1.5
+         * @see onSemesterChangedListener
+         * @see onFilterChangedListener
+
+         */
+        fun SetSemester(pSemester: Int,active:Boolean){
+            semester[pSemester] = active
+            if (locked) {
+                return
+            }
+            semesterChanged()
+            filterChanged()
+        }
+
 
         /**
          * Invokes every Method, appended to the onModuleNameChangedListener.
@@ -213,6 +267,34 @@ class MainActivity : AppCompatActivity() {
         }
 
         /**
+         * Invokes every method, appended to the onExaminerChangedListener.
+         *
+         * @author Alexander Lange
+         * @since 1.5
+         * @see onExaminerChangedListener
+         */
+        private fun examinerChanged() {
+            for (i in onExaminerChangedListener) {
+                i.invoke()
+            }
+
+        }
+
+        /**
+         * Invokes every method, appended to the [onSemesterChangedListener].
+         *
+         * @author Alexander Lange
+         * @since 1.5
+         * @see onSemesterChangedListener
+         */
+        private fun semesterChanged() {
+            for (i in onSemesterChangedListener) {
+                i.invoke()
+            }
+
+        }
+
+        /**
          * Invokes every Method, appended to the onFilterChangedListener.
          *
          * @author Alexander Lange
@@ -264,6 +346,9 @@ class MainActivity : AppCompatActivity() {
                     return false
                 }
             }
+            if (entry.semester != null && !semester[entry.semester!!.toInt().minus(1)]) {
+                return false
+            }
             return true
         }
 
@@ -279,6 +364,7 @@ class MainActivity : AppCompatActivity() {
             courseName = null
             modulName = null
             datum = null
+            semester.fill(true)
             for (i in onResetListener) {
                 i.invoke()
             }
@@ -289,6 +375,8 @@ class MainActivity : AppCompatActivity() {
         var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onFacultyIdChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
+        var onExaminerChangedListener: MutableList<() -> Unit> = mutableListOf()
+        var onSemesterChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onResetListener: MutableList<() -> Unit> = mutableListOf()
     }
@@ -677,12 +765,30 @@ class MainActivity : AppCompatActivity() {
         val sp_course = view.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
         val sp_faculty = view.findViewById<Spinner>(R.id.layout_dialog_filter_faculty_sp)
 
+        val tv_examiner = view.findViewById<AutoCompleteTextView>(R.id.layout_dialog_filter_examiner)
+
+        val c1 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
+        val c2 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
+        val c3 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_3)
+        val c4 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_4)
+        val c5 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_5)
+        val c6 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_6)
+
         //Initializes the view-components
         UpdateCourseFilter(this, sp_course)
         UpdateFacultyFilter(this, sp_faculty)
         UpdateModulFilter(this, sp_modul)
 
         btn_reset?.setOnClickListener { MainActivity.Filter.reset() }
+
+        initFilterExaminer(tv_examiner)
+
+        initFilterCheckbox(c1, 1)
+        initFilterCheckbox(c2, 2)
+        initFilterCheckbox(c3, 3)
+        initFilterCheckbox(c4, 4)
+        initFilterCheckbox(c5, 5)
+        initFilterCheckbox(c6, 6)
 
         //Sets filterhooks, so the menu dynamically changes when the filter changes
         Filter.onCourseNameChangedListener.add {
@@ -722,6 +828,37 @@ class MainActivity : AppCompatActivity() {
             .setView(view)
             .create()
         dialog.show()
+    }
+
+    private fun initFilterExaminer(tv_examiner:AutoCompleteTextView){
+        tv_examiner.addTextChangedListener(object:TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                return
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                return
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                Filter.examiner = s.toString()
+            }
+        })
+    }
+
+    /**
+     * Initializes a checkbox of the filter-menu.
+     *
+     * @param[c] The checkbox to be initialized.
+     * @param[semester] The semester, the checkbox is representing
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun initFilterCheckbox(c: CheckBox, semester: Int) {
+        c.isChecked = Filter.semester[semester - 1]
+        c.setOnCheckedChangeListener { buttonView, isChecked ->
+            Filter.SetSemester(semester-1,isChecked)
+        }
     }
 
     /**

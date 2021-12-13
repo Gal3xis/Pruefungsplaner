@@ -114,7 +114,7 @@
 
 
                 <AutoCompleteTextView
-                    android:id="@+id/acProfessor"
+                    android:id="@+id/layout_dialog_filter_examiner"
                     android:layout_width="match_parent"
                     android:layout_span="2"
                     android:hint="@string/all"
@@ -153,6 +153,7 @@
                             android:textSize="20sp" />
 
                         <CheckBox
+                            android:id="@+id/layout_dialog_filter_semester_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimaryText"
@@ -172,6 +173,7 @@
                             android:textSize="20sp" />
 
                         <CheckBox
+                            android:id="@+id/layout_dialog_filter_semester_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimaryText"
@@ -191,6 +193,7 @@
                             android:textSize="20sp" />
 
                         <CheckBox
+                            android:id="@+id/layout_dialog_filter_semester_3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimaryText"
@@ -210,6 +213,7 @@
                             android:textSize="20sp" />
 
                         <CheckBox
+                            android:id="@+id/layout_dialog_filter_semester_4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimaryText"
@@ -229,6 +233,7 @@
                             android:textSize="20sp" />
 
                         <CheckBox
+                            android:id="@+id/layout_dialog_filter_semester_5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimaryText"
@@ -248,6 +253,7 @@
                             android:textSize="20sp" />
 
                         <CheckBox
+                            android:id="@+id/layout_dialog_filter_semester_6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:buttonTint="?attr/colorPrimaryText"
