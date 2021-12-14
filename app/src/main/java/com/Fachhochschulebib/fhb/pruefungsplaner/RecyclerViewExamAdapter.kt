@@ -3,14 +3,10 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import android.content.SharedPreferences
 import android.graphics.drawable.GradientDrawable
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import android.os.Looper
-import com.Fachhochschulebib.fhb.pruefungsplaner.MyAdapter
-import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
@@ -21,7 +17,6 @@ import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.widget.*
-import kotlinx.android.synthetic.main.terminefragment.*
 import java.lang.Exception
 import java.util.*
 
@@ -34,7 +29,7 @@ import java.util.*
 //
 //
 //////////////////////////////
-class MyAdapter// private Intent calIntent;     // Provide a suitable constructor (depends on the kind of dataset)
+class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suitable constructor (depends on the kind of dataset)
     (
     var modules: MutableList<String>,
     private val examinerAndSemester: List<String>,
@@ -45,7 +40,7 @@ class MyAdapter// private Intent calIntent;     // Provide a suitable constructo
     mLayout: RecyclerView.LayoutManager?,
     private val roomAdapter: List<String>,
     private val statusHintList: List<String>
-) : RecyclerView.Adapter<MyAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
     private var save = false
     private var moduleName: String? = null
     private var context: Context? = null

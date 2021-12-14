@@ -87,7 +87,7 @@ class Terminefragment : Fragment() {
     private var returnCourse: String? = null
     private var courseMain: String? = null
 
-    private var mAdapter: MyAdapter? = null
+    private var mAdapter: RecyclerViewExamAdapter? = null
 
     //Link to Room-Database
     private var database: AppDatabase? = null
@@ -777,7 +777,7 @@ class Terminefragment : Fragment() {
                     checkList.add(true)
                 }
             } // define an adapter
-            mAdapter = MyAdapter(
+            mAdapter = RecyclerViewExamAdapter(
                 moduleAndCourseList,
                 examinerAndSemester,
                 dateList,
@@ -854,12 +854,12 @@ class Terminefragment : Fragment() {
                             if (isFavorite == true) {
                                 mAdapter?.deleteFromFavorites(
                                     position,
-                                    (viewHolder as MyAdapter.ViewHolder)
+                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
                                 )
                             } else {
                                 mAdapter?.addToFavorites(
                                     position,
-                                    (viewHolder as MyAdapter.ViewHolder)
+                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
                                 )
                             }
                             mAdapter?.notifyDataSetChanged()

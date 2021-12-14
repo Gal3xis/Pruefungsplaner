@@ -12,7 +12,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import android.util.Log
 import android.view.*
-import android.widget.Button
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
@@ -59,7 +58,7 @@ class TermineFragmentSearch : Fragment() {
     // private int position2 = 0;
     private var year2: String? = null
     private var mLayout: RecyclerView.LayoutManager? = null
-    var mAdapter: MyAdapter? = null
+    var mAdapter: RecyclerViewExamAdapter? = null
     var valuesToShowList: MutableList<Int> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -241,7 +240,7 @@ class TermineFragmentSearch : Fragment() {
             }
 
             // define an adapter
-            mAdapter = MyAdapter(
+            mAdapter = RecyclerViewExamAdapter(
                 moduleAndCourseList,
                 examinerAndSemester,
                 dateList,
@@ -287,12 +286,12 @@ class TermineFragmentSearch : Fragment() {
                             if (isFavorite == true) {
                                 mAdapter?.deleteFromFavorites(
                                     position,
-                                    (viewHolder as MyAdapter.ViewHolder)
+                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
                                 )
                             } else {
                                 mAdapter?.addToFavorites(
                                     position,
-                                    (viewHolder as MyAdapter.ViewHolder)
+                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
                                 )
                             }
                             mAdapter?.notifyDataSetChanged()
