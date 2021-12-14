@@ -29,7 +29,17 @@ import java.util.*
 //
 //
 //////////////////////////////
-class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suitable constructor (depends on the kind of dataset)
+/**
+ * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about all exams.
+ * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
+ * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ * @see RecyclerView.Adapter
+ * @see RecyclerView
+ */
+class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on the kind of dataset)
     (
     var modules: MutableList<String>,
     private val examinerAndSemester: List<String>,
@@ -41,20 +51,11 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
     private val roomAdapter: List<String>,
     private val statusHintList: List<String>
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
+
     private var save = false
     private var moduleName: String? = null
     private var context: Context? = null
     private var calDate = GregorianCalendar()
-
-    fun add(position: Int, item: String) {
-        modules.add(position, item)
-        notifyItemInserted(position)
-    }
-
-    fun remove(position: Int) {
-        modules.removeAt(position)
-        notifyItemRemoved(position)
-    }
 
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
@@ -103,8 +104,8 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
             }
             //TODO Change to COROUTINE
             Thread {
-                var database:AppDatabase?=null
-                var selectedEntry:TestPlanEntry?=null
+                var database: AppDatabase? = null
+                var selectedEntry: TestPlanEntry? = null
                 try {
                     moduleName = ""
                     for (b in 0 until course.size - 1) {
@@ -119,8 +120,8 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
                     //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
                     //                  Toast.LENGTH_SHORT).show();
                     save = false
-                }catch (ex:Exception){
-                    Log.d("MyAdapter.kt-onBindViewHolder",ex.stackTraceToString())
+                } catch (ex: Exception) {
+                    Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
                 }
                 Handler(Looper.getMainLooper()).post {
                     try {
@@ -132,14 +133,22 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
                             if (Integer.valueOf(selectedEntry?.id) == pruefid) {
                                 // Start Merlin Gürtler
                                 // Setze die Farbe des Icons
-                                holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry?.color))
+                                if (context != null) {
+                                    holder.statusIcon.setColorFilter(
+                                        Utils.getColorFromAttr(
+                                            Utils.statusColors[selectedEntry?.status]
+                                                ?: R.attr.defaultStatusColor, context!!.theme
+                                        )
+                                    )
+                                }
+                                //TODO holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry?.color))
 
                                 //if (eintrag.getStatus().equals("final")) {
                                 //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
                                 //}
                                 // Ende Merlin Gürtler
                                 if (selectedEntry?.favorit == true) {
-                                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))
+                                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))//TODO EXTRACT COLOR
                                     // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -200,7 +209,7 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
                     + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
             //holder.txtthirdline.setText("Semester: " + Semester5.toString());
         } catch (ex: Exception) {
-            Log.d("MyAdapter.kt-onBindViewHolder",ex.stackTraceToString())
+            Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
         }
 
     }
@@ -248,8 +257,8 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
  
  
  """
-        }catch (ex:Exception){
-            Log.e("MyAdapter.kt-giveStrtng:",ex.stackTraceToString())
+        } catch (ex: Exception) {
+            Log.e("MyAdapter.kt-giveStrtng:", ex.stackTraceToString())
             return ""
         }
 
@@ -400,8 +409,8 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
             // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
             save = selectedEntry?.favorit == true
             return save
-        }catch (ex:Exception){
-            Log.e("MyAdapter.kt-checkFavorite:",ex.stackTraceToString())
+        } catch (ex: Exception) {
+            Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
             return false
         }
 
@@ -429,7 +438,7 @@ class RecyclerViewExamAdapter// private Intent calIntent;     // Provide a suita
         val ivicon: ImageView
         val statusIcon: ImageView
         val button: Button
-        val txtSecondScreen:TextView
+        val txtSecondScreen: TextView
 
         init {
             ivicon = v.findViewById<View>(R.id.icon) as ImageView

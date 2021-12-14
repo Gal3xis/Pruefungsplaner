@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.AppTheme_1" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.AppTheme_1" parent="BaseTheme">
         <item name="themeName">@string/Theme1_ThemeName</item>
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/Theme1.colorPrimary</item>
@@ -30,7 +30,7 @@
 
     </style>
 
-    <style name="Theme.AppTheme_2" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.AppTheme_2" parent="BaseTheme">
         <item name="themeName">@string/Theme2_ThemeName</item>
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/Theme2.colorPrimary</item>
@@ -56,6 +56,15 @@
         <item name="actionMenuTextColor">@color/Theme2.colorOnPrimaryDark</item>
     </style>
 
+    <style name="BaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="frueherVorschlag">#f50</item>
+        <item name="inDiskussion">#ff0</item>
+        <item name="veroeffentlicht">#0a0</item>
+        <item name="veraltet">#333</item>
+        <item name="zukuenftigePlanung">#FFFFFF</item>
+        <item name="defaultStatusColor">#000</item>
+    </style>
+
     <!-- Alert Dialog -->
     <style name="AlertDialog.Filter" parent="@style/ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <!-- Background Color-->
@@ -68,6 +77,8 @@
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <!-- Style for negative button -->
     </style>
+
+
 
     <style name="OptionenFragment.Entry" parent="Base.CardView">
         <item name="android:background">@drawable/rounded_color_border</item>

@@ -19,4 +19,14 @@
         <attr name="colorUnchecked" format="reference" />
         <attr name="themeName" format="reference" />
     </declare-styleable>
+
+
+    <declare-styleable name="Status">
+        <attr name="defaultStatusColor" format="color"/>
+        <attr name="frueherVorschlag" format="color"/>
+        <attr name="inDiskussion" format="color"/>
+        <attr name="veroeffentlicht" format="color"/>
+        <attr name="veraltet" format="color"/>
+        <attr name="zukuenftigePlanung" format="color"/>
+    </declare-styleable>
 </resources>

@@ -10,6 +10,7 @@
       <map>
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/drawable/dotted_line.xml" value="0.48355555555555557" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/drawable/ic_baseline_menu.xml" value="0.48355555555555557" />
+        <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/drawable/ic_circle.xml" value="0.2954954954954955" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/drawable/ic_themecolor.xml" value="0.48355555555555557" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/drawable/spinnerbackground.xml" value="0.2954954954954955" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/activity_main.xml" value="0.4466666666666667" />
@@ -18,6 +19,7 @@
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/hauptfenster.xml" value="0.13896218117854" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_dialog_filter.xml" value="0.28153153153153154" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_options_header.xml" value="0.47612612612612615" />
+        <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_status_legend.xml" value="0.28153153153153154" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_theme_spinner_background.xml" value="0.28468468468468466" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_theme_spinner_row.xml" value="0.47612612612612615" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/optionfragment.xml" value="0.3542805100182149" />
@@ -25,6 +27,7 @@
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/start.xml" value="0.3333333333333333" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/termine.xml" value="0.47612612612612615" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/terminefragment.xml" value="0.4697777777777778" />
+        <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/menu/action_menu.xml" value="0.28153153153153154" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/menu/navigation_bottom.xml" value="0.26576576576576577" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_timespan.xml" value="0.184375" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/bottom_navigation_item.xml" value="0.1" />
