@@ -59,7 +59,6 @@ import java.lang.Runnable
  * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
  */
 class Terminefragment : Fragment() {
-
     //region parameter
     //UI
     private var progressBar: ProgressDialog? = null
@@ -108,6 +107,7 @@ class Terminefragment : Fragment() {
     companion object {
         var validation: String? = null
     }
+
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
