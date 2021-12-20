@@ -3,17 +3,13 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Handler
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
 import android.os.Looper
 import android.util.Log
 import android.view.View
@@ -32,7 +28,17 @@ import java.lang.Exception
 //
 //
 //////////////////////////////
-class MyAdapterfavorits     // Provide a suitable constructor (depends on the kind of dataset)
+/**
+ * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorit exams.
+ * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
+ * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ * @see RecyclerView.Adapter
+ * @see RecyclerView
+ */
+class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
     (
     private val moduleAndCourseList: MutableList<String>,
     private val examinerAndSemester: List<String>,
@@ -40,7 +46,7 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
     private val ppIdList: List<String>,
     private val roomList: List<String>,
     private val formList: List<String>
-) : RecyclerView.Adapter<MyAdapterfavorits.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null
     private var name: String? = null
     private var context: Context? = null
