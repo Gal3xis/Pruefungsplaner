@@ -22,7 +22,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import kotlinx.android.synthetic.main.activity_suche.*
 import java.lang.Exception
 
 //Alexander Lange Start
@@ -587,37 +586,6 @@ class MainActivity : AppCompatActivity() {
                         applicationContext.getString(R.string.title_calender),
                         Terminefragment()
                     )
-                }
-                R.id.navigation_medication -> {
-                    changeFragment(
-                        applicationContext.getString(R.string.title_search),
-                        searchFragment()
-                    )
-                    /*TODO REMOVE? //Menüpunkt Suche
-                    //TODO Change to Coroutine
-                    Thread {
-                        val validation = examineYear + returnCourse + currentExaminePeriode
-                        val rommData = AppDatabase.getAppDatabase(applicationContext)
-                        val ppeList =
-                            rommData?.userDao()?.getEntriesByValidation(validation)
-                        Handler(Looper.getMainLooper()).post {
-                            header?.title =
-                                applicationContext.getString(R.string.title_search)
-                            recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
-                            //TODO Check if needed or remove:caCalender?.visibility = View.GONE
-                            //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
-                            drawer_layout.closeDrawer(GravityCompat.START)
-
-
-                            //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
-                            if (ppeList?.size ?: 0 < 2) {
-                            } else {
-                                ft.replace(R.id.frame_placeholder, searchFragment())
-                                ft.commit()
-                            }
-                        }
-                    }.start()
-                    true*/
                 }
                 R.id.navigation_settings -> {
                     changeFragment(
