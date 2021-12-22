@@ -15,6 +15,7 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import kotlinx.android.synthetic.main.terminefragment.*
 import kotlinx.coroutines.*
 import java.lang.Exception
 import java.util.*
@@ -63,6 +64,8 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     private var context: Context? = null
     private var calDate = GregorianCalendar()
 
+    private var openItem: ViewHolder? = null
+
     // Create new views (invoked by the layout manager)
     /**
      * Inflates the view that shows the information for the passed viewType. In this case the information
@@ -85,18 +88,18 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         val inflater = LayoutInflater.from(
             parent.context
         )
-        val v = inflater.inflate(R.layout.termine, parent, false)
-        context = v.context
+        val view = inflater.inflate(R.layout.termine, parent, false)
+        context = view.context
 
         context?.let { database = AppDatabase.getAppDatabase(it) }
 
         sharedPreferencesValidation =
             context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
 
-        return ViewHolder(v)
+        return ViewHolder(view)
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+// Replace the contents of a view (invoked by the layout manager)
     /**
      * Initializes the [ViewHolder] with information of the viewtype. In this case,
      * passes the examinformation to the UI-Elements.
@@ -113,6 +116,17 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         try {
             val name = modules[position]
             holder.txtHeader.text = name
+            holder.layout.setOnClickListener { view: View? ->
+                if (holder.txtSecondScreen.visibility == View.VISIBLE) {
+                    holder.txtSecondScreen.visibility = View.GONE
+                } else {
+                    holder.txtSecondScreen.visibility = View.VISIBLE
+                    holder.txtSecondScreen.text = giveString(position)
+                    //Make previous details invisible
+                    openItem?.txtSecondScreen?.visibility = View.GONE
+                    openItem = holder
+                }
+            }
 
             // Start Merlin Gürtler
             // erhalte den ausgewählten Studiengang
@@ -124,6 +138,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
 
             //Darstellen der Werte in der Prüfitem Komponente
             initFooter(splitDay, holder, position)
+
         } catch (ex: Exception) {
             Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
         }
@@ -229,7 +244,12 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                                     ?: R.attr.defaultStatusColor, context!!.theme
                             )
                         )
-                        holder.ivicon.setImageDrawable(context!!.resources.getDrawable(Utils.favoritIcons[selectedEntry?.favorit?:false]!!,context!!.theme))
+                        holder.ivicon.setImageDrawable(
+                            context!!.resources.getDrawable(
+                                Utils.favoritIcons[selectedEntry?.favorit ?: false]!!,
+                                context!!.theme
+                            )
+                        )
                     }
                 } catch (ex: Exception) {
                     Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
@@ -270,7 +290,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @author Alexander Lange
      * @since 1.5
      */
-    //Methode zum Darstellen der "weiteren Informationen"
     fun giveString(position: Int): String {
         try {
             val name = modules[position]
@@ -329,7 +348,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @since 1.5
      */
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
-        var selectedEntry:TestPlanEntry? = null
+        var selectedEntry: TestPlanEntry? = null
         scopeIO.launch {
             favcheck = false
             selectedEntry = database?.userDao()?.getEntryById(planId[position])
@@ -351,7 +370,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                 Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
                     .show()
                 // Ende Merlin Gürtler
-                this.notifyDataSetChanged()
+                this.notifyItemChanged(position)
             }
         }
     }
@@ -381,11 +400,11 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
 
                 //Speichern des Prüfitem als Favorit
 
-                SaveInCalendar(position, holder)
+                saveInCalendar(position, holder)
 
                 Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
                     .show()
-                this.notifyDataSetChanged()
+                this.notifyItemChanged(position)
             }
         }
 
@@ -400,7 +419,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @author Alexander Lange
      * @since 1.5
      */
-    private fun SaveInCalendar(
+    private fun saveInCalendar(
         position: Int,
         holder: ViewHolder
     ) {
@@ -489,7 +508,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
 
-            return selectedEntry?.favorit?:false
+            return selectedEntry?.favorit ?: false
         } catch (ex: Exception) {
             Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
             return false
@@ -581,7 +600,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         var favcheck = true
     }
 
-    // Provide a reference to the views for each data item
+// Provide a reference to the views for each data item
 // Complex data items may need more than one view per item, and
 // you provide access to all the views for a data item in a view holder
     /**
@@ -619,6 +638,4 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             bigLayout = v.findViewById<View>(R.id.linearLayout6) as LinearLayout
         }
     }
-
-
 }

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 //TODO Alexander Lange Start
 
@@ -77,5 +78,25 @@ fun AppCompatActivity.applySettings() {
 
     theme.applyStyle(themeToApply, true)
     Log.d("ThemeTest", themeToApply.toString())
+}
+
+/**
+ * Adds an item to a given position, or, if the position is null, appends the item at the end of the list.
+ *
+ * @param[position] The position, where the item shall be inserted. Can be null
+ * @param[item] The item to be inserted
+ *
+ * @return The position, where the item was inserted.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ */
+fun <E> MutableList<E>.add(position:Int?,item:E):Int{
+    if(position==null){
+        add(item)
+        return size-1
+    }
+    add(position,item)
+    return position
 }
 //TODO Alexander Lange End
