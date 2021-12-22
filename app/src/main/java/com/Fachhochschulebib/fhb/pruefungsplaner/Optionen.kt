@@ -386,11 +386,6 @@ class Optionen() : Fragment() {
      * @see Menu
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        //Remove all items from the current menu.
-        menu.clear()
-        //Inflate the new menu and place it in the actionmenu.
-        inflater.inflate(R.menu.action_menu, menu)
-        //Make Save-Button visible
         menu.findItem(R.id.menu_item_save).isVisible = true
         //Make Filter-Button invisible
         menu.findItem(R.id.menu_item_filter).isVisible = false
@@ -410,13 +405,14 @@ class Optionen() : Fragment() {
      */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //Set behaviour for each clicked item.
-        when (item.itemId) {
+        return when (item.itemId) {
             //When the user clicked the savebutton.
             R.id.menu_item_save -> {
                 save()
+                true
             }
+            else-> false
         }
-        return super.onOptionsItemSelected(item)
     }
 
     /**
