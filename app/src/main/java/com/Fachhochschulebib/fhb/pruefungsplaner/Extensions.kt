@@ -1,6 +1,10 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.content.Context
+import android.util.Log
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -15,14 +19,13 @@ import java.util.*
  * @since 1.5
  * @see Spinner
  */
-fun Spinner.setSelection(value:String?){
-    if(value==null)
-    {
+fun Spinner.setSelection(value: String?) {
+    if (value == null) {
         return
     }
-    for (i in 0 until count){
+    for (i in 0 until count) {
         val item = getItemAtPosition(i)
-        if(item.toString().equals(value)){
+        if (item.toString().equals(value)) {
             setSelection(i)
             return
         }
@@ -40,17 +43,39 @@ fun Spinner.setSelection(value:String?){
  * @since 1.5
  * @see Date
  */
-fun Date.atDay(date:Date):Boolean{
-    val sdfy  = SimpleDateFormat("yyyy")
-    val sdfm  = SimpleDateFormat("MM")
-    val sdfd  = SimpleDateFormat("dd")
+fun Date.atDay(date: Date): Boolean {
+    val sdfy = SimpleDateFormat("yyyy")
+    val sdfm = SimpleDateFormat("MM")
+    val sdfd = SimpleDateFormat("dd")
 
     val date1 = Calendar.getInstance()
-    date1.set(sdfy.format(this).toInt(),sdfm.format(this).toInt(),sdfd.format(this).toInt())
+    date1.set(sdfy.format(this).toInt(), sdfm.format(this).toInt(), sdfd.format(this).toInt())
 
     val date2 = Calendar.getInstance()
-    date2.set(sdfy.format(date).toInt(),sdfm.format(date).toInt(),sdfd.format(date).toInt())
+    date2.set(sdfy.format(date).toInt(), sdfm.format(date).toInt(), sdfd.format(date).toInt())
 
     return date1.equals(date2)
+}
+
+/** Applies Settings from sharedPreferences to the activity.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ *
+ * @see Optionen
+ */
+fun AppCompatActivity.applySettings() {
+    val sharedPreferencesSettings = getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+    //Set Darkmode
+    val darkMode = sharedPreferencesSettings.getBoolean("darkmode", false)
+    AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+    Log.d("ThemeTest", darkMode.toString())
+
+    //Set Theme
+    val themeToApply = sharedPreferencesSettings?.getInt("themeid", R.style.Theme_AppTheme_1) ?: R.style.Theme_AppTheme_1
+
+    theme.applyStyle(themeToApply, true)
+    Log.d("ThemeTest", themeToApply.toString())
 }
 //TODO Alexander Lange End

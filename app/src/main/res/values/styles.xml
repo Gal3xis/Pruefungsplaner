@@ -64,6 +64,8 @@
         <item name="zukuenftigePlanung">#FFFFFF</item>
         <item name="defaultStatusColor">#000</item>
         <item name="spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+        <item name="isFavorit">#f00</item>
+        <item name="isNotFavorit">#0f0</item>
     </style>
 
     <!-- Alert Dialog -->

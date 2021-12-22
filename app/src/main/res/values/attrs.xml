@@ -29,4 +29,9 @@
         <attr name="veraltet" format="color"/>
         <attr name="zukuenftigePlanung" format="color"/>
     </declare-styleable>
+
+    <declare-styleable name="Favorit">
+        <attr name="isFavorit" format="color"/>
+        <attr name="isNotFavorit" format="color"/>
+    </declare-styleable>
 </resources>

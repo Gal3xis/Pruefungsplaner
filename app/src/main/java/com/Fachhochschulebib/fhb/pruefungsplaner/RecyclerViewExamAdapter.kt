@@ -3,20 +3,19 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import android.graphics.drawable.GradientDrawable
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import android.os.Looper
 import android.content.ContentValues
 import android.content.Context
-import android.graphics.Color
+import android.content.SharedPreferences
 import android.net.Uri
-import android.os.Build
 import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.widget.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import kotlinx.coroutines.*
 import java.lang.Exception
 import java.util.*
 
@@ -48,9 +47,16 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     private val planId: List<String>,
     private val examForm: List<String>,
     mLayout: RecyclerView.LayoutManager?,
-    private val roomAdapter: List<String>,
+    private val room: List<String>,
     private val statusHintList: List<String>
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
+
+    private val scopeIO = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
+
+    private var database: AppDatabase? = null
+
+    private var sharedPreferencesValidation: SharedPreferences? = null
+
 
     private var save = false
     private var moduleName: String? = null
@@ -58,6 +64,19 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     private var calDate = GregorianCalendar()
 
     // Create new views (invoked by the layout manager)
+    /**
+     * Inflates the view that shows the information for the passed viewType. In this case the information
+     * about the exam.
+     *
+     * @param[parent] The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param[viewType] The view type of the new View.
+     * @return The [ViewHolder], that shows the information.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.onCreateViewHolder
+     */
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -68,152 +87,189 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         )
         val v = inflater.inflate(R.layout.termine, parent, false)
         context = v.context
+
+        context?.let { database = AppDatabase.getAppDatabase(it) }
+
+        sharedPreferencesValidation =
+            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+
         return ViewHolder(v)
     }
 
     // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Initializes the [ViewHolder] with information of the viewtype. In this case,
+     * passes the examinformation to the UI-Elements.
+     *
+     * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param[position] The position of the item within the adapter's data set.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.onBindViewHolder
+     */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         try {
             val name = modules[position]
-
-            // Start Merlin Gürtler
-            // erhalte den ausgewählten Studiengang
-            val sharedPreferencesSelectedCourse =
-                context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-            val selectedCourse = sharedPreferencesSelectedCourse?.getString("selectedCourse", "0")
-                ?.split(" ")?.toTypedArray()
-            val colorElectiveModule = "#7FFFD4"
-            val course = name.split(" ").toTypedArray()
-
-            // Ende Merlin Gürtler
-            if (selectedCourse?.get(selectedCourse.size - 1) != course?.get(course.size - 1)) {
-                // Lege die Farben für die Wahlmodule fest
-                val backGroundGradient = GradientDrawable(
-                    GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(
-                        Color.parseColor(colorElectiveModule),
-                        Color.parseColor(colorElectiveModule)
-                    )
-                )
-                backGroundGradient.cornerRadius = 40f
-                val sdk = Build.VERSION.SDK_INT
-                if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                    holder.layout.setBackgroundDrawable(backGroundGradient)
-                } else {
-                    holder.layout.background = backGroundGradient
-                }
-            }
-            //TODO Change to COROUTINE
-            Thread {
-                var database: AppDatabase? = null
-                var selectedEntry: TestPlanEntry? = null
-                try {
-                    moduleName = ""
-                    for (b in 0 until course.size - 1) {
-                        moduleName = moduleName + " " + course[b]
-                    }
-
-                    //Datenbank und Pruefplan laden
-                    database = AppDatabase.getAppDatabase(context!!)
-                    selectedEntry = database?.userDao()?.getEntryById(planId[position])
-
-                    // Überprüfung, ob Prüfitem favorisiert wurde
-                    //  Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-                    //                  Toast.LENGTH_SHORT).show();
-                    save = false
-                } catch (ex: Exception) {
-                    Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
-                }
-                Handler(Looper.getMainLooper()).post {
-                    try {
-                        if (position >= 0) {
-                            Log.d("Handler", position.toString())//TODO REMOVE
-                            Log.d("Handler", planId.size.toString())
-                            //planId.forEach { Log.d("Handler",it.toString()) }
-                            val pruefid = planId[position]?.toInt()
-                            if (Integer.valueOf(selectedEntry?.id) == pruefid) {
-                                // Start Merlin Gürtler
-                                // Setze die Farbe des Icons
-                                if (context != null) {
-                                    holder.statusIcon.setColorFilter(
-                                        Utils.getColorFromAttr(
-                                            Utils.statusColors[selectedEntry?.status]
-                                                ?: R.attr.defaultStatusColor, context!!.theme
-                                        )
-                                    )
-                                }
-                                //TODO holder.statusIcon.setColorFilter(Color.parseColor(selectedEntry?.color))
-
-                                //if (eintrag.getStatus().equals("final")) {
-                                //    holder.statusIcon.setColorFilter(Color.parseColor("#228B22"));
-                                //}
-                                // Ende Merlin Gürtler
-                                if (selectedEntry?.favorit == true) {
-                                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))//TODO EXTRACT COLOR
-                                    // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                    } catch (ex: Exception) {
-                        Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
-                    }
-
-                }
-            }.start()
             holder.txtHeader.text = name
 
             // Start Merlin Gürtler
-            // Gibt die Statusmeldung aus
-            holder.statusIcon.setOnClickListener { v: View ->
-                Toast.makeText(
-                    v.context,
-                    statusHintList[position],
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            // Ende Merlin Gürtler
-            holder.ivicon.setOnClickListener { v: View? ->
-                Thread {
-                    val isFavorite = checkFavorite(position)
-                    // toggelt den Favoriten
-                    if (!isFavorite) {
-                        addToFavorites(position, holder)
-                    } else {
-                        deleteFromFavorites(position, holder)
-                    }
-                }.start()
-            }
+            // erhalte den ausgewählten Studiengang
+            val course = name.split(" ").toTypedArray()
 
+            setIcons(position, holder)
             //Aufteilung nach verschiedenen Tagen
-            val splitDay = date[position].split(" ").toTypedArray()
-            if (position > 0) {
-                val splitDayBefore = date[position - 1].split(" ").toTypedArray()
-
-                //Vergleich der beiden Tage
-                //wenn ungleich, dann blaue box mit Datumseintrag
-                if (splitDay[0] == splitDayBefore[0]) {
-                    holder.button.height = 0
-                }
-            }
+            val splitDay = splitInDays(position, holder)
 
             //Darstellen der Werte in der Prüfitem Komponente
-            val splitMonthDayYear = splitDay[0].split("-").toTypedArray()
-            holder.txtthirdline.text =
-                context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
-            holder.button.text = (splitMonthDayYear[2] + "."
-                    + splitMonthDayYear[1] + "."
-                    + splitMonthDayYear[0])
-            val splitExaminerAndSemester = examinerAndSemester[position].split(" ").toTypedArray()
-            holder.txtFooter.text = (context!!.getString(R.string.prof)
-                    + splitExaminerAndSemester[0] + ", "
-                    + splitExaminerAndSemester[1]
-                    + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
-            //holder.txtthirdline.setText("Semester: " + Semester5.toString());
+            initFooter(splitDay, holder, position)
         } catch (ex: Exception) {
             Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
         }
 
     }
 
+    /**
+     * Initializes the UI-Elements, that hold deeper information about the exam.
+     *
+     * @param[splitDay] The day, the exam takes place.
+     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+     * @param[position] The position of the item in the Recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun initFooter(
+        splitDay: Array<String>,
+        holder: ViewHolder,
+        position: Int
+    ) {
+        val splitMonthDayYear = splitDay[0].split("-").toTypedArray()
+        holder.txtthirdline.text =
+            context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
+        holder.button.text = (splitMonthDayYear[2] + "."
+                + splitMonthDayYear[1] + "."
+                + splitMonthDayYear[0])
+        val splitExaminerAndSemester = examinerAndSemester[position].split(" ").toTypedArray()
+        holder.txtFooter.text = (context!!.getString(R.string.prof)
+                + splitExaminerAndSemester[0] + ", "
+                + splitExaminerAndSemester[1]
+                + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
+        //holder.txtthirdline.setText("Semester: " + Semester5.toString());
+    }
+
+    /**
+     * Tests if the exam before that takes place at the same time as itself.
+     * If that is the case, it removes the date-indicator, so its placed under the indicator
+     * of the first exam that day.
+     *
+     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+     * @param[position] The position of the item in the Recyclerview.
+     * @return The day the exam takes place.
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun splitInDays(
+        position: Int,
+        holder: ViewHolder
+    ): Array<String> {
+        val splitDay = date[position].split(" ").toTypedArray()
+        if (position > 0) {
+            val splitDayBefore = date[position - 1].split(" ").toTypedArray()
+
+            //Vergleich der beiden Tage
+            //wenn ungleich, dann blaue box mit Datumseintrag
+            if (splitDay[0] == splitDayBefore[0]) {
+                holder.button.height = 0
+            }
+        }
+        return splitDay
+    }
+
+    /**
+     * Sets the icons for the items. Determines, the status of the exam an whether it is a favorit
+     * or not and sets the corresponding colors.
+     *
+     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+     * @param[position] The position of the item in the Recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun setIcons(
+        position: Int,
+        holder: ViewHolder
+    ) {
+        var selectedEntry: TestPlanEntry? = null
+        scopeIO.launch {
+            try {
+                selectedEntry = database?.userDao()?.getEntryById(planId[position])
+                //Datenbank und Pruefplan laden
+                save = false
+            } catch (ex: Exception) {
+                Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
+            }
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post {
+                try {
+                    if (position < 0) {
+                        return@post
+                    }
+                    val pruefid = planId[position]?.toInt()
+                    if (Integer.valueOf(selectedEntry?.id) != pruefid) {
+                        return@post
+                    }
+                    // Start Merlin Gürtler
+                    // Setze die Farbe des Icons
+                    if (context != null) {
+                        holder.statusIcon.setColorFilter(
+                            Utils.getColorFromAttr(
+                                Utils.statusColors[selectedEntry?.status]
+                                    ?: R.attr.defaultStatusColor, context!!.theme
+                            )
+                        )
+                        holder.ivicon.setImageDrawable(context!!.resources.getDrawable(Utils.favoritIcons[selectedEntry?.favorit?:false]!!,context!!.theme))
+                    }
+                } catch (ex: Exception) {
+                    Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
+                }
+            }
+        }
+        //OnClickListener
+        // Start Merlin Gürtler
+        // Gibt die Statusmeldung aus
+        holder.statusIcon.setOnClickListener { v: View ->
+            Toast.makeText(
+                v.context,
+                statusHintList[position],
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+        // Ende Merlin Gürtler
+        holder.ivicon.setOnClickListener { v: View? ->
+            scopeIO.launch {
+                val isFavorite = checkFavorite(position)
+                // toggelt den Favoriten
+                if (!isFavorite) {
+                    addToFavorites(position, holder)
+                } else {
+                    deleteFromFavorites(position, holder)
+                }
+            }
+            // Ende Merlin Gürtler
+        }
+    }
+
+    /**
+     * Returns a string that shows the extended information of the exam.
+     *
+     * @param[position] The position of the item in the Recyclerview.
+     * @return The string that contains the information
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     //Methode zum Darstellen der "weiteren Informationen"
     fun giveString(position: Int): String {
         try {
@@ -226,7 +282,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                 moduleName = moduleName + " " + course[b]
                 b++
             }
-            val room2 = roomAdapter[position]
+            val room = room[position]
             val division1 = date[position].split(" ").toTypedArray()
             val division2 = division1[0].split("-").toTypedArray()
             //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
@@ -246,7 +302,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                     0,
                     5
                 )
-            }${context!!.getString(R.string.clock)}${context!!.getString(R.string.room)}$room2${
+            }${context!!.getString(R.string.clock)}${context!!.getString(R.string.room)}$room${
                 context!!.getString(
                     R.string.form
                 )
@@ -261,25 +317,28 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             Log.e("MyAdapter.kt-giveStrtng:", ex.stackTraceToString())
             return ""
         }
-
     }
 
+    /**
+     * Deletes the exam from favorits. Executed after clicking the add/remove-icon.
+     *
+     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+     * @param[position] The position of the item in the Recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
-        //TODO Change to COROUTINE
-        Thread {
+        var selectedEntry:TestPlanEntry? = null
+        scopeIO.launch {
             favcheck = false
-
-            //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context!!)
-            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
-
+            selectedEntry = database?.userDao()?.getEntryById(planId[position])
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-            //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-            // Toast.LENGTH_SHORT).show();
             if (selectedEntry?.favorit == true) {
                 database?.userDao()
                     ?.update(false, planId[position].toInt())
             }
+        }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
                 // Start Merlin Gürtler
                 //Entferne den Eintrag aus dem Calendar falls vorhanden
@@ -288,174 +347,199 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                 if (!cal.checkCal(planId[position].toInt())) {
                     cal.deleteEntry(planId[position].toInt())
                 }
-                holder.ivicon.clearColorFilter()
+
                 Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
                     .show()
                 // Ende Merlin Gürtler
+                this.notifyDataSetChanged()
             }
-        }.start()
+        }
     }
 
+    /**
+     * Adds the exam to the favorits. Executed after clicking the add/remove-icon.
+     *
+     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+     * @param[position] The position of the item in the Recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun addToFavorites(position: Int, holder: ViewHolder) {
-        //TODO CHANGE TO COROUTINE
-        Thread {
+        var selectedEntry: TestPlanEntry? = null
+        scopeIO.launch {
             favcheck = false
-
-            //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context!!)
-            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
-
-            //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-            //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-            // Toast.LENGTH_SHORT).show();
-
+            selectedEntry = database?.userDao()?.getEntryById(planId[position])
             //Speichern des Prüfitem als Favorit
             // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
             if (selectedEntry?.favorit == false) {
                 database?.userDao()
                     ?.update(true, planId[position].toInt())
             }
+        }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
-                val pruefid = planId[position].toInt()
-                if (Integer.valueOf(selectedEntry?.id) == pruefid) {
-                    holder.ivicon.setColorFilter(Color.parseColor("#06ABF9"))
-                    // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-                }
 
                 //Speichern des Prüfitem als Favorit
-                // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-                //Überprüfung ob Pürfungen zum Google Kalender Hinzugefügt werden sollen
-                val GoogleCalenderWert = context?.getSharedPreferences("json8", 0)
-                //Creating editor to store uebergebeneModule to shared preferences
-                val googleCalendarEditor = GoogleCalenderWert?.edit()
-                googleCalendarEditor?.apply()
-                val checkGoogleCalendar = GoogleCalenderWert?.getString("jsondata2", "0")
 
-                // Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der
-                // Google Kalender aktiviert
-                var save2 = false
-                for (counter in 0 until checkGoogleCalendar?.length!!) {
-                    val ss1 = checkGoogleCalendar[counter].toString()
-                    if (ss1 == 1.toString()) {
-                        save2 = true
-                    }
-                }
+                SaveInCalendar(position, holder)
 
-                //Hinzufügen der Prüfungen zum Google Kalender
-                val checkEntry = CheckGoogleCalendar()
-                checkEntry.setCtx(context)
-
-                //Abfrage des geklickten Items
-                if (checkEntry.checkCal(planId[position].toInt())) {
-                    if (save2) {
-
-                        //Ermitteln benötigter Variablen
-                        val splitDateAndTime = date[position].split(" ").toTypedArray()
-                        val splitDayMonthYear = splitDateAndTime[0].split("-").toTypedArray()
-                        holder.txtthirdline.text = (context!!.getString(R.string.time)
-                                + splitDateAndTime[1].substring(0, 5))
-                        holder.button.text = (splitDayMonthYear[2] + "."
-                                + splitDayMonthYear[1] + "."
-                                + splitDayMonthYear[0])
-                        val sa = examinerAndSemester[position].split(" ").toTypedArray()
-                        holder.txtFooter.text =
-                            (context!!.getString(R.string.prof) + sa[0] + ", " + sa[1]
-                                    + context!!.getString(R.string.semester) + sa[2])
-                        val name1 = modules[position]
-                        val modulname1 = name1.split(" ").toTypedArray()
-                        moduleName = ""
-                        var b: Int
-                        b = 0
-                        while (b < modulname1.size - 1) {
-                            moduleName = moduleName + " " + modulname1[b]
-                            b++
-                        }
-                        val timeStart = splitDateAndTime[1].substring(0, 2).toInt()
-                        val timeEnd = splitDateAndTime[1].substring(4, 5).toInt()
-                        calDate = GregorianCalendar(
-                            splitDayMonthYear[0].toInt(),
-                            splitDayMonthYear[1].toInt() - 1, splitDayMonthYear[2].toInt(),
-                            timeStart, timeEnd
-                        )
-
-                        //Methode zum Speichern im Kalender
-                        val calendarid = calendarID(moduleName)
-
-                        //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
-                        checkEntry.insertCal(
-                            planId[position].toInt(),
-                            calendarid
-                        )
-                    }
-                }
                 Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
                     .show()
+                this.notifyDataSetChanged()
             }
-        }.start()
+        }
+
     }
 
+    /**
+     * Transfers the exam to the google calendar if necessary.
+     *
+     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+     * @param[position] The position of the item in the Recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun SaveInCalendar(
+        position: Int,
+        holder: ViewHolder
+    ) {
+        //Überprüfung ob Pürfungen zum Google Kalender Hinzugefügt werden sollen
+        val GoogleCalenderWert = context?.getSharedPreferences("json8", 0)
+        //Creating editor to store uebergebeneModule to shared preferences
+        val googleCalendarEditor = GoogleCalenderWert?.edit()
+        googleCalendarEditor?.apply()
+        val checkGoogleCalendar = GoogleCalenderWert?.getString("jsondata2", "0")
+
+
+        // Überprüfung des Wertes, wenn strJson2 "true" ist dann ist der
+        // Google Kalender aktiviert
+        var save2 = false
+        for (counter in 0 until checkGoogleCalendar?.length!!) {
+            val ss1 = checkGoogleCalendar[counter].toString()
+            if (ss1 == 1.toString()) {
+                save2 = true
+            }
+        }
+
+        //Hinzufügen der Prüfungen zum Google Kalender
+        val checkEntry = CheckGoogleCalendar()
+        checkEntry.setCtx(context)
+
+        //Abfrage des geklickten Items
+        if (checkEntry.checkCal(planId[position].toInt())) {
+            if (save2) {
+
+                //Ermitteln benötigter Variablen
+                val splitDateAndTime = date[position].split(" ").toTypedArray()
+                val splitDayMonthYear = splitDateAndTime[0].split("-").toTypedArray()
+                holder.txtthirdline.text = (context!!.getString(R.string.time)
+                        + splitDateAndTime[1].substring(0, 5))
+                holder.button.text = (splitDayMonthYear[2] + "."
+                        + splitDayMonthYear[1] + "."
+                        + splitDayMonthYear[0])
+                val sa = examinerAndSemester[position].split(" ").toTypedArray()
+                holder.txtFooter.text =
+                    (context!!.getString(R.string.prof) + sa[0] + ", " + sa[1]
+                            + context!!.getString(R.string.semester) + sa[2])
+                val name1 = modules[position]
+                val modulname1 = name1.split(" ").toTypedArray()
+                moduleName = ""
+                var b: Int
+                b = 0
+                while (b < modulname1.size - 1) {
+                    moduleName = moduleName + " " + modulname1[b]
+                    b++
+                }
+                val timeStart = splitDateAndTime[1].substring(0, 2).toInt()
+                val timeEnd = splitDateAndTime[1].substring(4, 5).toInt()
+                calDate = GregorianCalendar(
+                    splitDayMonthYear[0].toInt(),
+                    splitDayMonthYear[1].toInt() - 1, splitDayMonthYear[2].toInt(),
+                    timeStart, timeEnd
+                )
+
+                //Methode zum Speichern im Kalender
+                val calendarid = calendarID(moduleName)
+
+                //Funktion im Google-Kalender, um PrüfID und calenderID zu speichern
+                checkEntry.insertCal(
+                    planId[position].toInt(),
+                    calendarid
+                )
+            }
+        }
+    }
+
+    /**
+     * Checks if an exam is a favorit.
+     * Needs to be called in a Coroutine-Scope.
+     *
+     * @param[position] The position of the item in the Recyclerview.
+     *
+     * @return true->The exam is a favorit;false->The exam is not a favorit.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun checkFavorite(position: Int): Boolean {
         try {
             favcheck = false
-
-            //Datenbank und Pruefplan laden
-            val database = AppDatabase.getAppDatabase(context!!)
             val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-            //Toast.makeText(v.getContext(),String.valueOf(userdaten.size()),
-            // Toast.LENGTH_SHORT).show();
 
-            // Toast.makeText(v.getContext(), "129", Toast.LENGTH_SHORT).show();
-            save = selectedEntry?.favorit == true
-            return save
+            return selectedEntry?.favorit?:false
         } catch (ex: Exception) {
             Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
             return false
         }
-
     }
 
-    //Item anzahl
+    /**
+     * Returns the amount of items in the recyclerview, based on the size of the moduleslist.
+     *
+     * @return The amount of items in the recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.getItemCount
+     */
     override fun getItemCount(): Int {
         return modules.size
     }
 
+    /**
+     * Return the view type of the item at position for the purposes of view recycling.
+     * The default implementation of this method returns 0, making the assumption of a single view type for the adapter.
+     * Unlike ListView adapters, types need not be contiguous.
+     * Consider using id resources to uniquely identify item view types.
+     *
+     * @param[position] Position to query
+     *
+     * @return integer value identifying the type of the view needed to represent the item at position.
+     * Type codes need not be contiguous.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.getItemViewType
+     */
     override fun getItemViewType(position: Int): Int {
         return position
     }
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
-    inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
-        // each data item is just a string in this case
-        val txtHeader: TextView
-        val txtFooter: TextView
-        val txtthirdline: TextView
-        var layout: LinearLayout
-        var bigLayout: LinearLayout
-        val ivicon: ImageView
-        val statusIcon: ImageView
-        val button: Button
-        val txtSecondScreen: TextView
-
-        init {
-            ivicon = v.findViewById<View>(R.id.icon) as ImageView
-            statusIcon = v.findViewById<View>(R.id.icon2) as ImageView
-            txtHeader = v.findViewById<View>(R.id.firstLine) as TextView
-            txtFooter = v.findViewById<View>(R.id.secondLine) as TextView
-            txtSecondScreen = v.findViewById<View>(R.id.txtSecondscreen) as TextView
-            txtthirdline = v.findViewById<View>(R.id.thirdLine) as TextView
-            button = v.findViewById<View>(R.id.button7) as Button
-
-            //button.setLayoutParams(new LinearLayout.LayoutParams(
-            //    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            layout = v.findViewById<View>(R.id.linearLayout) as LinearLayout
-            bigLayout = v.findViewById<View>(R.id.linearLayout6) as LinearLayout
-        }
-    }
-
+    /**
+     * Used to put an event into the google calendar.
+     *
+     * @param[eventtitle] The title of the event.
+     *
+     * @return The id of the event in the google calendar.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun calendarID(eventtitle: String?): Int {
         val event = ContentValues()
         event.put(CalendarContract.Events.CALENDAR_ID, 2)
@@ -496,4 +580,45 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     companion object {
         var favcheck = true
     }
+
+    // Provide a reference to the views for each data item
+// Complex data items may need more than one view per item, and
+// you provide access to all the views for a data item in a view holder
+    /**
+     * Inner class [ViewHolder], that contains the references to the UI-Elements.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.ViewHolder
+     */
+    inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
+        // each data item is just a string in this case
+        val txtHeader: TextView
+        val txtFooter: TextView
+        val txtthirdline: TextView
+        val layout: LinearLayout
+        val bigLayout: LinearLayout
+        val ivicon: ImageView
+        val statusIcon: ImageView
+        val button: Button
+        val txtSecondScreen: TextView
+
+        init {
+            ivicon = v.findViewById<View>(R.id.icon) as ImageView
+            statusIcon = v.findViewById<View>(R.id.icon2) as ImageView
+            txtHeader = v.findViewById<View>(R.id.firstLine) as TextView
+            txtFooter = v.findViewById<View>(R.id.secondLine) as TextView
+            txtSecondScreen = v.findViewById<View>(R.id.txtSecondscreen) as TextView
+            txtthirdline = v.findViewById<View>(R.id.thirdLine) as TextView
+            button = v.findViewById<View>(R.id.button7) as Button
+
+            //button.setLayoutParams(new LinearLayout.LayoutParams(
+            //    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            layout = v.findViewById<View>(R.id.linearLayout) as LinearLayout
+            bigLayout = v.findViewById<View>(R.id.linearLayout6) as LinearLayout
+        }
+    }
+
+
 }
