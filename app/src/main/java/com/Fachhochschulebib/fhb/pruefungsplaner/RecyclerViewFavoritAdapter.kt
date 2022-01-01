@@ -3,17 +3,10 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
-import android.graphics.Color
-import android.graphics.drawable.GradientDrawable
-import android.os.Build
 import android.os.Handler
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
 import android.os.Looper
 import android.util.Log
 import android.view.View
@@ -21,6 +14,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import android.widget.TextView
 import android.widget.LinearLayout
+import com.Fachhochschulebib.fhb.pruefungsplaner.RecyclerViewExamAdapter.ViewHolder
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.lang.Exception
 
 //////////////////////////////
@@ -32,7 +30,17 @@ import java.lang.Exception
 //
 //
 //////////////////////////////
-class MyAdapterfavorits     // Provide a suitable constructor (depends on the kind of dataset)
+/**
+ * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorit exams.
+ * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
+ * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ * @see RecyclerView.Adapter
+ * @see RecyclerView
+ */
+class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
     (
     private val moduleAndCourseList: MutableList<String>,
     private val examinerAndSemester: List<String>,
@@ -40,26 +48,66 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
     private val ppIdList: List<String>,
     private val roomList: List<String>,
     private val formList: List<String>
-) : RecyclerView.Adapter<MyAdapterfavorits.ViewHolder>() {
+) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null
     private var name: String? = null
     private var context: Context? = null
-    fun add(position: Int, item: String) {
-        moduleAndCourseList.add(position, item)
-        notifyItemInserted(position)
+
+    private val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
+
+    private var database: AppDatabase? = null
+
+    private var sharedPreferencesValidation: SharedPreferences? = null
+
+    private var openItem: ViewHolder? = null
+
+    /**
+     * Adds an item to the recyclerview.
+     *
+     * @param[position] The position, where the item needs to be inserted.
+     * @param[item] The item, that needs to be inserted.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun add(position: Int?, item: String) {
+        notifyItemInserted(
+            moduleAndCourseList.add(position, item)
+        )
     }
 
+    /**
+     * Removes an item of the recyclerview.
+     *
+     * @param[position] The position of the item that is to remove.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun remove(position: Int) {
         try {
             moduleAndCourseList.removeAt(position)
             notifyItemRemoved(position)
-            deleteItemThread(position)
-        }catch (ex:Exception){
-            Log.e("MyAdapterfavorits.kt-remove",ex.stackTraceToString())
+            deleteItem(position)
+        } catch (ex: Exception) {
+            Log.e("MyAdapterfavorits.kt-remove", ex.stackTraceToString())
         }
 
     }
 
+    /**
+     * Inflates the view that shows the information for the passed viewType. In this case the information
+     * about the exam.
+     *
+     * @param[parent] The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param[viewType] The view type of the new View.
+     * @return The [ViewHolder], that shows the information.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.onCreateViewHolder
+     */
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -75,58 +123,77 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
 
         // Merlin Gürtler für den globalen Context
         context = parent.context
+
+        context?.let { database = AppDatabase.getAppDatabase(it) }
+
+        sharedPreferencesValidation =
+            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+
         return vh
     }
 
-    // Replace the contents of a view (invoked by the layout manager)
+    /**
+     * Initializes the [ViewHolder] with information of the viewtype. In this case,
+     * passes the examinformation to the UI-Elements.
+     *
+     * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param[position] The position of the item within the adapter's data set.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.onBindViewHolder
+     */
     override fun onBindViewHolder(
         holder: ViewHolder,
-        @SuppressLint("RecyclerView") position: Int
+        position: Int
     ) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         name = moduleAndCourseList[holder.adapterPosition]
         holder.txtHeader.text = name
 
+        holder.layout.setOnClickListener { view: View? ->
+            if (holder.txtSecondScreen.visibility == View.VISIBLE) {
+                holder.txtSecondScreen.visibility = View.GONE
+            } else {
+                holder.txtSecondScreen.visibility = View.VISIBLE
+                holder.txtSecondScreen.text = giveString(position)
+                //Make previous details invisible
+                openItem?.txtSecondScreen?.visibility = View.GONE
+                openItem = holder
+            }
+        }
+
         //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener { remove(position) }
         holder.txtFooter.text = context!!.getString(R.string.prof) + examinerAndSemester[position]
-        name = moduleAndCourseList[position]
+
         val course = name?.split(" ")?.toTypedArray()
         modulName = ""
         var b: Int
         b = 0
-        while (b < (course?.size?:0) - 1) {
+        while (b < (course?.size ?: 0) - 1) {
             modulName = modulName + " " + (course?.get(b) ?: "")
             b++
         }
+        displayExamInformation(position, holder)
+    }
 
-        // Start Merlin Gürtler
-        // erhalte den ausgewählten Studiengang
-        val sharedPreferencesCourse =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-        val selectedCourse = sharedPreferencesCourse?.getString("selectedCourse", "0")
-            ?.split(" ")?.toTypedArray()
-        val colorElectiveModule = "#7FFFD4"
-        if (selectedCourse?.get(selectedCourse.size - 1) != course?.get(course.size - 1)) {
-            // Lege die Farben für die Wahlmodule fest
-            val backGroundGradient = GradientDrawable(
-                GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(
-                    Color.parseColor(colorElectiveModule),
-                    Color.parseColor(colorElectiveModule)
-                )
-            )
-            backGroundGradient.cornerRadius = 40f
-            val sdk = Build.VERSION.SDK_INT
-            if (sdk < Build.VERSION_CODES.JELLY_BEAN) {
-                holder.layout.setBackgroundDrawable(backGroundGradient)
-            } else {
-                holder.layout.background = backGroundGradient
-            }
-        }
-
-        // Ende Merlin Gürtler
-
+    /**
+     * Displays the examinformation. Passes the information to the corresponding UI-Elements.
+     *
+     * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param[position] The position of the item within the adapter's data set.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     */
+    private fun displayExamInformation(
+        position: Int,
+        holder: ViewHolder
+    ) {
         //darstellen der Informationen für das Prüfitem
         val splitDateAndTime = datesList[position].split(" ").toTypedArray()
         val splitDayMonthYear = splitDateAndTime[0].split("-").toTypedArray()
@@ -142,11 +209,31 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
                 + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
     }
 
-    // Return the size of your dataset (invoked by the layout manager)
+
+    /**
+     * Returns the amount of items in the recyclerview, based on the size of the [moduleAndCourseList].
+     *
+     * @return The amount of items in the recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.Adapter.getItemCount
+     */
     override fun getItemCount(): Int {
         return moduleAndCourseList.size
     }
 
+
+    /**
+     * Returns a string that shows the extended information of the exam.
+     *
+     * @param[position] The position of the item in the Recyclerview.
+     * @return The string that contains the information
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun giveString(position: Int): String {
         try {
             val name = moduleAndCourseList[position]
@@ -198,42 +285,54 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
     }
 
     // Start Merlin Gürtler
-    // da die Funktion mehrmals genutzt wird ausglagern in Funktion
-    private fun deleteItemThread(position: Int) {
-        //TODO CHANGE TO COROUTINE
-        Thread {
-            val database = AppDatabase.getAppDatabase(context!!)
-            val ppeList = database?.userDao()?.getFavorites(true)
+
+    /**
+     * Delete an item at a given position.
+     *
+     * @param[position] The position of the item, that is to delete.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun deleteItem(position: Int) {
+        scope_io.launch {
+            val ppeList = database?.userDao()?.getFavorites(true) ?: return@launch
             // second parameter is necessary ie.,
             // Value to return if this preference does not exist.
-            if (ppeList != null) {
-                for (entry in ppeList) {
-                    if (entry?.id == ppIdList[position]) {
-                        database?.userDao()
-                            ?.update(false, Integer.valueOf(ppIdList[position]))
-
-                        //Entferne den Eintrag aus dem Calendar falls vorhanden
-                        val cal = CheckGoogleCalendar()
-                        cal.setCtx(context)
-                        if (!cal.checkCal(ppIdList[position].toInt())) {
-                            cal.deleteEntry(ppIdList[position].toInt())
-                        }
-                    }
+            for (entry in ppeList) {
+                if (entry?.id != ppIdList[position]) {
+                    continue
+                }
+                database?.userDao()
+                    ?.update(false, Integer.valueOf(ppIdList[position]))
+                //Entferne den Eintrag aus dem Calendar falls vorhanden
+                val cal = CheckGoogleCalendar()
+                cal.setCtx(context)
+                if (!cal.checkCal(ppIdList[position].toInt())) {
+                    cal.deleteEntry(ppIdList[position].toInt())
                 }
             }
+        }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
                     context,
                     context!!.getString(R.string.delete), Toast.LENGTH_SHORT
                 ).show()
             }
-        }.start()
+        }
     }
 
-    // Ende Merlin Gürtler
     // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
+// Complex data items may need more than one view per item, and
+// you provide access to all the views for a data item in a view holder
+    /**
+     * Inner class [ViewHolder], that contains the references to the UI-Elements.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     *
+     * @see RecyclerView.ViewHolder
+     */
     inner class ViewHolder(var layout: View) : RecyclerView.ViewHolder(
         layout
     ) {
@@ -243,11 +342,13 @@ class MyAdapterfavorits     // Provide a suitable constructor (depends on the ki
         var txtthirdline: TextView
         var ivicon: ImageView
         var layout2: LinearLayout
+        val txtSecondScreen: TextView
 
         init {
             ivicon = layout.findViewById<View>(R.id.icon) as ImageView
             txtHeader = layout.findViewById<View>(R.id.firstLine) as TextView
             txtFooter = layout.findViewById<View>(R.id.secondLine) as TextView
+            txtSecondScreen = layout.findViewById<View>(R.id.txtSecondscreen) as TextView
             txtthirdline = layout.findViewById<View>(R.id.thirdLine) as TextView
             layout2 = layout.findViewById<View>(R.id.linearLayout) as LinearLayout
             //button.setLayoutParams(new LinearLayout.LayoutParams(

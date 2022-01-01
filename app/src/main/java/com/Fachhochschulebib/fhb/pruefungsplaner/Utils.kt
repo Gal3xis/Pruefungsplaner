@@ -2,17 +2,14 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.Context
 import android.content.res.Resources
+import android.util.Log
 import android.util.TypedValue
 import androidx.annotation.AttrRes
 import androidx.annotation.RawRes
 import java.io.BufferedReader
-import java.io.InputStream
 import java.io.InputStreamReader
 import java.lang.Exception
-import java.nio.Buffer
 import java.util.*
-import android.util.Log
-
 
 object Utils {
 
@@ -22,6 +19,7 @@ object Utils {
     }
 
     val statusColors:Map<String,Int> = mapOf("Früher Vorschlag" to R.attr.frueherVorschlag,"In Diskussion" to R.attr.inDiskussion, "Veröffentlicht" to R.attr.veroeffentlicht, "Veraltet" to R.attr.veraltet, "Zukünftige Planung" to R.attr.zukuenftigePlanung)
+    val favoritIcons:Map<Boolean,Int> = mapOf(true to android.R.drawable.ic_delete,false to android.R.drawable.ic_input_add )
 
     fun readTextFile(context: Context,@RawRes textResource:Int):String?{
         val _is = context.resources.openRawResource(textResource)

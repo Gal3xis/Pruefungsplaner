@@ -6,10 +6,6 @@
         android:icon="@drawable/ic_action_suche"
         android:title="@string/title_calender"/>
 
-    <item
-        android:id="@+id/navigation_medication"
-        android:icon="@drawable/suche_nav"
-        android:title="@string/title_search"/>
 
     <item
         android:id="@+id/navigation_changeFaculty"

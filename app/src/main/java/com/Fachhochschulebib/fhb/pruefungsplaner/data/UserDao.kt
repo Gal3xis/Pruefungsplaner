@@ -29,6 +29,11 @@ interface UserDao {
     @Query("SELECT DISTINCT firstExaminer FROM TestPlanEntry WHERE course = :selectedCourse")
     fun getFirstExaminerDistinct(selectedCourse: String?): List<String?>?
 
+    //TODO Alexander Lange Start
+    @Query("SELECT DISTINCT firstExaminer FROM TestPlanEntry WHERE course = :selectedCourse ORDER BY firstExaminer")
+    fun getFirstExaminerDistinctSortedByName(selectedCourse: String?): List<String?>?
+    //TODO Alexander Lange End
+
     @Query("SELECT module FROM TestPlanEntry WHERE course = :selectedCourse ORDER BY module")
     fun getModuleWithCourseDistinct(selectedCourse: String?): List<String?>?
 

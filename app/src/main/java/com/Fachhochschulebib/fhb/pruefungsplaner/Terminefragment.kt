@@ -201,9 +201,9 @@ class Terminefragment : Fragment() {
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
         //TODO Alexander Lange Start
-        MainActivity.Filter.onFilterChangedListener.add{OnFilterChanged()}
-        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size-1
-    //TODO Alexander Lange End
+        MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged() }
+        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size - 1
+        //TODO Alexander Lange End
     }
 
 
@@ -218,12 +218,12 @@ class Terminefragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            if (filterChangeListenerPosition != null && MainActivity.Filter.onFilterChangedListener.size>=filterChangeListenerPosition!!) {
+            if (filterChangeListenerPosition != null && MainActivity.Filter.onFilterChangedListener.size >= filterChangeListenerPosition!!) {
                 MainActivity.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
             }
 
-        }catch (ex:Exception){
-            Log.e("TermineFragment.onStop",ex.stackTraceToString())
+        } catch (ex: Exception) {
+            Log.e("TermineFragment.onStop", ex.stackTraceToString())
         }
     }
 
@@ -327,46 +327,47 @@ class Terminefragment : Fragment() {
         mLayout = recyclerView4?.layoutManager
         //AdapterPassed() TODO REMOVE
 
-        recyclerView4?.addOnItemTouchListener(
-            RecyclerItemClickListener(
-                activity,
-                object : RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View?, position: Int) {
-                        val viewItem = recyclerView4?.layoutManager?.findViewByPosition(position)
-                        val layout1 =
-                            viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
-                        layout1.setOnClickListener { v1: View? ->
-                            val txtSecondScreen = view!!.findViewById<View>(R.id.txtSecondscreen) as TextView
-                            Log.e("@@@@@", "" + position)
-                            if (txtSecondScreen.visibility == View.VISIBLE) {
-                                txtSecondScreen.visibility = View.GONE
-                                checkList[position] = false
-                            } else {
-                                for (i in 0 until (recyclerView4?.childCount ?: 0)) {
-                                    val holder =
-                                        recyclerView4?.layoutManager?.findViewByPosition(i)
-                                    // Try and Catch, da die App crasht
-                                    // wenn das Element nicht im View Port ist
-                                    try {
-                                        val txtSecondScreen2 =
-                                            holder?.findViewById<View>(R.id.txtSecondscreen) as TextView
-                                        if (txtSecondScreen2?.visibility == View.VISIBLE) {
-                                            txtSecondScreen2?.visibility = View.GONE
-                                        }
-                                    } catch (e: Exception) {
-                                        Log.d("ERROR", "NOT IN VIEW PORT $e")
-                                    }
-                                }
-                                // Ende Merlin Gürtler
-                                txtSecondScreen.visibility = View.VISIBLE
-                                txtSecondScreen.text = mAdapter?.giveString(position)
-                                // Start Merlin Gürtler
-                            }
-                        }
-                        //TODO CHECK REMOVE positionOld = position
-                    }
-                })
-        )
+//        recyclerView4?.addOnItemTouchListener(
+//            RecyclerItemClickListener(
+//                activity,
+//                object : RecyclerItemClickListener.OnItemClickListener {
+//                    override fun onItemClick(view: View?, position: Int) {
+//                        val viewItem = recyclerView4?.layoutManager?.findViewByPosition(position)
+//                        val layout1 =
+//                            viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
+//                        layout1.setOnClickListener { v1: View? ->
+//                            val txtSecondScreen =
+//                                view!!.findViewById<View>(R.id.txtSecondscreen) as TextView
+//                            Log.e("@@@@@", "" + position)
+//                            if (txtSecondScreen.visibility == View.VISIBLE) {
+//                                txtSecondScreen.visibility = View.GONE
+//                                checkList[position] = false
+//                            } else {
+//                                for (i in 0 until (recyclerView4?.childCount ?: 0)) {
+//                                    val holder =
+//                                        recyclerView4?.layoutManager?.findViewByPosition(i)
+//                                    // Try and Catch, da die App crasht
+//                                    // wenn das Element nicht im View Port ist
+//                                    try {
+//                                        val txtSecondScreen2 =
+//                                            holder?.findViewById<View>(R.id.txtSecondscreen) as TextView
+//                                        if (txtSecondScreen2?.visibility == View.VISIBLE) {
+//                                            txtSecondScreen2?.visibility = View.GONE
+//                                        }
+//                                    } catch (e: Exception) {
+//                                        Log.d("ERROR", "NOT IN VIEW PORT $e")
+//                                    }
+//                                }
+//                                // Ende Merlin Gürtler
+//                                txtSecondScreen.visibility = View.VISIBLE
+//                                txtSecondScreen.text = mAdapter?.giveString(position)
+//                                // Start Merlin Gürtler
+//                            }
+//                        }
+//                        //TODO CHECK REMOVE positionOld = position
+//                    }
+//                })
+//        )
         // Start Merlin Gürtler
         recyclerView4?.addOnChildAttachStateChangeListener(object :
             OnChildAttachStateChangeListener {
@@ -636,8 +637,8 @@ class Terminefragment : Fragment() {
             mSharedPreferencesValidation?.getString("currentPeriode", "0")
         val currentExamineYearThread =
             mSharedPreferencesExamineYear?.getString("currentTermin", "0")
-        sleepTime = if (database?.userDao()?.getEntriesByCourseName(courseMain)?.size == 0
-            || currentExamineYearThread != database?.userDao()?.termin
+        sleepTime = if ((database?.userDao()?.getEntriesByCourseName(courseMain)?.size == 0
+            || currentExamineYearThread != database?.userDao()?.termin)&&database?.userDao()?.getFavorites(true)?.size==0
         ) {
             database?.userDao()?.deleteTestPlanEntryAll()
             retrofit.RetrofitWebAccess(
@@ -803,8 +804,8 @@ class Terminefragment : Fragment() {
      */
     fun setPruefungszeitraum() {
         val sdf_read = SimpleDateFormat("dd/MM/yyyy")
-        val start = sdf_read.parse(mSharedPreferencesPPeriode?.getString("startDate","0"))
-        val end = sdf_read.parse(mSharedPreferencesPPeriode?.getString("endDate","0"))
+        val start = sdf_read.parse(mSharedPreferencesPPeriode?.getString("startDate", "0"))
+        val end = sdf_read.parse(mSharedPreferencesPPeriode?.getString("endDate", "0"))
 
         val sdf_write = SimpleDateFormat("dd.MM.yyyy")
 
@@ -848,21 +849,23 @@ class Terminefragment : Fragment() {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                         val position = viewHolder.adapterPosition
                         var isFavorite: Boolean? = null
-                        scope_ui.launch {
+                        scope_io.launch {
                             isFavorite = mAdapter?.checkFavorite(viewHolder.adapterPosition)
                         }.invokeOnCompletion {
-                            if (isFavorite == true) {
-                                mAdapter?.deleteFromFavorites(
-                                    position,
-                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-                                )
-                            } else {
-                                mAdapter?.addToFavorites(
-                                    position,
-                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-                                )
+                            Handler(Looper.getMainLooper()).post {
+                                if (isFavorite == true) {
+                                    mAdapter?.deleteFromFavorites(
+                                        position,
+                                        (viewHolder as RecyclerViewExamAdapter.ViewHolder)
+                                    )
+                                } else {
+                                    mAdapter?.addToFavorites(
+                                        position,
+                                        (viewHolder as RecyclerViewExamAdapter.ViewHolder)
+                                    )
+                                }
+                                mAdapter?.notifyDataSetChanged()
                             }
-                            mAdapter?.notifyDataSetChanged()
                         }
                     }
                 }

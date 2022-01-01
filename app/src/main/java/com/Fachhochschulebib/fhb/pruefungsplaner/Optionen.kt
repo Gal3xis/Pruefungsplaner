@@ -7,13 +7,11 @@ import android.os.Looper
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Handler
 import android.provider.CalendarContract
 import android.util.Log
 import android.widget.*
-import androidx.annotation.StyleRes
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import org.json.JSONArray
@@ -22,8 +20,11 @@ import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
-import android.content.Intent.getIntent
 import android.view.*
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 //////////////////////////////
@@ -52,14 +53,14 @@ class Optionen() : Fragment() {
     private var response: JSONArray? = null
     private var calDate = GregorianCalendar()
     private var course: String? = null
-
-    private var mSharedPreferencesCurrentTermin: SharedPreferences? = null
-
     private var currentTermin: String? = null
 
+    private var mSharedPreferencesCurrentTermin: SharedPreferences? = null
     private var sharedPreferencesSettings: SharedPreferences? = null
     private var mSharedPreferencesPPServerAddress: SharedPreferences? = null
     private var mSharedPreferencesValidation: SharedPreferences? = null
+
+    private var database: AppDatabase? = null
 
     companion object {
         val idList: List<String> = ArrayList()
@@ -72,6 +73,7 @@ class Optionen() : Fragment() {
     var currentExaminePeriod: String? = null
     var returnCourse: String? = null
 
+    private var scope_io = CoroutineScope(CoroutineName("IO-SCOPE") + Dispatchers.IO)
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -86,13 +88,22 @@ class Optionen() : Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        database = context?.let { AppDatabase.getAppDatabase(it) }
         sharedPreferencesSettings = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
         mSharedPreferencesCurrentTermin = context
             ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
         mSharedPreferencesPPServerAddress =
-            view?.context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+            context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
         mSharedPreferencesValidation =
             context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+        serverAddress = mSharedPreferencesPPServerAddress?.getString("ServerIPAddress", "0")
+        relativePPlanURL = mSharedPreferencesPPServerAddress?.getString("ServerRelUrlPath", "0")
+        currentTermin = mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
+        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
+        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
+        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
+        // Ende Merlin Gürtler
+        setHasOptionsMenu(true)
     }
 
     /**
@@ -108,8 +119,8 @@ class Optionen() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initThemeSpinner(view)
-        initDarkModeBtn()
+        initThemeSpinner()
+        initDarkModeSwitch()
 
         //Button zum updaten der Prüfungen
         btnupdate?.setOnClickListener {
@@ -125,212 +136,34 @@ class Optionen() : Fragment() {
         //TODO REMOVE val SWgooglecalender = v.findViewById<View>(R.id.switch2) as Switch
         //TODO REMOVE val privacyDeclaration = v.findViewById<View>(R.id.privacyDeclaration) as Button
         //holder.zahl1 = position;
-        val serverAdresse = view.context.getSharedPreferences("json8", 0)
+        val serverAdresse = view.context.getSharedPreferences("json8", Context.MODE_PRIVATE)
         //Creating editor to store uebergebeneModule to shared preferences
         val mEditorGoogleCalendar = serverAdresse.edit()
 
-        //Creating editor to store uebergebeneModule to shared preferences
-        //------------------------------------------------------------------
-        //DONE: 08/2020 LG
-        serverAddress = mSharedPreferencesPPServerAddress?.getString("ServerIPAddress", "0")
-        relativePPlanURL = mSharedPreferencesPPServerAddress?.getString("ServerRelUrlPath", "0")
-        currentTermin = mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
-        //------------------------------------------------------------------
-
-        //----------------------------------------------------------------------------------------
-
-        //----------------------------------------------------------------------------------------
-        response = JSONArray()
-        val strServerAddress = serverAdresse.getString("jsondata2", "0")
-        //second parameter is necessary ie.,Value to return if this preference does not exist.
-        if (strServerAddress != null) {
-            try {
-                response = JSONArray(strServerAddress)
-            } catch (e: JSONException) {
-                Log.d("Fehler Optionen", "Server-Adresse Fehler")
-            }
-        }
-        var i =0
-        save = false
-        while (i < response?.length() ?: 0) {
-            run {
-                try {
-                    if ((response?.get(i).toString() == "1")) {
-                        switch2.setChecked(true)
-                        save = true
-                    } else {
-                        switch2.setChecked(false)
-                        save = false
-                    }
-                } catch (e: JSONException) {
-                    Log.d("Fehler Optionen", "Google Kalender aktivierung")
-                }
-            }
-            i++
-        }
+        doSomething()
 
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         switch2.setOnCheckedChangeListener(object :
             CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-                //TODO CHANGE TO COROUTINE
-                Thread(object : Runnable {
-                    override fun run() {
-                        // do something, the isChecked will be
-                        // true if the switch is in the On position
-                        if (isChecked) {
-                            mEditorGoogleCalendar.clear()
-                            mEditorGoogleCalendar.apply()
-                            response?.put("1")
-                            mEditorGoogleCalendar.putString("jsondata2", response.toString())
-                            mEditorGoogleCalendar.apply()
-                            val database = AppDatabase.getAppDatabase(context!!)
-                            val ppeList = database?.userDao()?.getFavorites(true)
-                            val googlecal = CheckGoogleCalendar()
-                            googlecal.setCtx(context)
-                            if (ppeList != null) {
-                                for (entry in ppeList) {
-                                    val id = entry?.id
-
-                                    //überprüfung von ein/aus Google Kalender
-                                    if (googlecal.checkCal(id?.toInt() ?: 0)) {
-                                        //ermitteln von benötigten Variablen
-                                        val splitDateAndTime =
-                                            entry?.date?.split(" ")?.toTypedArray()
-                                        val splitDayMonthYear =
-                                            splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
-                                        course = entry?.course
-                                        course = course + " " + entry?.module
-                                        val timeStart =
-                                            splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
-                                        val timeEnd =
-                                            splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
-                                        calDate = GregorianCalendar(
-                                            splitDayMonthYear?.get(0)?.toInt() ?: 0,
-                                            splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
-                                            splitDayMonthYear?.get(2)?.toInt() ?: 0,
-                                            timeStart ?: 0,
-                                            timeEnd ?: 0
-                                        )
-
-                                        //Methode zum Speichern im Kalender
-                                        val calendarid = calendarID(course)
-
-                                        //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                                        googlecal.insertCal(id?.toInt() ?: 0, calendarid)
-                                    }
-                                }
-                            }
-                            if (!isChecked) {
-                                mEditorGoogleCalendar.clear().apply()
-                                mEditorGoogleCalendar.remove("jsondata2").apply()
-                            }
-                            Handler(Looper.getMainLooper()).post(object : Runnable {
-                                override fun run() {
-                                    Toast.makeText(
-                                        view.context,
-                                        view.context.getString(R.string.add_calendar),
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                }
-                            })
-                        }
-                    }
-                }).start()
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                setCalendarSynchronization(isChecked)
             }
         })
 
-
-
-        //Change Listener für die Serveradresse
-        //speichert den neu eingegebenen Wert
-        /*
-        txtServerAddress.addTextChangedListener(new TextWatcher() {
-            boolean validate = false;
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-                String splitAdresse = txtServerAddress.getText().subSequence(0, 7).toString();
-                String splitAdresseEnde
-                        = String.valueOf(txtServerAddress
-                        .getText()
-                        .charAt(txtServerAddress.getText().length() - 1));
-
-                //System.out.println(splitAdresseEnde);
-
-                if (splitAdresse.equals("http://")) {
-                    if (splitAdresseEnde.equals("/")) {
-                        if (android.util.Patterns.WEB_URL.matcher(
-                                txtServerAddress.getText().toString()).matches()) {
-                            mEditorAdresse.clear();
-                            mEditorAdresse.apply();
-                            mEditorAdresse.putString(
-                                    "ServerIPAddress", txtServerAddress.getText().toString());
-                            mEditorAdresse.apply();
-                        }
-                    }
-                }
+        privacyDeclaration.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View) {
+                val ft = activity?.supportFragmentManager?.beginTransaction()
+                ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
+                ft?.commit()
             }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-            }
-        });
-         */
-        privacyDeclaration.setOnClickListener {
-            val ft = activity?.supportFragmentManager?.beginTransaction()
-            ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
-            ft?.commit()
-        }
-
-        optionenfragment_impressum.setOnClickListener {
-            val ft = activity?.supportFragmentManager?.beginTransaction()
-            ft?.replace(R.id.frame_placeholder,ImpressumFragment())
-            ft?.commit()
-        }
+        })
 
         //interne DB löschen
         btnDB.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                Thread(object : Runnable {
-                    override fun run() {
-                        val database = AppDatabase.getAppDatabase(v.context)
-                        Log.d("Test", "Lokale DB löschen.")
-                        database?.userDao()?.deleteTestPlanEntryAll()
-
-                        // Start Merlin Gürtler
-
-                        // Update nachdem löschen
-                        val retrofit = RetrofitConnect(relativePPlanURL ?: "")
-                        if (database != null) {
-                            retrofit.RetrofitWebAccess(
-                                context!!,
-                                database,
-                                examineYear!!,
-                                currentExaminePeriod!!,
-                                currentTermin!!,
-                                serverAddress!!
-                            )
-                        }
-                        // Ende Merlin Gürtler
-                        Handler(Looper.getMainLooper()).post(object : Runnable {
-                            override fun run() {
-                                Toast.makeText(
-                                    v.context,
-                                    v.context.getString(R.string.delete_db),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        })
-                    }
-                }).start()
+                deleteInternalDatabase()
             }
         })
 
@@ -349,87 +182,271 @@ class Optionen() : Fragment() {
         //Google Kalender einträge updaten
         btnGoogleUpdate.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                //TODO CHANGE TO COROUTINE
-                Thread(object : Runnable {
-                    override fun run() {
-                        updateCalendar()
-                    }
-                }).start()
-                Handler(Looper.getMainLooper()).post(object : Runnable {
-                    override fun run() {
-                        Toast.makeText(
-                            v.context,
-                            v.context.getString(R.string.actualisation_calendar),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
+                updateCalendar()
             }
         })
 
         //Favoriten Löschen
         btnFav.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                Thread(object : Runnable {
-                    override fun run() {
-                        val database = AppDatabase.getAppDatabase(v.context)
-                        val ppeList = database?.userDao()?.getFavorites(true)
-                        if (ppeList != null) {
-                            for (entry in ppeList) {
-                                Log.d("Test Favoriten löschen.", entry?.id?.toString() ?: "")
-                                database?.userDao()
-                                    ?.update(false, entry?.id?.toInt() ?: 0)
-                            }
-                        }
-                        Handler(Looper.getMainLooper()).post(object : Runnable {
-                            override fun run() {
-                                Toast.makeText(
-                                    v.context,
-                                    v.context.getString(R.string.delete_favorite),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        })
-                        // define an adapter
-                    }
-                }).start()
+                deleteFavorits()
             }
         })
 
         optionenfragment_save_btn.setOnClickListener { save() }
     }
 
+    /**
+     * Deletes the stored favorits of the user from the Room-Database.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     * @see AppDatabase
+     */
+    private fun deleteFavorits() {
+        scope_io.launch {
+            val ppeList = database?.userDao()?.getFavorites(true)
+            if (ppeList != null) {
+                for (entry in ppeList) {
+                    Log.d("Test Favoriten löschen.", entry?.id?.toString() ?: "")
+                    //Set favorit value for every favorit to false.
+                    database?.userDao()
+                        ?.update(false, entry?.id?.toInt() ?: 0)
+                }
+            }
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post(object : Runnable {
+                override fun run() {
+                    Toast.makeText(
+                        view?.context,
+                        view?.context?.getString(R.string.delete_favorite),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        }
+    }
+
+    /**
+     * Deletes every entry in the Room-Database. After the deletion,
+     * it updates the empty database
+     * with the default entries for the user.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     * @see AppDatabase
+     */
+    private fun deleteInternalDatabase() {
+        scope_io.launch {
+            Log.d("Test", "Lokale DB löschen.")
+            //Delete all entries in the Room-Database
+            database?.userDao()?.deleteTestPlanEntryAll()
+            // Start Merlin Gürtler
+            //Get the default entries for the user from the REST-API and store them in the room-database
+            Log.d("TestCal", relativePPlanURL.toString())
+            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
+            if (database != null && context != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
+                retrofit.RetrofitWebAccess(
+                    context!!,
+                    database!!,
+                    examineYear!!,
+                    currentExaminePeriod!!,
+                    currentTermin!!,
+                    serverAddress!!
+                )
+            }
+            // Ende Merlin Gürtler
+            Handler(Looper.getMainLooper()).post(object : Runnable {
+                override fun run() {
+                    Toast.makeText(
+                        view?.context,
+                        view?.context?.getString(R.string.delete_db),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        }
+    }
+
+    /**
+     * Sets the calendarsynchronization.
+     *
+     * @param[status] True->The calendar shall be synced with the app;False->The calendar shall not be synced.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see CheckGoogleCalendar
+     */
+    private fun setCalendarSynchronization(status: Boolean) {
+        scope_io.launch {
+            val mEditorGoogleCalendar = sharedPreferencesSettings?.edit()
+            if (status) {
+                mEditorGoogleCalendar?.clear()
+                mEditorGoogleCalendar?.apply()
+                response?.put("1")
+                mEditorGoogleCalendar?.putString("calSync", response.toString())
+                mEditorGoogleCalendar?.apply()
+                val ppeList = database?.userDao()?.getFavorites(true)
+                val googlecal = CheckGoogleCalendar()
+                googlecal.setCtx(context)
+                if (ppeList != null) {
+                    for (entry in ppeList) {
+                        val id = entry?.id
+
+                        //überprüfung von ein/aus Google Kalender
+                        if (googlecal.checkCal(id?.toInt() ?: 0)) {
+                            //ermitteln von benötigten Variablen
+                            val splitDateAndTime =
+                                entry?.date?.split(" ")?.toTypedArray()
+                            val splitDayMonthYear =
+                                splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
+                            course = entry?.course
+                            course = course + " " + entry?.module
+                            val timeStart =
+                                splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
+                            val timeEnd =
+                                splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
+                            calDate = GregorianCalendar(
+                                splitDayMonthYear?.get(0)?.toInt() ?: 0,
+                                splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
+                                splitDayMonthYear?.get(2)?.toInt() ?: 0,
+                                timeStart ?: 0,
+                                timeEnd ?: 0
+                            )
+
+                            //Methode zum Speichern im Kalender
+                            val calendarid = calendarID(course)
+
+                            //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
+                            googlecal.insertCal(id?.toInt() ?: 0, calendarid)
+                        }
+                    }
+                }
+                if (!status) {
+                    mEditorGoogleCalendar?.clear()?.apply()
+                    mEditorGoogleCalendar?.remove("calSync")?.apply()
+                }
+
+            }
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post(object : Runnable {
+                override fun run() {
+                    Toast.makeText(
+                        view?.context,
+                        view?.context?.getString(R.string.add_calendar),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        }
+
+    }
+
+    //TODO RENAME
+    private fun doSomething() {
+
+        val serverAdresse = view?.context?.getSharedPreferences("json8", Context.MODE_PRIVATE)
+        response = JSONArray()
+        val strServerAddress = serverAdresse?.getString("jsondata2", "0")
+        //second parameter is necessary ie.,Value to return if this preference does not exist.
+        if (strServerAddress != null) {
+            try {
+                response = JSONArray(strServerAddress)
+            } catch (e: JSONException) {
+                Log.d("Fehler Optionen", "Server-Adresse Fehler")
+            }
+        }
+        var i = 0
+        save = false
+        while (i < response?.length() ?: 0) {
+            run {
+                try {
+                    if ((response?.get(i).toString() == "1")) {
+                        switch2.setChecked(true)
+                        save = true
+                    } else {
+                        switch2.setChecked(false)
+                        save = false
+                    }
+                } catch (e: JSONException) {
+                    Log.d("Fehler Optionen", "Google Kalender aktivierung")
+                }
+            }
+            i++
+        }
+    }
+
+    /**
+     * Overrides the [onCreateOptionsMenu]-Method from the [Fragment]-Superclass.
+     * Initializes the items for the actionmenu. In this case the save-button.
+     * @param[menu] The menu where the items should be displayed.
+     * @param[inflater] The [MenuInflater] to inflate the actionmenu.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Fragment.onCreateOptionsMenu
+     * @see Menu
+     */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.action_menu,menu)
         menu.findItem(R.id.menu_item_save).isVisible = true
-        menu.findItem(R.id.menu_item_save)
+        //Make Filter-Button invisible
         menu.findItem(R.id.menu_item_filter).isVisible = false
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    /**
+     * Overrides the [onOptionsItemSelected]-Method from the [Fragment]-Superclass.
+     * Called when the user clicks an item in the actionmenu.
+     * Determines what to do for each item.
+     * @param[item] The item, which was clicked by the user.
+     * @return Return false to allow normal menu processing to proceed, true to consume it here.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Fragment.onOptionsItemSelected
+     * @see MenuItem
+     */
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_item_save->{
+        //Set behaviour for each clicked item.
+        return when (item.itemId) {
+            //When the user clicked the savebutton.
+            R.id.menu_item_save -> {
                 save()
+                true
             }
+            else-> false
         }
-        return super.onOptionsItemSelected(item)
     }
 
-    private fun initDarkModeBtn() {
-        darkMode.isChecked = sharedPreferencesSettings?.getBoolean("darkmode",false)?:false
+    /**
+     * Initializes the darkmode-[Switch]. Get the previous selection from sharedpreferences and
+     * pass them to the darkmode-[Switch].
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Switch
+     */
+    private fun initDarkModeSwitch() {
+        darkMode.isChecked = sharedPreferencesSettings?.getBoolean("darkmode", false) ?: false
     }
 
-    private fun initThemeSpinner(view: View) {
+    /**
+     * Initializes the theme-[Spinner]. Create a [Theme] for every implemented theme in
+     * the styles.xml and passes them to a custom [ThemeAdapter], which is then passed to
+     * the theme-[Spinner].
+     * @author Alexander Lange
+     * @since 1.5
+     * @see Theme
+     * @see ThemeAdapter
+     * @see Spinner
+     */
+    private fun initThemeSpinner() {
         val theme1 = Theme(R.style.Theme_AppTheme_1, view)
         val theme2 = Theme(R.style.Theme_AppTheme_2, view)
 
-        val adapter = ThemeAdapter(
-            view.context,
-            R.layout.layout_theme_spinner_row,
-            mutableListOf(theme1, theme2)
-        )
+        val adapter = view?.context?.let {
+            ThemeAdapter(
+                it,
+                R.layout.layout_theme_spinner_row,
+                mutableListOf(theme1, theme2)
+            )
+        }
         theme?.adapter = adapter
         val selectedPos: Int
         val themeid = sharedPreferencesSettings?.getInt("themeid", 0)
@@ -437,18 +454,20 @@ class Optionen() : Fragment() {
             R.style.Theme_AppTheme_2 -> selectedPos = 1
             else -> selectedPos = 0
         }
-        theme?.setSelection(selectedPos)
+        try {
+            theme?.setSelection(selectedPos)
+        } catch (ex: Exception) {
 
-
+        }
         //TODO Alexander Lange End
     }
 
-    private fun setTheme(@StyleRes themeId: Int, view: View?) {
-        val editor = sharedPreferencesSettings?.edit()
-        editor?.commit()
-
-    }
-
+    /**
+     * Save the current selected options and recreate the activity to change the theme and the darkmmode.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun save() {
         val editor = sharedPreferencesSettings?.edit()
 
@@ -456,18 +475,26 @@ class Optionen() : Fragment() {
         val position = theme.selectedItemPosition
 
         when (position) {
-            1 ->editor?.putInt("themeid", R.style.Theme_AppTheme_2)?.apply()
-            else->editor?.putInt("themeid", R.style.Theme_AppTheme_1)?.apply()
+            1 -> editor?.putInt("themeid", R.style.Theme_AppTheme_2)?.apply()
+            else -> editor?.putInt("themeid", R.style.Theme_AppTheme_1)?.apply()
         }
 
         //Darkmode
-        editor?.putBoolean("darkmode",darkMode.isChecked)
+        editor?.putBoolean("darkmode", darkMode.isChecked)
         editor?.apply()
 
         activity?.recreate()
         //fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
 
+    /**
+     * Overrides the onCreateView()-Method. It sets the current view to the optionfragmnet-layout.
+     *
+     * @return Returns the initialized view of this Fragment
+     * @since 1.5
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @see Fragment.onCreateView
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -475,46 +502,33 @@ class Optionen() : Fragment() {
         val v = inflater.inflate(R.layout.optionfragment, container, false)
         // Start Merlin Gürtler
         // Nun aus Shared Preferences
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        // Ende Merlin Gürtler
-        setHasOptionsMenu(true)
+
         return v
     }
 
+    //TODO Implement?
     fun updatePlan(validation: String?) {
-        val a = PingUrl(serverAddress)
-    }
-
-    //Methode zum Anzeigen das keine Verbindungs zum Server möglich ist
-    fun noConnection() {
-        activity?.runOnUiThread(object : Runnable {
-            override fun run() {
-                Toast.makeText(
-                    context,
-                    context!!.getString(R.string.noConnection),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
+        PingUrl(serverAddress)
     }
 
     // Methode zum Aktualiseren der Prüfungen
     // die Abfrage Methodes des Webservers
     // gibt Mögliche Änderungen wie den Status zurück,
     // diese werden dann geupdated
+    /**
+     * Updates the data for the exams, currently stored in the Room-Database.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see RetrofitConnect
+     */
     fun updateCheckPlan() {
-        Thread(object : Runnable {
-            override fun run() {
-                val database = AppDatabase.getAppDatabase(context!!)
+        scope_io.launch {
+            //Log.d("Test",String.valueOf(pruefplanDaten.size()));
+            //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
 
-
-                //Log.d("Test",String.valueOf(pruefplanDaten.size()));
-                //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
-
-                //retrofit auruf
-                val retrofit = RetrofitConnect(relativePPlanURL ?: "")
+            //retrofit auruf
+            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
+            if (context != null && database != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
                 retrofit.retroUpdate(
                     context!!,
                     database!!,
@@ -523,48 +537,62 @@ class Optionen() : Fragment() {
                     currentTermin!!,
                     serverAddress
                 )
-
-                // Log.d("Test3",String.valueOf(stringaufteilung[5]));
-                Handler(Looper.getMainLooper()).post(object : Runnable {
-                    override fun run() {
-                        Toast.makeText(
-                            context,
-                            context!!.getString(R.string.add_favorite),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                })
             }
-        }).start()
+            // Log.d("Test3",String.valueOf(stringaufteilung[5]));
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    context,
+                    context!!.getString(R.string.add_favorite),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     //Verbindungsaufbau zum Webserver
     //Überprüfung ob Webserver erreichbar
-    fun PingUrl(address: String?): Boolean {
-        //TODO CHANGE TO COROUTINE
-        Thread(object : Runnable {
-            override fun run() {
-                try {
-                    val url = URL(address)
-                    val urlConn = url.openConnection() as HttpURLConnection
-                    urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
-                    val startTime = System.currentTimeMillis()
-                    urlConn.connect()
-                    val endTime = System.currentTimeMillis()
-                    if (urlConn.responseCode == HttpURLConnection.HTTP_OK) {
-                        // System.out.println("Time (ms) : " + (endTime - startTime));
-                        // System.out.println("Ping to " + address + " successful.");
-                        updateCheckPlan()
-                    }
-                } catch (e: Exception) {
-                    noConnection()
+    /**
+     * Ping the webserver to check if there is a connection.
+     * After success it updates the Room-Database.
+     * @param[address] The address of the server to ping to.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see updateCheckPlan
+     */
+    fun PingUrl(address: String?){
+        scope_io.launch {
+            try {
+                val url = URL(address)
+                val urlConn = url.openConnection() as HttpURLConnection
+                urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
+                val startTime = System.currentTimeMillis()
+                urlConn.connect()
+                val endTime = System.currentTimeMillis()
+                if (urlConn.responseCode == HttpURLConnection.HTTP_OK) {
+                    // System.out.println("Time (ms) : " + (endTime - startTime));
+                    // System.out.println("Ping to " + address + " successful.");
+                    updateCheckPlan()
+                }
+            } catch (e: Exception) {
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        context,
+                        context!!.getString(R.string.noConnection),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-        }).start()
-        return true
+        }
     }
 
     //Google Kalender einträge löschen
+    /**
+     * Deletes the entries in the googlecalendar.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see CheckGoogleCalendar
+     */
     fun deleteCalendar() {
         val cal = CheckGoogleCalendar()
         cal.setCtx(context)
@@ -572,12 +600,37 @@ class Optionen() : Fragment() {
     }
 
     //Google Kalender aktualisieren
+    /**
+     * Updates the googlecalendar. Refreshes the favorites and removed favorites.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see CheckGoogleCalendar
+     */
     fun updateCalendar() {
-        val cal = CheckGoogleCalendar()
-        cal.setCtx(context)
-        cal.updateCal()
+        scope_io.launch {
+            val cal = CheckGoogleCalendar()
+            cal.setCtx(context)
+            cal.updateCal()
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post(object : Runnable {
+                override fun run() {
+                    Toast.makeText(
+                        view?.context,
+                        view?.context?.getString(R.string.actualisation_calendar),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            })
+        }
     }
 
+    /**
+     * Put an event into the googlecalendar and returns the id.
+     * @param[eventtitle] The exam to put into the googlecalendar.
+     * @return The id of the event, which was created in the googlecalendar.
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun calendarID(eventtitle: String?): Int {
         val event = ContentValues()
         event.put(CalendarContract.Events.CALENDAR_ID, 2)
@@ -614,5 +667,4 @@ class Optionen() : Fragment() {
         }
         return (result)
     }
-
 }

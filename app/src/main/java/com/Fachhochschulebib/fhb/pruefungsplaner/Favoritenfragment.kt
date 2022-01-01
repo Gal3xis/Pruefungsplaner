@@ -15,7 +15,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import androidx.recyclerview.widget.ItemTouchHelper
-import kotlinx.android.synthetic.main.favoriten.*
 import java.lang.Exception
 import java.util.ArrayList
 
@@ -46,7 +45,7 @@ import kotlinx.coroutines.launch
 class Favoritenfragment : Fragment() {
     val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
 
-    var mAdapter: MyAdapterfavorits? = null
+    var mAdapter: RecyclerViewFavoritAdapter? = null
     var check: MutableList<Boolean> = ArrayList()
 
     //TODO Alexander Lange Start
@@ -224,7 +223,7 @@ class Favoritenfragment : Fragment() {
             }
             // definiere adapter
             // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-            mAdapter = MyAdapterfavorits(courses, profnames, dates, examNo, room, form)
+            mAdapter = RecyclerViewFavoritAdapter(courses, profnames, dates, examNo, room, form)
             Handler(Looper.getMainLooper()).post {
                 recyclerView4?.adapter = mAdapter
             }

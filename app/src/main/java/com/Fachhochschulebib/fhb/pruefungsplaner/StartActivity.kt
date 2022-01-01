@@ -17,6 +17,7 @@ import android.os.Message
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDelegate
 import com.Fachhochschulebib.fhb.pruefungsplaner.R.attr.colorOnPrimary
 import com.Fachhochschulebib.fhb.pruefungsplaner.Utils.getColorFromAttr
 import org.json.JSONArray
@@ -117,10 +118,9 @@ class StartActivity() : AppCompatActivity() {
 
     // Ende Merlin Gürtler
     public override fun onCreate(savedInstanceState: Bundle?) {
+        applySettings()
         super.onCreate(savedInstanceState)
         //Set Theme
-        sharedPreferencesSettings = getSharedPreferences("settings",Context.MODE_PRIVATE)
-        sharedPreferencesSettings?.getInt("themeid",0)?.let { theme.applyStyle(it,true) }
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         val context = baseContext

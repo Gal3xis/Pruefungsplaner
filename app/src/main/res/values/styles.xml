@@ -63,6 +63,9 @@
         <item name="veraltet">#333</item>
         <item name="zukuenftigePlanung">#FFFFFF</item>
         <item name="defaultStatusColor">#000</item>
+        <item name="spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+        <item name="isFavorit">#f00</item>
+        <item name="isNotFavorit">#0f0</item>
     </style>
 
     <!-- Alert Dialog -->
@@ -77,7 +80,6 @@
         <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
         <!-- Style for negative button -->
     </style>
-
 
 
     <style name="OptionenFragment.Entry" parent="Base.CardView">
@@ -96,11 +98,34 @@
         <item name="android:textAlignment">textStart</item>
     </style>
 
-    <style name="AlertDialog.Filter.Spinner" parent="Widget.AppCompat.Spinner.Underlined">
+    <style name="AlertDialog.Filter.Spinner" parent="Widget.AppCompat.Spinner.DropDown">
         <item name="android:layout_height">50dp</item>
         <item name="android:layout_width">200dp</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:spinnerMode">dialog</item>
+    </style>
+
+    <style name="AlertDialog.Filter.CheckBox.TextView" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">?attr/colorOnPrimaryDark</item>
+    </style>
+
+    <style name="AlertDialog.Filter.CheckBox.Box" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:buttonTint">?attr/colorOnPrimaryDark</item>
+    </style>
+
+    <style name="AlertDialog.Filter.Divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:backgroundTint">?attr/colorOnPrimaryDark</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+
     </style>
 
     <style name="PositiveButtonStyle" parent="@style/Widget.MaterialComponents.Button">
@@ -111,11 +136,16 @@
     </style>
 
     <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
-
+        <item name="android:background">?attr/colorPrimaryDark</item>
+        <item name="android:editTextColor">?attr/colorOnPrimaryDark</item>
     </style>
-
+    <style name="ThemeOverlay.SearchView" parent="">
+        <!-- Text color -->
+        <item name="android:editTextColor">?attr/colorOnPrimaryDark</item>
+    </style>
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
-
+        <item name="android:background">?attr/colorPrimaryDark</item>
+        <item name="android:editTextColor">?attr/colorOnPrimaryDark</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -133,7 +163,7 @@
     </style>
 
     <style name="AutoCompleteStyle">
-        <item name="colorAccent">?attr/colorPrimary</item>
+        <item name="colorAccent">?attr/colorAccent</item>
     </style>
 
     <style name="customAlertDialog" parent="@android:style/Theme.Dialog">

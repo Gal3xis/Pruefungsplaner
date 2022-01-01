@@ -9,21 +9,19 @@ import android.content.DialogInterface
 import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Color
 import android.os.*
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
+import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import kotlinx.android.synthetic.main.activity_suche.*
 import java.lang.Exception
 
 //Alexander Lange Start
@@ -34,7 +32,9 @@ import org.json.JSONObject
 import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.SearchView.SearchAutoComplete
+import androidx.core.view.get
 
 //Alexander Lange End
 
@@ -124,25 +124,6 @@ class MainActivity : AppCompatActivity() {
             }
 
         /**
-         * Parameter to Filter with the Faculty-Id.
-         * Calls the [onFacultyIdChangedListener] and the [onFilterChangedListener].
-         *
-         * @author Alexander Lange
-         * @since 1.5
-         * @see onFacultyIdChangedListener
-         * @see onFilterChangedListener
-         */
-        var facultyId: String? = null
-            set(value) {
-                field = value
-                if (locked) {
-                    return
-                }
-                facultyIdChanged()
-                filterChanged()
-            }
-
-        /**
          * Parameter to Filter with a specific date.
          * Calls the [onDateChangedListener] and the [onFilterChangedListener].
          *
@@ -180,7 +161,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         /**
-         * Parameter to filter with a specific semester. (Value from 1 to 6)
+         * Array of 6 semester, where each field contains a boolean, if the semester is selected (true), or not (false)
          *
          * @author Alexander Lange
          * @since 1.5
@@ -201,7 +182,7 @@ class MainActivity : AppCompatActivity() {
          * @see onFilterChangedListener
 
          */
-        fun SetSemester(pSemester: Int,active:Boolean){
+        fun SetSemester(pSemester: Int, active: Boolean) {
             semester[pSemester] = active
             if (locked) {
                 return
@@ -235,20 +216,6 @@ class MainActivity : AppCompatActivity() {
         private fun courseNameChanged() {
             Log.d("Filter", "Course changed")
             for (i in onCourseNameChangedListener) {
-                i.invoke()
-            }
-        }
-
-        /**
-         * Invokes every Method, appended to the onFacultyIdChangedListener.
-         *
-         * @author Alexander Lange
-         * @since 1.5
-         * @see onFacultyIdChangedListener
-         */
-        private fun facultyIdChanged() {
-            Log.d("Filter", "Faculty changed")
-            for (i in onFacultyIdChangedListener) {
                 i.invoke()
             }
         }
@@ -321,23 +288,20 @@ class MainActivity : AppCompatActivity() {
                 return false
             }
             val database = AppDatabase.getAppDatabase(context)
-            val modulName: String? = MainActivity.Filter.modulName
-            val courseName: String? = MainActivity.Filter.courseName
-            val facultyID: String? = MainActivity.Filter.facultyId
             if (entry == null) {
                 return false
             }
-            if (!entry.module.equals(MainActivity.Filter.modulName ?: entry.module)) {
+            if (entry.module?.lowercase()?.startsWith(
+                    modulName?.lowercase() ?: entry.module?.lowercase() ?: "-1"
+                ) == false
+            ) {
                 return false
             }
-            if (!entry.course.equals(MainActivity.Filter.courseName ?: entry.course)) {
+            if (entry.course?.lowercase()?.startsWith(
+                    courseName?.lowercase() ?: entry.course?.lowercase() ?: "-1"
+                ) == false
+            ) {
                 return false
-            }
-            if (MainActivity.Filter.facultyId != null) {
-                val facultyId = database?.userDao()?.getFacultyByCourse(entry.course)
-                if (facultyId?.equals(MainActivity.Filter.facultyId) != true) {
-                    return false
-                }
             }
             if (this.datum != null) {
                 val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -345,6 +309,12 @@ class MainActivity : AppCompatActivity() {
                 if (!this.datum!!.atDay(date)) {
                     return false
                 }
+            }
+            if (entry.firstExaminer?.lowercase()?.startsWith(
+                    examiner?.lowercase() ?: entry.firstExaminer?.lowercase() ?: "-1"
+                ) == false
+            ) {
+                return false
             }
             if (entry.semester != null && !semester[entry.semester!!.toInt().minus(1)]) {
                 return false
@@ -360,7 +330,6 @@ class MainActivity : AppCompatActivity() {
          * @since 1.5
          */
         fun reset() {
-            facultyId = null
             courseName = null
             modulName = null
             datum = null
@@ -373,7 +342,6 @@ class MainActivity : AppCompatActivity() {
         //Declaration and empty initilization of every listener. To add an Method, write: listenerX.add{ ... }
         var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onFacultyIdChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onExaminerChangedListener: MutableList<() -> Unit> = mutableListOf()
         var onSemesterChangedListener: MutableList<() -> Unit> = mutableListOf()
@@ -493,7 +461,6 @@ class MainActivity : AppCompatActivity() {
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.frame_placeholder, Terminefragment())
         ft.commit()
-
     }
 
     //Start Alexander Lange
@@ -506,12 +473,44 @@ class MainActivity : AppCompatActivity() {
      * @author Alexander Lange
      * @since 1.5
      * @see AppCompatActivity.onCreateOptionsMenu
+     * @see SearchView.autofill
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menu.clear()
         menuInflater.inflate(R.menu.action_menu, menu);
         menu.findItem(R.id.menu_item_filter).isVisible = true
         menu.findItem(R.id.menu_item_save).isVisible = false
+        val search: SearchView = menu.findItem(R.id.menu_item_search).actionView as SearchView
+        val searchAutoComplete: SearchAutoComplete = search.findViewById(R.id.search_src_text)
+        val list: MutableList<String> = mutableListOf()
+        scope_io.launch {
+            database?.userDao()?.moduleOrdered?.forEach { action -> list.add(action ?: "") }
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post {
+                searchAutoComplete.setAdapter(
+                    ArrayAdapter(
+                        this,
+                        R.layout.simple_spinner_item,
+                        list
+                    )
+                )
+
+                searchAutoComplete.setOnItemClickListener { adapterView, view, i, l ->
+                    search.setQuery(adapterView.getItemAtPosition(i).toString(),true)
+                }
+                search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                    override fun onQueryTextChange(text: String?): Boolean {
+                        Filter.modulName = if (text.isNullOrBlank()) null else text
+                        return true
+                    }
+
+                    override fun onQueryTextSubmit(text: String?): Boolean {
+                        changeFragment(Filter.modulName?:"Suche", Terminefragment())
+                        return true
+                    }
+                })
+            }
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -587,37 +586,6 @@ class MainActivity : AppCompatActivity() {
                         applicationContext.getString(R.string.title_calender),
                         Terminefragment()
                     )
-                }
-                R.id.navigation_medication -> {
-                    changeFragment(
-                        applicationContext.getString(R.string.title_search),
-                        searchFragment()
-                    )
-                    /*TODO REMOVE? //Menüpunkt Suche
-                    //TODO Change to Coroutine
-                    Thread {
-                        val validation = examineYear + returnCourse + currentExaminePeriode
-                        val rommData = AppDatabase.getAppDatabase(applicationContext)
-                        val ppeList =
-                            rommData?.userDao()?.getEntriesByValidation(validation)
-                        Handler(Looper.getMainLooper()).post {
-                            header?.title =
-                                applicationContext.getString(R.string.title_search)
-                            recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
-                            //TODO Check if needed or remove:caCalender?.visibility = View.GONE
-                            //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
-                            drawer_layout.closeDrawer(GravityCompat.START)
-
-
-                            //Suche Layout wird nicht aufgerufen wenn keine daten vorhanden sind
-                            if (ppeList?.size ?: 0 < 2) {
-                            } else {
-                                ft.replace(R.id.frame_placeholder, searchFragment())
-                                ft.commit()
-                            }
-                        }
-                    }.start()
-                    true*/
                 }
                 R.id.navigation_settings -> {
                     changeFragment(
@@ -702,22 +670,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.5
      * @see Optionen
      */
-    private fun applySettings() {
-        val sharedPreferencesSettings = getSharedPreferences("settings", Context.MODE_PRIVATE)
 
-        //Set Darkmode
-        val darkMode = sharedPreferencesSettings.getBoolean("darkmode", false)
-        AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-
-        Log.d("ThemeTest", darkMode.toString())
-
-        //Set Theme
-        sharedPreferencesSettings?.getInt("themeid", 0)?.let {
-            theme.applyStyle(it, true)
-            Log.d("ThemeTest", it.toString())
-        }
-
-    }
 
     /**
      * Changes the Fragment.
@@ -750,7 +703,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.5
      * @see UpdateModulFilter
      * @see UpdateCourseFilter
-     * @see UpdateFacultyFilter
+     * @see initFacultyFilter
      * @see Filter
      */
     private fun OpenFilterMenu() {
@@ -760,12 +713,16 @@ class MainActivity : AppCompatActivity() {
         //Get view-Components
         val imgbtn_date = view.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
         val btn_reset = view.findViewById<Button>(R.id.layout_dialog_filter_reset_btn)
+        val tv_faculty = view.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
         val tv_date = view.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
         val sp_modul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
         val sp_course = view.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
-        val sp_faculty = view.findViewById<Spinner>(R.id.layout_dialog_filter_faculty_sp)
 
-        val tv_examiner = view.findViewById<AutoCompleteTextView>(R.id.layout_dialog_filter_examiner)
+        val sp_examiner =
+            view.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
+
+        initFacultyFilter(this, tv_faculty)
+
 
         val c1 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
         val c2 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
@@ -776,12 +733,11 @@ class MainActivity : AppCompatActivity() {
 
         //Initializes the view-components
         UpdateCourseFilter(this, sp_course)
-        UpdateFacultyFilter(this, sp_faculty)
         UpdateModulFilter(this, sp_modul)
 
         btn_reset?.setOnClickListener { MainActivity.Filter.reset() }
 
-        initFilterExaminer(tv_examiner)
+        initFilterExaminer(sp_examiner)
 
         initFilterCheckbox(c1, 1)
         initFilterCheckbox(c2, 2)
@@ -795,13 +751,8 @@ class MainActivity : AppCompatActivity() {
             UpdateModulFilter(this, sp_modul)
         }
 
-        Filter.onFacultyIdChangedListener.add {
-            UpdateCourseFilter(this, sp_course)
-        }
-
         Filter.onResetListener.add {
             UpdateCourseFilter(this, sp_course)
-            UpdateFacultyFilter(this, sp_faculty)
             UpdateModulFilter(this, sp_modul)
         }
 
@@ -830,20 +781,60 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun initFilterExaminer(tv_examiner:AutoCompleteTextView){
-        tv_examiner.addTextChangedListener(object:TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                return
+    /**
+     * Initializes the examiner-filter in the filtermenu.
+     * Creates an adapter with all first-examiners to imlement an autocompletion.
+     * @param[sp_examiner] The [Spinner] that shall be initialized.
+     * @author Alexander Lange
+     * @since 1.5
+     * @see AdapterView.OnItemSelectedListener.onItemSelected
+     */
+    private fun initFilterExaminer(sp_examiner: Spinner) {
+        sp_examiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (parent?.childCount ?: 0 > 0) {
+                    val child = parent?.getChildAt(0)
+                    //Set accurate textcolor for the selected item
+                    if (child != null) {
+                        (child as TextView).setTextColor(
+                            Utils.getColorFromAttr(
+                                R.attr.colorOnPrimary,
+                                theme
+                            )
+                        )
+                    }
+                }
+                Filter.examiner = if (position == 0) null else sp_examiner.selectedItem.toString()
             }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                return
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                Filter.examiner = null
             }
+        }
+        val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
+        scope_io.launch {
+            val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "")
+            spinnerProfArrayList.addAll(
+                database?.userDao()?.getFirstExaminerDistinctSortedByName(selectedCourse)?.toList()
+                    ?: mutableListOf()
+            )
+        }.invokeOnCompletion {
+            Handler(Looper.getMainLooper()).post {
+                val adapterProfAutoComplete = ArrayAdapter(
+                    applicationContext,
+                    android.R.layout.simple_list_item_1,
+                    spinnerProfArrayList ?: mutableListOf()
+                )
+                sp_examiner.adapter = adapterProfAutoComplete
+                sp_examiner.setSelection(Filter.examiner)
+            }
+        }
 
-            override fun afterTextChanged(s: Editable?) {
-                Filter.examiner = s.toString()
-            }
-        })
     }
 
     /**
@@ -857,7 +848,7 @@ class MainActivity : AppCompatActivity() {
     private fun initFilterCheckbox(c: CheckBox, semester: Int) {
         c.isChecked = Filter.semester[semester - 1]
         c.setOnCheckedChangeListener { buttonView, isChecked ->
-            Filter.SetSemester(semester-1,isChecked)
+            Filter.SetSemester(semester - 1, isChecked)
         }
     }
 
@@ -871,13 +862,11 @@ class MainActivity : AppCompatActivity() {
      * @see Filter
      */
     fun UserFilter(context: Context) {
-        val fac_id = mSharedPreferencesValidation?.getString("returnFaculty", null)
         val cou_sel = mSharedPreferencesValidation?.getString("selectedCourse", null)
 
         //Disable the callback from Filter. Only sets its values.
         Filter.locked = true
         Filter.reset()
-        Filter.facultyId = fac_id
         Filter.courseName = cou_sel
         //Resets the callbacks from the Filter
         Filter.locked = false
@@ -893,7 +882,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.5
      * @see setCourseSpinner
      * @see OpenFilterMenu
-     * @see UpdateFacultyFilter
+     * @see initFacultyFilter
      * @see UpdateModulFilter
      * @see Filter
      */
@@ -953,9 +942,9 @@ class MainActivity : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                //Set accurate textcolor for the selected item
                 if (parent?.childCount ?: 0 > 0) {
                     val child = parent?.getChildAt(0)
+                    //Set accurate textcolor for the selected item
                     if (child != null) {
                         (child as TextView).setTextColor(
                             Utils.getColorFromAttr(
@@ -985,7 +974,7 @@ class MainActivity : AppCompatActivity() {
      * Creates a list of faucultynames from the room-database and passes them to the spinner.
      *
      * @param[context] the current context
-     * @param[sp_faculty] the spinner from the filtermenu
+     * @param[tv_faculty] the spinner from the filtermenu
      * @author Alexander Lange
      * @since 1.5
      * @see setCourseSpinner
@@ -994,15 +983,15 @@ class MainActivity : AppCompatActivity() {
      * @see UpdateModulFilter
      * @see Filter
      */
-    private fun UpdateFacultyFilter(context: Context, sp_faculty: Spinner) {
+    private fun initFacultyFilter(context: Context, tv_faculty: TextView) {
         try {
             //Get a list of facultys from shared preferences
             val strFacultys = sharedPrefsFaculty?.getString("faculty", "0")
+            val returnFaculty = mSharedPreferencesValidation?.getString("returnFaculty", "0")
             //Create a jsonarray from faculty-list
             val jsonArrayFacultys = JSONArray(strFacultys)
 
-            var pos_selected: Int = 0
-            val list = mutableListOf<String?>()//TODO extract String
+            var selected_faculty: String? = null
 
             if (strFacultys != null) {
                 //Loop through jsonarray and create list of facultynames
@@ -1010,96 +999,19 @@ class MainActivity : AppCompatActivity() {
                 while (i < jsonArrayFacultys.length()) {
                     //Get json-object from jsonarray
                     val json: JSONObject? = jsonArrayFacultys.getJSONObject(i)
-                    //Add faculty-name from jsonobject to list
-                    list.add(json?.get("facName").toString())
                     //compare facultyid from filter with selected facultyid
-                    if (json?.get("fbid").toString().equals(Filter.facultyId)) {
+                    if (json?.get("fbid").toString() == returnFaculty) {
                         //if the facultys agree, save position as selected. Retrieve selection from filter
-                        pos_selected = i
+                        selected_faculty = json?.get("facName")?.toString()
                     }
                     i++
                 }
 
             }
             //Create spinneradapter from stringlist
-            val sp_faculty_adapter = ArrayAdapter<String>(
-                context,
-                android.R.layout.simple_spinner_dropdown_item,
-                list
-            )
-
-            setFacoultySpinner(sp_faculty_adapter, pos_selected, sp_faculty)
+            tv_faculty.setText(selected_faculty)
         } catch (ex: Exception) {
             System.err.println(ex.stackTrace)
-        }
-    }
-
-    /**
-     * Initializes the facultyspinner with an adapter and an onItemSelectedListener.
-     *
-     * @param[sp_faculty_adapter] The adapter to pass to the spinner
-     * @param[pos_selected] The position, where to set the selection of the spinner on start
-     * @param[sp_course] the spinner from the filtermenu
-     * @author Alexander Lange
-     * @since 1.5
-     * @see UpdateFacultyFilter
-     * @see Filter
-     */
-    private fun setFacoultySpinner(
-        sp_faculty_adapter: ArrayAdapter<String>,
-        pos_selected: Int,
-        sp_faculty: Spinner
-    ) {
-        //Pass Spinneradapter from list to spinner
-        sp_faculty.adapter = sp_faculty_adapter
-        //Set selection
-        sp_faculty.setSelection(pos_selected)
-        //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
-        sp_faculty.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>,
-                view: View, position: Int, id: Long
-            ) {
-                //Set accurate textcolor for selected item
-                if (parent?.childCount ?: 0 > 0) {
-                    val child = parent?.getChildAt(0)
-                    if (child != null) {
-                        (child as TextView).setTextColor(
-                            Utils.getColorFromAttr(
-                                R.attr.colorOnPrimary,
-                                theme
-                            )
-                        )
-                    }
-                }
-                /*if (Filter.facultyId == null && position == 0) {
-                    return
-                }*/
-                val strFacultys = sharedPrefsFaculty?.getString("faculty", "0")
-                if (strFacultys != null) {
-                    val jsonArrayFacultys: JSONArray = JSONArray(strFacultys)
-                    for (i in 0 until (jsonArrayFacultys?.length() ?: 0)) {
-                        val json = jsonArrayFacultys?.getJSONObject(i)
-                        val facName = json?.get("facName").toString()
-                        val selectedFaculty = sp_faculty.selectedItem.toString()
-                        if (facName.equals(selectedFaculty)) {
-                            Filter.facultyId =
-                                if (position == 0) null else json?.get("fbid")
-                                    .toString()
-                            Log.d(
-                                "table.kt-InitFilterSpinner",
-                                "Selected new Faculty-Id (%s)".format(Filter.facultyId)
-                            )
-                            break
-                        }
-                    }
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-                Log.d("table.kt-InitFilterSpinner", "Nothing selected")
-            }
         }
     }
 
