@@ -207,6 +207,11 @@
                 android:text="@string/settings_privacy_declaration" />
 
             <Button
+                android:id="@+id/optionenfragment_impressum"
+                style="@style/OptionenFragment.Entry"
+                android:text="@string/optionenfragment_impressum_text" />
+
+            <Button
                 android:id="@+id/optionenfragment_save_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

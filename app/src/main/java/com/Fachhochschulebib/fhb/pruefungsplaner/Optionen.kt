@@ -283,13 +283,18 @@ class Optionen() : Fragment() {
                                       int before, int count) {
             }
         });
-         */privacyDeclaration.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                val ft = activity?.supportFragmentManager?.beginTransaction()
-                ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
-                ft?.commit()
-            }
-        })
+         */
+        privacyDeclaration.setOnClickListener {
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
+            ft?.commit()
+        }
+
+        optionenfragment_impressum.setOnClickListener {
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            ft?.replace(R.id.frame_placeholder,ImpressumFragment())
+            ft?.commit()
+        }
 
         //interne DB löschen
         btnDB.setOnClickListener(object : View.OnClickListener {
