@@ -114,7 +114,6 @@ class AddCourseFragment() : Fragment() {
     private fun initOkButton() {
         buttonOk.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {
-                //TODO Change to Coroutine
                 scope_io.launch {// Aktualisiere die Studiengänge
                     for (i in courseChosen.indices) {
                         database?.userDao()?.updateCourse(

@@ -8,20 +8,25 @@ import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_impressum.*
 
 /**
- * A simple [Fragment] subclass.
- * Use the [ImpressumFragment.newInstance] factory method to
- * create an instance of this fragment.
+ * Fragment. that displays the impressum for the app.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.5
  */
 class ImpressumFragment : Fragment() {
 
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
+    /**
+     * Overrides the onCreateView()-Method. It sets the current view to the fragment_impressum-layout.
+     *
+     * @return Returns the initialized view of this Fragment
+     * @since 1.5
+     * @author Alexander Lange
+     * @see Fragment.onCreateView
+     */
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_impressum, container, false)
@@ -30,6 +35,16 @@ class ImpressumFragment : Fragment() {
         return view
     }
 
+
+
+    /**
+     * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
+     * Sets the test of the impressum-textview
+     *
+     * @since 1.5
+     * @author Alexander Lange
+     * @see Fragment.onViewCreated
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         impressum_tv.text = Utils.readTextFile(context!!, R.raw.impressum)

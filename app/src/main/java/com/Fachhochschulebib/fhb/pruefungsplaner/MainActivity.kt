@@ -364,8 +364,6 @@ class MainActivity : AppCompatActivity() {
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
-     * In this Method, the global parameter which are independent of the UI get initialized,
-     * like the App-SharedPreferences and the reference to the Room-Database
      *
      * @since 1.5
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)

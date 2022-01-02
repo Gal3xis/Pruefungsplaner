@@ -52,7 +52,7 @@ class Favoritenfragment : Fragment() {
     var filterChangeListenerPosition: Int? = null
 
     //TODO Alexander Lange End
-    // Datenbank initialisierung
+    //Datenbank initialisierung
     var database: AppDatabase? = null
 
     /**
