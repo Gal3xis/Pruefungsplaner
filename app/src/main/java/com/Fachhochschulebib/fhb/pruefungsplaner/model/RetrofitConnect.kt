@@ -1,12 +1,3 @@
-//////////////////////////////
-// RetrofitConnect
-//
-// autor:
-// inhalt: Verbindungsaufbau zum Webserver
-// zugriffsdatum: 11.12.19
-//
-//
-//////////////////////////////
 package com.Fachhochschulebib.fhb.pruefungsplaner.model
 
 import android.content.Context
@@ -20,6 +11,10 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface
 import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
+import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -32,10 +27,28 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * Interface for a connection to the REST-API and the Room-Database. Data is exchanged via JSON-Objects.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.5
+ */
 class RetrofitConnect(private val relativePPlanUrl: String) {
     var termine: String? = null
 
+    private val SCOPE_IO = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
+
     // private boolean checkvalidate = false;
+    /**
+     * Return a formatted date as String to save in the [TestPlanEntry.date]-Paramater.
+     *
+     * @param[dateResponse] The date from the JSON-Response.
+     *
+     * @return The formatted date for the [TestPlanEntry.date]
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun getDate(dateResponse: String): String {
         //Festlegen vom Dateformat
         var dateTimeZone: String
@@ -44,7 +57,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         var dateLastExamFormatted: String? = null
         try {
             val dateFormat: DateFormat = SimpleDateFormat(
-                "EEE MMM dd HH:mm:ss yyyy", Locale.US
+                    "EEE MMM dd HH:mm:ss yyyy", Locale.US//TODO CHANGE LOCAL
             )
             val dateLastExam = dateFormat.parse(dateTimeZone)
             val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
@@ -52,14 +65,22 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
             val currentDate = Calendar.getInstance().time
             val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val currentDateFormated = df.format(currentDate)
-            Log.d("Datum letzte Prüfung", dateLastExamFormatted)
-            Log.d("Datum aktuell", currentDateFormated)
         } catch (e: ParseException) {
             e.printStackTrace()
         }
         return dateLastExamFormatted.toString()
     }
 
+    /**
+     * Return the ids of all choosen courses in the Room-Database.
+     *
+     * @param[roomData] The Room-Database of the application.
+     *
+     * @return A String containing every course-ID
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun getIDs(roomData: AppDatabase): String {
         val Ids = roomData.userDao()?.getChoosenCourseId(true)
         val courseIds = JSONArray()
@@ -79,6 +100,16 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
 
     // Start Merlin Gürtler
     // Refactoring
+    /**
+     * Creates a new [TestPlanEntry] from a [JsonResponse].
+     *
+     * @param[entryResponse] The [JsonResponse], that contains the data for the [TestPlanEntry].
+     *
+     * @return A [TestPlanEntry] containing the data of the [JsonResponse]
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun createTestplanEntry(entryResponse: JsonResponse): TestPlanEntry {
         val dateLastExamFormatted = getDate(entryResponse.date!!)
         val testPlanEntry = TestPlanEntry()
@@ -98,9 +129,20 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         return testPlanEntry
     }
 
+    /**
+     * Update an existing [TestPlanEntry] with new data from a [JsonResponse].
+     *
+     * @param[entryResponse] The [JsonResponse] with the new data.
+     * @param[existingEntry] The [TestPlanEntry] that needs to be updated.
+     *
+     * @return The updated [TestPlanEntry]
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun updateTestPlanEntry(
-        entryResponse: JsonResponse,
-        existingEntry: TestPlanEntry?
+            entryResponse: JsonResponse,
+            existingEntry: TestPlanEntry?
     ): TestPlanEntry? {
         val dateLastExamFormatted = getDate(entryResponse.date!!)
         existingEntry?.firstExaminer = entryResponse.firstExaminer
@@ -119,93 +161,90 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         return existingEntry
     }
 
+    /**
+     * Insert new [TestPlanEntry]-Objects into the Room-Database, based on a List of [JsonResponse].
+     *
+     * @param[roomData] The database, in which the [TestPlanEntry]-Objects shall be inserted.
+     * @param[year] The current year
+     * @param[examinePeriod] The current examperiod
+     * @param[body] A list of [JsonResponse], containing data to store in the Room-Database.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun inserEntryToDatabase(
-        roomData: AppDatabase,
-        year: String,
-        examinePeriod: String,
-        body: List<JsonResponse?>?
+            roomData: AppDatabase,
+            year: String,
+            examinePeriod: String,
+            body: List<JsonResponse?>?
     ) {
+        if (body == null) {
+            return
+        }
         // Start Merlin Gürtler
         // Extra Thread da sonst die Db nicht aktualisiert werden kann.
-        //TODO Make Coroutine
-        Thread {
-            //Hole alle Einträge aus der lokalen Room-DB
-            var dataListFromLocalDB: List<TestPlanEntry?>? = null
-            try { //DONE (08/2020) LG
-                dataListFromLocalDB = roomData.userDao()?.allEntries
-                //roomdaten.clearAllTables();
-            } catch (e: Exception) {
-                Log.d("Fehler: ", "Kein Zugriff auf die Datenbank!")
-            }
-
-            // String validation = jahr+studiengang+pruefungsphase;
-            //String checkTermin = "0";
-
-            //Durchlaufe die Room-DB-Prüfplaneinträge mit dem aktuellen Validationwert
-            /*
-                    Merlin Gürtler
-                    Es Funktioniert auch ohne checkvalidate
-                    if(dataListFromLocalDB!=null) { //DONE (08/2020) LG
-                        for (int j = 0; j < dataListFromLocalDB.size(); j++) {
-                            if (dataListFromLocalDB.get(j).getValidation().equals(validation)) {
-                                //checkTermin = dataListFromLocalDB.get(j).getTermin();
-                                checkvalidate = true;
-                            }
-                        }
-                    }//if
-                    */
-
+        SCOPE_IO.launch {
             //Schleife zum Einfügen jedes erhaltenes Prüfungsobjekt in die lokale Datenbank
             //DONE (08/2020) LG: Die 0 für i muss doch auch beachtet werden, oder?
-            if (body != null) {
-                for (entryResponse in body) {
-                    //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
-                    /*
-                                    DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
-                                    jetzt hinzugefügt.
-                                 */
-                    // if(!checkvalidate){
-                    //erhaltene Werte zur Datenbank hinzufügen
+            for (entryResponse in body) {
+                //Pruefplan ist die Modelklasse für die angekommenden Prüfungsobjekte
+                /*
+                                DS, die bisher noch nicht in der lokalen DB enthalten sind, werden
+                                jetzt hinzugefügt.
+                             */
+                // if(!checkvalidate){
+                //erhaltene Werte zur Datenbank hinzufügen
 
-                    var testPlanEntry:TestPlanEntry? = if(entryResponse!=null)createTestplanEntry(entryResponse)else null
+                val testPlanEntry: TestPlanEntry? = if (entryResponse != null) createTestplanEntry(entryResponse) else null
 
-                    //lokale datenbank initialiseren
-                    //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
-                    //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
-                    //List<PruefplanEintrag> userdaten2 = database2.userDao().getAllEntries();
-                    //Log.d("Test4", String.valueOf(userdaten2.size()));
-                    try {
-                        for (b in Optionen.idList.indices) {
-                            if (testPlanEntry?.id == Optionen.idList[b]) {
-                                //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
-                                testPlanEntry?.favorit = true
-                            }
+                //lokale datenbank initialiseren
+                //DONE (08/2020) LG: Auskommentieren des erneuten Zugriffs
+                //AppDatabase database2 = AppDatabase.getAppDatabase(ctx2);
+                //List<PruefplanEintrag> userdaten2 = database2.userDao().getAllEntries();
+                //Log.d("Test4", String.valueOf(userdaten2.size()));
+                try {
+                    for (b in Optionen.idList.indices) {
+                        if (testPlanEntry?.id == Optionen.idList[b]) {
+                            //Log.d("Test4", String.valueOf(userdaten2.get(b).getID()));
+                            testPlanEntry.favorit = true
                         }
-                    } catch (e: Exception) {
-                        Log.d(
+                    }
+                } catch (e: Exception) {
+                    Log.d(
                             "Fehler RetrofitConnect",
                             "Fehler beim Ermitteln der favorisierten Prüfungen"
-                        )
-                    }
-
-                    //Schlüssel für die Erkennung bzw unterscheidung Festlegen
-                    testPlanEntry?.validation = year + entryResponse?.courseId + examinePeriod
-                    addUser(roomData, testPlanEntry)
+                    )
                 }
+                //Schlüssel für die Erkennung bzw unterscheidung Festlegen
+                testPlanEntry?.validation = year + entryResponse?.courseId + examinePeriod
+                addUser(roomData, testPlanEntry)
             }
-        }.start()
+        }
         // Ende Merlin Gürtler
         checkTransmission = true
     }
 
     //DONE (08/2020 LG) Parameter 7,8 eingefügt --> Adresse an zentraler Stelle verwalten
+    /**
+     * Access to the Rest-Api, to get the data from the Server.
+     *
+     * @param[ctx] The current context of the application to retrieve information from the sharedpreferences.
+     * @param[roomData] The database, in witch the response is saved.
+     * @param[year] The current year.
+     * @param[currentPeriod] The current examperiod.
+     * @param[termin] The current termin.
+     * @param[serverAdress] The address of the server.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun RetrofitWebAccess(
-        ctx: Context,
-        roomData: AppDatabase,
-        year: String,
-        currentPeriod: String,
-        termin: String,
-        serverAdress: String
+            ctx: Context,
+            roomData: AppDatabase,
+            year: String,
+            currentPeriod: String,
+            termin: String,
+            serverAdress: String
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server_Address", 0)
@@ -229,8 +268,8 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         val call = request.jSON
         call?.enqueue(object : Callback<List<JsonResponse?>?> {
             override fun onResponse(
-                call: Call<List<JsonResponse?>?>?,
-                response: Response<List<JsonResponse?>?>
+                    call: Call<List<JsonResponse?>?>?,
+                    response: Response<List<JsonResponse?>?>
             ) {
                 response.body()
                 if (response.isSuccessful) {
@@ -248,12 +287,26 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
     }
 
     // Start Merlin Gürtler
+    /**
+     * Update the Room-Database with current data on the server.
+     *
+     * @param[ctx] The current context of the application to retrieve information from the sharedpreferences.
+     * @param[roomData] The database, in witch the response is saved.
+     * @param[year] The current year.
+     * @param[currentPeriod] The current examperiod.
+     * @param[termin] The current termin.
+     * @param[serverAdress] The address of the server.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun retroUpdate(
-        ctx: Context, roomData: AppDatabase,
-        year: String,
-        currentPeriod: String,
-        termin: String,
-        serverAdress: String?
+            ctx: Context,
+            roomData: AppDatabase,
+            year: String,
+            currentPeriod: String,
+            termin: String,
+            serverAdress: String?
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
@@ -268,72 +321,97 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                 + courseIds + "/")
         val URL = urlfhb + relPathWithParameters
         val retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val request = retrofit.create(RequestInterface::class.java)
         val call = request.jSON
         call?.enqueue(object : Callback<List<JsonResponse?>?> {
             override fun onResponse(
-                call: Call<List<JsonResponse?>?>?,
-                response: Response<List<JsonResponse?>?>
+                    call: Call<List<JsonResponse?>?>?,
+                    response: Response<List<JsonResponse?>?>
             ) {
-                response.body()
-                if (response.isSuccessful && response.body()?.size?:0 > 0) {
-                    Thread {
-                        val dataListFromLocalDB = roomData.userDao()?.allEntries
-                        var responseId: String
-                        var i: Int
-                        val listSize = dataListFromLocalDB?.size?:0
-                        for (response in response.body()!!) {
-                            responseId = response?.id?:"-1"
-                            var existingEntry: TestPlanEntry? = TestPlanEntry()
-                            existingEntry = roomData.userDao()?.getEntryById(responseId)
-                            // prüfe ob der Eintrag schon existiert
-                            if (existingEntry != null) {
-                                // entfernt den Eintrag, da die Daten geupdatet wurden
-                                i = 0
-                                while (i < listSize) {
-                                    if (dataListFromLocalDB?.get(i)?.id == response?.id) {
-                                        existingEntry = dataListFromLocalDB?.get(i)
-                                        dataListFromLocalDB?.removeAt(i)
-                                        existingEntry = updateTestPlanEntry(response!!, existingEntry)
-                                        break
-                                    }
-                                    i++
-                                }
-                                roomData.userDao()?.updateExam(existingEntry)
-                            } else {
-                                var testPlanEntryResponse = TestPlanEntry()
-                                testPlanEntryResponse = createTestplanEntry(response!!)
-                                roomData.userDao()?.insertAll(testPlanEntryResponse)
-                            }
-
-                            //Update den Eintrag aus dem Calendar falls vorhanden
-                            val cal = CheckGoogleCalendar()
-                            cal.setCtx(ctx)
-                            if (!cal.checkCal(responseId.toInt())) {
-                                cal.updateCalendarEntry(responseId.toInt())
-                            }
-                        }
-
-                        // lösche Einträge die nicht geupdatet wurden
-                        roomData.userDao()?.deleteEntry(dataListFromLocalDB)
-                    }.start()
-                } else {
-                    Log.d("RESPONSE", ":::NO RESPONSE:::")
-                }
+                updateDatabase(response, roomData, ctx)
             }
 
             override fun onFailure(call: Call<List<JsonResponse?>?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
 
+    /**
+     * Updates the RoomDatabase with a list of [JsonResponse]-Objects.
+     *
+     * @param[response] A list of Entries that need to be updated.
+     * @param[roomData] The database to be updated.
+     * @param[ctx] The context of the application.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun updateDatabase(response: Response<List<JsonResponse?>?>, roomData: AppDatabase, ctx: Context) {
+        response.body()
+        if (response.isSuccessful && response.body()?.size ?: 0 > 0) {
+            SCOPE_IO.launch {
+                val dataListFromLocalDB = roomData.userDao()?.allEntries
+                var responseId: String
+                var i: Int
+                val listSize = dataListFromLocalDB?.size ?: 0
+                for (response in response.body()!!) {
+                    responseId = response?.id ?: "-1"
+                    var existingEntry: TestPlanEntry? = TestPlanEntry()
+                    existingEntry = roomData.userDao()?.getEntryById(responseId)
+                    // prüfe ob der Eintrag schon existiert
+                    if (existingEntry != null) {
+                        // entfernt den Eintrag, da die Daten geupdatet wurden
+                        i = 0
+                        while (i < listSize) {
+                            if (dataListFromLocalDB?.get(i)?.id == response?.id) {
+                                existingEntry = dataListFromLocalDB?.get(i)
+                                dataListFromLocalDB?.removeAt(i)
+                                existingEntry = updateTestPlanEntry(response!!, existingEntry)
+                                break
+                            }
+                            i++
+                        }
+                        roomData.userDao()?.updateExam(existingEntry)
+                    } else {
+                        var testPlanEntryResponse = TestPlanEntry()
+                        testPlanEntryResponse = createTestplanEntry(response!!)
+                        roomData.userDao()?.insertAll(testPlanEntryResponse)
+                    }
+
+                    //Update den Eintrag aus dem Calendar falls vorhanden
+                    val cal = CheckGoogleCalendar()
+                    cal.setCtx(ctx)
+                    if (!cal.checkCal(responseId.toInt())) {
+                        cal.updateCalendarEntry(responseId.toInt())
+                    }
+                }
+
+                // lösche Einträge die nicht geupdatet wurden
+                roomData.userDao()?.deleteEntry(dataListFromLocalDB)
+            }
+        } else {
+            Log.d("RESPONSE", ":::NO RESPONSE:::")
+        }
+    }
+
+    /**
+     * Initialization of the application on the first start.
+     *
+     * @param[ctx] The context of the application.
+     * @param[roomData] The Room-Database.
+     * @param[serverAdress] The address of the Web-Server.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun firstStart(
-        ctx: Context, roomData: AppDatabase,
-        serverAdress: String?
+            ctx: Context,
+            roomData: AppDatabase,
+            serverAdress: String?
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
@@ -348,33 +426,43 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                 faculty + "/"
         val URL = urlfhb + adresse
         val retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val request = retrofit.create(RequestInterface::class.java)
         val call = request.jsonUuid
         call?.enqueue(object : Callback<JsonUuid?> {
             override fun onResponse(call: Call<JsonUuid?>, response: Response<JsonUuid?>) {
                 if (response.isSuccessful) {
-                    //TODO Make Coroutine
-                    Thread { // Speichere die erhaltene Uuid
+                    SCOPE_IO.launch {
                         roomData.userDao()?.insertUuid(response.body()?.uuid)
 
                         // sende die gewählten Kurse
                         setUserCourses(ctx, roomData, serverAdress)
-                    }.start()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<JsonUuid?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
 
+    /**
+     * Called on every appstart except the first one.
+     *
+     * @param[ctx] The context of the application.
+     * @param[roomData] The Room-Database.
+     * @param[serverAdress] The address of the Web-Server.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun anotherStart(
-        ctx: Context, roomdaten: AppDatabase,
-        serverAdress: String?
+            ctx: Context,
+            roomdaten: AppDatabase,
+            serverAdress: String?
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
@@ -385,9 +473,9 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         val adress = relativePPlanUrl + "entity.user/anotherStart/" + uuid?.uuid + "/"
         val URL = urlfhb + adress
         val retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val request = retrofit.create(RequestInterface::class.java)
         val call = request.anotherStart()
         call?.enqueue(object : Callback<Void?> {
@@ -398,15 +486,33 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
             }
 
             override fun onFailure(call: Call<Void?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
 
+    /**
+     * Send Feedback to the Webserver.
+     *
+     * @param[ctx] The context of the application.
+     * @param[roomData] The Room-Database.
+     * @param[serverAdress] The address of the Web-Server.
+     * @param[usability] The feedback-value for the usability of the app.
+     * @param[functions] The feedback-value for the functionality of the app.
+     * @param[stability] The feedback-value for the stability of the app.
+     * @param[text] The written feedbacktext of the user.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun sendFeedBack(
-        ctx: Context, roomdaten: AppDatabase,
-        serverAdress: String?, usability: Float,
-        functions: Float, stability: Float, text: String
+            ctx: Context,
+            roomdaten: AppDatabase,
+            serverAdress: String?,
+            usability: Float,
+            functions: Float,
+            stability: Float,
+            text: String
     ) {
         //Serveradresse
         var text = text
@@ -424,9 +530,9 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                 + "/" + usability + "/" + functions + "/" + stability + "/" + text + "/")
         val URL = urlfhb + adress
         val retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val request = retrofit.create(RequestInterface::class.java)
         val call = request.sendFeedBack()
         call?.enqueue(object : Callback<Void?> {
@@ -437,14 +543,25 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
             }
 
             override fun onFailure(call: Call<Void?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
 
+    /**
+     * Retrieve a list of courses from the Webserver and store them in the Room-Database.
+     *
+     * @param[ctx] The context of the application.
+     * @param[roomData] The Room-Database.
+     * @param[serverAdress] The address of the Web-Server.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun getCourses(
-        ctx: Context, roomData: AppDatabase,
-        serverAdress: String?
+            ctx: Context,
+            roomData: AppDatabase,
+            serverAdress: String?
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
@@ -454,43 +571,53 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         val adress = relativePPlanUrl + "entity.studiengang/"
         val URL = urlfhb + adress
         val retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val request = retrofit.create(RequestInterface::class.java)
         val call = request.studiengaenge
         call?.enqueue(object : Callback<List<JsonCourse?>?> {
             override fun onResponse(
-                call: Call<List<JsonCourse?>?>?,
-                response: Response<List<JsonCourse?>?>
+                    call: Call<List<JsonCourse?>?>?,
+                    response: Response<List<JsonCourse?>?>
             ) {
                 if (response.isSuccessful) {
-                    //TODO Make Coroutine
-                    Thread { // füge die Einträge der db hinzu
+                    SCOPE_IO.launch {
                         val insertCourses: MutableList<Courses> = ArrayList()
                         for (course in response.body()!!) {
                             val courseFromApi = Courses()
                             courseFromApi.choosen = false
                             courseFromApi.courseName = course?.courseName
                             courseFromApi.facultyId = course?.fkfbid
-                            courseFromApi.sgid = course?.sgid?:"-1"
-                            courseFromApi.sgid = course?.sgid?:"-1"
+                            courseFromApi.sgid = course?.sgid ?: "-1"
+                            courseFromApi.sgid = course?.sgid ?: "-1"
                             insertCourses.add(courseFromApi)
                         }
                         roomData.userDao()?.insertCourse(insertCourses)
-                    }.start()
+                    }
                 }
             }
 
             override fun onFailure(call: Call<List<JsonCourse?>?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
 
+    /**
+     * TODO Needs to be implemented
+     *
+     * @param[ctx] The context of the application.
+     * @param[roomData] The Room-Database.
+     * @param[serverAdress] The address of the Web-Server.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun setUserCourses(
-        ctx: Context, roomData: AppDatabase,
-        serverAdress: String?
+            ctx: Context,
+            roomData: AppDatabase,
+            serverAdress: String?
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
@@ -505,9 +632,9 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                 courseIds + "/" + uuid?.uuid + "/"
         val URL = urlfhb + adress
         val retrofit = Retrofit.Builder()
-            .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                .baseUrl(URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
         val request = retrofit.create(RequestInterface::class.java)
         val call = request.sendCourses()
         call?.enqueue(object : Callback<Void?> {
@@ -518,19 +645,33 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
             }
 
             override fun onFailure(call: Call<Void?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
 
+    /**
+     * Updates the Room-Database, retrieve all entries for given courses from the Webserver and insert the Unknown ones into the database.
+     *
+     * @param[ctx] The current context of the application to retrieve information from the sharedpreferences.
+     * @param[roomData] The database, in witch the response is saved.
+     * @param[year] The current year.
+     * @param[examinPeriod] The current examperiod.
+     * @param[termin] The current termin.
+     * @param[serverAdress] The address of the server.
+     * @param[courses] The courses, that shall be updated.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun UpdateUnkownCourses(
-        ctx: Context,
-        roomData: AppDatabase,
-        year: String,
-        examinPeriod: String,
-        termin: String,
-        serverAdress: String,
-        courses: String
+            ctx: Context,
+            roomData: AppDatabase,
+            year: String,
+            examinPeriod: String,
+            termin: String,
+            serverAdress: String,
+            courses: String
     ) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server_Address", 0)
@@ -553,12 +694,12 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         val call = request.jSON
         call?.enqueue(object : Callback<List<JsonResponse?>?> {
             override fun onResponse(
-                call: Call<List<JsonResponse?>?>?,
-                response: Response<List<JsonResponse?>?>
+                    call: Call<List<JsonResponse?>?>?,
+                    response: Response<List<JsonResponse?>?>
             ) {
                 response.body()
                 if (response.isSuccessful) {
-                    inserEntryToDatabase(roomData, year, examinPeriod, response.body()!!)
+                    inserEntryToDatabase(roomData, year, examinPeriod, response.body())
                 } //if(response.isSuccessful())
                 else {
                     Log.d("RESPONSE", ":::NO RESPONSE:::")
@@ -566,7 +707,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
             }
 
             override fun onFailure(call: Call<List<JsonResponse?>?>, t: Throwable) {
-                Log.d("Error", t.message?:"No Errormessage")
+                Log.d("Error", t.message ?: "No Errormessage")
             }
         })
     }
@@ -576,6 +717,15 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
 
         // Ende Merlin Gürtler
         //DONE (08/2020) LG: Rückgabe des PPE wird nicht verwendet, deshalb gelöscht!
+        /**
+         * Insert a new [TestPlanEntry] into the Room-Database. Check if the entry is already present, and if not, insert it.
+         *
+         * @param[db] The Room-Database.
+         * @param[testPlanEntry] The entry that shall be inserted into the Database.
+         *
+         * @author Alexander Lange
+         * @since 1.5
+         */
         fun addUser(db: AppDatabase, testPlanEntry: TestPlanEntry?) {
             val existingEntry = db.userDao()?.getEntryById(testPlanEntry?.id)
             // Merlin Gürtler fügt den Eintrag nur hinzu wenn er nicht vorhanden ist

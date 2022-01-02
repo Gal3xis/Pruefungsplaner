@@ -21,6 +21,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import android.view.*
+import kotlinx.android.synthetic.main.fragment_impressum.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -91,11 +92,11 @@ class Optionen() : Fragment() {
         database = context?.let { AppDatabase.getAppDatabase(it) }
         sharedPreferencesSettings = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
         mSharedPreferencesCurrentTermin = context
-            ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
+                ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
         mSharedPreferencesPPServerAddress =
-            context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+                context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
         mSharedPreferencesValidation =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+                context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
         serverAddress = mSharedPreferencesPPServerAddress?.getString("ServerIPAddress", "0")
         relativePPlanURL = mSharedPreferencesPPServerAddress?.getString("ServerRelUrlPath", "0")
         currentTermin = mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
@@ -144,7 +145,7 @@ class Optionen() : Fragment() {
 
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         switch2.setOnCheckedChangeListener(object :
-            CompoundButton.OnCheckedChangeListener {
+                CompoundButton.OnCheckedChangeListener {
             override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
@@ -152,13 +153,18 @@ class Optionen() : Fragment() {
             }
         })
 
-        privacyDeclaration.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                val ft = activity?.supportFragmentManager?.beginTransaction()
-                ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
-                ft?.commit()
-            }
-        })
+        privacyDeclaration.setOnClickListener {
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
+            ft?.commit()
+        }
+
+        optionenfragment_impressum?.setOnClickListener {
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            ft?.replace(R.id.frame_placeholder, ImpressumFragment())
+            ft?.commit()
+
+        }
 
         //interne DB löschen
         btnDB.setOnClickListener(object : View.OnClickListener {
@@ -172,9 +178,9 @@ class Optionen() : Fragment() {
             override fun onClick(v: View) {
                 deleteCalendar()
                 Toast.makeText(
-                    v.context,
-                    v.context.getString(R.string.delete_calendar),
-                    Toast.LENGTH_SHORT
+                        v.context,
+                        v.context.getString(R.string.delete_calendar),
+                        Toast.LENGTH_SHORT
                 ).show()
             }
         })
@@ -211,16 +217,16 @@ class Optionen() : Fragment() {
                     Log.d("Test Favoriten löschen.", entry?.id?.toString() ?: "")
                     //Set favorit value for every favorit to false.
                     database?.userDao()
-                        ?.update(false, entry?.id?.toInt() ?: 0)
+                            ?.update(false, entry?.id?.toInt() ?: 0)
                 }
             }
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.delete_favorite),
-                        Toast.LENGTH_SHORT
+                            view?.context,
+                            view?.context?.getString(R.string.delete_favorite),
+                            Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -247,21 +253,21 @@ class Optionen() : Fragment() {
             val retrofit = RetrofitConnect(relativePPlanURL ?: "")
             if (database != null && context != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
                 retrofit.RetrofitWebAccess(
-                    context!!,
-                    database!!,
-                    examineYear!!,
-                    currentExaminePeriod!!,
-                    currentTermin!!,
-                    serverAddress!!
+                        context!!,
+                        database!!,
+                        examineYear!!,
+                        currentExaminePeriod!!,
+                        currentTermin!!,
+                        serverAddress!!
                 )
             }
             // Ende Merlin Gürtler
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.delete_db),
-                        Toast.LENGTH_SHORT
+                            view?.context,
+                            view?.context?.getString(R.string.delete_db),
+                            Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -296,21 +302,21 @@ class Optionen() : Fragment() {
                         if (googlecal.checkCal(id?.toInt() ?: 0)) {
                             //ermitteln von benötigten Variablen
                             val splitDateAndTime =
-                                entry?.date?.split(" ")?.toTypedArray()
+                                    entry?.date?.split(" ")?.toTypedArray()
                             val splitDayMonthYear =
-                                splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
+                                    splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
                             course = entry?.course
                             course = course + " " + entry?.module
                             val timeStart =
-                                splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
+                                    splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
                             val timeEnd =
-                                splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
+                                    splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
                             calDate = GregorianCalendar(
-                                splitDayMonthYear?.get(0)?.toInt() ?: 0,
-                                splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
-                                splitDayMonthYear?.get(2)?.toInt() ?: 0,
-                                timeStart ?: 0,
-                                timeEnd ?: 0
+                                    splitDayMonthYear?.get(0)?.toInt() ?: 0,
+                                    splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
+                                    splitDayMonthYear?.get(2)?.toInt() ?: 0,
+                                    timeStart ?: 0,
+                                    timeEnd ?: 0
                             )
 
                             //Methode zum Speichern im Kalender
@@ -331,9 +337,9 @@ class Optionen() : Fragment() {
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.add_calendar),
-                        Toast.LENGTH_SHORT
+                            view?.context,
+                            view?.context?.getString(R.string.add_calendar),
+                            Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -411,7 +417,7 @@ class Optionen() : Fragment() {
                 save()
                 true
             }
-            else-> false
+            else -> false
         }
     }
 
@@ -437,23 +443,20 @@ class Optionen() : Fragment() {
      * @see Spinner
      */
     private fun initThemeSpinner() {
-        val theme1 = Theme(R.style.Theme_AppTheme_1, view)
-        val theme2 = Theme(R.style.Theme_AppTheme_2, view)
+        val themeList = mutableListOf<Theme>()
+        Utils.themeList.forEach { x -> themeList.add(Theme(x, view)) }
 
         val adapter = view?.context?.let {
             ThemeAdapter(
-                it,
-                R.layout.layout_theme_spinner_row,
-                mutableListOf(theme1, theme2)
+                    it,
+                    R.layout.layout_theme_spinner_row,
+                    themeList
             )
         }
         theme?.adapter = adapter
         val selectedPos: Int
         val themeid = sharedPreferencesSettings?.getInt("themeid", 0)
-        when (themeid) {
-            R.style.Theme_AppTheme_2 -> selectedPos = 1
-            else -> selectedPos = 0
-        }
+        selectedPos = Utils.themeList.indexOf(themeid)
         try {
             theme?.setSelection(selectedPos)
         } catch (ex: Exception) {
@@ -496,8 +499,8 @@ class Optionen() : Fragment() {
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.optionfragment, container, false)
         // Start Merlin Gürtler
@@ -530,21 +533,21 @@ class Optionen() : Fragment() {
             val retrofit = RetrofitConnect(relativePPlanURL ?: "")
             if (context != null && database != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
                 retrofit.retroUpdate(
-                    context!!,
-                    database!!,
-                    examineYear!!,
-                    currentExaminePeriod!!,
-                    currentTermin!!,
-                    serverAddress
+                        context!!,
+                        database!!,
+                        examineYear!!,
+                        currentExaminePeriod!!,
+                        currentTermin!!,
+                        serverAddress
                 )
             }
             // Log.d("Test3",String.valueOf(stringaufteilung[5]));
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
-                    context,
-                    context!!.getString(R.string.add_favorite),
-                    Toast.LENGTH_SHORT
+                        context,
+                        context!!.getString(R.string.add_favorite),
+                        Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -560,7 +563,7 @@ class Optionen() : Fragment() {
      * @since 1.5
      * @see updateCheckPlan
      */
-    fun PingUrl(address: String?){
+    fun PingUrl(address: String?) {
         scope_io.launch {
             try {
                 val url = URL(address)
@@ -577,9 +580,9 @@ class Optionen() : Fragment() {
             } catch (e: Exception) {
                 Handler(Looper.getMainLooper()).post {
                     Toast.makeText(
-                        context,
-                        context!!.getString(R.string.noConnection),
-                        Toast.LENGTH_SHORT
+                            context,
+                            context!!.getString(R.string.noConnection),
+                            Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -615,9 +618,9 @@ class Optionen() : Fragment() {
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.actualisation_calendar),
-                        Toast.LENGTH_SHORT
+                            view?.context,
+                            view?.context?.getString(R.string.actualisation_calendar),
+                            Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -647,10 +650,10 @@ class Optionen() : Fragment() {
         var result = 0
         val projection = arrayOf("_id", "title")
         val cursor = context?.contentResolver
-            ?.query(
-                baseUri, null,
-                null, null, null
-            )
+                ?.query(
+                        baseUri, null,
+                        null, null, null
+                )
         if (cursor!!.moveToFirst()) {
             var calName: String?
             var calID: String

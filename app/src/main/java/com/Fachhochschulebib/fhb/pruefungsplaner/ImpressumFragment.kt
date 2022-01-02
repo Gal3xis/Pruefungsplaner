@@ -33,6 +33,5 @@ class ImpressumFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         impressum_tv.text = Utils.readTextFile(context!!, R.raw.impressum)
-
     }
 }

@@ -237,7 +237,9 @@ class AddCourseFragment() : Fragment() {
                 activity?.applicationContext!!
             )
         }.invokeOnCompletion {
-            recyclerViewChecklist?.adapter = mAdapter
+            Handler(Looper.getMainLooper()).post{
+                recyclerViewChecklist?.adapter = mAdapter
+            }
         }
 
     }

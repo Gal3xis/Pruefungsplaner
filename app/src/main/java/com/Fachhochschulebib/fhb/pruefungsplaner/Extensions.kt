@@ -76,7 +76,13 @@ fun AppCompatActivity.applySettings() {
     //Set Theme
     val themeToApply = sharedPreferencesSettings?.getInt("themeid", R.style.Theme_AppTheme_1) ?: R.style.Theme_AppTheme_1
 
-    theme.applyStyle(themeToApply, true)
+    if(Utils.themeList.contains(themeToApply))
+    {
+        theme.applyStyle(themeToApply, true)
+    }
+    else{
+        theme.applyStyle(Utils.themeList[0],true)
+    }
     Log.d("ThemeTest", themeToApply.toString())
 }
 

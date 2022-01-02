@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/plan"
-        android:textColor="@android:color/background_light"
+        android:textColor="?attr/colorOnPrimaryDark"
         android:textSize="30sp"
         app:fontFamily="monospace"
         app:layout_constraintBottom_toTopOf="@+id/imageView2"
