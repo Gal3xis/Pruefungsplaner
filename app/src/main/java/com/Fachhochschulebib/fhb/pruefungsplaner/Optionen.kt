@@ -7,6 +7,7 @@ import android.os.Looper
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Handler
 import android.provider.CalendarContract
@@ -22,6 +23,7 @@ import java.net.URL
 import java.util.*
 import android.view.*
 import kotlinx.android.synthetic.main.fragment_impressum.*
+import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -483,8 +485,7 @@ class Optionen() : Fragment() {
         }
 
         //Darkmode
-        editor?.putBoolean("darkmode", darkMode.isChecked)
-        editor?.apply()
+        editor?.putBoolean("darkmode", darkMode.isChecked)?.apply()
 
         activity?.recreate()
         //fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()

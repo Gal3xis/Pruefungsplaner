@@ -68,11 +68,6 @@ fun Date.atDay(date: Date): Boolean {
 fun AppCompatActivity.applySettings() {
     val sharedPreferencesSettings = getSharedPreferences("settings", Context.MODE_PRIVATE)
 
-    //Set Darkmode
-    val darkMode = sharedPreferencesSettings.getBoolean("darkmode", false)
-    AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-    Log.d("ThemeTest", darkMode.toString())
-
     //Set Theme
     val themeToApply = sharedPreferencesSettings?.getInt("themeid", R.style.Theme_AppTheme_1) ?: R.style.Theme_AppTheme_1
 
@@ -83,7 +78,10 @@ fun AppCompatActivity.applySettings() {
     else{
         theme.applyStyle(Utils.themeList[0],true)
     }
-    Log.d("ThemeTest", themeToApply.toString())
+
+    //Set Darkmode
+    val darkMode = sharedPreferencesSettings.getBoolean("darkmode", false)
+    AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 }
 
 /**
