@@ -10,17 +10,13 @@ import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.database.Cursor
-import android.graphics.Color
 import android.os.*
 import android.util.Log
-import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import java.lang.Exception
@@ -35,7 +31,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.SearchAutoComplete
-import androidx.core.view.get
 
 //Alexander Lange End
 
@@ -415,9 +410,7 @@ class MainActivity : AppCompatActivity() {
         initNavigationDrawer()
         initBottomNavigationView()
 
-        //TODO Alexander Lange Start
         UserFilter(applicationContext)
-        //TODO Alexander Lange End
 
         val ft = supportFragmentManager.beginTransaction()
         ft.replace(R.id.frame_placeholder, Terminefragment())
@@ -570,13 +563,10 @@ class MainActivity : AppCompatActivity() {
                             FeedbackFragment()
                     )
                 }
-                //TODO CHANGE
                 R.id.navigation_changeFaculty -> {
                     header?.title =
                             applicationContext.getString(R.string.title_changeFaculty)
-                    recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
-                    //TODO Check if needed or remove:caCalender?.visibility = View.GONE
-                    //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
+                    recyclerView4?.visibility = View.INVISIBLE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     // globale Variable, damit die Fakultät gewechselt werden kann
                     val globalVariable = applicationContext as StartClass
@@ -648,7 +638,7 @@ class MainActivity : AppCompatActivity() {
     private fun changeFragment(headertitle: String, fragment: Fragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
 
-        recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
+        recyclerView4?.visibility = View.INVISIBLE
 
         header?.title = headertitle
 
@@ -702,12 +692,12 @@ class MainActivity : AppCompatActivity() {
 
         initFilterExaminer(sp_examiner)
 
-        initFilterCheckbox(c1, 1)
-        initFilterCheckbox(c2, 2)
-        initFilterCheckbox(c3, 3)
-        initFilterCheckbox(c4, 4)
-        initFilterCheckbox(c5, 5)
-        initFilterCheckbox(c6, 6)
+        initFilterSemesterCheckbox(c1, 1)
+        initFilterSemesterCheckbox(c2, 2)
+        initFilterSemesterCheckbox(c3, 3)
+        initFilterSemesterCheckbox(c4, 4)
+        initFilterSemesterCheckbox(c5, 5)
+        initFilterSemesterCheckbox(c6, 6)
 
         //Sets filterhooks, so the menu dynamically changes when the filter changes
         Filter.onCourseNameChangedListener.add {
@@ -779,7 +769,7 @@ class MainActivity : AppCompatActivity() {
                 Filter.examiner = null
             }
         }
-        val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
+        val spinnerProfArrayList: MutableList<String?> = mutableListOf(resources.getString(R.string.spinner_no_selection))
         scope_io.launch {
             val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "")
             spinnerProfArrayList.addAll(
@@ -808,7 +798,7 @@ class MainActivity : AppCompatActivity() {
      * @author Alexander Lange
      * @since 1.5
      */
-    private fun initFilterCheckbox(c: CheckBox, semester: Int) {
+    private fun initFilterSemesterCheckbox(c: CheckBox, semester: Int) {
         c.isChecked = Filter.semester[semester - 1]
         c.setOnCheckedChangeListener { buttonView, isChecked ->
             Filter.SetSemester(semester - 1, isChecked)
@@ -853,7 +843,7 @@ class MainActivity : AppCompatActivity() {
         try {
             var sp_course_adapter: ArrayAdapter<String>? = null
             val list: MutableList<String?> =
-                    mutableListOf<String?>("Alle")//TODO extract String
+                    mutableListOf<String?>(resources.getString(R.string.spinner_no_selection))
 
             scope_io.launch {
                 //Get Courses from Room-Database
@@ -916,11 +906,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                         )
                     }
-                }/*TODO REMOVE
-                        //Return if user al
-                        if (Filter.courseName == null && position == 0) {
-                            return
-                        }*/
+                }
                 Filter.courseName =
                         if (position == 0) null else sp_course.selectedItem.toString()
             }
@@ -996,7 +982,7 @@ class MainActivity : AppCompatActivity() {
         try {
             var sp_modul_adapter: ArrayAdapter<String>? = null
             var pos_selected: Int = 0
-            val list: MutableList<String?> = mutableListOf("Alle")
+            val list: MutableList<String?> = mutableListOf(resources.getString(R.string.spinner_no_selection))
             scope_io.launch {
                 //Get filtered list of modules from room-database
                 val modules =
@@ -1013,11 +999,7 @@ class MainActivity : AppCompatActivity() {
                         android.R.layout.simple_spinner_dropdown_item,
                         list
                 )
-                Handler(Looper.getMainLooper()).post(object : Runnable {
-                    override fun run() {
-                        setModuleSpinner(sp_modul_adapter, sp_modul)
-                    }
-                })
+                Handler(Looper.getMainLooper()).post { setModuleSpinner(sp_modul_adapter, sp_modul) }
             }
         } catch (ex: Exception) {
             Log.e("UpdateModuleFilter", ex.stackTraceToString())
@@ -1133,10 +1115,10 @@ class MainActivity : AppCompatActivity() {
                 dialog.datePicker.maxDate = endDate.time
                 dialog.setButton(
                         DatePickerDialog.BUTTON_NEUTRAL,
-                        "Alle",
-                        { dialog, which ->
-                            Filter.datum = null
-                        })
+                        "Alle"
+                ) { _, _ ->
+                    Filter.datum = null
+                }
                 dialog.show()
 
             } else {

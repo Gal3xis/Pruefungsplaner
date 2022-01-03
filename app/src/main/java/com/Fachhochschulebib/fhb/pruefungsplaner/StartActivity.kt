@@ -197,7 +197,7 @@ class StartActivity() : AppCompatActivity() {
                 try {
                     jsonArrayFacultys = JSONArray(strJson)
                     var i = 0
-                    while (i < jsonArrayFacultys!!.length()) {//TODO Try Remove !!
+                    while (i < jsonArrayFacultys!!.length()) {
                         val json = jsonArrayFacultys!!.getJSONObject(i)
                         facultyName.add(json["facName"].toString())
                         initButtons()
@@ -299,7 +299,6 @@ class StartActivity() : AppCompatActivity() {
     private fun initButtons() {
         runOnUiThread {
             // Start Merlin Gürtler
-            //TODO Shorten
             buttonForSpinner.setOnClickListener {
                 createAlertDialogChooseFaculty()
             }

@@ -7,7 +7,6 @@ import android.os.Looper
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Handler
 import android.provider.CalendarContract
@@ -22,8 +21,6 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import android.view.*
-import androidx.core.view.GravityCompat
-import kotlinx.android.synthetic.main.fragment_impressum.*
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -133,18 +130,11 @@ class Optionen() : Fragment() {
         }
 
         //layout Komponenten
-        //TODO REMOVE val btnDb = v.findViewById<View>(R.id.btnDB) as Button
-        //TODO REMOVE val btnFav = v.findViewById<View>(R.id.btnFav) as Button
-        //TODO REMOVE val btnGoogleloeschen = v.findViewById<View>(R.id.btnCalClear) as Button
-        //TODO REMOVE val btnGoogleupdate = v.findViewById<View>(R.id.btnGoogleUpdate) as Button
-        //TODO REMOVE val SWgooglecalender = v.findViewById<View>(R.id.switch2) as Switch
-        //TODO REMOVE val privacyDeclaration = v.findViewById<View>(R.id.privacyDeclaration) as Button
-        //holder.zahl1 = position;
         val serverAdresse = view.context.getSharedPreferences("json8", Context.MODE_PRIVATE)
         //Creating editor to store uebergebeneModule to shared preferences
         val mEditorGoogleCalendar = serverAdresse.edit()
 
-        doSomething()
+        getResponse()
 
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         switch2.setOnCheckedChangeListener { _, isChecked -> // do something, the isChecked will be
@@ -330,8 +320,7 @@ class Optionen() : Fragment() {
 
     }
 
-    //TODO RENAME
-    private fun doSomething() {
+    private fun getResponse() {
 
         val serverAdresse = view?.context?.getSharedPreferences("json8", Context.MODE_PRIVATE)
         response = JSONArray()

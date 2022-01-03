@@ -63,12 +63,7 @@ class Terminefragment : Fragment() {
     //UI
     private var progressBar: ProgressDialog? = null
     private var mLayout: RecyclerView.LayoutManager? = null
-    //TODO REMOVE private var date: String? = null
-    //TODO REMOVE private var month2: String? = null
-    //TODO REMOVE private var day2: String? = null
-    //TODO CHECK REMOVE private var positionOld = 0
 
-    //TODO REMOVE private var year2: String? = null
     private var checkList: MutableList<Boolean> = ArrayList()
 
     //Links to sharedPreferences
@@ -184,9 +179,6 @@ class Terminefragment : Fragment() {
 
         //From onCreateView
         //hinzufügen von recycleview
-        //TODO REMOVE recyclerView = v.findViewById<View>(R.id.recyclerView4) as RecyclerView
-        //TODO REMOVE currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
-
 
         // Ende Merlin Gürtler
 
@@ -195,9 +187,6 @@ class Terminefragment : Fragment() {
         //itemTouchhelper.attachToRecyclerView(recyclerView);
 
         //initialisieren der UI-Komponenten
-        //TODO REMOVE calendar = v.findViewById<View>(R.id.caCalender) as CalendarView
-        //TODO REMOVE btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
-
         //Clicklistener für den Kalender,
         //Es wird überprüft, welches Datum ausgewählt wurde.
         //TODO Alexander Lange Start
@@ -325,49 +314,7 @@ class Terminefragment : Fragment() {
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
         mLayout = recyclerView4?.layoutManager
-        //AdapterPassed() TODO REMOVE
 
-//        recyclerView4?.addOnItemTouchListener(
-//            RecyclerItemClickListener(
-//                activity,
-//                object : RecyclerItemClickListener.OnItemClickListener {
-//                    override fun onItemClick(view: View?, position: Int) {
-//                        val viewItem = recyclerView4?.layoutManager?.findViewByPosition(position)
-//                        val layout1 =
-//                            viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
-//                        layout1.setOnClickListener { v1: View? ->
-//                            val txtSecondScreen =
-//                                view!!.findViewById<View>(R.id.txtSecondscreen) as TextView
-//                            Log.e("@@@@@", "" + position)
-//                            if (txtSecondScreen.visibility == View.VISIBLE) {
-//                                txtSecondScreen.visibility = View.GONE
-//                                checkList[position] = false
-//                            } else {
-//                                for (i in 0 until (recyclerView4?.childCount ?: 0)) {
-//                                    val holder =
-//                                        recyclerView4?.layoutManager?.findViewByPosition(i)
-//                                    // Try and Catch, da die App crasht
-//                                    // wenn das Element nicht im View Port ist
-//                                    try {
-//                                        val txtSecondScreen2 =
-//                                            holder?.findViewById<View>(R.id.txtSecondscreen) as TextView
-//                                        if (txtSecondScreen2?.visibility == View.VISIBLE) {
-//                                            txtSecondScreen2?.visibility = View.GONE
-//                                        }
-//                                    } catch (e: Exception) {
-//                                        Log.d("ERROR", "NOT IN VIEW PORT $e")
-//                                    }
-//                                }
-//                                // Ende Merlin Gürtler
-//                                txtSecondScreen.visibility = View.VISIBLE
-//                                txtSecondScreen.text = mAdapter?.giveString(position)
-//                                // Start Merlin Gürtler
-//                            }
-//                        }
-//                        //TODO CHECK REMOVE positionOld = position
-//                    }
-//                })
-//        )
         // Start Merlin Gürtler
         recyclerView4?.addOnChildAttachStateChangeListener(object :
             OnChildAttachStateChangeListener {
@@ -376,7 +323,6 @@ class Terminefragment : Fragment() {
             // Wenn ein Element den Viewport verlässt, wird
             // der zweite Screen zu geklappt
             override fun onChildViewDetachedFromWindow(view: View) {
-                //TODO REMOVE val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
                 if (txtSecondscreen?.visibility == View.VISIBLE) {
                     txtSecondscreen?.visibility = View.GONE
                 }
@@ -754,7 +700,6 @@ class Terminefragment : Fragment() {
             validation = examineYear + returnCourse + currentExaminePeriod
             //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
             val ppeList = database?.userDao()?.allEntries
-            Log.d("validation", ppeList?.size.toString())//TODO REMVOE
             if (ppeList != null) {
                 for (entry in ppeList) {
                     if (!MainActivity.Filter.validateFilter(context, entry)) {
@@ -810,7 +755,6 @@ class Terminefragment : Fragment() {
         val sdf_write = SimpleDateFormat("dd.MM.yyyy")
 
         val strJson = sdf_write.format(start) + "-" + sdf_write.format(end)
-        //TODO REMOVE val strJson = mSharedPreferencesPPeriode?.getString("currentPeriode", "0")
         if (strJson != "0") {
             currentPeriode?.text = strJson
         }
@@ -877,17 +821,4 @@ class Terminefragment : Fragment() {
             Log.d("Error", "Orientation error$e")
         }
     }
-
-//    TODO REMOVE
-//    fun AdapterPassed() {
-//        //TODO CHANGE TO COROUTINE
-//        Thread {
-//            createAdapter()
-//            Handler(Looper.getMainLooper()).post { // Merlin Gürtler
-//                // Aktiviert den swipe listener
-//            }
-//            // System.out.println(String.valueOf(userdaten.size()));
-//        }.start()
-//        //Datenbankaufruf
-//    }
 }

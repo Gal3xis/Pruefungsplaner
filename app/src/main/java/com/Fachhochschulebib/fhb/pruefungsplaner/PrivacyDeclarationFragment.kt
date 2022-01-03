@@ -46,7 +46,6 @@ class PrivacyDeclarationFragment : Fragment() {
         //From onCreate
 
         //From onCreateView
-        //TODO REMOVE val okButton = v.findViewById<Button>(R.id.privacyDeclarationButton)
 
         privacyDeclarationButton.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
