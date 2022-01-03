@@ -5,6 +5,12 @@ import android.graphics.Color
 import android.view.View
 import androidx.annotation.StyleableRes
 
+/**
+ * Class to store data for a Theme
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ */
 class Theme (resId:Int?,view:View?){
     var name:String? = null
     var theme: Resources.Theme? = null

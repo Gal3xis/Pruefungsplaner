@@ -78,7 +78,6 @@ class MainActivity : AppCompatActivity() {
          * @since 1.5
          */
         var locked = false
-            //TODO Check if working
             set(value) {
                 field = value
                 if (!value) {
@@ -384,7 +383,7 @@ class MainActivity : AppCompatActivity() {
         // Start Merlin Gürtler
         // registriert die Toolbar
         setSupportActionBar(header)
-        header.setTitleTextColor(Color.WHITE)//TODO Set reference
+        header.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,theme))
         val inputMethodManager = baseContext.getSystemService(
                 INPUT_METHOD_SERVICE
         ) as InputMethodManager
@@ -412,43 +411,6 @@ class MainActivity : AppCompatActivity() {
                 mSharedPreferencesValidation?.getString("currentPeriode", "0")
         returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
         // Ende Merlin Gürtler
-
-        /* TODO REMOVE
-        if (!nv.isFocused())
-        {
-            dl.setVisibility(View.GONE);
-        }
-
-
-        dl.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-                // Called when a drawer's position changes.
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                // Called when a drawer has settled in a completely open state.
-                // The drawer is interactive at this point.
-                // If you have 2 drawers (left and right) you can distinguish
-                // them by using id of the drawerView. int id = drawerView.getId();
-                // id will be your layout's id: for example R.id.left_drawer
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                dl.setVisibility(View.GONE);
-                // Called when a drawer has settled in a completely closed state.
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-                // Called when the drawer motion state changes.
-                // The new state will be one of STATE_IDLE, STATE_DRAGGING or STATE_SETTLING.
-            }
-        });
-         */
-
 
         initNavigationDrawer()
         initBottomNavigationView()
@@ -543,12 +505,12 @@ class MainActivity : AppCompatActivity() {
 
         } else {
             AlertDialog.Builder(this)
-                    .setMessage("App wirklich beenden?")//TODO Extract String
-                    .setTitle("Beenden")
-                    .setPositiveButton("Beenden", DialogInterface.OnClickListener { dialog, which ->
+                    .setMessage(R.string.close_app)
+                    .setTitle(R.string.title_close_app)
+                    .setPositiveButton(R.string.title_close_app) { _, _ ->
                         setResult(0)
                         finishAffinity()
-                    })
+                    }
                     .setNegativeButton("Cancel", null)
                     .create()
                     .show()
@@ -671,14 +633,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    /**
-     * Applies Settings from sharedPreferences to the activity.
-     *
-     * @author Alexander Lange
-     * @since 1.5
-     * @see Optionen
-     */
 
 
     /**

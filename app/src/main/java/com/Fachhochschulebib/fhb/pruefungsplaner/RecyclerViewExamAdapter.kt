@@ -120,11 +120,15 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                 if (holder.txtSecondScreen.visibility == View.VISIBLE) {
                     holder.txtSecondScreen.visibility = View.GONE
                 } else {
+                    if(openItem?.txtSecondScreen?.visibility==View.VISIBLE)
+                    {
+                        openItem?.txtSecondScreen?.visibility = View.GONE
+                    }
                     holder.txtSecondScreen.visibility = View.VISIBLE
                     holder.txtSecondScreen.text = giveString(position)
                     //Make previous details invisible
-                    openItem?.txtSecondScreen?.visibility = View.GONE
                     openItem = holder
+
                 }
             }
 

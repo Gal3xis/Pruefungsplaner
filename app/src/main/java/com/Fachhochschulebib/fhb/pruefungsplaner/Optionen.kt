@@ -22,6 +22,7 @@ import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import android.view.*
+import androidx.core.view.GravityCompat
 import kotlinx.android.synthetic.main.fragment_impressum.*
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.CoroutineName
@@ -146,60 +147,42 @@ class Optionen() : Fragment() {
         doSomething()
 
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
-        switch2.setOnCheckedChangeListener(object :
-                CompoundButton.OnCheckedChangeListener {
-            override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-                // do something, the isChecked will be
-                // true if the switch is in the On position
-                setCalendarSynchronization(isChecked)
-            }
-        })
+        switch2.setOnCheckedChangeListener { _, isChecked -> // do something, the isChecked will be
+            // true if the switch is in the On position
+            setCalendarSynchronization(isChecked)
+        }
 
         privacyDeclaration.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
+            header?.title = "Privacy"
             ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
             ft?.commit()
         }
 
         optionenfragment_impressum?.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
+            header?.title = "Impressum"
             ft?.replace(R.id.frame_placeholder, ImpressumFragment())
-            ft?.commit()
-
-        }
+            ft?.commit()        }
 
         //interne DB löschen
-        btnDB.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                deleteInternalDatabase()
-            }
-        })
+        btnDB.setOnClickListener { deleteInternalDatabase() }
 
         //Google Kalender einträge löschen
-        btnCalClear.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                deleteCalendar()
-                Toast.makeText(
-                        v.context,
-                        v.context.getString(R.string.delete_calendar),
-                        Toast.LENGTH_SHORT
-                ).show()
-            }
-        })
+        btnCalClear.setOnClickListener { v ->
+            deleteCalendar()
+            Toast.makeText(
+                    v.context,
+                    v.context.getString(R.string.delete_calendar),
+                    Toast.LENGTH_SHORT
+            ).show()
+        }
 
         //Google Kalender einträge updaten
-        btnGoogleUpdate.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                updateCalendar()
-            }
-        })
+        btnGoogleUpdate.setOnClickListener { updateCalendar() }
 
         //Favoriten Löschen
-        btnFav.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                deleteFavorits()
-            }
-        })
+        btnFav.setOnClickListener { deleteFavorits() }
 
         optionenfragment_save_btn.setOnClickListener { save() }
     }
@@ -223,15 +206,13 @@ class Optionen() : Fragment() {
                 }
             }
         }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post(object : Runnable {
-                override fun run() {
-                    Toast.makeText(
-                            view?.context,
-                            view?.context?.getString(R.string.delete_favorite),
-                            Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                        view?.context,
+                        view?.context?.getString(R.string.delete_favorite),
+                        Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

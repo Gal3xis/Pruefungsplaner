@@ -11,8 +11,28 @@ import java.io.InputStreamReader
 import java.lang.Exception
 import java.util.*
 
+/**
+ * Utility-Function for the application.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.5
+ */
 object Utils {
 
+    /**
+     * Takes an Attribute-ID for a color and the current theme and returns the color for that id.
+     * Provides access to the colorscheme, so they can be assigned dynamically in code.
+     *
+     * @param[attrColor] The id of the Color (R.attr.*)
+     * @param[theme] The current theme of the application
+     * @param[typedValue] Stores the data of the resolved attribute, does not need to be given
+     * @param[resolveRes] If true, resource references will be walked; if false, outValue may be a TYPE_REFERENCE. In either case, it will never be a TYPE_ATTRIBUTE.
+     *
+     * @return The color as integer, that is associated with the given id.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     fun getColorFromAttr(@AttrRes attrColor:Int, theme: Resources.Theme, typedValue: TypedValue= TypedValue(), resolveRes:Boolean=true):Int{
         theme.resolveAttribute(attrColor,typedValue,resolveRes)
         return typedValue.data
@@ -23,7 +43,18 @@ object Utils {
     val themeList:List<Int> = listOf(R.style.Theme_AppTheme_1,R.style.Theme_AppTheme_2)
 
 
-    fun readTextFile(context: Context,@RawRes textResource:Int):String?{
+    /**
+     * Reads a textfile in the Raw-Folder and returns the content as a string.
+     *
+     * @param[context] The context of the application
+     * @param[textResource] The id of the textfile (R.raw.*)
+     *
+     * @return The content of the textfile as string
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun readTextFile(context: Context,@RawRes textResource:Int): String {
         val _is = context.resources.openRawResource(textResource)
         val reader = BufferedReader(InputStreamReader(_is))
         var string:String? = null

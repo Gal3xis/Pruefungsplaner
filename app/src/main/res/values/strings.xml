@@ -39,6 +39,7 @@
     <string name="title_changeCourse">Studiengänge hinzufügen</string>
     <string name="title_changeFaculty">Fachbereich ändern</string>
     <string name="title_feedback">Feedback geben</string>
+    <string name="title_close_app">Beenden</string>
 
     <!-- Jahreszeiten -->
     <string name="sommer">Sommer</string>
@@ -57,6 +58,7 @@
     <string name="add_favorite">Prüfungen wurden aktualisiert.</string>
     <string name="elective_search">Bitte wählen Sie einen Studiengang aus,
         oder geben einen Modulnamen ein der länger als drei Zeichen ist.</string>
+    <string name="close_app">App beenden?</string>
 
     <!-- Start -->
     <string name="current">Aktuelle Prüfungsphase: \n&#160;</string>
