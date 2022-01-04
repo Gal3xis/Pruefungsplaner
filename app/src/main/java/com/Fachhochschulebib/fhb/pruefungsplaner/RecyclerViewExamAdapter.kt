@@ -116,7 +116,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         try {
             val name = modules[position]
             holder.txtHeader.text = name
-            holder.layout.setOnClickListener { view: View? ->
+            holder.layout.setOnClickListener {
                 if (holder.txtSecondScreen.visibility == View.VISIBLE) {
                     holder.txtSecondScreen.visibility = View.GONE
                 } else {
@@ -128,7 +128,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                     holder.txtSecondScreen.text = giveString(position)
                     //Make previous details invisible
                     openItem = holder
-
                 }
             }
 

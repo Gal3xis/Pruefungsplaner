@@ -23,6 +23,7 @@ import java.net.URL
 import java.util.*
 import android.view.*
 import androidx.core.view.GravityCompat
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.android.synthetic.main.fragment_impressum.*
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.CoroutineName
@@ -95,11 +96,11 @@ class Optionen() : Fragment() {
         database = context?.let { AppDatabase.getAppDatabase(it) }
         sharedPreferencesSettings = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
         mSharedPreferencesCurrentTermin = context
-                ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
+            ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
         mSharedPreferencesPPServerAddress =
-                context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
+            context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
         mSharedPreferencesValidation =
-                context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
+            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
         serverAddress = mSharedPreferencesPPServerAddress?.getString("ServerIPAddress", "0")
         relativePPlanURL = mSharedPreferencesPPServerAddress?.getString("ServerRelUrlPath", "0")
         currentTermin = mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
@@ -133,12 +134,6 @@ class Optionen() : Fragment() {
         }
 
         //layout Komponenten
-        //TODO REMOVE val btnDb = v.findViewById<View>(R.id.btnDB) as Button
-        //TODO REMOVE val btnFav = v.findViewById<View>(R.id.btnFav) as Button
-        //TODO REMOVE val btnGoogleloeschen = v.findViewById<View>(R.id.btnCalClear) as Button
-        //TODO REMOVE val btnGoogleupdate = v.findViewById<View>(R.id.btnGoogleUpdate) as Button
-        //TODO REMOVE val SWgooglecalender = v.findViewById<View>(R.id.switch2) as Switch
-        //TODO REMOVE val privacyDeclaration = v.findViewById<View>(R.id.privacyDeclaration) as Button
         //holder.zahl1 = position;
         val serverAdresse = view.context.getSharedPreferences("json8", Context.MODE_PRIVATE)
         //Creating editor to store uebergebeneModule to shared preferences
@@ -163,7 +158,8 @@ class Optionen() : Fragment() {
             val ft = activity?.supportFragmentManager?.beginTransaction()
             header?.title = "Impressum"
             ft?.replace(R.id.frame_placeholder, ImpressumFragment())
-            ft?.commit()        }
+            ft?.commit()
+        }
 
         //interne DB löschen
         btnDB.setOnClickListener { deleteInternalDatabase() }
@@ -172,15 +168,24 @@ class Optionen() : Fragment() {
         btnCalClear.setOnClickListener { v ->
             deleteCalendar()
             Toast.makeText(
-                    v.context,
-                    v.context.getString(R.string.delete_calendar),
-                    Toast.LENGTH_SHORT
+                v.context,
+                v.context.getString(R.string.delete_calendar),
+                Toast.LENGTH_SHORT
             ).show()
         }
 
         //Google Kalender einträge updaten
-        btnGoogleUpdate.setOnClickListener { updateCalendar() }
-
+        //TODO Implement btnGoogleUpdate.setOnClickListener { updateCalendar() }
+        btnGoogleUpdate.setOnClickListener {
+            scope_io.launch {
+                val entries = database?.userDao()?.getFavorites(true)
+                if (entries != null) {
+                    if (entries.isNotEmpty()) {
+                        context?.let { it1 -> GoogleCalendarIO.insertEntry(it1, entries[0]) }
+                    }
+                }
+            }
+        }
         //Favoriten Löschen
         btnFav.setOnClickListener { deleteFavorits() }
 
@@ -202,15 +207,15 @@ class Optionen() : Fragment() {
                     Log.d("Test Favoriten löschen.", entry?.id?.toString() ?: "")
                     //Set favorit value for every favorit to false.
                     database?.userDao()
-                            ?.update(false, entry?.id?.toInt() ?: 0)
+                        ?.update(false, entry?.id?.toInt() ?: 0)
                 }
             }
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.delete_favorite),
-                        Toast.LENGTH_SHORT
+                    view?.context,
+                    view?.context?.getString(R.string.delete_favorite),
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -236,21 +241,21 @@ class Optionen() : Fragment() {
             val retrofit = RetrofitConnect(relativePPlanURL ?: "")
             if (database != null && context != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
                 retrofit.RetrofitWebAccess(
-                        context!!,
-                        database!!,
-                        examineYear!!,
-                        currentExaminePeriod!!,
-                        currentTermin!!,
-                        serverAddress!!
+                    context!!,
+                    database!!,
+                    examineYear!!,
+                    currentExaminePeriod!!,
+                    currentTermin!!,
+                    serverAddress!!
                 )
             }
             // Ende Merlin Gürtler
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                            view?.context,
-                            view?.context?.getString(R.string.delete_db),
-                            Toast.LENGTH_SHORT
+                        view?.context,
+                        view?.context?.getString(R.string.delete_db),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -285,21 +290,21 @@ class Optionen() : Fragment() {
                         if (googlecal.checkCal(id?.toInt() ?: 0)) {
                             //ermitteln von benötigten Variablen
                             val splitDateAndTime =
-                                    entry?.date?.split(" ")?.toTypedArray()
+                                entry?.date?.split(" ")?.toTypedArray()
                             val splitDayMonthYear =
-                                    splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
+                                splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
                             course = entry?.course
                             course = course + " " + entry?.module
                             val timeStart =
-                                    splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
+                                splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
                             val timeEnd =
-                                    splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
+                                splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
                             calDate = GregorianCalendar(
-                                    splitDayMonthYear?.get(0)?.toInt() ?: 0,
-                                    splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
-                                    splitDayMonthYear?.get(2)?.toInt() ?: 0,
-                                    timeStart ?: 0,
-                                    timeEnd ?: 0
+                                splitDayMonthYear?.get(0)?.toInt() ?: 0,
+                                splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
+                                splitDayMonthYear?.get(2)?.toInt() ?: 0,
+                                timeStart ?: 0,
+                                timeEnd ?: 0
                             )
 
                             //Methode zum Speichern im Kalender
@@ -320,9 +325,9 @@ class Optionen() : Fragment() {
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                            view?.context,
-                            view?.context?.getString(R.string.add_calendar),
-                            Toast.LENGTH_SHORT
+                        view?.context,
+                        view?.context?.getString(R.string.add_calendar),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -431,9 +436,9 @@ class Optionen() : Fragment() {
 
         val adapter = view?.context?.let {
             ThemeAdapter(
-                    it,
-                    R.layout.layout_theme_spinner_row,
-                    themeList
+                it,
+                R.layout.layout_theme_spinner_row,
+                themeList
             )
         }
         theme?.adapter = adapter
@@ -481,8 +486,8 @@ class Optionen() : Fragment() {
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.optionfragment, container, false)
         // Start Merlin Gürtler
@@ -515,21 +520,21 @@ class Optionen() : Fragment() {
             val retrofit = RetrofitConnect(relativePPlanURL ?: "")
             if (context != null && database != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
                 retrofit.retroUpdate(
-                        context!!,
-                        database!!,
-                        examineYear!!,
-                        currentExaminePeriod!!,
-                        currentTermin!!,
-                        serverAddress
+                    context!!,
+                    database!!,
+                    examineYear!!,
+                    currentExaminePeriod!!,
+                    currentTermin!!,
+                    serverAddress
                 )
             }
             // Log.d("Test3",String.valueOf(stringaufteilung[5]));
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
                 Toast.makeText(
-                        context,
-                        context!!.getString(R.string.add_favorite),
-                        Toast.LENGTH_SHORT
+                    context,
+                    context!!.getString(R.string.add_favorite),
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
@@ -562,9 +567,9 @@ class Optionen() : Fragment() {
             } catch (e: Exception) {
                 Handler(Looper.getMainLooper()).post {
                     Toast.makeText(
-                            context,
-                            context!!.getString(R.string.noConnection),
-                            Toast.LENGTH_SHORT
+                        context,
+                        context!!.getString(R.string.noConnection),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             }
@@ -600,9 +605,9 @@ class Optionen() : Fragment() {
             Handler(Looper.getMainLooper()).post(object : Runnable {
                 override fun run() {
                     Toast.makeText(
-                            view?.context,
-                            view?.context?.getString(R.string.actualisation_calendar),
-                            Toast.LENGTH_SHORT
+                        view?.context,
+                        view?.context?.getString(R.string.actualisation_calendar),
+                        Toast.LENGTH_SHORT
                     ).show()
                 }
             })
@@ -632,10 +637,10 @@ class Optionen() : Fragment() {
         var result = 0
         val projection = arrayOf("_id", "title")
         val cursor = context?.contentResolver
-                ?.query(
-                        baseUri, null,
-                        null, null, null
-                )
+            ?.query(
+                baseUri, null,
+                null, null, null
+            )
         if (cursor!!.moveToFirst()) {
             var calName: String?
             var calID: String
