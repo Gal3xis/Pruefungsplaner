@@ -135,9 +135,9 @@ class Optionen() : Fragment() {
         switch2.setOnCheckedChangeListener { _, isChecked -> // do something, the isChecked will be
             // true if the switch is in the On position
             setCalendarSynchro(isChecked)
-            //setCalendarSynchronization(isChecked)
         }
         switch2.isChecked = sharedPreferencesSettings?.getBoolean("calSync", false) ?: false
+
 
         privacyDeclaration.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
@@ -196,21 +196,21 @@ class Optionen() : Fragment() {
      * @since 1.5
      */
     private fun setCalendarSynchro(active: Boolean) {
-        val editor = sharedPreferencesSettings?.edit()
-        editor?.putBoolean("calSync", active)
-        editor?.apply()
-
         val favorites: MutableList<TestPlanEntry?> = mutableListOf()
         scope_io.launch {
             database?.userDao()?.getFavorites(true)?.let { favorites.addAll(it) }
         }.invokeOnCompletion {
+            if (!active) {
+                context?.let { it1 ->
+                    GoogleCalendarIO.deleteAll(it1)
+                }
+            }
+            val editor = sharedPreferencesSettings?.edit()
+            editor?.putBoolean("calSync", active)
+            editor?.apply()
             if (active) {
                 context?.let { it1 ->
                     GoogleCalendarIO.insertEntries(it1, favorites, true)
-                }
-            } else {
-                context?.let { it1 ->
-                    GoogleCalendarIO.deleteAll(it1)
                 }
             }
         }

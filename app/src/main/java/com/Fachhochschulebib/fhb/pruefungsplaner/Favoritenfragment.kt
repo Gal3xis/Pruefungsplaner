@@ -111,64 +111,8 @@ class Favoritenfragment : Fragment() {
         //linear layout manager
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
-        recyclerView4?.addOnItemTouchListener(
-            RecyclerItemClickListener(activity,
-                object : RecyclerItemClickListener.OnItemClickListener {
-                    override fun onItemClick(view: View?, position: Int) {
-                        val txtSecondScreen =
-                            view?.findViewById<View>(R.id.txtSecondscreen) as TextView
-                        val viewItem =
-                            recyclerView4?.layoutManager?.findViewByPosition(position as Int)
-                        val layoutinformationen =
-                            viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
-                        //überprüfung ob das linear layout geklickt wurde
-                        layoutinformationen.setOnClickListener {
-                            if (txtSecondScreen.visibility == View.VISIBLE) {
-                                txtSecondScreen.visibility = View.GONE
-                                check[position as Int] = false
-                            } else {
-
-                                // Start Merlin Gürtler
-                                for (i in 0 until recyclerView4?.childCount!!) {
-                                    val holder = recyclerView4?.layoutManager!!
-                                        .findViewByPosition(i)
-                                    // Try and Catch, da die App crasht
-                                    // wenn das Element nicht im View Port ist
-                                    try {
-                                        val txtSecondScreen2 =
-                                            holder?.findViewById<View>(R.id.txtSecondscreen) as TextView
-                                        if (txtSecondScreen2.visibility == View.VISIBLE) {
-                                            txtSecondScreen2.visibility = View.GONE
-                                        }
-                                    } catch (e: Exception) {
-                                        Log.d("ERROR", "NOT IN VIEW PORT $e")
-                                    }
-                                }
-                                // Ende Merlin Gürtler
-                                txtSecondScreen.visibility = View.VISIBLE
-                                txtSecondScreen.text = mAdapter
-                                    ?.giveString(position)
-                            }
-                        }
-                    }
-                })
-        )
-        // Start Merlin Gürtler
-        recyclerView4?.addOnChildAttachStateChangeListener(
-            object :
-                OnChildAttachStateChangeListener {
-                override fun onChildViewAttachedToWindow(view: View) {}
-
-                // Wenn ein Element den Viewport verlässt, wird
-                // der zweite Screen zu geklappt
-                override fun onChildViewDetachedFromWindow(view: View) {
-                    val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
-                    if (txtSecondScreen.visibility == View.VISIBLE) {
-                        txtSecondScreen.visibility = View.GONE
-                    }
-                }
-            })
     }
+
 
     /**
      * Called, when the [MainActivity.Filter] of the [MainActivity]-Class changes.
