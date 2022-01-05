@@ -57,5 +57,4 @@ class TestPlanEntry {
 
     @ColumnInfo(name = "Color")
     var color: String? = null
-
 }

@@ -18,7 +18,6 @@ import java.util.*
  * @since 1.5
  */
 object Utils {
-
     /**
      * Takes an Attribute-ID for a color and the current theme and returns the color for that id.
      * Provides access to the colorscheme, so they can be assigned dynamically in code.
@@ -72,8 +71,18 @@ object Utils {
         return stringBuilder.toString()
     }
 
+    /**
+     * Returns the duration for a given exam. Only necassary if the duration information
+     * is transferred via the examForm.
+     * TODO WIP
+     *
+     * @param[examForm] The exam form that holds information about the duration.
+     *
+     * @return The duration for the exam in minutes.
+     *
+     * @author Alexander Lange
+     */
     fun getExamDuration(examForm:String?): Int? {
         return 90//TODO Implement
     }
 }
-

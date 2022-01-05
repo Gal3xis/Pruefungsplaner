@@ -86,7 +86,16 @@ object GoogleCalendarIO {
 
 
     /**
+     * Creates an event, that can be passed to the Google Calendar.
      *
+     * @param[title] The title of the event, "Unnamed" by default.
+     * @param[description] The description of the event, empty by default.
+     * @param[startDate] The startdate of the event, including day and time, current time by default.
+     * @param[endDate] The enddate of the event, including day and time, current time by default.
+     * @param[allDay] Determines if the event is for the whole day,false by default.
+     * @param[hasAlarm] Determines if the event has an alarm attatched, false by default.
+     *
+     * @return A set of values, that define an event and can be inserted to the GoogleCalendar.
      *
      * **See Also:**[CalendarContract-Documentation](https://developer.android.com/reference/android/provider/CalendarContract)
      *
@@ -94,33 +103,34 @@ object GoogleCalendarIO {
      * @since 1.5
      */
     fun createEvent(
-        entryId: String = "-1",
         title: String = "Unnamed",
         description: String = "",
         startDate: Calendar = Calendar.getInstance(),
         endDate: Calendar = Calendar.getInstance(),
         allDay: Boolean = false,
-        hasAlarm:Boolean = false
+        hasAlarm: Boolean = false
     ): ContentValues {
-
         val event = ContentValues()
         event.put(CalendarContract.Events.CALENDAR_ID, CAL_ID)
         event.put(CalendarContract.Events.TITLE, title)
         event.put(CalendarContract.Events.DESCRIPTION, description)
         event.put(CalendarContract.Events.DTSTART, startDate.timeInMillis)
         event.put(CalendarContract.Events.DTEND, endDate.timeInMillis)
-        event.put(CalendarContract.Events.ALL_DAY, if(allDay)1 else 0) // 0 for false, 1 for true
-        event.put(CalendarContract.Events.HAS_ALARM, if(hasAlarm)1 else 0) // 0 for false, 1 for true
-        event.put(CalendarContract.Events.EVENT_TIMEZONE,TimeZone.getDefault().id)
+        event.put(CalendarContract.Events.ALL_DAY, if (allDay) 1 else 0) // 0 for false, 1 for true
+        event.put(
+            CalendarContract.Events.HAS_ALARM,
+            if (hasAlarm) 1 else 0
+        ) // 0 for false, 1 for true
+        event.put(CalendarContract.Events.EVENT_TIMEZONE, TimeZone.getDefault().id)
         return event
     }
 
     /**
-     * Creates an intent for a given [TestPlanEntry].
+     * Creates an event for a given [TestPlanEntry].
      *
      * @param[e] The [TestPlanEntry] to be transformed into an calendar intent.
      *
-     * @return The intent to put into the Google Calendar
+     * @return The event to put into the Google Calendar
      *
      * @author Alexander Lange
      * @since 1.5
@@ -142,7 +152,8 @@ object GoogleCalendarIO {
     }
 
     /**
-     * Inserts an entry into the googlecalender.
+     * Inserts an entry into the googlecalender. If the synchronization in the settings
+     * is turned of, this method has no effect,
      *
      * @param[context] The application context
      * @param[e] The [TestPlanEntry] that holds the necessary information
@@ -154,20 +165,66 @@ object GoogleCalendarIO {
      * @since 1.5
      */
     fun insertEntry(context: Context, e: TestPlanEntry, force: Boolean = false) {
+        if (!context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getBoolean("calSync", false)
+        ) {
+            return
+        }
         if (force) {
-            if(findEventSingle(context,e)!=null){
-                deleteEntry(context,e)
+            if (findEventSingle(context, e) != null) {
+                deleteEntry(context, e)
             }
-            forceInsert(context, createEvent(context,e))
+            forceInsert(context, createEvent(context, e))
         } else {
             indirectInsert(context, createIntent(context, e))
         }
     }
 
-    private fun forceInsert(context: Context,event:ContentValues){
+    /**
+     * Inserts a list of entries into the google calender. If the synchronization in the settings
+     * is turned of, this method has no effect,
+     *
+     * @param[context] The application context
+     * @param[list] The list of [TestPlanEntry] to be inserted.
+     * @param[force] If false, the User gets an dialog, in which he can view the entry,
+     * before it is saved into the calendar. If true, it is passed directly, without
+     * any user confirmation. The defaulvalue is false.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun insertEntries(context: Context, list: List<TestPlanEntry?>, force: Boolean) {
+        list.forEach {
+            if (it != null) {
+                insertEntry(context, it, force)
+            }
+        }
+    }
+
+    /**
+     * Inserts an event into the google calendar without showing a dialog to the user.
+     *
+     * @param[context] The application context.
+     * @param[event] The event to be inserted to the calendar.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun forceInsert(context: Context, event: ContentValues) {
         context.contentResolver?.insert(EVENTS_URI, event)
     }
 
+    /**
+     * Redirects the user to the Calendar to insert an event.
+     * After he saved the event or canceled the process, the user is directed back
+     * to where he was.
+     *
+     * @param[context] The application context.
+     * @param[intent] An intent, containing the information to start the insertion process.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
     private fun indirectInsert(context: Context, intent: Intent) {
         if (intent.resolveActivity(context.packageManager) != null) {
             context.startActivity(intent)
@@ -175,41 +232,122 @@ object GoogleCalendarIO {
     }
 
     /**
+     * Deletes an event from the google calendar from a given [TestPlanEntry].
+     * This method has no effect when the synchronization is turned of in the settings.
      *
+     * @param[context] The application context.
+     * @param[e] The [TestPlanEntry] to be removed from the calendar.
+     *
+     * @author Alexander Lange
+     * @since 1.5
      */
-    fun deleteEntry(context: Context,e:TestPlanEntry)
-    {
-        val entryId = findEventSingle(context,e)
-        entryId?.let { ContentUris.withAppendedId(EVENTS_URI, it) }
-            ?.let {
-                val numRows = context.contentResolver?.delete(it,null,null)
-                Log.d("GoogleCalendarIO","Deleted $numRows events")
-            }
+    fun deleteEntry(context: Context, e: TestPlanEntry) {
+        findEventSingle(context, e)?.let { deleteEntry(context, it) }
     }
 
-    fun findEventIds(context: Context):List<Long>{
+    /**
+     * Deletes multiple events from the google calendar, based on [TestPlanEntry]-Objects.
+     * This method has no effect when the synchronization is turned of in the settings.
+     *
+     * @param[context] The application context.
+     * @param[list] A list of [TestPlanEntry]-Objects that shall be removed from the calendar.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun deleteEntries(context: Context, list: List<TestPlanEntry?>) {
+        list.forEach {
+            if (it != null) {
+                deleteEntry(context, it)
+            }
+        }
+    }
+
+    /**
+     * Deletes an event from the google calendar, based on its id.
+     * This method has no effect when the synchronization is turned of in the settings.
+     *
+     * @param[context] The application context.
+     * @param[entryId] The id of the event to be removed.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun deleteEntry(context: Context, entryId: Long) {
+        if (!context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+                .getBoolean("calSync", false)
+        ) {
+            return
+        }
+        val numRows = context.contentResolver?.delete(
+            ContentUris.withAppendedId(EVENTS_URI, entryId),
+            null,
+            null
+        )
+        Log.d("GoogleCalendarIO", "Deleted $numRows events")
+    }
+
+    /**
+     * Deletes every event from the google calendar, connected with this application.
+     * This method has no effect when the synchronization is turned of in the settings.
+     *
+     * @param[context] The application context.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun deleteAll(context: Context) {
+        findEventIds(context).forEach {
+            deleteEntry(context, it)
+        }
+    }
+
+    /**
+     * Returns a list of every event-id, connected to this application.
+     *
+     * @param[context] The application context.
+     *
+     * @return The list of ids
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun findEventIds(context: Context): List<Long> {
         val ret: MutableList<Long> = mutableListOf()
         val cursor = context.contentResolver?.query(
-            EVENTS_URI,arrayOf("_id"),
-            "calendar_id=$CAL_ID",null,null)
-        while(cursor?.moveToNext() == true){
+            EVENTS_URI, arrayOf("_id"),
+            "calendar_id=$CAL_ID", null, null
+        )
+        while (cursor?.moveToNext() == true) {
             ret.add(cursor.getLong(cursor.getColumnIndex("_id")))
-            Log.d("EventTestCalId",cursor.getString(cursor.getColumnIndex("_id")))
-            }
+            Log.d("EventTestCalId", cursor.getString(cursor.getColumnIndex("_id")))
+        }
         cursor?.close()
         return ret
     }
 
-    fun findEventSingle(context: Context,entry:TestPlanEntry):Long?{
+    /**
+     * Returns the id of an event that is connected with a [TestPlanEntry].
+     * Can return null if no event was found, but cannot find more than one event.
+     *
+     * @param[context] The application context.
+     * @param[entry] The [TestPlanEntry], connected to the event.
+     *
+     * @return The id of the event for the [TestPlanEntry].
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun findEventSingle(context: Context, entry: TestPlanEntry): Long? {
         val cursor = context.contentResolver?.query(
-            EVENTS_URI,arrayOf("_id","title","description"),
-            "calendar_id=$CAL_ID",null,null)
-        while(cursor?.moveToNext() == true){
+            EVENTS_URI, arrayOf("_id", "title", "description"),
+            "calendar_id=$CAL_ID", null, null
+        )
+        while (cursor?.moveToNext() == true) {
             val id = cursor.getLong(cursor.getColumnIndex("_id"))
             val module = cursor.getString(cursor.getColumnIndex("title"))
             val description = cursor.getString(cursor.getColumnIndex("description"))
-            if(module == entry.module&&description == entry.getString(context))
-            {
+            if (module == entry.module && description == entry.getString(context)) {
                 Log.d("EventTest", "$id;$module")
                 cursor.close()
                 return id

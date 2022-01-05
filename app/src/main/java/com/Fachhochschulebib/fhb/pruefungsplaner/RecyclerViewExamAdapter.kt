@@ -120,8 +120,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                 if (holder.txtSecondScreen.visibility == View.VISIBLE) {
                     holder.txtSecondScreen.visibility = View.GONE
                 } else {
-                    if(openItem?.txtSecondScreen?.visibility==View.VISIBLE)
-                    {
+                    if (openItem?.txtSecondScreen?.visibility == View.VISIBLE) {
                         openItem?.txtSecondScreen?.visibility = View.GONE
                     }
                     holder.txtSecondScreen.visibility = View.VISIBLE
@@ -303,12 +302,14 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
         var selectedEntry: TestPlanEntry? = null
         scopeIO.launch {
-            favcheck = false
             selectedEntry = database?.userDao()?.getEntryById(planId[position])
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-            if (selectedEntry?.favorit == true) {
-                database?.userDao()
-                    ?.update(false, planId[position].toInt())
+            database?.userDao()
+                ?.update(false, planId[position].toInt())
+            context?.let {
+                selectedEntry?.let { it1 ->
+                    GoogleCalendarIO.deleteEntry(it, it1)
+                }
             }
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
@@ -340,20 +341,20 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     fun addToFavorites(position: Int, holder: ViewHolder) {
         var selectedEntry: TestPlanEntry? = null
         scopeIO.launch {
-            favcheck = false
             selectedEntry = database?.userDao()?.getEntryById(planId[position])
             //Speichern des Prüfitem als Favorit
-            // Toast.makeText(v.getContext(), "137", Toast.LENGTH_SHORT).show();
-            if (selectedEntry?.favorit == false) {
-                database?.userDao()
-                    ?.update(true, planId[position].toInt())
+            database?.userDao()
+                ?.update(true, planId[position].toInt())
+            context?.let {
+                selectedEntry?.let { it1 ->
+                    GoogleCalendarIO.insertEntry(it, it1,true)
+                }
             }
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
-
                 //Speichern des Prüfitem als Favorit
 
-                saveInCalendar(position, holder)
+                //TODO REMOVE saveInCalendar(position, holder)
 
                 Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
                     .show()
@@ -456,7 +457,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      */
     fun checkFavorite(position: Int): Boolean {
         try {
-            favcheck = false
             val selectedEntry = database?.userDao()?.getEntryById(planId[position])
 
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
@@ -547,10 +547,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             cursor.close()
         }
         return result
-    }
-
-    companion object {
-        var favcheck = true
     }
 
 // Provide a reference to the views for each data item

@@ -38,7 +38,7 @@ fun Spinner.setSelection(value: String?) {
 }
 
 /**
- * Returns formatted details for an entry.
+ * Returns formatted details for a [TestPlanEntry].
  *
  * @param[context] The application context
  *
@@ -68,6 +68,18 @@ fun TestPlanEntry.getString(context: Context):String?{
     return ret.toString()
 }
 
+/**
+ * Puts together a label from the strings-resources and an associated value. (E.g. Modul:Datenbankanwendungen)
+ *
+ * @param[context] The application context.
+ * @param[label] The Resources-Id of the label.
+ * @param[info] The value, associated with the label.
+ *
+ * @return A String, that displays the label and the info.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ */
 private fun createStringWithLabel(context: Context,@StringRes label:Int,info:String?):String{
     return StringBuilder().append(context.getString(label)).append(info).toString()
 }

@@ -15,6 +15,7 @@ import android.widget.Toast
 import android.widget.TextView
 import android.widget.LinearLayout
 import com.Fachhochschulebib.fhb.pruefungsplaner.RecyclerViewExamAdapter.ViewHolder
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -153,16 +154,22 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         name = moduleAndCourseList[holder.adapterPosition]
         holder.txtHeader.text = name
 
-        holder.layout.setOnClickListener { view: View? ->
+        holder.layout.setOnClickListener {
             if (holder.txtSecondScreen.visibility == View.VISIBLE) {
                 holder.txtSecondScreen.visibility = View.GONE
             } else {
-                if(openItem?.txtSecondScreen?.visibility==View.VISIBLE)
-                {
+                if (openItem?.txtSecondScreen?.visibility == View.VISIBLE) {
                     openItem?.txtSecondScreen?.visibility = View.GONE
                 }
                 holder.txtSecondScreen.visibility = View.VISIBLE
-                holder.txtSecondScreen.text = giveString(position)
+                scope_io.launch {
+                    holder.txtSecondScreen.text =
+                        context?.let { it1 ->
+                            database?.userDao()?.getEntryById(ppIdList[position])?.getString(
+                                it1
+                            )
+                        }
+                }
                 //Make previous details invisible
                 openItem = holder
             }
@@ -228,66 +235,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     }
 
 
-    /**
-     * Returns a string that shows the extended information of the exam.
-     *
-     * @param[position] The position of the item in the Recyclerview.
-     * @return The string that contains the information
-     *
-     * @author Alexander Lange
-     * @since 1.5
-     */
-    fun giveString(position: Int): String {
-        try {
-            val name = moduleAndCourseList[position]
-            val course = name.split(" ").toTypedArray()
-            modulName = ""
-            var b: Int
-            b = 0
-            while (b < course.size - 1) {
-                modulName = modulName + " " + course[b]
-                b++
-            }
-            val division1 = datesList[position].split(" ").toTypedArray()
-            val division2 = division1[0].split("-").toTypedArray()
-            //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-            val sa = examinerAndSemester[position].split(" ").toTypedArray()
-            //AlertDialog.Builder builder1 = new AlertDialog.Builder(v.getContext());
-            return """${context!!.getString(R.string.information)}${context!!.getString(R.string.course)}${course[course.size - 1]}${
-                context!!.getString(
-                    R.string.modul
-                )
-            }$modulName${context!!.getString(R.string.firstProf)}${sa[0]}${context!!.getString(R.string.secondProf)}${sa[1]}${
-                context!!.getString(
-                    R.string.date
-                )
-            }${division2[2]}.${division2[1]}.${division2[0]}${context!!.getString(R.string.clockTime)}${
-                division1[1].substring(
-                    0,
-                    5
-                )
-            }${context!!.getString(R.string.clock)}${context!!.getString(R.string.room)}${roomList[position]}${
-                context!!.getString(
-                    R.string.form
-                )
-            }${formList[position]}
- 
- 
- 
- 
- 
- 
- """
-        } catch (e: Exception) {
-            Log.d(
-                "Fehler Adapterfavorits",
-                "Fehler bei ermittlung der weiteren Informationen"
-            )
-        }
-        return "0" //????
-    }
-
-    // Start Merlin Gürtler
+// Start Merlin Gürtler
 
     /**
      * Delete an item at a given position.
@@ -298,21 +246,15 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @since 1.5
      */
     private fun deleteItem(position: Int) {
+        var selectedEntry: TestPlanEntry? = null
         scope_io.launch {
-            val ppeList = database?.userDao()?.getFavorites(true) ?: return@launch
-            // second parameter is necessary ie.,
-            // Value to return if this preference does not exist.
-            for (entry in ppeList) {
-                if (entry?.id != ppIdList[position]) {
-                    continue
-                }
-                database?.userDao()
-                    ?.update(false, Integer.valueOf(ppIdList[position]))
-                //Entferne den Eintrag aus dem Calendar falls vorhanden
-                val cal = CheckGoogleCalendar()
-                cal.setCtx(context)
-                if (!cal.checkCal(ppIdList[position].toInt())) {
-                    cal.deleteEntry(ppIdList[position].toInt())
+            selectedEntry = database?.userDao()?.getEntryById(ppIdList[position])
+            database?.userDao()
+                ?.update(false, Integer.valueOf(ppIdList[position]))
+            //Entferne den Eintrag aus dem Calendar falls vorhanden
+            context?.let {
+                selectedEntry?.let { it1 ->
+                    GoogleCalendarIO.deleteEntry(it, it1)
                 }
             }
         }.invokeOnCompletion {
@@ -326,8 +268,8 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     }
 
     // Provide a reference to the views for each data item
-// Complex data items may need more than one view per item, and
-// you provide access to all the views for a data item in a view holder
+    // Complex data items may need more than one view per item, and
+    // you provide access to all the views for a data item in a view holder
     /**
      * Inner class [ViewHolder], that contains the references to the UI-Elements.
      *

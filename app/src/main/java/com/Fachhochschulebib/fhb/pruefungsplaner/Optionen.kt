@@ -5,26 +5,19 @@ import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
-import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Handler
-import android.provider.CalendarContract
 import android.util.Log
 import android.widget.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import org.json.JSONArray
-import org.json.JSONException
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import android.view.*
-import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import kotlinx.android.synthetic.main.fragment_impressum.*
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -137,15 +130,14 @@ class Optionen() : Fragment() {
         //holder.zahl1 = position;
         val serverAdresse = view.context.getSharedPreferences("json8", Context.MODE_PRIVATE)
         //Creating editor to store uebergebeneModule to shared preferences
-        val mEditorGoogleCalendar = serverAdresse.edit()
-
-        doSomething()
 
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         switch2.setOnCheckedChangeListener { _, isChecked -> // do something, the isChecked will be
             // true if the switch is in the On position
-            setCalendarSynchronization(isChecked)
+            setCalendarSynchro(isChecked)
+            //setCalendarSynchronization(isChecked)
         }
+        switch2.isChecked = sharedPreferencesSettings?.getBoolean("calSync", false) ?: false
 
         privacyDeclaration.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
@@ -166,37 +158,23 @@ class Optionen() : Fragment() {
 
         //Google Kalender einträge löschen
         btnCalClear.setOnClickListener {
-            scope_io.launch {
-                val entries = database?.userDao()?.getFavorites(true)
-                if (entries != null) {
-                    if (entries.isNotEmpty()) {
-                        context?.let { it1 ->
-                            entries[0]?.let { it2 -> GoogleCalendarIO.deleteEntry(it1, it2) }
-                        }
-
-                    }
-                }
+            context?.let { it1 ->
+                GoogleCalendarIO.deleteAll(it1)
             }
-            /*deleteCalendar()
-            Toast.makeText(
-                v.context,
-                v.context.getString(R.string.delete_calendar),
-                Toast.LENGTH_SHORT
-            ).show()*/
         }
 
         //Google Kalender einträge updaten
-        //TODO Implement btnGoogleUpdate.setOnClickListener { updateCalendar() }
         btnGoogleUpdate.setOnClickListener {
+            context?.let { it1 ->
+                GoogleCalendarIO.deleteAll(it1)
+            }
+            var favorits: List<TestPlanEntry?>? = null
             scope_io.launch {
-                val entries = database?.userDao()?.getFavorites(true)
-                if (entries != null) {
-                    if (entries.isNotEmpty()) {
-                        context?.let { it1 ->
-                            entries[0]?.let { it2 ->
-                                GoogleCalendarIO.insertEntry(it1, it2, true)
-                            }
-                        }
+                favorits = database?.userDao()?.getFavorites(true)
+            }.invokeOnCompletion {
+                context?.let { it1 ->
+                    favorits?.let { it2 ->
+                        GoogleCalendarIO.insertEntries(it1, it2, true)
                     }
                 }
             }
@@ -205,6 +183,37 @@ class Optionen() : Fragment() {
         btnFav.setOnClickListener { deleteFavorits() }
 
         optionenfragment_save_btn.setOnClickListener { save() }
+    }
+
+    /**
+     * Toggles, if the Googlecalendar shall get favorits as events or not.
+     * If it is toggled on, all current favorits get inserted into the calendar.
+     * If it is toggled of, all events in the calendar for this application get deleted.
+     *
+     * @param[active] If synchronization is active or not.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private fun setCalendarSynchro(active: Boolean) {
+        val editor = sharedPreferencesSettings?.edit()
+        editor?.putBoolean("calSync", active)
+        editor?.apply()
+
+        val favorites: MutableList<TestPlanEntry?> = mutableListOf()
+        scope_io.launch {
+            database?.userDao()?.getFavorites(true)?.let { favorites.addAll(it) }
+        }.invokeOnCompletion {
+            if (active) {
+                context?.let { it1 ->
+                    GoogleCalendarIO.insertEntries(it1, favorites, true)
+                }
+            } else {
+                context?.let { it1 ->
+                    GoogleCalendarIO.deleteAll(it1)
+                }
+            }
+        }
     }
 
     /**
@@ -217,12 +226,13 @@ class Optionen() : Fragment() {
     private fun deleteFavorits() {
         scope_io.launch {
             val ppeList = database?.userDao()?.getFavorites(true)
-            if (ppeList != null) {
-                for (entry in ppeList) {
-                    Log.d("Test Favoriten löschen.", entry?.id?.toString() ?: "")
-                    //Set favorit value for every favorit to false.
-                    database?.userDao()
-                        ?.update(false, entry?.id?.toInt() ?: 0)
+            ppeList?.forEach {
+                database?.userDao()
+                    ?.update(false, it?.id?.toInt() ?: 0)
+            }
+            context?.let {
+                ppeList?.let { it1 ->
+                    GoogleCalendarIO.deleteEntries(it, it1)
                 }
             }
         }.invokeOnCompletion {
@@ -274,113 +284,6 @@ class Optionen() : Fragment() {
                     ).show()
                 }
             })
-        }
-    }
-
-    /**
-     * Sets the calendarsynchronization.
-     *
-     * @param[status] True->The calendar shall be synced with the app;False->The calendar shall not be synced.
-     * @author Alexander Lange
-     * @since 1.5
-     * @see CheckGoogleCalendar
-     */
-    private fun setCalendarSynchronization(status: Boolean) {
-        scope_io.launch {
-            val mEditorGoogleCalendar = sharedPreferencesSettings?.edit()
-            if (status) {
-                mEditorGoogleCalendar?.clear()
-                mEditorGoogleCalendar?.apply()
-                response?.put("1")
-                mEditorGoogleCalendar?.putString("calSync", response.toString())
-                mEditorGoogleCalendar?.apply()
-                val ppeList = database?.userDao()?.getFavorites(true)
-                val googlecal = CheckGoogleCalendar()
-                googlecal.setCtx(context)
-                if (ppeList != null) {
-                    for (entry in ppeList) {
-                        val id = entry?.id
-
-                        //überprüfung von ein/aus Google Kalender
-                        if (googlecal.checkCal(id?.toInt() ?: 0)) {
-                            //ermitteln von benötigten Variablen
-                            val splitDateAndTime =
-                                entry?.date?.split(" ")?.toTypedArray()
-                            val splitDayMonthYear =
-                                splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
-                            course = entry?.course
-                            course = course + " " + entry?.module
-                            val timeStart =
-                                splitDateAndTime?.get(1)?.substring(0, 2)?.toInt()
-                            val timeEnd =
-                                splitDateAndTime?.get(1)?.substring(4, 5)?.toInt()
-                            calDate = GregorianCalendar(
-                                splitDayMonthYear?.get(0)?.toInt() ?: 0,
-                                splitDayMonthYear?.get(1)?.toInt() ?: 1 - 1,
-                                splitDayMonthYear?.get(2)?.toInt() ?: 0,
-                                timeStart ?: 0,
-                                timeEnd ?: 0
-                            )
-
-                            //Methode zum Speichern im Kalender
-                            val calendarid = calendarID(course)
-
-                            //Funktion im Google Kalender, um PrüfID und calenderID zu speichern
-                            googlecal.insertCal(id?.toInt() ?: 0, calendarid)
-                        }
-                    }
-                }
-                if (!status) {
-                    mEditorGoogleCalendar?.clear()?.apply()
-                    mEditorGoogleCalendar?.remove("calSync")?.apply()
-                }
-
-            }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post(object : Runnable {
-                override fun run() {
-                    Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.add_calendar),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-        }
-
-    }
-
-    //TODO RENAME
-    private fun doSomething() {
-
-        val serverAdresse = view?.context?.getSharedPreferences("json8", Context.MODE_PRIVATE)
-        response = JSONArray()
-        val strServerAddress = serverAdresse?.getString("jsondata2", "0")
-        //second parameter is necessary ie.,Value to return if this preference does not exist.
-        if (strServerAddress != null) {
-            try {
-                response = JSONArray(strServerAddress)
-            } catch (e: JSONException) {
-                Log.d("Fehler Optionen", "Server-Adresse Fehler")
-            }
-        }
-        var i = 0
-        save = false
-        while (i < response?.length() ?: 0) {
-            run {
-                try {
-                    if ((response?.get(i).toString() == "1")) {
-                        switch2.setChecked(true)
-                        save = true
-                    } else {
-                        switch2.setChecked(false)
-                        save = false
-                    }
-                } catch (e: JSONException) {
-                    Log.d("Fehler Optionen", "Google Kalender aktivierung")
-                }
-            }
-            i++
         }
     }
 
@@ -516,10 +419,10 @@ class Optionen() : Fragment() {
         PingUrl(serverAddress)
     }
 
-    // Methode zum Aktualiseren der Prüfungen
-    // die Abfrage Methodes des Webservers
-    // gibt Mögliche Änderungen wie den Status zurück,
-    // diese werden dann geupdated
+// Methode zum Aktualiseren der Prüfungen
+// die Abfrage Methodes des Webservers
+// gibt Mögliche Änderungen wie den Status zurück,
+// diese werden dann geupdated
     /**
      * Updates the data for the exams, currently stored in the Room-Database.
      * @author Alexander Lange
@@ -555,8 +458,8 @@ class Optionen() : Fragment() {
         }
     }
 
-    //Verbindungsaufbau zum Webserver
-    //Überprüfung ob Webserver erreichbar
+//Verbindungsaufbau zum Webserver
+//Überprüfung ob Webserver erreichbar
     /**
      * Ping the webserver to check if there is a connection.
      * After success it updates the Room-Database.
@@ -591,83 +494,4 @@ class Optionen() : Fragment() {
         }
     }
 
-    //Google Kalender einträge löschen
-    /**
-     * Deletes the entries in the googlecalendar.
-     * @author Alexander Lange
-     * @since 1.5
-     * @see CheckGoogleCalendar
-     */
-    fun deleteCalendar() {
-        val cal = CheckGoogleCalendar()
-        cal.setCtx(context)
-        cal.clearCal()
-    }
-
-    //Google Kalender aktualisieren
-    /**
-     * Updates the googlecalendar. Refreshes the favorites and removed favorites.
-     * @author Alexander Lange
-     * @since 1.5
-     * @see CheckGoogleCalendar
-     */
-    fun updateCalendar() {
-        scope_io.launch {
-            val cal = CheckGoogleCalendar()
-            cal.setCtx(context)
-            cal.updateCal()
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    view?.context,
-                    view?.context?.getString(R.string.actualisation_calendar),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-    }
-
-    /**
-     * Put an event into the googlecalendar and returns the id.
-     * @param[eventtitle] The exam to put into the googlecalendar.
-     * @return The id of the event, which was created in the googlecalendar.
-     * @author Alexander Lange
-     * @since 1.5
-     */
-    fun calendarID(eventtitle: String?): Int {
-        val event = ContentValues()
-        event.put(CalendarContract.Events.CALENDAR_ID, 2)
-        event.put(CalendarContract.Events.TITLE, course)
-        event.put(CalendarContract.Events.DESCRIPTION, context!!.getString(R.string.fh_name))
-        event.put(CalendarContract.Events.DTSTART, calDate.timeInMillis)
-        event.put(CalendarContract.Events.DTEND, calDate.timeInMillis + (90 * 60000))
-        event.put(CalendarContract.Events.ALL_DAY, 0) // 0 for false, 1 for true
-        event.put(CalendarContract.Events.HAS_ALARM, 0) // 0 for false, 1 for true
-        val timeZone = TimeZone.getDefault().id
-        event.put(CalendarContract.Events.EVENT_TIMEZONE, timeZone)
-        val baseUri = Uri.parse("content://com.android.calendar/events")
-        context?.contentResolver?.insert(baseUri, event)
-        var result = 0
-        val projection = arrayOf("_id", "title")
-        val cursor = context?.contentResolver
-            ?.query(
-                baseUri, null,
-                null, null, null
-            )
-        if (cursor!!.moveToFirst()) {
-            var calName: String?
-            var calID: String
-            val nameCol = cursor.getColumnIndex(projection[1])
-            val idCol = cursor.getColumnIndex(projection[0])
-            do {
-                calName = cursor.getString(nameCol)
-                calID = cursor.getString(idCol)
-                if (calName != null && calName.contains((eventtitle)!!)) {
-                    result = calID.toInt()
-                }
-            } while (cursor.moveToNext())
-            cursor.close()
-        }
-        return (result)
-    }
 }
