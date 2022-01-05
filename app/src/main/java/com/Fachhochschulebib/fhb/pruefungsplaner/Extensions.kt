@@ -3,8 +3,12 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 import android.content.Context
 import android.util.Log
 import android.widget.Spinner
+import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
+import java.lang.Exception
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -31,6 +35,41 @@ fun Spinner.setSelection(value: String?) {
             return
         }
     }
+}
+
+/**
+ * Returns formatted details for an entry.
+ *
+ * @param[context] The application context
+ *
+ * @return A Formatted String, including the details for the exam.
+ *
+ * @author Alexander Lange
+ * @since 1.5
+ */
+fun TestPlanEntry.getString(context: Context):String?{
+    val ret = StringBuilder()
+    ret.appendLine(context.getString(R.string.information))
+    ret.appendLine()
+    ret.appendLine(createStringWithLabel(context,R.string.course,course))
+    ret.appendLine(createStringWithLabel(context,R.string.modul,module))
+    ret.appendLine()
+    ret.appendLine(createStringWithLabel(context,R.string.firstProf,firstExaminer))
+    ret.appendLine(createStringWithLabel(context,R.string.secondProf,secondExaminer))
+    val d = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date)
+    ret.appendLine(createStringWithLabel(context,R.string.date2,SimpleDateFormat("dd.MM.yyyy").format(d)))
+    ret.appendLine(createStringWithLabel(context,R.string.clockTime2,SimpleDateFormat("HH:mm").format(d)))
+    ret.appendLine(createStringWithLabel(context,R.string.duration,
+        Utils.getExamDuration(examForm)?.toString() + "min"
+    ))
+    ret.appendLine(createStringWithLabel(context,R.string.room,room))
+    ret.appendLine(createStringWithLabel(context,R.string.form,examForm))
+
+    return ret.toString()
+}
+
+private fun createStringWithLabel(context: Context,@StringRes label:Int,info:String?):String{
+    return StringBuilder().append(context.getString(label)).append(info).toString()
 }
 
 /**

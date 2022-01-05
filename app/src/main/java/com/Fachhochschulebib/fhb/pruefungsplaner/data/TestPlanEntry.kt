@@ -27,6 +27,7 @@ class TestPlanEntry {
     @ColumnInfo(name = "Validation")
     var validation: String? = null
 
+    //Format:yyyy-MM-dd HH:mm:ss
     @ColumnInfo(name = "Date")
     var date: String? = null
 
@@ -56,4 +57,5 @@ class TestPlanEntry {
 
     @ColumnInfo(name = "Color")
     var color: String? = null
+
 }

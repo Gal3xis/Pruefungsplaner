@@ -73,8 +73,7 @@ object Utils {
     }
 
     fun getExamDuration(examForm:String?): Int? {
-        val strs = examForm?.split("_")
-        return strs?.get(1)?.toInt()
+        return 90//TODO Implement
     }
 }
 

@@ -64,23 +64,24 @@
     <string name="current">Aktuelle Prüfungsphase: \n&#160;</string>
     <string name="bis">&#160;bis&#160;</string>
 
-    <!-- Klausuren Dastellung -->
-    <string name="time">Uhrzeit:&#160;</string>
-    <string name="prof">Prüfer:&#160;</string>
-    <string name="semester">&#160;&#160;Semester:&#160;</string>
-    <string name="information">&#160;Informationen zur Prüfung \n \n&#160;</string>
+    <!-- Klausuren Darstellung -->
+    <string name="time">Uhrzeit:</string>
+    <string name="prof">Prüfer:</string>
+    <string name="semester">Semester:</string>
+    <string name="information">Informationen zur Prüfung&#160;</string>
     <string name="course">Studiengang:&#160;</string>
-    <string name="modul">\n Modul:&#160;</string>
-    <string name="firstProf">\n Erstprüfer:&#160;</string>
-    <string name="secondProf">\n Zweitprüfer:&#160;</string>
-    <string name="date">\n  Datum:&#160;</string>
-    <string name="date2">&#160;Datum:&#160;</string>
-    <string name="clockTime">\n Uhrzeit:&#160;</string>
+    <string name="modul">Modul:&#160;</string>
+    <string name="firstProf">Erstprüfer:&#160;</string>
+    <string name="secondProf">Zweitprüfer:&#160;</string>
+    <string name="date">Datum:&#160;</string>
+    <string name="date2">Datum:&#160;</string>
+    <string name="clockTime">Uhrzeit:&#160;</string>
     <string name="clockTime2">Uhrzeit:&#160;</string>
-    <string name="clock">&#160;Uhr</string>
-    <string name="room">\n Raum:&#160;</string>
-    <string name="form">\n Prüfungsform:&#160;</string>
+    <string name="clock">Uhr</string>
+    <string name="room">Raum:&#160;</string>
+    <string name="form">Prüfungsform:&#160;</string>
     <string name="fh_name">Fachhochschule Bielefeld</string>
+    <string name="duration">Dauer:</string>
 
     <!-- Suche -->
     <string name="all">Alle</string>
@@ -147,4 +148,4 @@
     </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    </resources>
+</resources>

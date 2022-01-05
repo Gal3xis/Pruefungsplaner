@@ -125,7 +125,14 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                         openItem?.txtSecondScreen?.visibility = View.GONE
                     }
                     holder.txtSecondScreen.visibility = View.VISIBLE
-                    holder.txtSecondScreen.text = giveString(position)
+                    scopeIO.launch {
+                        holder.txtSecondScreen.text =
+                            context?.let { it1 ->
+                                database?.userDao()?.getEntryById(planId[position])?.getString(
+                                    it1
+                                )
+                            }
+                    }
                     //Make previous details invisible
                     openItem = holder
                 }
@@ -281,63 +288,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                 }
             }
             // Ende Merlin Gürtler
-        }
-    }
-
-    /**
-     * Returns a string that shows the extended information of the exam.
-     *
-     * @param[position] The position of the item in the Recyclerview.
-     * @return The string that contains the information
-     *
-     * @author Alexander Lange
-     * @since 1.5
-     */
-    fun giveString(position: Int): String {
-        try {
-            val name = modules[position]
-            val course = name.split(" ").toTypedArray()
-            moduleName = ""
-            var b: Int
-            b = 0
-            while (b < course.size - 1) {
-                moduleName = moduleName + " " + course[b]
-                b++
-            }
-            val room = room[position]
-            val division1 = date[position].split(" ").toTypedArray()
-            val division2 = division1[0].split("-").toTypedArray()
-            //holder.txtthirdline.setText("Uhrzeit: " + aufteilung1[1].substring(0, 5).toString());
-            val sa = examinerAndSemester[position].split(" ").toTypedArray()
-
-            //String mit dem Inhalt für weitere Informationen
-            return """${context!!.getString(R.string.information)}${context!!.getString(R.string.course)}${course[course.size - 1]}${
-                context!!.getString(
-                    R.string.modul
-                )
-            }$moduleName${context!!.getString(R.string.firstProf)}${sa[0]}${context!!.getString(R.string.secondProf)}${sa[1]}${
-                context!!.getString(
-                    R.string.date
-                )
-            }${division2[2]}.${division2[1]}.${division2[0]}${context!!.getString(R.string.clockTime)}${
-                division1[1].substring(
-                    0,
-                    5
-                )
-            }${context!!.getString(R.string.clock)}${context!!.getString(R.string.room)}$room${
-                context!!.getString(
-                    R.string.form
-                )
-            }${examForm[position]}
- 
- 
- 
- 
- 
- """
-        } catch (ex: Exception) {
-            Log.e("MyAdapter.kt-giveStrtng:", ex.stackTraceToString())
-            return ""
         }
     }
 

@@ -165,13 +165,24 @@ class Optionen() : Fragment() {
         btnDB.setOnClickListener { deleteInternalDatabase() }
 
         //Google Kalender einträge löschen
-        btnCalClear.setOnClickListener { v ->
-            deleteCalendar()
+        btnCalClear.setOnClickListener {
+            scope_io.launch {
+                val entries = database?.userDao()?.getFavorites(true)
+                if (entries != null) {
+                    if (entries.isNotEmpty()) {
+                        context?.let { it1 ->
+                            entries[0]?.let { it2 -> GoogleCalendarIO.deleteEntry(it1, it2) }
+                        }
+
+                    }
+                }
+            }
+            /*deleteCalendar()
             Toast.makeText(
                 v.context,
                 v.context.getString(R.string.delete_calendar),
                 Toast.LENGTH_SHORT
-            ).show()
+            ).show()*/
         }
 
         //Google Kalender einträge updaten
@@ -181,7 +192,11 @@ class Optionen() : Fragment() {
                 val entries = database?.userDao()?.getFavorites(true)
                 if (entries != null) {
                     if (entries.isNotEmpty()) {
-                        context?.let { it1 -> GoogleCalendarIO.insertEntry(it1, entries[0]) }
+                        context?.let { it1 ->
+                            entries[0]?.let { it2 ->
+                                GoogleCalendarIO.insertEntry(it1, it2, true)
+                            }
+                        }
                     }
                 }
             }
@@ -602,15 +617,13 @@ class Optionen() : Fragment() {
             cal.setCtx(context)
             cal.updateCal()
         }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post(object : Runnable {
-                override fun run() {
-                    Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.actualisation_calendar),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
+            Handler(Looper.getMainLooper()).post {
+                Toast.makeText(
+                    view?.context,
+                    view?.context?.getString(R.string.actualisation_calendar),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
