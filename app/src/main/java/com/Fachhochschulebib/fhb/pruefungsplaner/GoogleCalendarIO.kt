@@ -356,4 +356,18 @@ object GoogleCalendarIO {
         cursor?.close()
         return null
     }
+
+    /**
+     * Updates the GoogleCalendar with a new set of events. Deletes everything for the app and reinsert the events.
+     *
+     * @param[context] The application context.
+     * @param[entries] The up-to-date list of entries to put into the calendar.
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    fun update(context: Context,entries:List<TestPlanEntry?>){
+        deleteAll(context)
+        insertEntries(context,entries,true)
+    }
 }

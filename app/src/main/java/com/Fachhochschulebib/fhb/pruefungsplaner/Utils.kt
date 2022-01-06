@@ -38,7 +38,7 @@ object Utils {
     }
 
     val statusColors:Map<String,Int> = mapOf("Früher Vorschlag" to R.attr.frueherVorschlag,"In Diskussion" to R.attr.inDiskussion, "Veröffentlicht" to R.attr.veroeffentlicht, "Veraltet" to R.attr.veraltet, "Zukünftige Planung" to R.attr.zukuenftigePlanung)
-    val favoritIcons:Map<Boolean,Int> = mapOf(true to android.R.drawable.ic_delete,false to android.R.drawable.ic_input_add )
+    val favoritIcons:Map<Boolean,Int> = mapOf(true to android.R.drawable.ic_delete,false to android.R.drawable.ic_input_add )//TODO Customize
     val themeList:List<Int> = listOf(R.style.Theme_AppTheme_1,R.style.Theme_AppTheme_2)
 
 

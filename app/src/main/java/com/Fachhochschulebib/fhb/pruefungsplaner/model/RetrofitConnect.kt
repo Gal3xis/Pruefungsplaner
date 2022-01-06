@@ -3,13 +3,10 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.model
 import android.content.Context
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.Optionen
 import android.util.Log
+import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import com.Fachhochschulebib.fhb.pruefungsplaner.RequestInterface
-import com.Fachhochschulebib.fhb.pruefungsplaner.CheckGoogleCalendar
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -381,17 +378,14 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                         testPlanEntryResponse = createTestplanEntry(response!!)
                         roomData.userDao()?.insertAll(testPlanEntryResponse)
                     }
-
-                    //Update den Eintrag aus dem Calendar falls vorhanden
-                    val cal = CheckGoogleCalendar()
-                    cal.setCtx(ctx)
-                    if (!cal.checkCal(responseId.toInt())) {
-                        cal.updateCalendarEntry(responseId.toInt())
-                    }
                 }
 
                 // lösche Einträge die nicht geupdatet wurden
                 roomData.userDao()?.deleteEntry(dataListFromLocalDB)
+
+                roomData.userDao()?.getFavorites(true)?.let {
+                    GoogleCalendarIO.update(ctx, it)
+                }
             }
         } else {
             Log.d("RESPONSE", ":::NO RESPONSE:::")
