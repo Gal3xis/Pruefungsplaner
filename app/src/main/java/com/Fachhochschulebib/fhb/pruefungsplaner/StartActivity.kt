@@ -1,18 +1,17 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.content.SharedPreferences
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.Intent
-import android.os.Bundle
 import android.content.pm.ActivityInfo
+import android.os.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
-import android.os.Handler
-import android.os.Looper
-import android.os.Message
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -155,9 +154,14 @@ class StartActivity() : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         applySettings()
+        //TODO Alexander Lange Start
+        //TODO Alexander Lange End
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
         context = baseContext
+        PushService.createNotificationChannel(this)
+
+        context?.let { PushService.sendNotification(it,"Test") }//TODO REMOVE
 
         database = AppDatabase.getAppDatabase(baseContext)
         initSharedPreferences()
@@ -618,7 +622,7 @@ class StartActivity() : AppCompatActivity() {
         }
         Log.d("Output checkFakultaet", "abgeschlossen")
     }
-    
+
 
     companion object {
         var returnCourse: String? = null
