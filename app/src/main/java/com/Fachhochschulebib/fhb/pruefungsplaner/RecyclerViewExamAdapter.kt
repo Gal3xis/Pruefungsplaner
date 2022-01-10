@@ -343,10 +343,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             }
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
-                //Speichern des Prüfitem als Favorit
-
-                //TODO REMOVE saveInCalendar(position, holder)
-
                 Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
                     .show()
                 this.notifyItemChanged(position)

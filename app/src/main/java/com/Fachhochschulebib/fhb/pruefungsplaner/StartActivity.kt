@@ -201,11 +201,13 @@ class StartActivity() : AppCompatActivity() {
                 try {
                     jsonArrayFacultys = JSONArray(strJson)
                     var i = 0
-                    while (i < jsonArrayFacultys!!.length()) {//TODO Try Remove !!
-                        val json = jsonArrayFacultys!!.getJSONObject(i)
-                        facultyName.add(json["facName"].toString())
-                        initButtons()
-                        i++
+                    jsonArrayFacultys?.let {
+                        while (i < it.length()) {
+                            val json = it.getJSONObject(i)
+                            facultyName.add(json["facName"].toString())
+                            initButtons()
+                            i++
+                        }
                     }
                 } catch (b: Exception) {
                     Log.d("Datenbankfehler", "Keine Daten in der Datenbank vorhanden!")
@@ -303,7 +305,6 @@ class StartActivity() : AppCompatActivity() {
     private fun initButtons() {
         runOnUiThread {
             // Start Merlin Gürtler
-            //TODO Shorten
             buttonForSpinner.setOnClickListener {
                 createAlertDialogChooseFaculty()
             }

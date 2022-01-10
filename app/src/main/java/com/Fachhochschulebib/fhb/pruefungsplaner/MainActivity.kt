@@ -570,13 +570,10 @@ class MainActivity : AppCompatActivity() {
                             FeedbackFragment()
                     )
                 }
-                //TODO CHANGE
                 R.id.navigation_changeFaculty -> {
                     header?.title =
                             applicationContext.getString(R.string.title_changeFaculty)
-                    recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
-                    //TODO Check if needed or remove:caCalender?.visibility = View.GONE
-                    //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
+                    //TODO REMOVE?recyclerView4?.visibility = View.INVISIBLE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     // globale Variable, damit die Fakultät gewechselt werden kann
                     val globalVariable = applicationContext as StartClass
@@ -648,7 +645,7 @@ class MainActivity : AppCompatActivity() {
     private fun changeFragment(headertitle: String, fragment: Fragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
 
-        recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
+        //TODO REMOVE?recyclerView4?.visibility = View.INVISIBLE
 
         header?.title = headertitle
 
@@ -722,14 +719,14 @@ class MainActivity : AppCompatActivity() {
         val now = Calendar.getInstance().time
         Filter.onDateChangedListener.add {
             tv_date.text =
-                    if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
+                    if (Filter.datum == null) resources.getString(R.string.all) else SimpleDateFormat("dd.MM.yyyy").format(
                             Filter.datum!!
                     )
         }
 
         setCalendarBtn(imgbtn_date)
 
-        tv_date.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
+        tv_date.text = if (Filter.datum == null) resources.getString(R.string.all) else SimpleDateFormat("dd.MM.yyyy").format(
                 Filter.datum!!
         )
         //Create and open the dialog
@@ -779,7 +776,7 @@ class MainActivity : AppCompatActivity() {
                 Filter.examiner = null
             }
         }
-        val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
+        val spinnerProfArrayList: MutableList<String?> = mutableListOf(resources.getString(R.string.all))
         scope_io.launch {
             val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "")
             spinnerProfArrayList.addAll(
@@ -853,7 +850,7 @@ class MainActivity : AppCompatActivity() {
         try {
             var sp_course_adapter: ArrayAdapter<String>? = null
             val list: MutableList<String?> =
-                    mutableListOf<String?>("Alle")//TODO extract String
+                    mutableListOf<String?>(resources.getString(R.string.all))
 
             scope_io.launch {
                 //Get Courses from Room-Database
@@ -916,11 +913,7 @@ class MainActivity : AppCompatActivity() {
                                 )
                         )
                     }
-                }/*TODO REMOVE
-                        //Return if user al
-                        if (Filter.courseName == null && position == 0) {
-                            return
-                        }*/
+                }
                 Filter.courseName =
                         if (position == 0) null else sp_course.selectedItem.toString()
             }
@@ -996,7 +989,7 @@ class MainActivity : AppCompatActivity() {
         try {
             var sp_modul_adapter: ArrayAdapter<String>? = null
             var pos_selected: Int = 0
-            val list: MutableList<String?> = mutableListOf("Alle")
+            val list: MutableList<String?> = mutableListOf(resources.getString(R.string.all))
             scope_io.launch {
                 //Get filtered list of modules from room-database
                 val modules =
@@ -1133,7 +1126,7 @@ class MainActivity : AppCompatActivity() {
                 dialog.datePicker.maxDate = endDate.time
                 dialog.setButton(
                         DatePickerDialog.BUTTON_NEUTRAL,
-                        "Alle",
+                        resources.getString(R.string.all),
                         { dialog, which ->
                             Filter.datum = null
                         })
