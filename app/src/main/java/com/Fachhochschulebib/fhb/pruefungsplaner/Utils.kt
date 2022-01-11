@@ -10,6 +10,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.Exception
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * Utility-Function for the application.
@@ -78,11 +79,21 @@ object Utils {
      *
      * @param[examForm] The exam form that holds information about the duration.
      *
-     * @return The duration for the exam in minutes.
+     * @return The duration for the exam in minutes. Returns zero if it doesn't find the information in the input.
      *
      * @author Alexander Lange
      */
-    fun getExamDuration(examForm:String?): Int? {
-        return 90//TODO Implement
+    fun getExamDuration(examForm:String?): Int {
+        val pattern = Regex("[0-9]+")
+        val result: MatchResult? = examForm?.let { pattern.find(it) }
+        val duration = result?.value?.toInt()
+        return duration?:0
+    }
+
+    fun getExamForm(examForm: String?):String{
+        val pattern = Regex("[^0-9()]+")
+        val result: MatchResult? = examForm?.let { pattern.find(it) }
+        val form = result?.value
+        return form?:examForm?:""
     }
 }

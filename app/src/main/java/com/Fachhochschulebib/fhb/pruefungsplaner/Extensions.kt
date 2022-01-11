@@ -63,7 +63,7 @@ fun TestPlanEntry.getString(context: Context):String?{
         Utils.getExamDuration(examForm)?.toString() + "min"
     ))
     ret.appendLine(createStringWithLabel(context,R.string.room,room))
-    ret.appendLine(createStringWithLabel(context,R.string.form,examForm))
+    ret.appendLine(createStringWithLabel(context,R.string.form,Utils.getExamForm(examForm)))
 
     return ret.toString()
 }

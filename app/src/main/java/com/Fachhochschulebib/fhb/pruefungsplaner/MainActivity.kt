@@ -334,6 +334,7 @@ class MainActivity : AppCompatActivity() {
             modulName = null
             datum = null
             semester.fill(true)
+            examiner = null
             for (i in onResetListener) {
                 i.invoke()
             }
@@ -699,12 +700,7 @@ class MainActivity : AppCompatActivity() {
 
         initFilterExaminer(sp_examiner)
 
-        initFilterCheckbox(c1, 1)
-        initFilterCheckbox(c2, 2)
-        initFilterCheckbox(c3, 3)
-        initFilterCheckbox(c4, 4)
-        initFilterCheckbox(c5, 5)
-        initFilterCheckbox(c6, 6)
+        initFIlterCheckboxes(c1, c2, c3, c4, c5, c6)
 
         //Sets filterhooks, so the menu dynamically changes when the filter changes
         Filter.onCourseNameChangedListener.add {
@@ -714,6 +710,8 @@ class MainActivity : AppCompatActivity() {
         Filter.onResetListener.add {
             UpdateCourseFilter(this, sp_course)
             UpdateModulFilter(this, sp_modul)
+            initFilterExaminer(sp_examiner)
+            initFIlterCheckboxes(c1, c2, c3, c4, c5, c6)
         }
 
         val now = Calendar.getInstance().time
@@ -731,7 +729,6 @@ class MainActivity : AppCompatActivity() {
         )
         //Create and open the dialog
         val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
-                .setTitle("Filter")
                 .setPositiveButton("Ok", null)
                 .setNegativeButton(
                         "Reset",
@@ -739,6 +736,15 @@ class MainActivity : AppCompatActivity() {
                 .setView(view)
                 .create()
         dialog.show()
+    }
+
+    private fun initFIlterCheckboxes(c1: CheckBox, c2: CheckBox, c3: CheckBox, c4: CheckBox, c5: CheckBox, c6: CheckBox) {
+        initFilterCheckbox(c1, 1)
+        initFilterCheckbox(c2, 2)
+        initFilterCheckbox(c3, 3)
+        initFilterCheckbox(c4, 4)
+        initFilterCheckbox(c5, 5)
+        initFilterCheckbox(c6, 6)
     }
 
     /**

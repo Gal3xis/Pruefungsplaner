@@ -22,6 +22,8 @@
                     android:id="@+id/layout_dialog_filter_faculty_tv"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:lines="1"
+                    android:autoSizeTextType="uniform"
                     android:layout_span="2"
                     android:textAlignment="center"
                     tools:text="Inginieurswissenschaften"
@@ -74,6 +76,9 @@
             <TableRow android:layout_marginTop="10dp">
 
                 <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:text="Prüfer:"
                     android:textColor="?attr/colorOnPrimaryDark"
                     android:textSize="15sp" />

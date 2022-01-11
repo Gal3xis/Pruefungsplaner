@@ -19,20 +19,20 @@ object PushService {
      *
      * **See Also:**[Documentation](https://developer.android.com/training/notify-user/build-notification#kotlin)
      */
-    fun sendNotification(context: Context, message:String){
+    fun sendNotification(context: Context, message:String?=null,title:String? = null,pIntent: PendingIntent? = null){
 
         //Create intent to navigate the user after he tapped the notification. That starts the StartActivity.
         val intent = Intent(context, StartActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
+        val pendingIntent: PendingIntent = pIntent?:PendingIntent.getActivity(context, 0, intent, 0)
 
         val id = Calendar.getInstance().timeInMillis.toInt()
 
-        var builder = NotificationCompat.Builder(context,CHANNEL_ID)
+        val builder = NotificationCompat.Builder(context,CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(context.resources.getString(R.string.app_name))
-                .setContentText(message)
+                .setContentTitle(title?:context.resources.getString(R.string.app_name))
+                .setContentText(message?:"")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
 
