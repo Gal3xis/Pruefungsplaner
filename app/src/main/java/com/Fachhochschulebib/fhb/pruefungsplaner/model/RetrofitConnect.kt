@@ -54,7 +54,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         var dateLastExamFormatted: String? = null
         try {
             val dateFormat: DateFormat = SimpleDateFormat(
-                    "EEE MMM dd HH:mm:ss yyyy", Locale.US//TODO CHANGE LOCAL
+                    "EEE MMM dd HH:mm:ss yyyy", Locale.getDefault()
             )
             val dateLastExam = dateFormat.parse(dateTimeZone)
             val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
