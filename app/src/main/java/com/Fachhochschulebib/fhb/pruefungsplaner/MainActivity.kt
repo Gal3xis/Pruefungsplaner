@@ -55,7 +55,7 @@ import androidx.core.view.get
  * The MainWindow is the TermineFragment.fragment, where the user can view and pick the exams.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  * @see Filter
  */
 class MainActivity : AppCompatActivity() {
@@ -64,7 +64,7 @@ class MainActivity : AppCompatActivity() {
      * Inner Class to filter the table of moduls. Used by TermineFragment-fragment and FavoritenFragment-fragment.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Terminefragment
      * @see Favoritenfragment
      */
@@ -75,7 +75,7 @@ class MainActivity : AppCompatActivity() {
          * If it is set back to false, the [filterChanged()]-Method is called.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          */
         var locked = false
             set(value) {
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
          * Calls the [onModuleNameChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onModulNameChangedListener
          * @see onFilterChangedListener
          */
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
          * Calls the [onCourseNameChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onCourseNameChangedListener
          * @see onFilterChangedListener
          */
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
          * Calls the [onDateChangedListener] and the [onFilterChangedListener].
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onDateChangedListener
          * @see onFilterChangedListener
          */
@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
          * Parameter to filter with a specific examiner.
          * Calls the [onExaminerChangedListener] and [onFilterChangedListener].
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onExaminerChangedListener
          * @see onFilterChangedListener
          */
@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity() {
          * Array of 6 semester, where each field contains a boolean, if the semester is selected (true), or not (false)
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          */
         var semester: Array<Boolean> = arrayOf(true, true, true, true, true, true)
             set(value) {
@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity() {
          * @param[pSemester] The semester to set the value.
          * @param[active] If the semester is checked or not.
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onSemesterChangedListener
          * @see onFilterChangedListener
 
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
          * Invokes every Method, appended to the onModuleNameChangedListener.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onModulNameChangedListener
          */
         private fun modulNameChanged() {
@@ -210,7 +210,7 @@ class MainActivity : AppCompatActivity() {
          * Invokes every Method, appended to the onCourseNameChangedListener.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onCourseNameChangedListener
          */
         private fun courseNameChanged() {
@@ -224,7 +224,7 @@ class MainActivity : AppCompatActivity() {
          * Invokes every Method, appended to the onDateChangedListener.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onDateChangedListener
          */
         private fun dateChanged() {
@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity() {
          * Invokes every method, appended to the onExaminerChangedListener.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onExaminerChangedListener
          */
         private fun examinerChanged() {
@@ -251,7 +251,7 @@ class MainActivity : AppCompatActivity() {
          * Invokes every method, appended to the [onSemesterChangedListener].
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onSemesterChangedListener
          */
         private fun semesterChanged() {
@@ -265,7 +265,7 @@ class MainActivity : AppCompatActivity() {
          * Invokes every Method, appended to the onFilterChangedListener.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          * @see onFilterChangedListener
          */
         private fun filterChanged() {
@@ -281,7 +281,7 @@ class MainActivity : AppCompatActivity() {
          * @param[entry] The Entry that needs to be validated
          * @return true->The entry agrees with the filter,false->the entry does not agree with the filter
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          */
         fun validateFilter(context: Context?, entry: TestPlanEntry?): Boolean {
             if (context == null) {
@@ -327,7 +327,7 @@ class MainActivity : AppCompatActivity() {
          * Calls the onResetListener.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          */
         fun reset() {
             courseName = null
@@ -364,7 +364,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreate
      */
@@ -432,7 +432,7 @@ class MainActivity : AppCompatActivity() {
      * @param[menu] The menu from this fragment. The action-menu is after inflation assigend to this.
      * @return Return true to show the menu, if it returns false, the menu is hidden
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see AppCompatActivity.onCreateOptionsMenu
      * @see SearchView.autofill
      */
@@ -521,7 +521,7 @@ class MainActivity : AppCompatActivity() {
      * Initializes the NavigationDrawer
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initNavigationDrawer() {
         val inputMethodManager = baseContext.getSystemService(
@@ -600,7 +600,7 @@ class MainActivity : AppCompatActivity() {
      * Initializes the BottomNavigationView
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initBottomNavigationView() {
         //Set listener for BottomNavigationView
@@ -642,7 +642,7 @@ class MainActivity : AppCompatActivity() {
      * @param[fragment] The fragment which shall be shown.
      * @return Returns always true, needed for the listener.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see onCreate
      */
     private fun changeFragment(headertitle: String, fragment: Fragment): Boolean {
@@ -663,7 +663,7 @@ class MainActivity : AppCompatActivity() {
      * Creates and opens the Filter-Dialog.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see UpdateModulFilter
      * @see UpdateCourseFilter
      * @see initFacultyFilter
@@ -749,7 +749,7 @@ class MainActivity : AppCompatActivity() {
      * Creates an adapter with all first-examiners to imlement an autocompletion.
      * @param[sp_examiner] The [Spinner] that shall be initialized.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see AdapterView.OnItemSelectedListener.onItemSelected
      */
     private fun initFilterExaminer(sp_examiner: Spinner) {
@@ -806,7 +806,7 @@ class MainActivity : AppCompatActivity() {
      * @param[c] The checkbox to be initialized.
      * @param[semester] The semester, the checkbox is representing
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initFilterCheckbox(c: CheckBox, semester: Int) {
         c.isChecked = Filter.semester[semester - 1]
@@ -821,7 +821,7 @@ class MainActivity : AppCompatActivity() {
      *
      * @param[context] The current Context
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Filter
      */
     fun UserFilter(context: Context) {
@@ -842,7 +842,7 @@ class MainActivity : AppCompatActivity() {
      * @param[context] the current context
      * @param[sp_course] the spinner from the filtermenu
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see setCourseSpinner
      * @see OpenFilterMenu
      * @see initFacultyFilter
@@ -887,7 +887,7 @@ class MainActivity : AppCompatActivity() {
      * @param[sp_course_adapter] The adapter to pass to the spinner
      * @param[sp_course] the spinner from the filtermenu
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see UpdateCourseFilter
      * @see Filter
      */
@@ -939,7 +939,7 @@ class MainActivity : AppCompatActivity() {
      * @param[context] the current context
      * @param[tv_faculty] the spinner from the filtermenu
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see setCourseSpinner
      * @see OpenFilterMenu
      * @see UpdateCourseFilter
@@ -985,7 +985,7 @@ class MainActivity : AppCompatActivity() {
      * @param[context] the current context
      * @param[sp_faculty] the spinner from the filtermenu
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see setCourseSpinner
      * @see OpenFilterMenu
      * @see UpdateCourseFilter
@@ -1030,7 +1030,7 @@ class MainActivity : AppCompatActivity() {
      * @param[sp_modul_adapter] The adapter to pass to the spinner
      * @param[sp_modul] the spinner from the filtermenu
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see UpdateModulFilter
      * @see Filter
      */
@@ -1080,7 +1080,7 @@ class MainActivity : AppCompatActivity() {
      *
      * @param[btn_calendar] The Button which is shown in the menu.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Calendar
      * @see DatePickerDialog
      * @see Filter

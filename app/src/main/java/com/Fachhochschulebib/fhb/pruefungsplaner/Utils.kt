@@ -15,7 +15,7 @@ import java.util.*
  * Utility-Function for the application.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 object Utils {
     /**
@@ -30,7 +30,7 @@ object Utils {
      * @return The color as integer, that is associated with the given id.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun getColorFromAttr(@AttrRes attrColor:Int, theme: Resources.Theme, typedValue: TypedValue= TypedValue(), resolveRes:Boolean=true):Int{
         theme.resolveAttribute(attrColor,typedValue,resolveRes)
@@ -51,7 +51,7 @@ object Utils {
      * @return The content of the textfile as string
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun readTextFile(context: Context,@RawRes textResource:Int): String {
         val _is = context.resources.openRawResource(textResource)

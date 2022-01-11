@@ -26,7 +26,7 @@ import android.view.View
 /**
  * Custom OnItemTouchListener for the recyclerview.
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class RecyclerItemClickListener(
     context: Context?, //überprüfung welches item geklickt wurde
@@ -45,7 +45,7 @@ class RecyclerItemClickListener(
      * @param[e] Information about the touchevent.
      * @return Returns always false.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see RecyclerView.OnItemTouchListener.onInterceptTouchEvent
      * @see RecyclerView.OnItemTouchListener
      */
@@ -62,7 +62,7 @@ class RecyclerItemClickListener(
      * @param[view] The recyclerview, which is attatched.
      * @param[motionEvent] MotionEvent describing the touch event. All coordinates are in the RecyclerView's coordinate system.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see RecyclerView.OnItemTouchListener.onTouchEvent
      */
     override fun onTouchEvent(view: RecyclerView, motionEvent: MotionEvent) {}
@@ -71,7 +71,7 @@ class RecyclerItemClickListener(
      * Overrides the [RecyclerView.OnItemTouchListener.onRequestDisallowInterceptTouchEvent] of the [RecyclerView.OnItemTouchListener]-Class.
      * @param[disallowIntercept] True if the child does not want the parent to intercept touch events.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see RecyclerView.OnItemTouchListener.onRequestDisallowInterceptTouchEvent
      */
     override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}

@@ -55,7 +55,7 @@ import java.lang.Runnable
 /**
  * Class to maintain the view for all exams. Requests information about exams and fills the recyclerview with them.
  *
- * @since 1.5
+ * @since 1.6
  * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
  */
 class Terminefragment : Fragment() {
@@ -114,7 +114,7 @@ class Terminefragment : Fragment() {
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
-     * @since 1.5
+     * @since 1.6
      *
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
@@ -149,7 +149,7 @@ class Terminefragment : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreateView
      */
@@ -165,7 +165,7 @@ class Terminefragment : Fragment() {
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onViewCreated
      */
@@ -211,7 +211,7 @@ class Terminefragment : Fragment() {
      * This Method is called when the fragment gets destroyed. Its the last called Method in the Fragment-Lifecycle.
      * It needs to remove the Filter-Callback from the table.kt-class so it will no longer update when the filter is changed.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onDestroy
      */
@@ -231,7 +231,7 @@ class Terminefragment : Fragment() {
      * This Method checks, if the user already gave permission to access the Calendar,
      * if not, he is ask to do so.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun getCalendarPermission() {
@@ -254,7 +254,7 @@ class Terminefragment : Fragment() {
      * @param[callbackId] Id of Permission which called function
      * @param[permissionsId] List of permissions that need to be requested
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun checkPermission(callbackId: Int, vararg permissionsId: String) {
@@ -279,7 +279,7 @@ class Terminefragment : Fragment() {
      *
      * @param[dateToFormat] The Number that needs to be formatted
      * @return The formatted date
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun formatDate(dateToFormat: String): String {
@@ -298,7 +298,7 @@ class Terminefragment : Fragment() {
     /**
      * Initializes the Recyclerview which shows the information about pending exams.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun initRecyclerview() {
@@ -390,7 +390,7 @@ class Terminefragment : Fragment() {
      * Can change the data in the recyclerview and the currentExamPeriod
      * Shows a progressbar while loading the data.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun updateDataFromServer() {
@@ -426,7 +426,7 @@ class Terminefragment : Fragment() {
     /**
      * Updates the Room-Database. Checks if entries have to be removed or have to be loaded from the server.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun updateRoomDatabase() {
@@ -456,7 +456,7 @@ class Terminefragment : Fragment() {
      * Returns a list of unknown courses that need to be updated
      *
      * @return A JSON-Array of courses that need to be updated.
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun getUnknownCourseIds(): JSONArray {
@@ -500,7 +500,7 @@ class Terminefragment : Fragment() {
     /**
      * Checks for a new exam period and updates the exam-data if necessary.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     //TODO Shorten
@@ -674,7 +674,7 @@ class Terminefragment : Fragment() {
      * Returns a list of all examperiods in the database.
      *
      * @return a JSONArray with all examperiods containing information. The Json-Objects contain data about the first day of the period, the semester (WiSe or SoSe), first or second period, weeknumber and faculty.
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun getPruefperiondenObjects(): JSONArray {
@@ -733,7 +733,7 @@ class Terminefragment : Fragment() {
     /**
      * Gets the Entries from the Room-Database and adds them to the Recyclerview.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun createView() {
@@ -799,7 +799,7 @@ class Terminefragment : Fragment() {
     /**
      * Sets the text for the current period with content from shared preferences
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun setPruefungszeitraum() {
@@ -819,7 +819,7 @@ class Terminefragment : Fragment() {
     /**
      * Refreshes the Recyclerview with new Filteroptions. It is appended to the Filter.onFilterChangedListener.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see MainActivity.Filter
      * @see MainActivity.Filter.onFilterChangedListener
@@ -834,7 +834,7 @@ class Terminefragment : Fragment() {
     /**
      * Enables the functionality to swipe an entity from the recyclerview to favor or delete it
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     // Start Merlin Gürtler

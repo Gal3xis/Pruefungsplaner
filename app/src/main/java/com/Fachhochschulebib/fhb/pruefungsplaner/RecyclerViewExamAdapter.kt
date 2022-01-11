@@ -35,7 +35,7 @@ import java.util.*
  * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  * @see RecyclerView.Adapter
  * @see RecyclerView
  */
@@ -76,7 +76,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @return The [ViewHolder], that shows the information.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.onCreateViewHolder
      */
@@ -108,7 +108,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @param[position] The position of the item within the adapter's data set.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.onBindViewHolder
      */
@@ -162,7 +162,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @param[position] The position of the item in the Recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initFooter(
         splitDay: Array<String>,
@@ -192,7 +192,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @param[position] The position of the item in the Recyclerview.
      * @return The day the exam takes place.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun splitInDays(
         position: Int,
@@ -219,7 +219,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @param[position] The position of the item in the Recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun setIcons(
         position: Int,
@@ -297,7 +297,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @param[position] The position of the item in the Recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
         var selectedEntry: TestPlanEntry? = null
@@ -327,7 +327,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @param[position] The position of the item in the Recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun addToFavorites(position: Int, holder: ViewHolder) {
         var selectedEntry: TestPlanEntry? = null
@@ -364,7 +364,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @return true->The exam is a favorit;false->The exam is not a favorit.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun checkFavorite(position: Int): Boolean {
         try {
@@ -385,7 +385,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @return The amount of items in the recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.getItemCount
      */
@@ -405,7 +405,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * Type codes need not be contiguous.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.getItemViewType
      */
@@ -421,7 +421,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * Inner class [ViewHolder], that contains the references to the UI-Elements.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.ViewHolder
      */

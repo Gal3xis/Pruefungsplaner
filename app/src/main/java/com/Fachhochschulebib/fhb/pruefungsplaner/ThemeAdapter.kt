@@ -15,7 +15,7 @@ import androidx.annotation.NonNull
  * Displays the different themes with an icon, that shows the primary-and the accent color.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  *
  */
 class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>) :
@@ -54,7 +54,7 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
      * @return The spinnerrow, containing the initialized UI-Elements.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun view(view: View?, position: Int): View {
         val image = view?.findViewById<View>(R.id.layout_theme_spinner_row_image)

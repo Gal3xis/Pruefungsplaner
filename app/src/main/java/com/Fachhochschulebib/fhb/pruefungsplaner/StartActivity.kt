@@ -19,6 +19,13 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.R.attr.colorOnPrimary
 import com.Fachhochschulebib.fhb.pruefungsplaner.Utils.getColorFromAttr
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -54,11 +61,20 @@ import kotlinx.coroutines.launch
  * Activity, that allows the user to pick a faculty and select courses.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class StartActivity() : AppCompatActivity() {
     var mAdapter: CheckListAdapter? = null
 
+    private var updateManager:AppUpdateManager? = null
+    private val UPDATE_REQUEST_CODE = 100
+    private val installStateUpdateListener:InstallStateUpdatedListener = InstallStateUpdatedListener {
+        if(it.installStatus()== InstallStatus.DOWNLOADED){
+            Snackbar.make(findViewById(android.R.id.content),"Update is ready",Snackbar.LENGTH_INDEFINITE).setAction("Install") {
+                updateManager?.completeUpdate()
+            }.show()
+        }
+    }
 
     //KlassenVariablen
     private var courseMain: String? = null
@@ -90,7 +106,7 @@ class StartActivity() : AppCompatActivity() {
      * @param[choosenCourse] The course that is supposed to be the mein course.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun addMainCourse(choosenCourse: String?) {
         if (database == null) {
@@ -130,12 +146,15 @@ class StartActivity() : AppCompatActivity() {
      * @param[data] – An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see AppCompatActivity.onActivityResult
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode==UPDATE_REQUEST_CODE&&resultCode!= RESULT_OK){
+
+        }
         if (resultCode == 0) {
             finish()
         }
@@ -146,7 +165,7 @@ class StartActivity() : AppCompatActivity() {
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      *
-     * @since 1.5
+     * @since 1.6
      *
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
@@ -161,6 +180,16 @@ class StartActivity() : AppCompatActivity() {
 
         database = AppDatabase.getAppDatabase(baseContext)
         initSharedPreferences()
+
+        updateManager = AppUpdateManagerFactory.create(this)
+        updateManager?.appUpdateInfo?.addOnSuccessListener {
+            if(it.updateAvailability()==UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
+            {
+                updateManager?.startUpdateFlowForResult(it,AppUpdateType.FLEXIBLE,this,UPDATE_REQUEST_CODE)
+            }
+        }
+        updateManager?.registerListener(installStateUpdateListener)
+
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
@@ -210,11 +239,25 @@ class StartActivity() : AppCompatActivity() {
         }
     }
 
+
+    /**
+     * Called when the app is stopped.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see AppCompatActivity.onStop
+     */
+    override fun onStop() {
+        updateManager?.unregisterListener(installStateUpdateListener)
+        super.onStop()
+    }
+
     /**
      * Initializes the sharedPrefernces and the parameter which are attatched to them.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initSharedPreferences() {
         mSharedPreferencesValidation =
@@ -245,7 +288,7 @@ class StartActivity() : AppCompatActivity() {
      * Equalizes the Room-Database with the Webserver.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initServer() {
         checkFaculties(serverAddress + relativePPlanURL + "entity.faculty")
@@ -280,7 +323,7 @@ class StartActivity() : AppCompatActivity() {
      * Shows a Toast for the case, that No connection to the server is available.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun noConnection() {
         Toast.makeText(
@@ -294,7 +337,7 @@ class StartActivity() : AppCompatActivity() {
      * Initializes the buttons of the UI.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initButtons() {
         runOnUiThread {
@@ -317,7 +360,7 @@ class StartActivity() : AppCompatActivity() {
      * @param[view] The view that calls this method.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun createAlertDialogSelectMainCourse(view: View) {
         val chooseCourse = AlertDialog.Builder(
@@ -383,7 +426,7 @@ class StartActivity() : AppCompatActivity() {
     /**
      * Creates a dialog that asks the user to select a faculty.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun createAlertDialogChooseFaculty() {
         val chooseFaculty = AlertDialog.Builder(
@@ -413,7 +456,7 @@ class StartActivity() : AppCompatActivity() {
      * @param[which] The index of the picked item.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun facultyChosen(faculties: Array<String?>, which: Int) {
         for (i in facultyName.indices) {
@@ -518,7 +561,7 @@ class StartActivity() : AppCompatActivity() {
      * @param[address] The address of the server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun checkFaculties(address: String?) {
         SCOPE_IO.launch {
@@ -554,7 +597,7 @@ class StartActivity() : AppCompatActivity() {
      * @param[address] The address of the server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      */
     private fun updateFaculties(address: String?) {

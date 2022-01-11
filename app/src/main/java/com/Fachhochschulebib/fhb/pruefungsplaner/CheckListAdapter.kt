@@ -25,7 +25,7 @@ import android.widget.CheckBox
  * Adapter-Class for the Recyclerview in the AddCourseFragment-Class
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  *
  * @see AddCourseFragment
  * @see RecyclerView.Adapter
@@ -49,7 +49,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * @return A new ViewHolder that holds a View of the given view type.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView
      * @see RecyclerView.Adapter
@@ -89,7 +89,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * @param[position] The position of the item within the adapter's data set.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView
      * @see RecyclerView.Adapter
@@ -116,7 +116,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      *
      * @return true if the course was set as favorite,false if the course is no longer a favorite.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun addFavorite(position: Int): Boolean {
         if (coursesList[position] != selectedCourse || globalVariable!!.isChangeFaculty) {
@@ -136,7 +136,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * @return the size of the courselist
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see RecyclerView
      * @see RecyclerView.Adapter
      * @see RecyclerView.Adapter.getItemCount
@@ -154,7 +154,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * @return integer value identifying the type of the view needed to represent the item at
      *                 <code>position</code>. Type codes need not be contiguous.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see RecyclerView
      * @see RecyclerView.Adapter
      * @see RecyclerView.Adapter.getItemViewType
@@ -169,7 +169,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * you provide access to all the views for a data item in a view holder
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case

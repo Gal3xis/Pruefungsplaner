@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
  * Class for the Fragment, where the user can see his selected exams.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  * @see Fragment
  */
 class Favoritenfragment : Fragment() {
@@ -60,7 +60,7 @@ class Favoritenfragment : Fragment() {
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
-     * @since 1.5
+     * @since 1.6
      *
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
@@ -76,7 +76,7 @@ class Favoritenfragment : Fragment() {
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onViewCreated
      */
@@ -104,7 +104,7 @@ class Favoritenfragment : Fragment() {
      * Initializes the recyclerview, that shows the selected courses.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun initRecyclerview() {
         recyclerView4?.setHasFixedSize(true)
@@ -119,7 +119,7 @@ class Favoritenfragment : Fragment() {
      * It recreates the recyclerview, so the user can see the new filtered items.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun OnFilterChanged() {
         createAdapter()
@@ -130,7 +130,7 @@ class Favoritenfragment : Fragment() {
      * and passes them into an adapter for the recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun createAdapter() {
         val courses: MutableList<String> = ArrayList()
@@ -179,7 +179,7 @@ class Favoritenfragment : Fragment() {
      * Removes the listener, when this fragment is not longer visible.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Fragment.onDestroy
      * @see MainActivity.Filter
      */
@@ -195,7 +195,7 @@ class Favoritenfragment : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreateView
      */
@@ -212,7 +212,7 @@ class Favoritenfragment : Fragment() {
      * so the user can swipe to delete an entry from the list.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     // Start Merlin Gürtler
     private fun enableSwipeToDelete() {

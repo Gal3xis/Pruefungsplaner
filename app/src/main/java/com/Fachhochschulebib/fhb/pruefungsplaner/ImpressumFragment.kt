@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.fragment_impressum.*
  * Fragment. that displays the impressum for the app.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class ImpressumFragment : Fragment() {
 
@@ -20,7 +20,7 @@ class ImpressumFragment : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the fragment_impressum-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange
      * @see Fragment.onCreateView
      */
@@ -41,7 +41,7 @@ class ImpressumFragment : Fragment() {
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
      * Sets the test of the impressum-textview
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange
      * @see Fragment.onViewCreated
      */

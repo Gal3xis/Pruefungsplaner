@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
  * Provides the possibility to swipe an Recyclerview-Item to save or delete it.
  *
  * @author Alexander Lange(Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 open class swipeListener internal constructor(var mContext: Context, delete: Boolean) :
         ItemTouchHelper.Callback() {

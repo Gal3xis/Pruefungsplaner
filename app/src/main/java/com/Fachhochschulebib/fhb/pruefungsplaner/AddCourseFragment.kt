@@ -32,7 +32,7 @@ import kotlinx.coroutines.launch
  * Class, that creates a list of all courses, from whom the user can decide,
  * which courses he wants to include in his exam-list.
  *
- * @since 1.5
+ * @since 1.6
  * @author Alexander Lange
  */
 class AddCourseFragment() : Fragment() {
@@ -54,7 +54,7 @@ class AddCourseFragment() : Fragment() {
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
-     * @since 1.5
+     * @since 1.6
      *
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
@@ -76,7 +76,7 @@ class AddCourseFragment() : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreateView
      */
@@ -92,7 +92,7 @@ class AddCourseFragment() : Fragment() {
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
 
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onViewCreated
      */
@@ -108,7 +108,7 @@ class AddCourseFragment() : Fragment() {
     /**
      * Initializes the OK, Button. Implements what happens when the user clicks Ok.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange
      */
     private fun initOkButton() {
@@ -143,7 +143,7 @@ class AddCourseFragment() : Fragment() {
     /**
      * Updates the Room-Database with data from the Server.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange
      */
     private fun updateDbEntries(){
@@ -211,7 +211,7 @@ class AddCourseFragment() : Fragment() {
      * Initializes the recyclerview. Obtains data from the Room-Database, creates an adapter and passes
      * it to the recyclerview.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange
      */
     private fun initRecyclerview() {

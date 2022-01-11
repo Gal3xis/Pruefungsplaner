@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.privacy_declaration.*
 /**
  * [Fragment], that shows the privacy-declaration.
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class PrivacyDeclarationFragment : Fragment() {
 
@@ -38,7 +38,7 @@ class PrivacyDeclarationFragment : Fragment() {
      * because the UI-Elements, which are directly accessed via synthetic imports
      * are no instantiated in the onCreate()-Method yet.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Fragment.onViewCreated
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +59,7 @@ class PrivacyDeclarationFragment : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the privacy_declaration-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreateView
      */

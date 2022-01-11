@@ -37,7 +37,7 @@ import java.lang.Exception
  * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  * @see RecyclerView.Adapter
  * @see RecyclerView
  */
@@ -69,7 +69,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @param[item] The item, that needs to be inserted.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun add(position: Int?, item: String) {
         notifyItemInserted(
@@ -83,7 +83,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @param[position] The position of the item that is to remove.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun remove(position: Int) {
         try {
@@ -105,7 +105,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @return The [ViewHolder], that shows the information.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.onCreateViewHolder
      */
@@ -141,7 +141,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @param[position] The position of the item within the adapter's data set.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.onBindViewHolder
      */
@@ -197,7 +197,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @param[position] The position of the item within the adapter's data set.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      */
     private fun displayExamInformation(
@@ -226,7 +226,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @return The amount of items in the recyclerview.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.Adapter.getItemCount
      */
@@ -243,7 +243,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @param[position] The position of the item, that is to delete.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun deleteItem(position: Int) {
         var selectedEntry: TestPlanEntry? = null
@@ -274,7 +274,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * Inner class [ViewHolder], that contains the references to the UI-Elements.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      *
      * @see RecyclerView.ViewHolder
      */

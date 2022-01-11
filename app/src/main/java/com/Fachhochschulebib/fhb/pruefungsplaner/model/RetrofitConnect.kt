@@ -28,7 +28,7 @@ import java.util.*
  * Interface for a connection to the REST-API and the Room-Database. Data is exchanged via JSON-Objects.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class RetrofitConnect(private val relativePPlanUrl: String) {
     var termine: String? = null
@@ -44,7 +44,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @return The formatted date for the [TestPlanEntry.date]
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun getDate(dateResponse: String): String {
         //Festlegen vom Dateformat
@@ -76,7 +76,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @return A String containing every course-ID
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun getIDs(roomData: AppDatabase): String {
         val Ids = roomData.userDao()?.getChoosenCourseId(true)
@@ -105,7 +105,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @return A [TestPlanEntry] containing the data of the [JsonResponse]
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun createTestplanEntry(entryResponse: JsonResponse): TestPlanEntry {
         val dateLastExamFormatted = getDate(entryResponse.date!!)
@@ -135,7 +135,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @return The updated [TestPlanEntry]
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun updateTestPlanEntry(
             entryResponse: JsonResponse,
@@ -167,7 +167,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[body] A list of [JsonResponse], containing data to store in the Room-Database.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun inserEntryToDatabase(
             roomData: AppDatabase,
@@ -233,7 +233,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[serverAdress] The address of the server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun RetrofitWebAccess(
             ctx: Context,
@@ -295,7 +295,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[serverAdress] The address of the server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun retroUpdate(
             ctx: Context,
@@ -345,7 +345,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[ctx] The context of the application.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun updateDatabase(response: Response<List<JsonResponse?>?>, roomData: AppDatabase, ctx: Context) {
         response.body()
@@ -400,7 +400,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[serverAdress] The address of the Web-Server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun firstStart(
             ctx: Context,
@@ -451,7 +451,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[serverAdress] The address of the Web-Server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun anotherStart(
             ctx: Context,
@@ -497,7 +497,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[text] The written feedbacktext of the user.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun sendFeedBack(
             ctx: Context,
@@ -550,7 +550,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[serverAdress] The address of the Web-Server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun getCourses(
             ctx: Context,
@@ -606,7 +606,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[serverAdress] The address of the Web-Server.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun setUserCourses(
             ctx: Context,
@@ -656,7 +656,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @param[courses] The courses, that shall be updated.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun UpdateUnkownCourses(
             ctx: Context,
@@ -718,7 +718,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
          * @param[testPlanEntry] The entry that shall be inserted into the Database.
          *
          * @author Alexander Lange
-         * @since 1.5
+         * @since 1.6
          */
         fun addUser(db: AppDatabase, testPlanEntry: TestPlanEntry?) {
             val existingEntry = db.userDao()?.getEntryById(testPlanEntry?.id)

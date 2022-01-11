@@ -17,7 +17,7 @@ import java.util.*
  * entries and also works with [TestPlanEntry]-Objects.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  *
  * **See Also:**[Android Calendar Intent-Tutorial](https://itnext.io/android-calendar-intent-8536232ecb38)
 
@@ -33,7 +33,7 @@ object GoogleCalendarIO {
      * **See Also:**[CalendarContract-Documentation](https://developer.android.com/reference/android/provider/CalendarContract)
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun createIntent(
         title: String? = "Unnamed",
@@ -66,7 +66,7 @@ object GoogleCalendarIO {
      * @return The intent to put into the Google Calendar
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun createIntent(context: Context, e: TestPlanEntry?): Intent {
         val cs = Calendar.getInstance()
@@ -100,7 +100,7 @@ object GoogleCalendarIO {
      * **See Also:**[CalendarContract-Documentation](https://developer.android.com/reference/android/provider/CalendarContract)
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun createEvent(
         title: String = "Unnamed",
@@ -133,7 +133,7 @@ object GoogleCalendarIO {
      * @return The event to put into the Google Calendar
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun createEvent(context: Context, e: TestPlanEntry?): ContentValues {
         val cs = Calendar.getInstance()
@@ -162,7 +162,7 @@ object GoogleCalendarIO {
      * any user confirmation. The defaulvalue is false.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun insertEntry(context: Context, e: TestPlanEntry, force: Boolean = false) {
         if (!context.getSharedPreferences("settings", Context.MODE_PRIVATE)
@@ -191,7 +191,7 @@ object GoogleCalendarIO {
      * any user confirmation. The defaulvalue is false.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun insertEntries(context: Context, list: List<TestPlanEntry?>, force: Boolean) {
         list.forEach {
@@ -208,7 +208,7 @@ object GoogleCalendarIO {
      * @param[event] The event to be inserted to the calendar.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun forceInsert(context: Context, event: ContentValues) {
         context.contentResolver?.insert(EVENTS_URI, event)
@@ -223,7 +223,7 @@ object GoogleCalendarIO {
      * @param[intent] An intent, containing the information to start the insertion process.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun indirectInsert(context: Context, intent: Intent) {
         if (intent.resolveActivity(context.packageManager) != null) {
@@ -239,7 +239,7 @@ object GoogleCalendarIO {
      * @param[e] The [TestPlanEntry] to be removed from the calendar.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun deleteEntry(context: Context, e: TestPlanEntry) {
         findEventSingle(context, e)?.let { deleteEntry(context, it) }
@@ -253,7 +253,7 @@ object GoogleCalendarIO {
      * @param[list] A list of [TestPlanEntry]-Objects that shall be removed from the calendar.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun deleteEntries(context: Context, list: List<TestPlanEntry?>) {
         list.forEach {
@@ -271,7 +271,7 @@ object GoogleCalendarIO {
      * @param[entryId] The id of the event to be removed.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun deleteEntry(context: Context, entryId: Long) {
         if (!context.getSharedPreferences("settings", Context.MODE_PRIVATE)
@@ -294,7 +294,7 @@ object GoogleCalendarIO {
      * @param[context] The application context.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun deleteAll(context: Context) {
         findEventIds(context).forEach {
@@ -310,7 +310,7 @@ object GoogleCalendarIO {
      * @return The list of ids
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun findEventIds(context: Context): List<Long> {
         val ret: MutableList<Long> = mutableListOf()
@@ -336,7 +336,7 @@ object GoogleCalendarIO {
      * @return The id of the event for the [TestPlanEntry].
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun findEventSingle(context: Context, entry: TestPlanEntry): Long? {
         val cursor = context.contentResolver?.query(
@@ -364,7 +364,7 @@ object GoogleCalendarIO {
      * @param[entries] The up-to-date list of entries to put into the calendar.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     fun update(context: Context,entries:List<TestPlanEntry?>){
         deleteAll(context)

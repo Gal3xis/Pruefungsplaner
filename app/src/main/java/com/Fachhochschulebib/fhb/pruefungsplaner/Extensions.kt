@@ -21,7 +21,7 @@ import kotlin.collections.ArrayList
  *
  * @param[value] The text, the spinner is showing at the wanted position.
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  * @see Spinner
  */
 fun Spinner.setSelection(value: String?) {
@@ -45,7 +45,7 @@ fun Spinner.setSelection(value: String?) {
  * @return A Formatted String, including the details for the exam.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  */
 fun TestPlanEntry.getString(context: Context):String?{
     val ret = StringBuilder()
@@ -78,7 +78,7 @@ fun TestPlanEntry.getString(context: Context):String?{
  * @return A String, that displays the label and the info.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  */
 private fun createStringWithLabel(context: Context,@StringRes label:Int,info:String?):String{
     return StringBuilder().append(context.getString(label)).append(info).toString()
@@ -92,7 +92,7 @@ private fun createStringWithLabel(context: Context,@StringRes label:Int,info:Str
  * @return true-> both dates are at the same day,false->both dates are not at the same day.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  * @see Date
  */
 fun Date.atDay(date: Date): Boolean {
@@ -112,7 +112,7 @@ fun Date.atDay(date: Date): Boolean {
 /** Applies Settings from sharedPreferences to the activity.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  *
  * @see Optionen
  */
@@ -144,7 +144,7 @@ fun AppCompatActivity.applySettings() {
  * @return The position, where the item was inserted.
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  */
 fun <E> MutableList<E>.add(position:Int?,item:E):Int{
     if(position==null){

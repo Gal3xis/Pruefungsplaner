@@ -44,7 +44,7 @@ import kotlinx.coroutines.launch
  * Class to maintain the Options-Fragment.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class Optionen() : Fragment() {
     private var save = false
@@ -78,7 +78,7 @@ class Optionen() : Fragment() {
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
-     * @since 1.5
+     * @since 1.6
      *
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
@@ -110,7 +110,7 @@ class Optionen() : Fragment() {
      * because the UI-Elements, which are directly accessed via synthetic imports
      * are no instantiated in the onCreate()-Method yet.
      *
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onViewCreated
      */
@@ -193,7 +193,7 @@ class Optionen() : Fragment() {
      * @param[active] If synchronization is active or not.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun setCalendarSynchro(active: Boolean) {
         val favorites: MutableList<TestPlanEntry?> = mutableListOf()
@@ -220,7 +220,7 @@ class Optionen() : Fragment() {
      * Deletes the stored favorits of the user from the Room-Database.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see AppDatabase
      */
     private fun deleteFavorits() {
@@ -252,7 +252,7 @@ class Optionen() : Fragment() {
      * with the default entries for the user.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see AppDatabase
      */
     private fun deleteInternalDatabase() {
@@ -293,7 +293,7 @@ class Optionen() : Fragment() {
      * @param[menu] The menu where the items should be displayed.
      * @param[inflater] The [MenuInflater] to inflate the actionmenu.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Fragment.onCreateOptionsMenu
      * @see Menu
      */
@@ -311,7 +311,7 @@ class Optionen() : Fragment() {
      * @param[item] The item, which was clicked by the user.
      * @return Return false to allow normal menu processing to proceed, true to consume it here.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Fragment.onOptionsItemSelected
      * @see MenuItem
      */
@@ -331,7 +331,7 @@ class Optionen() : Fragment() {
      * Initializes the darkmode-[Switch]. Get the previous selection from sharedpreferences and
      * pass them to the darkmode-[Switch].
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Switch
      */
     private fun initDarkModeSwitch() {
@@ -343,7 +343,7 @@ class Optionen() : Fragment() {
      * the styles.xml and passes them to a custom [ThemeAdapter], which is then passed to
      * the theme-[Spinner].
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see Theme
      * @see ThemeAdapter
      * @see Spinner
@@ -375,7 +375,7 @@ class Optionen() : Fragment() {
      * Save the current selected options and recreate the activity to change the theme and the darkmmode.
      *
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      */
     private fun save() {
         val editor = sharedPreferencesSettings?.edit()
@@ -399,7 +399,7 @@ class Optionen() : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the optionfragmnet-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreateView
      */
@@ -426,7 +426,7 @@ class Optionen() : Fragment() {
     /**
      * Updates the data for the exams, currently stored in the Room-Database.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see RetrofitConnect
      */
     fun updateCheckPlan() {
@@ -465,7 +465,7 @@ class Optionen() : Fragment() {
      * After success it updates the Room-Database.
      * @param[address] The address of the server to ping to.
      * @author Alexander Lange
-     * @since 1.5
+     * @since 1.6
      * @see updateCheckPlan
      */
     fun PingUrl(address: String?) {

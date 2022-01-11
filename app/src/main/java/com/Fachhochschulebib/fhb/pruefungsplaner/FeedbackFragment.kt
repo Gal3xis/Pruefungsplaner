@@ -38,7 +38,7 @@ import kotlinx.coroutines.launch
  * Lets the user give Feedback about the app.
  *
  * @author Alexander Lange (Email:alexander.lange@fh.bielefeld.de)
- * @since 1.5
+ * @since 1.6
  */
 class FeedbackFragment : Fragment() {
     val scope_io = CoroutineScope(CoroutineName("IO-Scope")+Dispatchers.IO)
@@ -52,7 +52,7 @@ class FeedbackFragment : Fragment() {
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
-     * @since 1.5
+     * @since 1.6
      *
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
@@ -67,7 +67,7 @@ class FeedbackFragment : Fragment() {
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
 
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onViewCreated
      */
@@ -106,7 +106,7 @@ class FeedbackFragment : Fragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
      *
      * @return Returns the initialized view of this Fragment
-     * @since 1.5
+     * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      * @see Fragment.onCreateView
      */

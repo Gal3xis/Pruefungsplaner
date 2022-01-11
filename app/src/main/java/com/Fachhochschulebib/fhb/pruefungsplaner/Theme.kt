@@ -9,7 +9,7 @@ import androidx.annotation.StyleableRes
  * Class to store data for a Theme
  *
  * @author Alexander Lange
- * @since 1.5
+ * @since 1.6
  */
 class Theme (resId:Int?,view:View?){
     var name:String? = null
