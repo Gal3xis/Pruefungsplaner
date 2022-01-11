@@ -153,7 +153,7 @@ class StartActivity() : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode==UPDATE_REQUEST_CODE&&resultCode!= RESULT_OK){
-
+            Toast.makeText(this,"Cancel",Toast.LENGTH_LONG).show()
         }
         if (resultCode == 0) {
             finish()
