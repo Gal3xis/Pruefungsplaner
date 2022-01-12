@@ -735,8 +735,8 @@ class Terminefragment : Fragment() {
      */
     fun setPruefungszeitraum() {
         val sdf_read = SimpleDateFormat("dd/MM/yyyy")
-        val start = sdf_read.parse(mSharedPreferencesPPeriode?.getString("startDate", "0"))
-        val end = sdf_read.parse(mSharedPreferencesPPeriode?.getString("endDate", "0"))
+        val start = sdf_read.parse(mSharedPreferencesPPeriode?.getString("startDate", sdf_read.format(Calendar.getInstance().time)))
+        val end = sdf_read.parse(mSharedPreferencesPPeriode?.getString("endDate", sdf_read.format(Calendar.getInstance().time)))
 
         val sdf_write = SimpleDateFormat("dd.MM.yyyy")
 

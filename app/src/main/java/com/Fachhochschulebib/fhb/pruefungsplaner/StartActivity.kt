@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.work.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.R.attr.colorOnPrimary
 import com.Fachhochschulebib.fhb.pruefungsplaner.Utils.getColorFromAttr
 import com.google.android.material.snackbar.Snackbar
@@ -45,7 +46,7 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-
+import java.util.concurrent.TimeUnit
 //Alexander Lange End
 
 //////////////////////////////
@@ -65,15 +66,7 @@ import kotlinx.coroutines.launch
 class StartActivity() : AppCompatActivity() {
     var mAdapter: CheckListAdapter? = null
 
-    private var updateManager:AppUpdateManager? = null
-    private val UPDATE_REQUEST_CODE = 100
-    private val installStateUpdateListener:InstallStateUpdatedListener = InstallStateUpdatedListener {
-        if(it.installStatus()== InstallStatus.DOWNLOADED){
-            Snackbar.make(findViewById(android.R.id.content),"Update is ready",Snackbar.LENGTH_INDEFINITE).setAction("Install") {
-                updateManager?.completeUpdate()
-            }.show()
-        }
-    }
+
 
     //KlassenVariablen
     private var courseMain: String? = null
@@ -136,29 +129,33 @@ class StartActivity() : AppCompatActivity() {
         }
     }
 
-    // Schließt die App beim BackButton
+    private val updateWorkerName = "updateWorker"
+
     /**
-     * Dispatch incoming result to the correct fragment.
+     * Sets a backgroundservice, that enables the application to check for changes in the Examplan-database in a specified interval.
      *
-     * @param[requestCode] – The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
-     * @param[resultCode] – The integer result code returned by the child activity through its setResult().
-     * @param[data] – An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     * @see AppCompatActivity.onActivityResult
+     * **See Also:**[PeriodicWorkRequest](https://developer.android.com/reference/androidx/work/PeriodicWorkRequest)
+     * **See Also:**[Define work requests](https://developer.android.com/topic/libraries/architecture/workmanager/how-to/define-work#schedule_periodic_work)
+     * **See Also:**[Guide to background work](https://developer.android.com/guide/background)
+     * **See Also:**[Youtube](https://www.youtube.com/watch?v=pe_yqM16hPQ)
      */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==UPDATE_REQUEST_CODE&&resultCode!= RESULT_OK){
-            Toast.makeText(this,"Cancel",Toast.LENGTH_LONG).show()
-        }
-        if (resultCode == 0) {
-            finish()
-        }
+    private fun initPeriodicRequests(){
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+        val checkRequest = PeriodicWorkRequestBuilder<CheckForDatabaseUpdateWorker>(((sharedPreferencesSettings?.getInt("update_intervall_time_hour",0)?:0)*60+(sharedPreferencesSettings?.getInt("update_intervall_time_minute",15)?:15)).toLong(),TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+
+        context?.let { WorkManager.getInstance(it).enqueueUniquePeriodicWork(updateWorkerName,ExistingPeriodicWorkPolicy.KEEP,checkRequest) }
     }
 
+    /**
+     * Removes the check for Database-updates from the WorkManager.
+     */
+    private fun removePeriodicRequest(){
+        context?.let { WorkManager.getInstance(it).cancelUniqueWork(updateWorkerName) }
+    }
 
     // Ende Merlin Gürtler
     /**
@@ -178,21 +175,19 @@ class StartActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
         context = baseContext
+        if(sharedPreferencesSettings?.getBoolean("auto_updates",false) == true){
+            initPeriodicRequests()
+        }else
+        {
+            removePeriodicRequest()
+        }
         PushService.createNotificationChannel(this)
 
-        context?.let { PushService.sendNotification(it,"Test") }//TODO REMOVE
+        //context?.let { PushService.sendNotification(it,"Test") }//TODO REMOVE
 
         database = AppDatabase.getAppDatabase(baseContext)
         initSharedPreferences()
 
-        updateManager = AppUpdateManagerFactory.create(this)
-        updateManager?.appUpdateInfo?.addOnSuccessListener {
-            if(it.updateAvailability()==UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
-            {
-                updateManager?.startUpdateFlowForResult(it,AppUpdateType.FLEXIBLE,this,UPDATE_REQUEST_CODE)
-            }
-        }
-        updateManager?.registerListener(installStateUpdateListener)
 
 
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -246,18 +241,6 @@ class StartActivity() : AppCompatActivity() {
     }
 
 
-    /**
-     * Called when the app is stopped.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     * @see AppCompatActivity.onStop
-     */
-    override fun onStop() {
-        updateManager?.unregisterListener(installStateUpdateListener)
-        super.onStop()
-    }
 
     /**
      * Initializes the sharedPrefernces and the parameter which are attatched to them.
