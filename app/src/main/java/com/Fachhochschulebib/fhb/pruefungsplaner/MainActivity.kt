@@ -251,7 +251,6 @@ class MainActivity : AppCompatActivity() {
             for (i in onExaminerChangedListener) {
                 i.invoke()
             }
-
         }
 
         /**
@@ -265,7 +264,6 @@ class MainActivity : AppCompatActivity() {
             for (i in onSemesterChangedListener) {
                 i.invoke()
             }
-
         }
 
         /**
@@ -820,6 +818,19 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Initializes the checkboxes in the filter, which lets the user select one or more semester to filter from.
+     *
+     * @param[c1] The checkbox for the first semester.
+     * @param[c2] The checkbox for the second semester.
+     * @param[c3] The checkbox for the third semester.
+     * @param[c4] The checkbox for the fourth semester.
+     * @param[c5] The checkbox for the fifth semester.
+     * @param[c6] The checkbox for the sixth semester.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initFIlterCheckboxes(c1: CheckBox, c2: CheckBox, c3: CheckBox, c4: CheckBox, c5: CheckBox, c6: CheckBox) {
         initFilterCheckbox(c1, 1)
         initFilterCheckbox(c2, 2)

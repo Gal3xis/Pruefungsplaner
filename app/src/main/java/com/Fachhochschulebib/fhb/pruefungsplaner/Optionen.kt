@@ -201,6 +201,7 @@ class Optionen() : Fragment() {
             val editor = sharedPreferencesSettings?.edit()
             editor?.putBoolean("auto_updates",isChecked)
             editor?.apply()
+            context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
 
         setIntervallTime()
@@ -222,6 +223,7 @@ class Optionen() : Fragment() {
             val editor = sharedPreferencesSettings?.edit()
             editor?.putBoolean("notification_sounds",isChecked)
             editor?.apply()
+            context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
     }
 
@@ -231,6 +233,7 @@ class Optionen() : Fragment() {
         editor?.putInt("update_intervall_time_minute", minute)
         editor?.apply()
         optionenfragment_auto_updates_intervall_button.text = "%s%02d:%02d".format(resources.getString(R.string.optionenfragment_auto_updates_intervall_text),hour,minute)
+        context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
     }
 
     /**
