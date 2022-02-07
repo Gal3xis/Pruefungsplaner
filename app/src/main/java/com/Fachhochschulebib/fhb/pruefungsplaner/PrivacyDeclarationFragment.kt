@@ -43,7 +43,7 @@ class PrivacyDeclarationFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        privacyDeclarationText.text = context?.let { Utils.readTextFile(it,R.raw.privacy_declarement) }
         privacyDeclarationButton.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
             ft?.replace(R.id.frame_placeholder, Optionen())

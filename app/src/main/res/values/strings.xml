@@ -136,6 +136,7 @@
     <string name="optionenfragment_save_btn_text">Speichern</string>
     <string name="choose_course_all_btn_text">Alle</string>
     <string name="optionenfragment_impressum_text">Impressum</string>
+    <string name="optionenfragment_about_text">Über</string>
 
 
     <string-array name="TestArray">
@@ -150,4 +151,11 @@
         <item>Entry 9</item>
         <item>Entry 10</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="optionfragment_header_updates">Updates</string>
+    <string name="optionenfragment_auto_updates_switch_text">Im Hintergrund nach Prüfplanänderungen suchen</string>
+    <string name="optionenfragment_auto_updates_intervall_text">Updateintervall:</string>
+    <string name="optionenfragment_auto_updates_intervall_button">Intervall</string>
+    <string name="optionenfragment_auto_updates_notificationsound_text">Benachrichtigungssound</string>
 </resources>

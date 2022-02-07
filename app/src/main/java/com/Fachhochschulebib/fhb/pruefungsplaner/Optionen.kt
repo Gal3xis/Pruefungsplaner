@@ -1,5 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
+import android.app.TimePickerDialog
 import android.content.SharedPreferences
 import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
@@ -23,6 +24,7 @@ import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.sql.Time
 
 
 //////////////////////////////
@@ -119,6 +121,7 @@ class Optionen() : Fragment() {
 
         initThemeSpinner()
         initDarkModeSwitch()
+        initUpdateSettings()
 
         //Button zum updaten der Prüfungen
         btnupdate?.setOnClickListener {
@@ -141,15 +144,22 @@ class Optionen() : Fragment() {
 
         privacyDeclaration.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
-            header?.title = "Privacy"
+            header?.title = "Privacy"//TODO Extract
             ft?.replace(R.id.frame_placeholder, PrivacyDeclarationFragment())
             ft?.commit()
         }
 
         optionenfragment_impressum?.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
-            header?.title = "Impressum"
+            header?.title = "Impressum"//TODO Extract
             ft?.replace(R.id.frame_placeholder, ImpressumFragment())
+            ft?.commit()
+        }
+
+        optionenfragment_about?.setOnClickListener {
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            header?.title = "Über"//TODO Extract
+            ft?.replace(R.id.frame_placeholder, AboutFragment())
             ft?.commit()
         }
 
@@ -183,6 +193,47 @@ class Optionen() : Fragment() {
         btnFav.setOnClickListener { deleteFavorits() }
 
         optionenfragment_save_btn.setOnClickListener { save() }
+    }
+
+    private fun initUpdateSettings(){
+        optionenfragment_auto_updates.isChecked = sharedPreferencesSettings?.getBoolean("auto_updates",false)?:false
+        optionenfragment_auto_updates.setOnCheckedChangeListener{_,isChecked->
+            val editor = sharedPreferencesSettings?.edit()
+            editor?.putBoolean("auto_updates",isChecked)
+            editor?.apply()
+            context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
+        }
+
+        setIntervallTime()
+        optionenfragment_auto_updates_intervall_button.setOnClickListener {
+            TimePickerDialog(context, 3,{ _, hour, minute ->
+                var _minute = minute
+                if(hour==0&&_minute<15){
+                    _minute = 15
+                    Toast.makeText(context,"15 Minutes is minimum",Toast.LENGTH_SHORT).show()
+                }
+                setIntervallTime(hour,_minute)
+
+            },sharedPreferencesSettings?.getInt("update_intervall_time_hour",0)?:0,sharedPreferencesSettings?.getInt("update_intervall_time_minute",15)?:15,true)
+                    .show()
+        }
+
+        optionenfragment_auto_updates_notificationsound.isChecked = sharedPreferencesSettings?.getBoolean("notification_sounds",false)?:false
+        optionenfragment_auto_updates_notificationsound.setOnCheckedChangeListener{_,isChecked->
+            val editor = sharedPreferencesSettings?.edit()
+            editor?.putBoolean("notification_sounds",isChecked)
+            editor?.apply()
+            context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
+        }
+    }
+
+    private fun setIntervallTime(hour:Int=sharedPreferencesSettings?.getInt("update_intervall_time_hour",0)?:0,minute:Int=sharedPreferencesSettings?.getInt("update_intervall_time_minute",15)?:15){
+        val editor = sharedPreferencesSettings?.edit()
+        editor?.putInt("update_intervall_time_hour", hour)
+        editor?.putInt("update_intervall_time_minute", minute)
+        editor?.apply()
+        optionenfragment_auto_updates_intervall_button.text = "%s%02d:%02d".format(resources.getString(R.string.optionenfragment_auto_updates_intervall_text),hour,minute)
+        context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
     }
 
     /**

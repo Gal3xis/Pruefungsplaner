@@ -5,7 +5,10 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.media.RingtoneManager
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import java.util.*
@@ -35,6 +38,7 @@ object PushService {
                 .setContentText(message?:"")
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(pendingIntent)
+                .setSilent(!(context.getSharedPreferences("settings",Context.MODE_PRIVATE)?.getBoolean("notification_sounds",false)?:false))
 
         with(NotificationManagerCompat.from(context))
         {

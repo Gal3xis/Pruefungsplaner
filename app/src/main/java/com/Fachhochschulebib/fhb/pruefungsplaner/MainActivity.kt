@@ -36,6 +36,13 @@ import java.util.*
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.SearchAutoComplete
 import androidx.core.view.get
+import com.google.android.material.snackbar.Snackbar
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 
 //Alexander Lange End
 
@@ -244,7 +251,6 @@ class MainActivity : AppCompatActivity() {
             for (i in onExaminerChangedListener) {
                 i.invoke()
             }
-
         }
 
         /**
@@ -258,7 +264,6 @@ class MainActivity : AppCompatActivity() {
             for (i in onSemesterChangedListener) {
                 i.invoke()
             }
-
         }
 
         /**
@@ -362,6 +367,65 @@ class MainActivity : AppCompatActivity() {
     val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
     val scope_ui = CoroutineScope(CoroutineName("UI-Scope") + Dispatchers.Main)
 
+    private var updateManager: AppUpdateManager? = null
+    private val UPDATE_REQUEST_CODE = 100
+    private val installStateUpdateListener: InstallStateUpdatedListener = InstallStateUpdatedListener {
+        if(it.installStatus()== InstallStatus.PENDING){
+            Snackbar.make(findViewById(android.R.id.content),"Update is ready", Snackbar.LENGTH_INDEFINITE).setAction("Install") {
+                updateManager?.completeUpdate()
+            }.show()
+        }
+    }
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param[requestCode] – The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param[resultCode] – The integer result code returned by the child activity through its setResult().
+     * @param[data] – An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see AppCompatActivity.onActivityResult
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == 0) {
+            finish()
+        }
+    }
+
+    override fun onResume() {
+        updateManager?.appUpdateInfo?.addOnSuccessListener {
+            if(it.updateAvailability()== UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS)
+            {
+                try {
+
+                    Log.d("VersionCode",it.availableVersionCode().toString())
+                    updateManager?.startUpdateFlowForResult(it, AppUpdateType.IMMEDIATE,this,UPDATE_REQUEST_CODE)
+                }catch (ex:Exception){
+                    Log.e("UpdatingService",ex.stackTraceToString())
+                }
+            }
+        }
+        super.onResume()
+    }
+
+    /**
+     * Called when the app is stopped.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see AppCompatActivity.onStop
+     */
+    override fun onStop() {
+        updateManager?.unregisterListener(installStateUpdateListener)
+        super.onStop()
+    }
+
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      *
@@ -375,6 +439,22 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.hauptfenster)
+
+        updateManager = AppUpdateManagerFactory.create(this)
+        updateManager?.appUpdateInfo?.addOnSuccessListener {
+            if(it.updateAvailability()== UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE))
+            {
+                try {
+
+                    Log.d("VersionCode",it.availableVersionCode().toString())
+                    updateManager?.startUpdateFlowForResult(it, AppUpdateType.IMMEDIATE,this,UPDATE_REQUEST_CODE)
+                }catch (ex:Exception){
+                    Log.e("UpdatingService",ex.stackTraceToString())
+                }
+            }
+        }
+        //updateManager?.registerListener(installStateUpdateListener)
+
 
         sharedPrefsFaculty = getSharedPreferences("faculty", Context.MODE_PRIVATE)
         mSharedPreferencesValidation = getSharedPreferences("validation", Context.MODE_PRIVATE)
@@ -738,6 +818,19 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Initializes the checkboxes in the filter, which lets the user select one or more semester to filter from.
+     *
+     * @param[c1] The checkbox for the first semester.
+     * @param[c2] The checkbox for the second semester.
+     * @param[c3] The checkbox for the third semester.
+     * @param[c4] The checkbox for the fourth semester.
+     * @param[c5] The checkbox for the fifth semester.
+     * @param[c6] The checkbox for the sixth semester.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initFIlterCheckboxes(c1: CheckBox, c2: CheckBox, c3: CheckBox, c4: CheckBox, c5: CheckBox, c6: CheckBox) {
         initFilterCheckbox(c1, 1)
         initFilterCheckbox(c2, 2)

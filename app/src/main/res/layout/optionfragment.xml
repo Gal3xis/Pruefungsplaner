@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     android:layout_marginTop="51dp"
     android:layout_marginBottom="50dp"
+    android:background="?attr/colorBackground"
     android:minHeight="140dp"
     android:screenOrientation="portrait"
-    tools:layout_editor_absoluteY="81dp"
-    android:background="?attr/colorBackground"
-    >
+    tools:layout_editor_absoluteY="81dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,8 +37,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/optionfragment_header_design"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="20sp" />
 
 
                 <ImageView
@@ -101,8 +99,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/optionfragment_header_calendar"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="20sp" />
 
 
                 <ImageView
@@ -145,8 +142,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/optionfragment_header_pruefungen"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="20sp" />
 
 
                 <ImageView
@@ -171,7 +167,51 @@
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_act_fav" />
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/optionfragment_header_updates"
+                    android:textColor="?attr/colorOnBackground"
+                    android:textSize="20sp" />
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:src="@drawable/dotted_line"
+                    app:tint="?attr/colorOnBackground" />
+            </LinearLayout>
+
+            <Switch
+                android:id="@+id/optionenfragment_auto_updates"
+                style="@style/OptionenFragment.Entry"
+                android:text="@string/optionenfragment_auto_updates_switch_text"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Button
+                android:id="@+id/optionenfragment_auto_updates_intervall_button"
+                style="@style/OptionenFragment.Entry"
+                android:text = "@string/optionenfragment_auto_updates_intervall_button"
+                tools:text="Intervall:10min"
+                />
+
+            <Switch
+                android:id="@+id/optionenfragment_auto_updates_notificationsound"
+                style="@style/OptionenFragment.Entry"
+                android:text="@string/optionenfragment_auto_updates_notificationsound_text"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -190,8 +230,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/optionfragment_header_about"
                     android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp"
-                    />
+                    android:textSize="20sp" />
 
 
                 <ImageView
@@ -212,15 +251,19 @@
                 android:text="@string/optionenfragment_impressum_text" />
 
             <Button
+                android:id="@+id/optionenfragment_about"
+                style="@style/OptionenFragment.Entry"
+                android:text="@string/optionenfragment_about_text" />
+
+            <Button
                 android:id="@+id/optionenfragment_save_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:background="@drawable/button_rounded_corners"
                 android:backgroundTint="?attr/colorAccent"
-                android:textColor="?attr/colorOnAccent"
                 android:text="@string/optionenfragment_save_btn_text"
-                />
+                android:textColor="?attr/colorOnAccent" />
         </LinearLayout>
     </ScrollView>
 
