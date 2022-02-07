@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.ProgressDialog
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
-import android.widget.TextView
 import android.content.SharedPreferences
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
@@ -12,7 +11,6 @@ import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import org.json.XML
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.core.content.ContextCompat
@@ -325,49 +323,7 @@ class Terminefragment : Fragment() {
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
         mLayout = recyclerView4?.layoutManager
-        //AdapterPassed() TODO REMOVE
 
-//        recyclerView4?.addOnItemTouchListener(
-//            RecyclerItemClickListener(
-//                activity,
-//                object : RecyclerItemClickListener.OnItemClickListener {
-//                    override fun onItemClick(view: View?, position: Int) {
-//                        val viewItem = recyclerView4?.layoutManager?.findViewByPosition(position)
-//                        val layout1 =
-//                            viewItem?.findViewById<View>(R.id.linearLayout) as LinearLayout
-//                        layout1.setOnClickListener { v1: View? ->
-//                            val txtSecondScreen =
-//                                view!!.findViewById<View>(R.id.txtSecondscreen) as TextView
-//                            Log.e("@@@@@", "" + position)
-//                            if (txtSecondScreen.visibility == View.VISIBLE) {
-//                                txtSecondScreen.visibility = View.GONE
-//                                checkList[position] = false
-//                            } else {
-//                                for (i in 0 until (recyclerView4?.childCount ?: 0)) {
-//                                    val holder =
-//                                        recyclerView4?.layoutManager?.findViewByPosition(i)
-//                                    // Try and Catch, da die App crasht
-//                                    // wenn das Element nicht im View Port ist
-//                                    try {
-//                                        val txtSecondScreen2 =
-//                                            holder?.findViewById<View>(R.id.txtSecondscreen) as TextView
-//                                        if (txtSecondScreen2?.visibility == View.VISIBLE) {
-//                                            txtSecondScreen2?.visibility = View.GONE
-//                                        }
-//                                    } catch (e: Exception) {
-//                                        Log.d("ERROR", "NOT IN VIEW PORT $e")
-//                                    }
-//                                }
-//                                // Ende Merlin Gürtler
-//                                txtSecondScreen.visibility = View.VISIBLE
-//                                txtSecondScreen.text = mAdapter?.giveString(position)
-//                                // Start Merlin Gürtler
-//                            }
-//                        }
-//                        //TODO CHECK REMOVE positionOld = position
-//                    }
-//                })
-//        )
         // Start Merlin Gürtler
         recyclerView4?.addOnChildAttachStateChangeListener(object :
             OnChildAttachStateChangeListener {
@@ -461,7 +417,7 @@ class Terminefragment : Fragment() {
      */
     private fun getUnknownCourseIds(): JSONArray {
         var ret = JSONArray()
-        val courses = database?.userDao()?.allCourses
+        val courses = database?.userDao()?.getAllCourses()
 
         if (courses != null) {
             //Durchlaufe alle Kurse
@@ -476,7 +432,7 @@ class Terminefragment : Fragment() {
                         // lösche nicht die Einträge der gewählten Studiengänge und Favorit
                         val toDelete =
                             database?.userDao()?.getEntriesByCourseName(courseName, false)
-                        database?.userDao()?.deleteEntry(toDelete)
+                        database?.userDao()?.deleteEntries(toDelete)
                     }
                     //Prüfe ob Kurs ausgewählt ist und nur unfavorisierte Einträge enthält. Falls ja, füge
                     //Ihn zu den zu aktualisierenden Kursen hinzu
@@ -638,9 +594,9 @@ class Terminefragment : Fragment() {
         val currentExamineYearThread =
             mSharedPreferencesExamineYear?.getString("currentTermin", "0")
         sleepTime = if ((database?.userDao()?.getEntriesByCourseName(courseMain)?.size == 0
-            || currentExamineYearThread != database?.userDao()?.termin)&&database?.userDao()?.getFavorites(true)?.size==0
+            || currentExamineYearThread != database?.userDao()?.getTermin)&&database?.userDao()?.getFavorites(true)?.size==0
         ) {
-            database?.userDao()?.deleteTestPlanEntryAll()
+            database?.userDao()?.deleteAllEntries()
             retrofit.RetrofitWebAccess(
                 this@Terminefragment.context!!,
                 database!!,
@@ -753,8 +709,7 @@ class Terminefragment : Fragment() {
             returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
             validation = examineYear + returnCourse + currentExaminePeriod
             //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
-            val ppeList = database?.userDao()?.allEntries
-            Log.d("validation", ppeList?.size.toString())//TODO REMVOE
+            val ppeList = database?.userDao()?.getAllEntries
             if (ppeList != null) {
                 for (entry in ppeList) {
                     if (!MainActivity.Filter.validateFilter(context, entry)) {

@@ -16,11 +16,11 @@ import androidx.room.Room
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun userDao(): UserDao?
+    abstract fun userDao(): UserDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null
-        fun getAppDatabase(context: Context): AppDatabase? {
+        fun getAppDatabase(context: Context): AppDatabase {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(
                     context.applicationContext,
@@ -28,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                     .build()
             }
-            return INSTANCE
+            return INSTANCE!!
         }
 
         fun destroyInstance() {

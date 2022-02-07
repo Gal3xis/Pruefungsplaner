@@ -158,7 +158,7 @@ class AddCourseFragment() : Fragment() {
             mSharedPreferencesValidation?.getString("examineYear", "0")
         val currentExamine =
             mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        val courses = database?.userDao()?.allCourses
+        val courses = database?.userDao()?.getAllCourses
 
 
         // aktualsiere die db Einträge
@@ -172,7 +172,7 @@ class AddCourseFragment() : Fragment() {
                         // lösche nicht die Einträge der gewählten Studiengänge und Favorit
                         val toDelete = database?.userDao()
                             ?.getEntriesByCourseName(courseName, false)
-                        database?.userDao()?.deleteEntry(toDelete)
+                        database?.userDao()?.deleteEntries(toDelete)
                     }
                     if (database?.userDao()?.getOneEntryByName(
                             courseName,

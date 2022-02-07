@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
 import android.os.Handler
 import android.os.Looper
-import android.os.Message
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -113,7 +112,7 @@ class StartActivity() : AppCompatActivity() {
             return
         }
         SCOPE_IO.launch {
-            returnCourse = database?.userDao()?.getIdCourse(choosenCourse)
+            returnCourse = database?.userDao()?.getCourseId(choosenCourse)
 
             // Erstelle Shared Pref für die anderen Fragmente
 
@@ -124,7 +123,7 @@ class StartActivity() : AppCompatActivity() {
             val retrofit = RetrofitConnect(relativePPlanURL ?: "")
             // Überprüfe ob die App schonmal gestartet wurde
 
-            if (database!!.userDao()?.uuid == null) {
+            if (database!!.userDao()?.getUuid == null) {
                 // Sende nur ans Backend wenn die App wirklich zum ersten mal
                 // gestartet wurde
                 retrofit.firstStart(
@@ -305,7 +304,7 @@ class StartActivity() : AppCompatActivity() {
 
         // Thread für die UUid
         SCOPE_IO.launch {
-            val uuid = database?.userDao()?.uuid
+            val uuid = database?.userDao()?.getUuid
             if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
                 globalVariable.appStarted = true
                 if (database != null) {

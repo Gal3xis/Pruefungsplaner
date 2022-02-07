@@ -10,17 +10,13 @@ import androidx.core.view.GravityCompat
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.database.Cursor
-import android.graphics.Color
 import android.os.*
 import android.util.Log
-import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import java.lang.Exception
@@ -35,7 +31,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.SearchAutoComplete
-import androidx.core.view.get
 
 //Alexander Lange End
 
@@ -445,7 +440,7 @@ class MainActivity : AppCompatActivity() {
         val searchAutoComplete: SearchAutoComplete = search.findViewById(R.id.search_src_text)
         val list: MutableList<String> = mutableListOf()
         scope_io.launch {
-            database?.userDao()?.moduleOrdered?.forEach { action -> list.add(action ?: "") }
+            database?.userDao()?.getModulesOrdered?.forEach { action -> list.add(action ?: "") }
         }.invokeOnCompletion {
             Handler(Looper.getMainLooper()).post {
                 searchAutoComplete.setAdapter(
@@ -783,7 +778,7 @@ class MainActivity : AppCompatActivity() {
         scope_io.launch {
             val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "")
             spinnerProfArrayList.addAll(
-                    database?.userDao()?.getFirstExaminerDistinctSortedByName(selectedCourse)?.toList()
+                    database?.userDao()?.getFirstExaminerSortedByName(selectedCourse)?.toList()
                             ?: mutableListOf()
             )
         }.invokeOnCompletion {
@@ -858,7 +853,7 @@ class MainActivity : AppCompatActivity() {
             scope_io.launch {
                 //Get Courses from Room-Database
                 val courses =
-                        database?.userDao()?.getChoosenCourse(true)
+                        database?.userDao()?.getChoosenCourses(true)
                 //Create a list of Course-Names
                 courses?.forEach { course ->
                     list.add(course.toString())
@@ -1000,7 +995,7 @@ class MainActivity : AppCompatActivity() {
             scope_io.launch {
                 //Get filtered list of modules from room-database
                 val modules =
-                        if (Filter.courseName == null) database?.userDao()?.allEntries else database?.userDao()
+                        if (Filter.courseName == null) database?.userDao()?.getAllEntries else database?.userDao()
                                 ?.getEntriesByCourseName(Filter.courseName)
                 //Loop through modules and create list of modulnames
                 modules?.forEach { i ->

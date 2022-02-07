@@ -35,6 +35,8 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
 
     private val SCOPE_IO = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
 
+
+
     // private boolean checkvalidate = false;
     /**
      * Return a formatted date as String to save in the [TestPlanEntry.date]-Paramater.
@@ -79,7 +81,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
      * @since 1.6
      */
     private fun getIDs(roomData: AppDatabase): String {
-        val Ids = roomData.userDao()?.getChoosenCourseId(true)
+        val Ids = roomData.userDao()?.getChoosenCourseIds(true)
         val courseIds = JSONArray()
         if (Ids != null) {
             for (id in Ids) {
@@ -351,7 +353,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         response.body()
         if (response.isSuccessful && response.body()?.size ?: 0 > 0) {
             SCOPE_IO.launch {
-                val dataListFromLocalDB = roomData.userDao()?.allEntries
+                val dataListFromLocalDB = roomData.userDao()?.getAllEntries
                 var responseId: String
                 var i: Int
                 val listSize = dataListFromLocalDB?.size ?: 0
@@ -372,16 +374,16 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                             }
                             i++
                         }
-                        roomData.userDao()?.updateExam(existingEntry)
+                        existingEntry?.let { roomData.userDao()?.updateExam(it) }
                     } else {
                         var testPlanEntryResponse = TestPlanEntry()
                         testPlanEntryResponse = createTestplanEntry(response!!)
-                        roomData.userDao()?.insertAll(testPlanEntryResponse)
+                        roomData.userDao()?.insertEntry(testPlanEntryResponse)
                     }
                 }
 
                 // lösche Einträge die nicht geupdatet wurden
-                roomData.userDao()?.deleteEntry(dataListFromLocalDB)
+                roomData.userDao()?.deleteEntries(dataListFromLocalDB)
 
                 roomData.userDao()?.getFavorites(true)?.let {
                     GoogleCalendarIO.update(ctx, it)
@@ -461,7 +463,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         //Serveradresse
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
         val urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress)
-        val uuid = roomdaten.userDao()?.uuid
+        val uuid = roomdaten.userDao()?.getUuid
 
         //uebergabe der parameter an die Adresse
         val adress = relativePPlanUrl + "entity.user/anotherStart/" + uuid?.uuid + "/"
@@ -512,7 +514,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
         var text = text
         val mSharedPreferencesAdresse = ctx.getSharedPreferences("Server-Adresse", 0)
         val urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress)
-        val uuid = roomdaten.userDao()?.uuid
+        val uuid = roomdaten.userDao()?.getUuid
 
         // Falls kein Text eingegeben wurde
         if (text.length < 1) {
@@ -587,7 +589,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
                             courseFromApi.sgid = course?.sgid ?: "-1"
                             insertCourses.add(courseFromApi)
                         }
-                        roomData.userDao()?.insertCourse(insertCourses)
+                        roomData.userDao()?.insertCourses(insertCourses)
                     }
                 }
             }
@@ -618,7 +620,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
 
         // erhalte die gewählten Studiengänge
         val courseIds = getIDs(roomData)
-        val uuid = roomData.userDao()?.uuid
+        val uuid = roomData.userDao()?.getUuid
         val urlfhb = mSharedPreferencesAdresse.getString("ServerIPAddress", serverAdress)
 
         //uebergabe der parameter an die Adresse
@@ -726,7 +728,7 @@ class RetrofitConnect(private val relativePPlanUrl: String) {
             // dies wird verwendet, da die Favoriten behalten werden sollen
             // und um doppelte Eintrage zu verhindern
             if (existingEntry == null) {
-                db.userDao()?.insertAll(testPlanEntry)
+                db.userDao()?.insertEntry(testPlanEntry)
             }
         }
     }

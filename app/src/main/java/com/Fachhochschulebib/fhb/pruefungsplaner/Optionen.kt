@@ -259,7 +259,7 @@ class Optionen() : Fragment() {
         scope_io.launch {
             Log.d("Test", "Lokale DB löschen.")
             //Delete all entries in the Room-Database
-            database?.userDao()?.deleteTestPlanEntryAll()
+            database?.userDao()?.deleteAllEntries()
             // Start Merlin Gürtler
             //Get the default entries for the user from the REST-API and store them in the room-database
             Log.d("TestCal", relativePPlanURL.toString())
