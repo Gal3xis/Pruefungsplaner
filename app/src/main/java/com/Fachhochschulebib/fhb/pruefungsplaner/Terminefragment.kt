@@ -595,7 +595,7 @@ class Terminefragment : Fragment() {
         }
         try {
             // Timeout für die Progressbar
-            Thread.sleep(sleepTime.toLong())
+            //TODO TEST Thread.sleep(sleepTime.toLong())
         } catch (e: InterruptedException) {
             e.printStackTrace()
         }

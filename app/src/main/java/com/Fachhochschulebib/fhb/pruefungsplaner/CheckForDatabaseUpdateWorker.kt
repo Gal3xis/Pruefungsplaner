@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import com.google.common.util.concurrent.*
+import retrofit2.Retrofit
 import java.util.concurrent.ScheduledExecutorService
 
 /**
