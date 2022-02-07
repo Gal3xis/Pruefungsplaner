@@ -162,13 +162,15 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                     openItem?.txtSecondScreen?.visibility = View.GONE
                 }
                 holder.txtSecondScreen.visibility = View.VISIBLE
+                var stringSecondScreen:String? = null
                 scope_io.launch {
-                    holder.txtSecondScreen.text =
-                        context?.let { it1 ->
-                            database?.userDao()?.getEntryById(ppIdList[position])?.getString(
-                                it1
-                            )
-                        }
+                    stringSecondScreen = context?.let { it1 ->
+                        database?.userDao()?.getEntryById(ppIdList[position])?.getString(
+                            it1
+                        )
+                    }
+                }.invokeOnCompletion {
+                    holder.txtSecondScreen.text = stringSecondScreen?:""
                 }
                 //Make previous details invisible
                 openItem = holder

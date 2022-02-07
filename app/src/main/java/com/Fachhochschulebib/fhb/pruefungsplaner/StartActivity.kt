@@ -180,8 +180,6 @@ class StartActivity() : AppCompatActivity() {
         context = baseContext
         PushService.createNotificationChannel(this)
 
-        context?.let { PushService.sendNotification(it,"Test") }//TODO REMOVE
-
         database = AppDatabase.getAppDatabase(baseContext)
         initSharedPreferences()
 
@@ -244,7 +242,6 @@ class StartActivity() : AppCompatActivity() {
             }
         }
     }
-
 
     /**
      * Called when the app is stopped.
