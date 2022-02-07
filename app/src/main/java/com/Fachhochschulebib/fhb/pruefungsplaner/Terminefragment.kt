@@ -20,6 +20,7 @@ import android.util.Log
 import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.terminefragment.*
 import org.json.JSONArray
@@ -89,6 +90,9 @@ class Terminefragment : Fragment() {
     //Link to Room-Database
     private var database: AppDatabase? = null
 
+    //ViewModel
+    private lateinit var viewModel: MainViewModel
+
     //Scopes
     //IO-Scope,optimized for network and disk operations
     private val scope_io =
@@ -140,7 +144,7 @@ class Terminefragment : Fragment() {
         serverAddress = mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
 
         //Get access to the Room-Database
-        database = AppDatabase.getAppDatabase(context!!)
+        database = context?.let { AppDatabase.getAppDatabase(it) }
     }
 
     /**
@@ -168,40 +172,17 @@ class Terminefragment : Fragment() {
      * @see Fragment.onViewCreated
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            MainViewModelFactory(requireActivity().application)
+        ).get(MainViewModel::class.java)
         getCalendarPermission()
-
-        val courseMain = mSharedPreferencesValidation?.getString("selectedCourse", "0")
-
         updateDataFromServer()
         enableSwipeToDelete()
         initRecyclerview()
-
-        // LongOperation asynctask = new LongOperation();
-
-        // asynctask.execute("");
-
-        //From onCreateView
-        //hinzufügen von recycleview
-        //TODO REMOVE recyclerView = v.findViewById<View>(R.id.recyclerView4) as RecyclerView
-        //TODO REMOVE currentPeriodeTextView = v.findViewById<View>(R.id.currentPeriode) as TextView
-
-
-        // Ende Merlin Gürtler
-
-        //Touchhelper für die Recyclerview-Komponente, zum Überprüfen, ob gescrollt wurde
-        //ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeController);
-        //itemTouchhelper.attachToRecyclerView(recyclerView);
-
-        //initialisieren der UI-Komponenten
-        //TODO REMOVE calendar = v.findViewById<View>(R.id.caCalender) as CalendarView
-        //TODO REMOVE btnSearch = v.findViewById<View>(R.id.btnDatum) as Button
-
-        //Clicklistener für den Kalender,
-        //Es wird überprüft, welches Datum ausgewählt wurde.
-        //TODO Alexander Lange Start
         MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged() }
         filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size - 1
-        //TODO Alexander Lange End
     }
 
 
@@ -225,6 +206,7 @@ class Terminefragment : Fragment() {
         }
     }
 
+    //TODO Move
     /**
      * This Method checks, if the user already gave permission to access the Calendar,
      * if not, he is ask to do so.
@@ -245,6 +227,7 @@ class Terminefragment : Fragment() {
         )
     }
 
+    //TODO Move
     /**
      * Checks the Phone for a give permission.
      * If the permission is not granted, the user is asked if he wants to grant permission.
@@ -267,10 +250,8 @@ class Terminefragment : Fragment() {
             permissionsId,
             callbackId
         )
-    } // Ende Merlin Gürtler
+    }
 
-    // Start Merlin Gürtler
-    // Funktion um die Führende 0 hinzuzufügen
     /**
      * Used to format a date with leading zeros. Checks if the given number contains only one digit and then adds the zero.
      * TODO Change with SimpleDatePattern
@@ -288,11 +269,6 @@ class Terminefragment : Fragment() {
         return dateToFormat
     }
 
-    // Ende Merlin Gürtler
-
-
-    // Ende Merlin Gürtler
-
     /**
      * Initializes the Recyclerview which shows the information about pending exams.
      *
@@ -301,15 +277,9 @@ class Terminefragment : Fragment() {
      */
     fun initRecyclerview() {
         recyclerView4?.visibility = View.VISIBLE
-
-        // use this setting to
-        // improve performance if you know that changes
-        // in content do not change the layout size
-        // of the RecyclerView
         recyclerView4?.setHasFixedSize(true)
 
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
-
         termineFragment_swiperefres.setOnRefreshListener {
             val globalVariable = this.context?.applicationContext as StartClass
             globalVariable.isShowNoProgressBar = false
@@ -318,13 +288,10 @@ class Terminefragment : Fragment() {
             termineFragment_swiperefres.isRefreshing = false
         }
 
-        //mSharedPreferences = v.getContext().getSharedPreferences("json6", 0);
-        // use a linear layout manager
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
         mLayout = recyclerView4?.layoutManager
 
-        // Start Merlin Gürtler
         recyclerView4?.addOnChildAttachStateChangeListener(object :
             OnChildAttachStateChangeListener {
             override fun onChildViewAttachedToWindow(view: View) {}
@@ -332,7 +299,6 @@ class Terminefragment : Fragment() {
             // Wenn ein Element den Viewport verlässt, wird
             // der zweite Screen zu geklappt
             override fun onChildViewDetachedFromWindow(view: View) {
-                //TODO REMOVE val txtSecondScreen = view.findViewById<View>(R.id.txtSecondscreen) as TextView
                 if (txtSecondscreen?.visibility == View.VISIBLE) {
                     txtSecondscreen?.visibility = View.GONE
                 }
@@ -341,6 +307,7 @@ class Terminefragment : Fragment() {
         createView()
     }
 
+    //TODO place into viewmodel
     /**
      * Updates the current local data with the data from the server.
      * Can change the data in the recyclerview and the currentExamPeriod
@@ -366,6 +333,7 @@ class Terminefragment : Fragment() {
             // Zeige den Fortschrittsbalken
             progressBar?.show()
 
+            //TODO Change after implementing retrofit repository
             scope_io.launch {
                 updatePruefperiode()
                 updateRoomDatabase()
@@ -379,6 +347,7 @@ class Terminefragment : Fragment() {
         }
     }
 
+    //TODO place into viewmodel
     /**
      * Updates the Room-Database. Checks if entries have to be removed or have to be loaded from the server.
      *
@@ -407,7 +376,7 @@ class Terminefragment : Fragment() {
         }
     }
 
-
+    //TODO Place into viewmodel
     /**
      * Returns a list of unknown courses that need to be updated
      *
@@ -417,26 +386,23 @@ class Terminefragment : Fragment() {
      */
     private fun getUnknownCourseIds(): JSONArray {
         var ret = JSONArray()
-        val courses = database?.userDao()?.getAllCourses()
+        val courses = viewModel.getAllCourses()
 
         if (courses != null) {
             //Durchlaufe alle Kurse
             for (course in courses) {
                 try {
-
                     val courseName = course?.courseName ?: ""
-
                     //Prüfe ob Kurs ausgewählt wurde. Falls nicht, lösche TestplanEntries für diesen Kurs
                     //aus der Room-Database
                     if (course?.choosen == false) {
                         // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                        val toDelete =
-                            database?.userDao()?.getEntriesByCourseName(courseName, false)
-                        database?.userDao()?.deleteEntries(toDelete)
+                        val toDelete = viewModel.getEntriesByCourseName(courseName, false)
+                        toDelete?.let { viewModel.deleteEntries(it) }
                     }
                     //Prüfe ob Kurs ausgewählt ist und nur unfavorisierte Einträge enthält. Falls ja, füge
                     //Ihn zu den zu aktualisierenden Kursen hinzu
-                    if (database?.userDao()?.getOneEntryByName(
+                    if (viewModel.getOneEntryByName(
                             courseName,
                             false
                         ) == null && course?.choosen == true
@@ -453,6 +419,7 @@ class Terminefragment : Fragment() {
         return ret
     }
 
+    //TODO place into viewmodel
     /**
      * Checks for a new exam period and updates the exam-data if necessary.
      *
@@ -593,10 +560,10 @@ class Terminefragment : Fragment() {
             mSharedPreferencesValidation?.getString("currentPeriode", "0")
         val currentExamineYearThread =
             mSharedPreferencesExamineYear?.getString("currentTermin", "0")
-        sleepTime = if ((database?.userDao()?.getEntriesByCourseName(courseMain)?.size == 0
-            || currentExamineYearThread != database?.userDao()?.getTermin)&&database?.userDao()?.getFavorites(true)?.size==0
+        sleepTime = if ((courseMain?.let { viewModel.getEntriesByCourseName(it)?.size } == 0
+                    || currentExamineYearThread != viewModel.getTermin()) && viewModel.getFavorites(true)?.size == 0
         ) {
-            database?.userDao()?.deleteAllEntries()
+            viewModel.deleteAllEntries()
             retrofit.RetrofitWebAccess(
                 this@Terminefragment.context!!,
                 database!!,
@@ -626,6 +593,7 @@ class Terminefragment : Fragment() {
         progressBar?.dismiss()
     }
 
+    //TODO Move
     /**
      * Returns a list of all examperiods in the database.
      *
@@ -709,7 +677,7 @@ class Terminefragment : Fragment() {
             returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
             validation = examineYear + returnCourse + currentExaminePeriod
             //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
-            val ppeList = database?.userDao()?.getAllEntries
+            val ppeList = viewModel.getAllEntries()
             if (ppeList != null) {
                 for (entry in ppeList) {
                     if (!MainActivity.Filter.validateFilter(context, entry)) {
@@ -765,7 +733,6 @@ class Terminefragment : Fragment() {
         val sdf_write = SimpleDateFormat("dd.MM.yyyy")
 
         val strJson = sdf_write.format(start) + "-" + sdf_write.format(end)
-        //TODO REMOVE val strJson = mSharedPreferencesPPeriode?.getString("currentPeriode", "0")
         if (strJson != "0") {
             currentPeriode?.text = strJson
         }
@@ -782,7 +749,6 @@ class Terminefragment : Fragment() {
     fun OnFilterChanged() {
         scope_io.launch {
             createView()
-            Log.d("Terminefragment.kt-OnFilterChanged", "Updated Filter")
         }
     }
 
@@ -832,17 +798,4 @@ class Terminefragment : Fragment() {
             Log.d("Error", "Orientation error$e")
         }
     }
-
-//    TODO REMOVE
-//    fun AdapterPassed() {
-//        //TODO CHANGE TO COROUTINE
-//        Thread {
-//            createAdapter()
-//            Handler(Looper.getMainLooper()).post { // Merlin Gürtler
-//                // Aktiviert den swipe listener
-//            }
-//            // System.out.println(String.valueOf(userdaten.size()));
-//        }.start()
-//        //Datenbankaufruf
-//    }
 }
