@@ -48,9 +48,10 @@
             android:layout_marginBottom="62dp"
             android:layout_gravity="center_vertical|center_horizontal"
             android:background="@drawable/button_rounded_corners"
+            android:backgroundTint="?attr/colorAccent"
             android:text="@string/ok"
             android:textAppearance="@style/spinnerDropDownItemStyle"
-            android:textColor="#eeeeee"
+            android:textColor="?attr/colorOnAccent"
             android:textSize="18sp" />
     </LinearLayout >
 
