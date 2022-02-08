@@ -35,19 +35,12 @@ import kotlinx.coroutines.launch
  * @since 1.6
  * @author Alexander Lange
  */
-class AddCourseFragment() : Fragment() {
-    // References to the shared preferences
-    var mSharedPreferencesPPServerAdress: SharedPreferences? = null
-    var mSharedPreferencesCurrentTermin: SharedPreferences? = null
-    var mSharedPreferencesValidation: SharedPreferences? = null
-
-    // Reference to the Room-Database
-    var database: AppDatabase? = null
+class AddCourseFragment : Fragment() {
+    private lateinit var viewModel: MainViewModel
 
     var mAdapter: CheckListAdapter? = null
     var courseChosen: MutableList<Boolean> = ArrayList()
     var courseName: MutableList<String> = ArrayList()
-    val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -62,14 +55,6 @@ class AddCourseFragment() : Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        database = context?.let { AppDatabase.getAppDatabase(it) }
-
-        mSharedPreferencesPPServerAdress =
-            context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
-        mSharedPreferencesCurrentTermin =
-            context?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
-        mSharedPreferencesValidation =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
     }
 
     /**
@@ -112,32 +97,23 @@ class AddCourseFragment() : Fragment() {
      * @author Alexander Lange
      */
     private fun initOkButton() {
-        buttonOk.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View) {
-                scope_io.launch {// Aktualisiere die Studiengänge
-                    for (i in courseChosen.indices) {
-                        database?.userDao()?.updateCourse(
-                            courseName[i],
-                            courseChosen[i]
-                        )
-                    }
-                    updateDbEntries()
-
-                    Handler(Looper.getMainLooper()).post(object : Runnable {
-                        override fun run() {
-                            // Feedback nach Update
-                            Toast.makeText(
-                                v.context,
-                                v.context.getString(R.string.courseActualisation),
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            val mainWindow = Intent(v.context, MainActivity::class.java)
-                            startActivity(mainWindow)
-                        }
-                    })
-                }
+        buttonOk.setOnClickListener { view ->
+            for (i in courseChosen.indices) {
+                viewModel.updateCourse(
+                    courseName[i],
+                    courseChosen[i]
+                )
             }
-        })
+            updateDbEntries()
+            // Feedback nach Update
+            Toast.makeText(
+                view.context,
+                view.context.getString(R.string.courseActualisation),
+                Toast.LENGTH_SHORT
+            ).show()
+            val mainWindow = Intent(view.context, MainActivity::class.java)
+            startActivity(mainWindow)
+        }
     }
 
     /**
@@ -146,20 +122,15 @@ class AddCourseFragment() : Fragment() {
      * @since 1.6
      * @author Alexander Lange
      */
-    private fun updateDbEntries(){
+    private fun updateDbEntries() {
         // die Retrofitdaten aus den Shared Preferences
-        val relativePPlanURL =
-            mSharedPreferencesPPServerAdress?.getString("ServerRelUrlPath", "0")
-        val serverAddress =
-            mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
-        val currentDate =
-            mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
-        val examineYear =
-            mSharedPreferencesValidation?.getString("examineYear", "0")
-        val currentExamine =
-            mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        val courses = database?.userDao()?.getAllCourses
+        val relativePPlanURL = viewModel.getServerRelUrlPath()
 
+        val serverAddress = viewModel.getServerIPAddress()
+        val currentDate = viewModel.getCurrentTermin()
+        val examineYear = viewModel.getExamineYear()
+        val currentExamine = viewModel.getCurrentPeriode()
+        val courses = viewModel.getAllCourses()
 
         // aktualsiere die db Einträge
         val courseIds = JSONArray()
@@ -167,17 +138,16 @@ class AddCourseFragment() : Fragment() {
         if (courses != null) {
             for (course in courses) {
                 try {
-                    courseName = course?.courseName ?: ""
-                    if (!course?.choosen!!) {
+                    courseName = course.courseName ?: ""
+                    if (course.choosen == false) {
                         // lösche nicht die Einträge der gewählten Studiengänge und Favorit
-                        val toDelete = database?.userDao()
-                            ?.getEntriesByCourseName(courseName, false)
-                        database?.userDao()?.deleteEntries(toDelete)
+                        val toDelete = viewModel.getEntriesByCourseName(courseName, false)
+                        toDelete?.let { viewModel.deleteEntries(it) }
                     }
-                    if (database?.userDao()?.getOneEntryByName(
+                    if (viewModel.getOneEntryByName(
                             courseName,
                             false
-                        ) == null && course.choosen!!
+                        ) == null && course.choosen == true
                     ) {
                         val idJson = JSONObject()
                         idJson.put("ID", course.sgid)
@@ -188,23 +158,14 @@ class AddCourseFragment() : Fragment() {
                 }
             }
         }
-        val retrofit = RetrofitConnect(relativePPlanURL!!)
+        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-        if (courseIds.toString().length > 2) {
-            retrofit.UpdateUnkownCourses(
-                context!!,
-                database!!,
-                examineYear!!,
-                currentExamine!!,
-                currentDate!!,
-                serverAddress!!,
-                courseIds.toString()
-            )
+        if (courseIds.toString().length > 2 && context != null && examineYear != null && currentExamine != null && currentDate != null && serverAddress != null) {
+            retrofit?.UpdateUnkownCourses(
+                courseIds.toString(),
+                )
         }
-        retrofit.setUserCourses(
-            context!!, database!!,
-            serverAddress
-        )
+        retrofit?.setUserCourses()
     }
 
     /**
@@ -219,27 +180,22 @@ class AddCourseFragment() : Fragment() {
         //linear layout manager
         val layoutManager = LinearLayoutManager(context)
         recyclerViewChecklist.layoutManager = layoutManager
-        scope_io.launch {
-            val faculty = mSharedPreferencesValidation?.getString("returnFaculty", "0")
+        val faculty = viewModel.getReturnFaculty()
 
-            // Fülle die Recylcerview
-            val courses = database?.userDao()?.getAllCoursesByFacultyId(faculty)
-            if (courses != null) {
-                for (cours in courses) {
-                    courseName.add(cours?.courseName ?: "")
-                    courseChosen.add(cours?.choosen ?: false)
-                }
-            }
-            mAdapter = CheckListAdapter(
-                courseName,
-                courseChosen,
-                activity?.applicationContext!!
-            )
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post{
-                recyclerViewChecklist?.adapter = mAdapter
+        // Fülle die Recylcerview
+        val courses = faculty?.let { viewModel.getAllCoursesByFacultyid(it) }
+        if (courses != null) {
+            for (course in courses) {
+                courseName.add(course.courseName ?: "")
+                courseChosen.add(course.choosen ?: false)
             }
         }
-
+        mAdapter = CheckListAdapter(
+            courseName,
+            courseChosen,
+            activity?.applicationContext!!,
+            viewModel
+        )
+        recyclerViewChecklist?.adapter = mAdapter
     }
 }

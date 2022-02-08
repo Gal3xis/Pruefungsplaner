@@ -10,7 +10,7 @@ class Courses {
     @PrimaryKey
     @ColumnInfo(name = "cId")
     @NonNull
-    var sgid: String? = null
+    var sgid: String = "0"
 
     @ColumnInfo(name = "couresName")
     var courseName: String? = null

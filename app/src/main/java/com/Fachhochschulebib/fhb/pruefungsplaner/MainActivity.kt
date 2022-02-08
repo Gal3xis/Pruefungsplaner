@@ -1,7 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import androidx.appcompat.app.AppCompatActivity
-import android.content.SharedPreferences
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
@@ -345,18 +344,7 @@ class MainActivity : AppCompatActivity() {
         var onResetListener: MutableList<() -> Unit> = mutableListOf()
     }
 
-    var sharedPrefsFaculty: SharedPreferences? = null
-    var mSharedPreferencesValidation: SharedPreferences? = null
-    var sharedPreferencesPeriod: SharedPreferences? = null
-
-    var examineYear: String? = null
-    var currentExaminePeriode: String? = null
-    var returnCourse: String? = null
-    var database: AppDatabase? = null
-    private lateinit var viewModel:MainViewModel
-
-    val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
-    val scope_ui = CoroutineScope(CoroutineName("UI-Scope") + Dispatchers.Main)
+    private lateinit var viewModel: MainViewModel
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -368,13 +356,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         applySettings()
         super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this,MainViewModelFactory(application)).get(MainViewModel::class.java)
         setContentView(R.layout.hauptfenster)
-
-        sharedPrefsFaculty = getSharedPreferences("faculty", Context.MODE_PRIVATE)
-        mSharedPreferencesValidation = getSharedPreferences("validation", Context.MODE_PRIVATE)
-        sharedPreferencesPeriod = getSharedPreferences("currentPeriode", Context.MODE_PRIVATE)
-        database = AppDatabase.getAppDatabase(applicationContext)
+        viewModel = ViewModelProvider(
+            this,
+            MainViewModelFactory(application)
+        )[MainViewModel::class.java]
 
         // Start Merlin Gürtler
         // registriert die Toolbar
@@ -399,14 +385,6 @@ class MainActivity : AppCompatActivity() {
                 drawer_layout.openDrawer(GravityCompat.START)
             }
         }
-
-
-        // Nun aus Shared Preferences
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriode =
-            mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        // Ende Merlin Gürtler
 
         initNavigationDrawer()
         initBottomNavigationView()
@@ -771,7 +749,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
-        val selectedCourse = mSharedPreferencesValidation?.getString("selectedCourse", "")
+        val selectedCourse = viewModel.getSelectedCourse()
         spinnerProfArrayList.addAll(
             selectedCourse?.let { viewModel.getFirstExaminerSortedByName(it)?.toList() }
                 ?: mutableListOf()
@@ -810,7 +788,7 @@ class MainActivity : AppCompatActivity() {
      * @see Filter
      */
     fun UserFilter(context: Context) {
-        val cou_sel = mSharedPreferencesValidation?.getString("selectedCourse", null)
+        val cou_sel = viewModel.getSelectedCourse()
 
         //Disable the callback from Filter. Only sets its values.
         Filter.locked = true
@@ -840,27 +818,20 @@ class MainActivity : AppCompatActivity() {
             val list: MutableList<String?> =
                 mutableListOf<String?>("Alle")//TODO extract String
 
-            scope_io.launch {
-                //Get Courses from Room-Database
-                val courses =
-                    database?.userDao()?.getChoosenCourses(true)
-                //Create a list of Course-Names
-                courses?.forEach { course ->
-                    list.add(course.toString())
-                }
-                //Create Spinneradapter from coursename-list
-                sp_course_adapter = ArrayAdapter<String>(
-                    context,
-                    android.R.layout.simple_spinner_dropdown_item,
-                    list
-                )
-            }.invokeOnCompletion {
-                Handler(Looper.getMainLooper()).post(object : Runnable {
-                    override fun run() {
-                        setCourseSpinner(sp_course_adapter, sp_course)
-                    }
-                })
+            //Get Courses from Room-Database
+            val courses = viewModel.getChoosenCourses(true)
+            //Create a list of Course-Names
+            courses?.forEach { course ->
+                list.add(course.toString())
             }
+            //Create Spinneradapter from coursename-list
+            sp_course_adapter = ArrayAdapter<String>(
+                context,
+                android.R.layout.simple_spinner_dropdown_item,
+                list
+            )
+            setCourseSpinner(sp_course_adapter, sp_course)
+
         } catch (ex: Exception) {
             Log.e("table-UpdateCourseFilter:", ex.stackTraceToString())
         }
@@ -934,14 +905,14 @@ class MainActivity : AppCompatActivity() {
     private fun initFacultyFilter(context: Context, tv_faculty: TextView) {
         try {
             //Get a list of facultys from shared preferences
-            val strFacultys = sharedPrefsFaculty?.getString("faculty", "0")
-            val returnFaculty = mSharedPreferencesValidation?.getString("returnFaculty", "0")
+            val strFaculties = viewModel.getFaculties()
+            val returnFaculty = viewModel.getReturnFaculty()
             //Create a jsonarray from faculty-list
-            val jsonArrayFacultys = JSONArray(strFacultys)
+            val jsonArrayFacultys = JSONArray(strFaculties)
 
             var selected_faculty: String? = null
 
-            if (strFacultys != null) {
+            if (strFaculties != null) {
                 //Loop through jsonarray and create list of facultynames
                 var i = 0
                 while (i < jsonArrayFacultys.length()) {
@@ -982,27 +953,24 @@ class MainActivity : AppCompatActivity() {
             var sp_modul_adapter: ArrayAdapter<String>? = null
             var pos_selected: Int = 0
             val list: MutableList<String?> = mutableListOf("Alle")
-            scope_io.launch {
-                //Get filtered list of modules from room-database
-                val modules =
-                    if (Filter.courseName == null) viewModel.getAllEntries() else Filter.courseName?.let {viewModel.getEntriesByCourseName(it)  }
-                //Loop through modules and create list of modulnames
-                modules?.forEach { i ->
-                    list.add(i?.module)
+            //Get filtered list of modules from room-database
+            val modules =
+                if (Filter.courseName == null) viewModel.getAllEntries() else Filter.courseName?.let {
+                    viewModel.getEntriesByCourseName(
+                        it
+                    )
                 }
-            }.invokeOnCompletion {
-                //Create spinneradapter from list
-                sp_modul_adapter = ArrayAdapter<String>(
-                    context,
-                    android.R.layout.simple_spinner_dropdown_item,
-                    list
-                )
-                Handler(Looper.getMainLooper()).post(object : Runnable {
-                    override fun run() {
-                        setModuleSpinner(sp_modul_adapter, sp_modul)
-                    }
-                })
+            //Loop through modules and create list of modulnames
+            modules?.forEach { i ->
+                list.add(i?.module)
             }
+            //Create spinneradapter from list
+            sp_modul_adapter = ArrayAdapter<String>(
+                context,
+                android.R.layout.simple_spinner_dropdown_item,
+                list
+            )
+            setModuleSpinner(sp_modul_adapter, sp_modul)
         } catch (ex: Exception) {
             Log.e("UpdateModuleFilter", ex.stackTraceToString())
         }
@@ -1071,24 +1039,9 @@ class MainActivity : AppCompatActivity() {
      */
     private fun setCalendarBtn(btn_calendar: ImageButton) {
         //Get start-and enddate from sharedPrefs
-        val startDate: Date = SimpleDateFormat("dd/MM/yyyy").parse(
-            sharedPreferencesPeriod?.getString(
-                "startDate",
-                "01/01/1990"
-            ) ?: "01/01/1990"
-        )
-        val endDate: Date = SimpleDateFormat("dd/MM/yyyy").parse(
-            sharedPreferencesPeriod?.getString(
-                "endDate",
-                "01/01/1990"
-            ) ?: "01/01/1990"
-        )
-        val pickedDate = Filter.datum ?: SimpleDateFormat("dd/MM/yyyy").parse(
-            sharedPreferencesPeriod?.getString(
-                "startDate",
-                "01/01/1990"
-            ) ?: "01/01/1990"
-        )
+        val startDate = viewModel.getStartDate()
+        val endDate = viewModel.getEndDate()
+        val pickedDate = Filter.datum ?: viewModel.getStartDate()
         //Extract day,month and year from startDate as startParameter for the Calendar
         val year: Int = SimpleDateFormat("yyyy").format(pickedDate).toInt()
         val month: Int = SimpleDateFormat("MM").format(pickedDate).toInt()
@@ -1113,8 +1066,8 @@ class MainActivity : AppCompatActivity() {
                     month - 1,
                     day
                 )
-                dialog.datePicker.minDate = startDate.time
-                dialog.datePicker.maxDate = endDate.time
+                startDate?.let { dialog.datePicker.minDate = it.time }
+                endDate?.let { dialog.datePicker.maxDate = it.time }
                 dialog.setButton(
                     DatePickerDialog.BUTTON_NEUTRAL,
                     "Alle",

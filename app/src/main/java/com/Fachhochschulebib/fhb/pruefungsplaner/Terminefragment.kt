@@ -37,7 +37,6 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.*
-import java.lang.Runnable
 
 //////////////////////////////
 // Terminefragment
@@ -62,44 +61,12 @@ class Terminefragment : Fragment() {
     //UI
     private var progressBar: ProgressDialog? = null
     private var mLayout: RecyclerView.LayoutManager? = null
-    //TODO REMOVE private var date: String? = null
-    //TODO REMOVE private var month2: String? = null
-    //TODO REMOVE private var day2: String? = null
-    //TODO CHECK REMOVE private var positionOld = 0
-
-    //TODO REMOVE private var year2: String? = null
     private var checkList: MutableList<Boolean> = ArrayList()
-
-    //Links to sharedPreferences
-    private var mSharedPreferencesValidation: SharedPreferences? = null
-    private var mSharedPreferencesPPServerAdress: SharedPreferences? = null
-    private var mSharedPreferencesExamineYear: SharedPreferences? = null
-
-    private var mSharedPreferencesPPeriode: SharedPreferences? = null
-
-    //Globaldata from sharedPreferences
-    private var serverAddress: String? = null
-    private var relativePPlanURL: String? = null
-    private var examineYear: String? = null
-    private var currentExaminePeriod: String? = null
-    private var returnCourse: String? = null
-    private var courseMain: String? = null
 
     private var mAdapter: RecyclerViewExamAdapter? = null
 
-    //Link to Room-Database
-    private var database: AppDatabase? = null
-
     //ViewModel
     private lateinit var viewModel: MainViewModel
-
-    //Scopes
-    //IO-Scope,optimized for network and disk operations
-    private val scope_io =
-        CoroutineScope(CoroutineName("IO Scope") + Dispatchers.IO)
-
-    //UI-Scope, improved for ui operations
-    private val scope_ui = CoroutineScope(CoroutineName("UI Scope") + Dispatchers.Main)
 
     //TODO Alexander Lange Start
     var filterChangeListenerPosition: Int? = null
@@ -125,26 +92,6 @@ class Terminefragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        //Get access to the shared preferences
-        mSharedPreferencesValidation =
-            this@Terminefragment.context?.getSharedPreferences("validation", 0)
-        mSharedPreferencesPPServerAdress = this@Terminefragment.context!!.getSharedPreferences(
-            "Server_Address",
-            Context.MODE_PRIVATE
-        )
-        mSharedPreferencesExamineYear =
-            this@Terminefragment.context?.getSharedPreferences("examineTermin", 0)
-        mSharedPreferencesPPeriode =
-            context?.getSharedPreferences("currentPeriode", Context.MODE_PRIVATE)
-
-        //Get content from shared preferences
-        relativePPlanURL =
-            mSharedPreferencesPPServerAdress?.getString("ServerRelUrlPath", "0")
-        serverAddress = mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
-
-        //Get access to the Room-Database
-        database = context?.let { AppDatabase.getAppDatabase(it) }
     }
 
     /**
@@ -176,7 +123,8 @@ class Terminefragment : Fragment() {
         viewModel = ViewModelProvider(
             requireActivity(),
             MainViewModelFactory(requireActivity().application)
-        ).get(MainViewModel::class.java)
+        )[MainViewModel::class.java]
+
         getCalendarPermission()
         updateDataFromServer()
         enableSwipeToDelete()
@@ -275,10 +223,9 @@ class Terminefragment : Fragment() {
      * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
-    fun initRecyclerview() {
+    private fun initRecyclerview() {
         recyclerView4?.visibility = View.VISIBLE
         recyclerView4?.setHasFixedSize(true)
-
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
         termineFragment_swiperefres.setOnRefreshListener {
             val globalVariable = this.context?.applicationContext as StartClass
@@ -287,11 +234,9 @@ class Terminefragment : Fragment() {
             initRecyclerview()
             termineFragment_swiperefres.isRefreshing = false
         }
-
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
         mLayout = recyclerView4?.layoutManager
-
         recyclerView4?.addOnChildAttachStateChangeListener(object :
             OnChildAttachStateChangeListener {
             override fun onChildViewAttachedToWindow(view: View) {}
@@ -334,16 +279,11 @@ class Terminefragment : Fragment() {
             progressBar?.show()
 
             //TODO Change after implementing retrofit repository
-            scope_io.launch {
+            runBlocking {
                 updatePruefperiode()
                 updateRoomDatabase()
-            }.invokeOnCompletion {
-                Handler(Looper.getMainLooper()).post(object : Runnable {
-                    override fun run() {
-                        createView()
-                    }
-                })
             }
+            createView()
         }
     }
 
@@ -355,24 +295,15 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun updateRoomDatabase() {
-        val currentExamineYear = mSharedPreferencesExamineYear?.getString("currentTermin", "0")
-        val retrofit = RetrofitConnect(relativePPlanURL!!)
+        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+
         // IDs der zu aktualisierenden Kurse
         val courseIds = getUnknownCourseIds()
         //Aktualisiere die notwendigen Kurse
         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
+
         if (courseIds.toString().length > 2) {
-            if (database != null && context != null && currentExamineYear != null && !examineYear.isNullOrEmpty() && !currentExaminePeriod.isNullOrEmpty() && !serverAddress.isNullOrEmpty()) {
-                retrofit.UpdateUnkownCourses(
-                    context!!,
-                    database!!,
-                    examineYear!!,
-                    currentExaminePeriod!!,
-                    currentExamineYear,
-                    serverAddress!!,
-                    courseIds.toString()
-                )
-            }
+            retrofit?.UpdateUnkownCourses(courseIds.toString())
         }
     }
 
@@ -392,10 +323,10 @@ class Terminefragment : Fragment() {
             //Durchlaufe alle Kurse
             for (course in courses) {
                 try {
-                    val courseName = course?.courseName ?: ""
+                    val courseName = course.courseName ?: ""
                     //Prüfe ob Kurs ausgewählt wurde. Falls nicht, lösche TestplanEntries für diesen Kurs
                     //aus der Room-Database
-                    if (course?.choosen == false) {
+                    if (course.choosen == false) {
                         // lösche nicht die Einträge der gewählten Studiengänge und Favorit
                         val toDelete = viewModel.getEntriesByCourseName(courseName, false)
                         toDelete?.let { viewModel.deleteEntries(it) }
@@ -429,10 +360,9 @@ class Terminefragment : Fragment() {
     //TODO Shorten
     fun updatePruefperiode() {
 
-        val mEditor: SharedPreferences.Editor?
-        val retrofit = RetrofitConnect(relativePPlanURL!!)
+        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+
         // Erhalte die gewählte Fakultät aus den Shared Preferences
-        val facultyId = mSharedPreferencesValidation?.getString("returnFaculty", "0")
         try {
             //DONE (09/2020 LG) Aktuellen Prüftermin aus JSON-String herausfiltern!
             //Heutiges Datum als Vergleichsdatum ermitteln und den Formatierer festlegen.
@@ -469,30 +399,22 @@ class Terminefragment : Fragment() {
                 //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
                 //liegt ist die aktuelle Prüfperiode!
                 // die Fakultäts id wird noch mit der gewählten Fakultät verglichen
-                if (currentDate.before(lastDayPp) && facultyId == facultyIdDB) break
+                if (currentDate.before(lastDayPp) && viewModel.getReturnFaculty() == facultyIdDB) break
             }
             examineWeek = currentExamineDate?.get("PPWochen")?.toString()?.toInt() ?: 0
             //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
             //-------------------------------------------------------------------
             //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
-            val mSharedPreferencesExamineTermin = context
-                ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
-            val mEditorExaminePeriodAndYear = mSharedPreferencesValidation?.edit()
-            mEditorExaminePeriodAndYear?.putString(
-                "examineYear",
-                currentExamineDate?.get("PPJahr")?.toString()
-            )
-            val mEditorTermin = mSharedPreferencesExamineTermin?.edit()
-            mEditorTermin?.putString(
-                "currentTermin",
-                currentExamineDate?.get("pruefTermin")?.toString()
-            )
-            mEditorExaminePeriodAndYear?.putString(
-                "currentPeriode",
-                currentExamineDate?.get("pruefSemester")?.toString()
-            )
-            mEditorExaminePeriodAndYear?.apply()
-            mEditorTermin?.apply() //Ausführen der Schreiboperation!
+
+            //Set current termin
+            currentExamineDate?.get("pruefTermin")?.toString()
+                ?.let { viewModel.setCurrentTermin(it) }
+            //Set examin year
+            currentExamineDate?.get("PPJahr")?.toString()?.let { viewModel.setExamineYear(it) }
+            //Set current periode
+            currentExamineDate?.get("pruefSemester")?.toString()
+                ?.let { viewModel.setCurrentPeriode(it) }
+
             //-------------------------------------------------------------------
             val currentPeriode = currentExamineDate?.get("startDatum")?.toString()
             val arrayCurrentPeriode = currentPeriode?.split("T")?.toTypedArray()
@@ -522,29 +444,22 @@ class Terminefragment : Fragment() {
                     + "." + year2) // number of days to add;
 
             //Prüfperiode für die Offline-Verwendung speichern
-            mEditor = mSharedPreferencesPPeriode?.edit()
-            val strJson = mSharedPreferencesPPeriode?.getString("currentPeriode", "0")
+            val strJson = viewModel.getCurrentPeriode()
             if (strJson != null) {
                 if (strJson == currentExamineDateFormatted) {
                 } else {
-                    mEditor?.clear()
-                    mEditor?.apply()
-                    // Start Merlin Gürtler
                     // Speichere das Start und Enddatum der Prüfperiode
-                    mEditor?.putString(
-                        "startDate", formatDate(day.toString())
+                    viewModel.setStartDate(
+                        formatDate(day.toString())
                                 + "/" + formatDate(month.toString()) + "/" + formatDate(year.toString())
                     )
-                    mEditor?.putString(
-                        "endDate", formatDate(day2.toString())
+                    viewModel.setEndDate(
+                        formatDate(day2.toString())
                                 + "/" + formatDate(month2.toString()) + "/" + formatDate(
                             year2.toString()
                         )
                     )
-                    mEditor?.apply()
-                    // Ende Merlin Gürtler
-                    mEditor?.putString("currentPeriode", currentExamineDateFormatted)
-                    mEditor?.apply()
+                    viewModel.setCurrentPeriode(currentExamineDateFormatted)
                 }
             }
             // Ende Merlin Gürtler
@@ -555,33 +470,20 @@ class Terminefragment : Fragment() {
         // Nun aus Shared Preferences
         // die Daten für die Periode aus den Shared Preferences
         val sleepTime: Int
-        val examineYearThread = mSharedPreferencesValidation?.getString("examineYear", "0")
-        val currentExaminePeriodThread =
-            mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        val currentExamineYearThread =
-            mSharedPreferencesExamineYear?.getString("currentTermin", "0")
-        sleepTime = if ((courseMain?.let { viewModel.getEntriesByCourseName(it)?.size } == 0
-                    || currentExamineYearThread != viewModel.getTermin()) && viewModel.getFavorites(true)?.size == 0
+        val examineYearThread = viewModel.getExamineYear()
+        val currentExaminePeriodThread = viewModel.getCurrentPeriode()
+        val currentExamineYearThread = viewModel.getCurrentTermin()
+        sleepTime = if ((viewModel.getReturnCourse()
+                ?.let { viewModel.getEntriesByCourseName(it)?.size } == 0
+                    || currentExamineYearThread != viewModel.getTermin()) && viewModel.getFavorites(
+                true
+            )?.size == 0
         ) {
             viewModel.deleteAllEntries()
-            retrofit.RetrofitWebAccess(
-                this@Terminefragment.context!!,
-                database!!,
-                examineYearThread!!,
-                currentExaminePeriodThread!!,
-                currentExamineYearThread!!,
-                serverAddress!!
-            )
+            retrofit?.RetrofitWebAccess()
             3000
         } else {
-            retrofit.retroUpdate(
-                this@Terminefragment.context!!,
-                database!!,
-                examineYearThread!!,
-                currentExaminePeriodThread!!,
-                currentExamineYearThread!!,
-                serverAddress
-            )
+            retrofit?.retroUpdate()
             2000
         }
         try {
@@ -605,7 +507,8 @@ class Terminefragment : Fragment() {
         val result = StringBuilder()
 
         //DONE (08/2020 LG)
-        val address = serverAddress + relativePPlanURL + "entity.pruefperioden"
+        val address =
+            viewModel.getServerIPAddress() + viewModel.getServerRelUrlPath() + "entity.pruefperioden"
         val url = URL(address)
 
         /*
@@ -653,7 +556,8 @@ class Terminefragment : Fragment() {
 
 
 // List<PruefplanEintrag> ppeList = datenbank.userDao().getEntriesByValidation(validation);
-    // Start Merlin Gürtler
+
+    //TODO MOVE
     /**
      * Gets the Entries from the Room-Database and adds them to the Recyclerview.
      *
@@ -671,51 +575,48 @@ class Terminefragment : Fragment() {
         var statusMessage: MutableList<String> = ArrayList()
 
 
-        scope_io.launch {
-            examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-            currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-            returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-            validation = examineYear + returnCourse + currentExaminePeriod
-            //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
-            val ppeList = viewModel.getAllEntries()
-            if (ppeList != null) {
-                for (entry in ppeList) {
-                    if (!MainActivity.Filter.validateFilter(context, entry)) {
-                        continue
-                    }
-                    moduleAndCourseList.add(
-                        """${entry?.module}
-     ${entry?.course}"""
-                    )
-                    examinerAndSemester.add(
-                        entry?.firstExaminer
-                                + " " + entry?.secondExaminer
-                                + " " + entry?.semester + " "
-                    )
-                    dateList.add(entry?.date ?: "")
-                    moduleList.add(entry?.module ?: "")
-                    idList.add(entry?.id ?: "")
-                    formList.add(entry?.examForm ?: "")
-                    roomList.add(entry?.room ?: "")
-                    statusMessage.add(entry?.hint ?: "")
-                    checkList.add(true)
+        validation =
+            viewModel.getExamineYear() + viewModel.getReturnCourse() + viewModel.getCurrentPeriode()
+        //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
+        val ppeList = viewModel.getAllEntries()
+        if (ppeList != null) {
+            for (entry in ppeList) {
+                if (!MainActivity.Filter.validateFilter(context, entry)) {
+                    continue
                 }
-            } // define an adapter
-            mAdapter = RecyclerViewExamAdapter(
-                moduleAndCourseList,
-                examinerAndSemester,
-                dateList,
-                moduleList,
-                idList,
-                formList,
-                mLayout,
-                roomList,
-                statusMessage
-            )
-            Handler(Looper.getMainLooper()).post {
-                recyclerView4?.adapter = mAdapter
-                setPruefungszeitraum()
+                moduleAndCourseList.add(
+                    """${entry?.module}
+     ${entry?.course}"""
+                )
+                examinerAndSemester.add(
+                    entry?.firstExaminer
+                            + " " + entry?.secondExaminer
+                            + " " + entry?.semester + " "
+                )
+                dateList.add(entry?.date ?: "")
+                moduleList.add(entry?.module ?: "")
+                idList.add(entry?.id ?: "")
+                formList.add(entry?.examForm ?: "")
+                roomList.add(entry?.room ?: "")
+                statusMessage.add(entry?.hint ?: "")
+                checkList.add(true)
             }
+        } // define an adapter
+        mAdapter = RecyclerViewExamAdapter(
+            moduleAndCourseList,
+            examinerAndSemester,
+            dateList,
+            moduleList,
+            idList,
+            formList,
+            mLayout,
+            roomList,
+            statusMessage,
+            viewModel
+        )
+        Handler(Looper.getMainLooper()).post {
+            recyclerView4?.adapter = mAdapter
+            setPruefungszeitraum()
         }
     }
 
@@ -726,13 +627,12 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun setPruefungszeitraum() {
-        val sdf_read = SimpleDateFormat("dd/MM/yyyy")
-        val start = sdf_read.parse(mSharedPreferencesPPeriode?.getString("startDate", "0"))
-        val end = sdf_read.parse(mSharedPreferencesPPeriode?.getString("endDate", "0"))
+        val start = viewModel.getStartDate()
+        val end = viewModel.getEndDate()
 
         val sdf_write = SimpleDateFormat("dd.MM.yyyy")
 
-        val strJson = sdf_write.format(start) + "-" + sdf_write.format(end)
+        val strJson = start?.let { start->end?.let { end->sdf_write.format(start) + "-" + sdf_write.format(end) } }
         if (strJson != "0") {
             currentPeriode?.text = strJson
         }
@@ -747,9 +647,7 @@ class Terminefragment : Fragment() {
      * @see MainActivity.Filter.onFilterChangedListener
      */
     fun OnFilterChanged() {
-        scope_io.launch {
-            createView()
-        }
+        createView()
     }
 
     /**
@@ -770,24 +668,19 @@ class Terminefragment : Fragment() {
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                         val position = viewHolder.adapterPosition
                         var isFavorite: Boolean? = null
-                        scope_io.launch {
-                            isFavorite = mAdapter?.checkFavorite(viewHolder.adapterPosition)
-                        }.invokeOnCompletion {
-                            Handler(Looper.getMainLooper()).post {
-                                if (isFavorite == true) {
-                                    mAdapter?.deleteFromFavorites(
-                                        position,
-                                        (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-                                    )
-                                } else {
-                                    mAdapter?.addToFavorites(
-                                        position,
-                                        (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-                                    )
-                                }
-                                mAdapter?.notifyDataSetChanged()
-                            }
+                        isFavorite = mAdapter?.checkFavorite(viewHolder.adapterPosition)
+                        if (isFavorite == true) {
+                            mAdapter?.deleteFromFavorites(
+                                position,
+                                (viewHolder as RecyclerViewExamAdapter.ViewHolder)
+                            )
+                        } else {
+                            mAdapter?.addToFavorites(
+                                position,
+                                (viewHolder as RecyclerViewExamAdapter.ViewHolder)
+                            )
                         }
+                        mAdapter?.notifyDataSetChanged()
                     }
                 }
 

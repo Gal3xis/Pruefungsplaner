@@ -1,10 +1,10 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppRepository
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.DatabaseRepository
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.Uuid
@@ -18,15 +18,40 @@ import java.util.*
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    private val context = application.applicationContext
+    private val repository = DatabaseRepository(application)
+    private val spRepository = SharedPreferencesRepository(application)
+    private val sdf = SimpleDateFormat("dd/MM/yyyy")
 
-    private val repository = AppRepository(application)
     val liveEntryList = repository.getAllEntriesLiveData()
+
+
+    /**
+     * Initializes the shared preferences and its values for later use.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initSharedPreferences() {
+        //Get access to the shared preferences
+        var mSharedPreferencesValidation = context?.getSharedPreferences("validation", 0)
+        var mSharedPreferencesPPServerAdress = context?.getSharedPreferences(
+            "Server_Address",
+            Context.MODE_PRIVATE
+        )
+        var mSharedPreferencesExamineYear = context?.getSharedPreferences("examineTermin", 0)
+        var mSharedPreferencesPPeriode =
+            context?.getSharedPreferences("currentPeriode", Context.MODE_PRIVATE)
+    }
+
 
     fun insertEntry(testPlanEntry: TestPlanEntry) {
         viewModelScope.launch {
             repository.insertEntry(testPlanEntry)
         }
     }
+
+
 
     fun insertEntryJSON(jsonResponse: JsonResponse) {
         insertEntry(createTestplanEntry(jsonResponse))
@@ -276,4 +301,163 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return course
     }
 
+
+    //Shared Preferences
+    fun getSelectedCourse():String?{
+        return spRepository.getSelectedCourse()
+    }
+
+    fun setSelectedCourse(course:String){
+        spRepository.setSelectedCourse(course)
+    }
+
+    fun getReturnCourse():String?{
+        return spRepository.getReturnCourse()
+        }
+
+    fun setReturnCourse(course: String){
+        spRepository.setReturnCourse(course)
+    }
+
+    fun getReturnFaculty():String?{
+        return spRepository.getReturnFaculty()
+    }
+
+    fun setReturnFaculty(faculty:String){
+        spRepository.setReturnFaculty(faculty)
+    }
+
+    fun getExamineYear():String?{
+        return spRepository.getExamineYear()
+    }
+
+    fun setExamineYear(year:String){
+        spRepository.setExamineYear(year)
+    }
+
+    fun getCurrentPeriode():String?{
+        return spRepository.getCurrentPeriode()
+    }
+
+    fun setCurrentPeriode(periode:String){
+        spRepository.setCurrentPeriode(periode)
+    }
+
+    fun getCurrentTermin():String?{
+        return spRepository.getCurrentTermin()
+    }
+
+    fun setCurrentTermin(termin:String){
+        spRepository.setCurrentTermin(termin)
+    }
+
+    //TODO Needed?
+    fun getCurrentPeriodeString():String?{
+        return spRepository.getCurrentPeriodeString()
+    }
+
+    fun setCurrentPeriodeString(str:String){
+        spRepository.setCurrentPeriodeString(str)
+    }
+
+    fun getStartDateString():String?{
+        return spRepository.getStartDate()
+    }
+
+
+    fun getStartDate():Date?
+    {
+        return getStartDateString()?.let { sdf.parse(it) }
+    }
+
+    fun setStartDate(date:String){
+        spRepository.setStartDate(date)
+    }
+
+    fun setStartDate(date:Date){
+        spRepository.setStartDate(sdf.format(date))
+    }
+
+    fun getEndDateString():String?{
+        return spRepository.getEndDate()
+    }
+
+    fun getEndDate():Date?{
+        return getEndDateString()?.let { sdf.parse(it) }
+    }
+
+    fun setEndDate(date: String){
+        spRepository.setEndDate(date)
+    }
+
+    fun setEndDate(date:Date){
+        spRepository.setEndDate(sdf.format(date))
+    }
+
+    //Returns false by default
+    fun getChosenDarkmode():Boolean{
+        return spRepository.getChosenDarkmode()
+    }
+
+    fun setChosenDarkmode(darkmode:Boolean){
+        spRepository.setChosenDarkmode(darkmode)
+    }
+
+    //Returns -1 by default
+    fun getChosenThemeId():Int{
+        return spRepository.getChosenThemeId()
+    }
+
+    fun setChosenThemeId(id:Int){
+        spRepository.setChosenThemeId(id)
+    }
+
+    fun getUpdateIntervalTimeHour():Int{
+        return spRepository.getUpdateIntervalTimeHour()
+    }
+
+    fun setUpdateIntervalTimeHour(hour:Int){
+        spRepository.setUpdateIntervalTimeHour(hour)
+    }
+
+    //Return 15 by default
+    fun getUpdateIntervalTimeMinute():Int{
+        return spRepository.getUpdateIntervalTimeMinute()
+    }
+
+    fun setUpdateIntervalTimeMinute(minute:Int){
+        spRepository.setUpdateIntervalTimeMinute(minute)
+    }
+
+    fun getCalendarSync():Boolean{
+        return spRepository.getCalendarSync()
+    }
+
+    fun setCalendarSync(sync:Boolean){
+        spRepository.setCalendarSync(sync)
+    }
+
+    fun getServerIPAddress():String?{
+        return spRepository.getServerIPAddress()
+    }
+
+    fun setServerIPAddress(address:String){
+        spRepository.setServerIPAddress(address)
+    }
+
+    fun getServerRelUrlPath():String?{
+        return spRepository.getServerRelUrlPath()
+    }
+
+    fun setServerRelUrlPath(path:String){
+        spRepository.setServerRelUrlPath(path)
+    }
+
+    fun getFaculties():String?{
+        return spRepository.getFaculties()
+    }
+
+    fun setFaculties(faculties:String){
+        spRepository.setFaculties(faculties)
+    }
 }

@@ -7,8 +7,9 @@ import androidx.room.Entity
 
 @Entity(tableName = "Uuid")
 class Uuid {
+
     @PrimaryKey
     @ColumnInfo(name = "uuid")
     @NonNull
-    var uuid: String? = null
+    var uuid: String = "0"
 }

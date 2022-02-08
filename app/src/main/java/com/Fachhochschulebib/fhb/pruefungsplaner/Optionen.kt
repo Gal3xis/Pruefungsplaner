@@ -1,28 +1,22 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
-import android.content.Context
 import android.os.Handler
 import android.util.Log
 import android.widget.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
-import org.json.JSONArray
 import java.lang.Exception
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
 import android.view.*
+import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.android.synthetic.main.hauptfenster.*
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 //////////////////////////////
@@ -47,31 +41,11 @@ import kotlinx.coroutines.launch
  * @since 1.6
  */
 class Optionen() : Fragment() {
-    private var save = false
-    private var response: JSONArray? = null
-    private var calDate = GregorianCalendar()
-    private var course: String? = null
-    private var currentTermin: String? = null
-
-    private var mSharedPreferencesCurrentTermin: SharedPreferences? = null
-    private var sharedPreferencesSettings: SharedPreferences? = null
-    private var mSharedPreferencesPPServerAddress: SharedPreferences? = null
-    private var mSharedPreferencesValidation: SharedPreferences? = null
-
-    private var database: AppDatabase? = null
+    private lateinit var viewModel: MainViewModel
 
     companion object {
         val idList: List<String> = ArrayList()
     }
-
-    //DONE: 08/2020 LG
-    var serverAddress: String? = null
-    var relativePPlanURL: String? = null
-    var examineYear: String? = null
-    var currentExaminePeriod: String? = null
-    var returnCourse: String? = null
-
-    private var scope_io = CoroutineScope(CoroutineName("IO-SCOPE") + Dispatchers.IO)
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -86,21 +60,10 @@ class Optionen() : Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        database = context?.let { AppDatabase.getAppDatabase(it) }
-        sharedPreferencesSettings = context?.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        mSharedPreferencesCurrentTermin = context
-            ?.getSharedPreferences("examineTermin", Context.MODE_PRIVATE)
-        mSharedPreferencesPPServerAddress =
-            context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
-        mSharedPreferencesValidation =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-        serverAddress = mSharedPreferencesPPServerAddress?.getString("ServerIPAddress", "0")
-        relativePPlanURL = mSharedPreferencesPPServerAddress?.getString("ServerRelUrlPath", "0")
-        currentTermin = mSharedPreferencesCurrentTermin?.getString("currentTermin", "0")
-        examineYear = mSharedPreferencesValidation?.getString("examineYear", "0")
-        currentExaminePeriod = mSharedPreferencesValidation?.getString("currentPeriode", "0")
-        returnCourse = mSharedPreferencesValidation?.getString("returnCourse", "0")
-        // Ende Merlin Gürtler
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            MainViewModelFactory(requireActivity().application)
+        )[MainViewModel::class.java]
         setHasOptionsMenu(true)
     }
 
@@ -122,22 +85,16 @@ class Optionen() : Fragment() {
 
         //Button zum updaten der Prüfungen
         btnupdate?.setOnClickListener {
-            val validation = examineYear + returnCourse + currentExaminePeriod
+            val validation =
+                viewModel.getExamineYear() + viewModel.getReturnCourse() + viewModel.getCurrentPeriode()
             updatePlan(validation)
         }
-
-        //layout Komponenten
-        //holder.zahl1 = position;
-        val serverAdresse = view.context.getSharedPreferences("json8", Context.MODE_PRIVATE)
-        //Creating editor to store uebergebeneModule to shared preferences
-
         //Abfrage ob der Google kalender Ein/Ausgeschaltet ist
         switch2.setOnCheckedChangeListener { _, isChecked -> // do something, the isChecked will be
             // true if the switch is in the On position
             setCalendarSynchro(isChecked)
         }
-        switch2.isChecked = sharedPreferencesSettings?.getBoolean("calSync", false) ?: false
-
+        switch2.isChecked = viewModel.getCalendarSync()
 
         privacyDeclaration.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
@@ -169,19 +126,15 @@ class Optionen() : Fragment() {
                 GoogleCalendarIO.deleteAll(it1)
             }
             var favorits: List<TestPlanEntry?>? = null
-            scope_io.launch {
-                favorits = database?.userDao()?.getFavorites(true)
-            }.invokeOnCompletion {
-                context?.let { it1 ->
-                    favorits?.let { it2 ->
-                        GoogleCalendarIO.insertEntries(it1, it2, true)
-                    }
+            favorits = viewModel.getFavorites(true)
+            context?.let { it1 ->
+                favorits?.let { it2 ->
+                    GoogleCalendarIO.insertEntries(it1, it2, true)
                 }
             }
         }
         //Favoriten Löschen
         btnFav.setOnClickListener { deleteFavorits() }
-
         optionenfragment_save_btn.setOnClickListener { save() }
     }
 
@@ -197,21 +150,16 @@ class Optionen() : Fragment() {
      */
     private fun setCalendarSynchro(active: Boolean) {
         val favorites: MutableList<TestPlanEntry?> = mutableListOf()
-        scope_io.launch {
-            database?.userDao()?.getFavorites(true)?.let { favorites.addAll(it) }
-        }.invokeOnCompletion {
-            if (!active) {
-                context?.let { it1 ->
-                    GoogleCalendarIO.deleteAll(it1)
-                }
+        viewModel.getFavorites(true)?.let { favorites.addAll(it) }
+        if (!active) {
+            context?.let { it1 ->
+                GoogleCalendarIO.deleteAll(it1)
             }
-            val editor = sharedPreferencesSettings?.edit()
-            editor?.putBoolean("calSync", active)
-            editor?.apply()
-            if (active) {
-                context?.let { it1 ->
-                    GoogleCalendarIO.insertEntries(it1, favorites, true)
-                }
+        }
+        viewModel.setCalendarSync(active)
+        if (active) {
+            context?.let { it1 ->
+                GoogleCalendarIO.insertEntries(it1, favorites, true)
             }
         }
     }
@@ -224,26 +172,20 @@ class Optionen() : Fragment() {
      * @see AppDatabase
      */
     private fun deleteFavorits() {
-        scope_io.launch {
-            val ppeList = database?.userDao()?.getFavorites(true)
-            ppeList?.forEach {
-                database?.userDao()
-                    ?.update(false, it?.id?.toInt() ?: 0)
-            }
-            context?.let {
-                ppeList?.let { it1 ->
-                    GoogleCalendarIO.deleteEntries(it, it1)
-                }
-            }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    view?.context,
-                    view?.context?.getString(R.string.delete_favorite),
-                    Toast.LENGTH_SHORT
-                ).show()
+        val ppeList = viewModel.getFavorites(true)
+        ppeList?.forEach {
+            it.id?.toInt()?.let { it1 -> viewModel.updateEntryFavorit(false, it1) }
+        }
+        context?.let {
+            ppeList?.let { it1 ->
+                GoogleCalendarIO.deleteEntries(it, it1)
             }
         }
+        Toast.makeText(
+            view?.context,
+            view?.context?.getString(R.string.delete_favorite),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**
@@ -256,35 +198,19 @@ class Optionen() : Fragment() {
      * @see AppDatabase
      */
     private fun deleteInternalDatabase() {
-        scope_io.launch {
-            Log.d("Test", "Lokale DB löschen.")
-            //Delete all entries in the Room-Database
-            database?.userDao()?.deleteAllEntries()
-            // Start Merlin Gürtler
-            //Get the default entries for the user from the REST-API and store them in the room-database
-            Log.d("TestCal", relativePPlanURL.toString())
-            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
-            if (database != null && context != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
-                retrofit.RetrofitWebAccess(
-                    context!!,
-                    database!!,
-                    examineYear!!,
-                    currentExaminePeriod!!,
-                    currentTermin!!,
-                    serverAddress!!
-                )
-            }
-            // Ende Merlin Gürtler
-            Handler(Looper.getMainLooper()).post(object : Runnable {
-                override fun run() {
-                    Toast.makeText(
-                        view?.context,
-                        view?.context?.getString(R.string.delete_db),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            })
-        }
+        Log.d("Test", "Lokale DB löschen.")
+        //Delete all entries in the Room-Database
+        viewModel.deleteAllEntries()
+        // Start Merlin Gürtler
+        //Get the default entries for the user from the REST-API and store them in the room-database
+        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+        retrofit?.RetrofitWebAccess()
+        // Ende Merlin Gürtler
+        Toast.makeText(
+            view?.context,
+            view?.context?.getString(R.string.delete_db),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     /**
@@ -335,7 +261,7 @@ class Optionen() : Fragment() {
      * @see Switch
      */
     private fun initDarkModeSwitch() {
-        darkMode.isChecked = sharedPreferencesSettings?.getBoolean("darkmode", false) ?: false
+        darkMode.isChecked = viewModel.getChosenDarkmode()
     }
 
     /**
@@ -361,7 +287,7 @@ class Optionen() : Fragment() {
         }
         theme?.adapter = adapter
         val selectedPos: Int
-        val themeid = sharedPreferencesSettings?.getInt("themeid", 0)
+        val themeid = viewModel.getChosenThemeId()
         selectedPos = Utils.themeList.indexOf(themeid)
         try {
             theme?.setSelection(selectedPos)
@@ -378,21 +304,15 @@ class Optionen() : Fragment() {
      * @since 1.6
      */
     private fun save() {
-        val editor = sharedPreferencesSettings?.edit()
-
         //Theme
         val position = theme.selectedItemPosition
 
         when (position) {
-            1 -> editor?.putInt("themeid", R.style.Theme_AppTheme_2)?.apply()
-            else -> editor?.putInt("themeid", R.style.Theme_AppTheme_1)?.apply()
+            1 -> viewModel.setChosenThemeId(R.style.Theme_AppTheme_2)
+            else -> viewModel.setChosenThemeId(R.style.Theme_AppTheme_1)
         }
-
-        //Darkmode
-        editor?.putBoolean("darkmode", darkMode.isChecked)?.apply()
-
+        viewModel.setChosenDarkmode(darkMode.isChecked)
         activity?.recreate()
-        //fragmentManager?.beginTransaction()?.detach(this)?.attach(this)?.commit()
     }
 
     /**
@@ -408,21 +328,14 @@ class Optionen() : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.optionfragment, container, false)
-        // Start Merlin Gürtler
-        // Nun aus Shared Preferences
-
         return v
     }
 
     //TODO Implement?
     fun updatePlan(validation: String?) {
-        PingUrl(serverAddress)
+        PingUrl(viewModel.getServerIPAddress())
     }
 
-// Methode zum Aktualiseren der Prüfungen
-// die Abfrage Methodes des Webservers
-// gibt Mögliche Änderungen wie den Status zurück,
-// diese werden dann geupdated
     /**
      * Updates the data for the exams, currently stored in the Room-Database.
      * @author Alexander Lange
@@ -430,32 +343,13 @@ class Optionen() : Fragment() {
      * @see RetrofitConnect
      */
     fun updateCheckPlan() {
-        scope_io.launch {
-            //Log.d("Test",String.valueOf(pruefplanDaten.size()));
-            //aktuellerTermin, serverAddress, relativePPlanURL aus SharedPreferences
-
-            //retrofit auruf
-            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
-            if (context != null && database != null && examineYear != null && currentExaminePeriod != null && currentTermin != null && serverAddress != null) {
-                retrofit.retroUpdate(
-                    context!!,
-                    database!!,
-                    examineYear!!,
-                    currentExaminePeriod!!,
-                    currentTermin!!,
-                    serverAddress
-                )
-            }
-            // Log.d("Test3",String.valueOf(stringaufteilung[5]));
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    context!!.getString(R.string.add_favorite),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+        retrofit?.retroUpdate()
+        Toast.makeText(
+            context,
+            context!!.getString(R.string.add_favorite),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
 //Verbindungsaufbau zum Webserver
@@ -469,29 +363,22 @@ class Optionen() : Fragment() {
      * @see updateCheckPlan
      */
     fun PingUrl(address: String?) {
-        scope_io.launch {
-            try {
-                val url = URL(address)
-                val urlConn = url.openConnection() as HttpURLConnection
-                urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
-                val startTime = System.currentTimeMillis()
-                urlConn.connect()
-                val endTime = System.currentTimeMillis()
-                if (urlConn.responseCode == HttpURLConnection.HTTP_OK) {
-                    // System.out.println("Time (ms) : " + (endTime - startTime));
-                    // System.out.println("Ping to " + address + " successful.");
-                    updateCheckPlan()
-                }
-            } catch (e: Exception) {
-                Handler(Looper.getMainLooper()).post {
-                    Toast.makeText(
-                        context,
-                        context!!.getString(R.string.noConnection),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        try {
+            val url = URL(address)
+            val urlConn = url.openConnection() as HttpURLConnection
+            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
+            val startTime = System.currentTimeMillis()
+            urlConn.connect()
+            val endTime = System.currentTimeMillis()
+            if (urlConn.responseCode == HttpURLConnection.HTTP_OK) {
+                updateCheckPlan()
             }
+        } catch (e: Exception) {
+            Toast.makeText(
+                context,
+                context!!.getString(R.string.noConnection),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
-
 }

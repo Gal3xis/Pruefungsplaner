@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.R.attr.colorOnPrimary
 import com.Fachhochschulebib.fhb.pruefungsplaner.Utils.getColorFromAttr
 import com.google.android.material.snackbar.Snackbar
@@ -65,15 +66,20 @@ import kotlinx.coroutines.launch
 class StartActivity() : AppCompatActivity() {
     var mAdapter: CheckListAdapter? = null
 
-    private var updateManager:AppUpdateManager? = null
+    private var updateManager: AppUpdateManager? = null
     private val UPDATE_REQUEST_CODE = 100
-    private val installStateUpdateListener:InstallStateUpdatedListener = InstallStateUpdatedListener {
-        if(it.installStatus()== InstallStatus.DOWNLOADED){
-            Snackbar.make(findViewById(android.R.id.content),"Update is ready",Snackbar.LENGTH_INDEFINITE).setAction("Install") {
-                updateManager?.completeUpdate()
-            }.show()
+    private val installStateUpdateListener: InstallStateUpdatedListener =
+        InstallStateUpdatedListener {
+            if (it.installStatus() == InstallStatus.DOWNLOADED) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Update is ready",
+                    Snackbar.LENGTH_INDEFINITE
+                ).setAction("Install") {
+                    updateManager?.completeUpdate()
+                }.show()
+            }
         }
-    }
 
     //KlassenVariablen
     private var courseMain: String? = null
@@ -84,18 +90,8 @@ class StartActivity() : AppCompatActivity() {
 
     // private Spinner spStudiengangMain;
     // List<String> idList = new ArrayList<String>();
-    var mSharedPreferencesPPServerAdress: SharedPreferences? = null
-    var sharedPreferencesSettings: SharedPreferences? = null
-    var mSharedPreferencesValidation: SharedPreferences? = null
-    var sharedPrefPruefPeriode: SharedPreferences? = null
-    var sharedPrefsFaculty:SharedPreferences? = null
-    var database: AppDatabase? = null
-    var context: Context? = null
-
-    val SCOPE_IO = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
-
-    var serverAddress: String? = null
-    var relativePPlanURL: String? = null
+    private lateinit var context: Context
+    private lateinit var viewModel: MainViewModel
 
     // Start Merlin Gürtler
     // Fügt den Hauptstudiengang zu den Shared Preferences hinzu
@@ -108,31 +104,20 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     private fun addMainCourse(choosenCourse: String?) {
-        if (database == null) {
-            return
-        }
-        SCOPE_IO.launch {
-            returnCourse = database?.userDao()?.getCourseId(choosenCourse)
+        returnCourse = choosenCourse?.let { viewModel.getCourseId(it) }
+        choosenCourse?.let { viewModel.setSelectedCourse(it) }
+        returnCourse?.let { viewModel.setReturnCourse(it) }
 
-            // Erstelle Shared Pref für die anderen Fragmente
+        val retrofit = RetrofitConnect(viewModel,context)
 
-            val editorStudiengangValidation = mSharedPreferencesValidation?.edit()
-            editorStudiengangValidation?.putString("selectedCourse", choosenCourse)
-            editorStudiengangValidation?.putString("returnCourse", returnCourse)
-            editorStudiengangValidation?.apply()
-            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
-            // Überprüfe ob die App schonmal gestartet wurde
+        // Überprüfe ob die App schonmal gestartet wurde
 
-            if (database!!.userDao()?.getUuid == null) {
-                // Sende nur ans Backend wenn die App wirklich zum ersten mal
-                // gestartet wurde
-                retrofit.firstStart(
-                        applicationContext, database!!,
-                        serverAddress
-                )
-            } else {
-                retrofit.setUserCourses(applicationContext, database!!, serverAddress)
-            }
+        if (viewModel.getUuid() == null) {
+            // Sende nur ans Backend wenn die App wirklich zum ersten mal
+            // gestartet wurde
+            retrofit?.firstStart()
+        } else {
+            retrofit?.setUserCourses()
         }
     }
 
@@ -151,8 +136,8 @@ class StartActivity() : AppCompatActivity() {
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode==UPDATE_REQUEST_CODE&&resultCode!= RESULT_OK){
-            Toast.makeText(this,"Cancel",Toast.LENGTH_LONG).show()
+        if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
+            Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
         }
         if (resultCode == 0) {
             finish()
@@ -176,15 +161,23 @@ class StartActivity() : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
         context = baseContext
-
-        database = AppDatabase.getAppDatabase(baseContext)
+        viewModel = ViewModelProvider(
+            this,
+            MainViewModelFactory(application)
+        )[MainViewModel::class.java]
         initSharedPreferences()
-
         updateManager = AppUpdateManagerFactory.create(this)
         updateManager?.appUpdateInfo?.addOnSuccessListener {
-            if(it.updateAvailability()==UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(AppUpdateType.FLEXIBLE))
-            {
-                updateManager?.startUpdateFlowForResult(it,AppUpdateType.FLEXIBLE,this,UPDATE_REQUEST_CODE)
+            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
+                    AppUpdateType.FLEXIBLE
+                )
+            ) {
+                updateManager?.startUpdateFlowForResult(
+                    it,
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    UPDATE_REQUEST_CODE
+                )
             }
         }
         updateManager?.registerListener(installStateUpdateListener)
@@ -203,12 +196,11 @@ class StartActivity() : AppCompatActivity() {
         //Kalender:: aktuelles Jahr --> Bestimmung der Prüfphase (WiSe, SoSe)
         val calendar = Calendar.getInstance()
         val calendarMonth = calendar[Calendar.MONTH]
-        Log.d("Output Monat", calendarMonth.toString())
 
         // Start Merlin Gürtler
         //Anzahl der Elemente
         //Adapter-Aufruf
-        val strJson = sharedPrefPruefPeriode?.getString("currentPeriode", "0")
+        val strJson = viewModel.getCurrentPeriode()
         try {
             initServer()
             initButtons()
@@ -259,27 +251,9 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     private fun initSharedPreferences() {
-        mSharedPreferencesValidation =
-                application.getSharedPreferences("validation", MODE_PRIVATE)
-        // Ende Merlin Gürtler
-        mSharedPreferencesPPServerAdress =
-                applicationContext.getSharedPreferences("Server_Address", MODE_PRIVATE)
-        sharedPrefsFaculty = getApplicationContext()
-                .getSharedPreferences("faculty", Context.MODE_PRIVATE)
-        courseMain = mSharedPreferencesValidation?.getString("selectedCourse", "0")
-        val mEditorPPServerAdress = mSharedPreferencesPPServerAdress?.edit()
-        mEditorPPServerAdress?.putString(
-                "ServerIPAddress",
-                context?.getString(R.string.server_adress)
-        )
-        mEditorPPServerAdress?.apply() //Schreiben der Präferenz!
-        serverAddress = mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
-        val mEditorRelUrlPath = mSharedPreferencesPPServerAdress?.edit()
-        mEditorRelUrlPath?.putString("ServerRelUrlPath", context?.getString(R.string.server_url))
-        mEditorRelUrlPath?.apply() //Schreiben der Präferenz!
-        //Auslesen zur allgemeinen Verwendung in der aktuellen Activity
-        relativePPlanURL = mSharedPreferencesPPServerAdress?.getString("ServerRelUrlPath", "0")
-        sharedPrefPruefPeriode = applicationContext.getSharedPreferences("periode", MODE_PRIVATE)
+        viewModel.setServerIPAddress(context.getString(R.string.server_adress))
+        viewModel.setServerRelUrlPath(context.getString(R.string.server_url))
+        courseMain = viewModel.getSelectedCourse()
     }
 
     //Aufruf in onCreate()
@@ -290,30 +264,19 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     private fun initServer() {
-        checkFaculties(serverAddress + relativePPlanURL + "entity.faculty")
+        checkFaculties(viewModel.getServerIPAddress() + viewModel.getServerRelUrlPath() + "entity.faculty")
         // Start Merlin Gürtler
         val globalVariable = applicationContext as StartClass
-        val retrofit = RetrofitConnect(relativePPlanURL ?: "")
+        val retrofit =  RetrofitConnect(viewModel,context)
 
-        // Thread für die Studiengänge
-        SCOPE_IO.launch {
-            if (database != null) {
-                retrofit.getCourses(application, database!!, serverAddress)
-            }
-        }
+        retrofit.getCourses()
+
 
         // Thread für die UUid
-        SCOPE_IO.launch {
-            val uuid = database?.userDao()?.getUuid
-            if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
-                globalVariable.appStarted = true
-                if (database != null) {
-                    retrofit.anotherStart(
-                            applicationContext, database!!,
-                            serverAddress
-                    )
-                }
-            }
+        val uuid = viewModel.getUuid()
+        if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
+            globalVariable.appStarted = true
+            retrofit.anotherStart()
         }
 
     }
@@ -326,9 +289,9 @@ class StartActivity() : AppCompatActivity() {
      */
     fun noConnection() {
         Toast.makeText(
-                applicationContext,
-                applicationContext.getString(R.string.noConnection),
-                Toast.LENGTH_SHORT
+            applicationContext,
+            applicationContext.getString(R.string.noConnection),
+            Toast.LENGTH_SHORT
         ).show()
     }
 
@@ -349,7 +312,6 @@ class StartActivity() : AppCompatActivity() {
                 // Erstele einen Dialog um den Hauptstudiengang zu wählen
                 createAlertDialogSelectMainCourse(v)
             }
-            // Ende Merlin Gürtler
         }
     }
 
@@ -363,62 +325,57 @@ class StartActivity() : AppCompatActivity() {
      */
     private fun createAlertDialogSelectMainCourse(view: View) {
         val chooseCourse = AlertDialog.Builder(
-                this@StartActivity,
-                R.style.customAlertDialog
+            this@StartActivity,
+            R.style.customAlertDialog
         )
         var oneFavorite = false
         val favoriteCourses: MutableList<String> = ArrayList()
-        SCOPE_IO.launch {
-            // prüfe ob mindesten ein Studiengang favorisiert wurde
-            for (chosen: Boolean in courseChosen) {
-                if (chosen) {
-                    oneFavorite = true
-                    break
+        // prüfe ob mindesten ein Studiengang favorisiert wurde
+        for (chosen: Boolean in courseChosen) {
+            if (chosen) {
+                oneFavorite = true
+                break
+            }
+        }
+        if (oneFavorite) {
+            // aktualisiere die db
+            for (i in courseChosen.indices) {
+                viewModel.updateCourse(
+                    courseName[i],
+                    courseChosen[i]
+                )
+                if (courseChosen[i]) {
+                    favoriteCourses.add(courseName[i])
                 }
             }
-            if (oneFavorite) {
-                // aktualisiere die db
-                for (i in courseChosen.indices) {
-                    database?.userDao()?.updateCourse(
-                            courseName[i],
-                            courseChosen[i]
-                    )
-                    if (courseChosen[i]) {
-                        favoriteCourses.add(courseName[i])
-                    }
+        }
+        if (oneFavorite) {
+            if (favoriteCourses.size == 1) {
+                addMainCourse(favoriteCourses[0])
+                val mainWindow = Intent(applicationContext, MainActivity::class.java)
+                startActivityForResult(mainWindow, 0)
+            } else {
+                val courses =
+                    arrayOfNulls<String>(favoriteCourses.size)
+                for (i in favoriteCourses.indices) {
+                    courses[i] = favoriteCourses[i]
                 }
-            }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                if (oneFavorite) {
-                    if (favoriteCourses.size == 1) {
-                        addMainCourse(favoriteCourses[0])
-                        val mainWindow = Intent(applicationContext, MainActivity::class.java)
-                        startActivityForResult(mainWindow, 0)
-                    } else {
-                        val courses =
-                                arrayOfNulls<String>(favoriteCourses.size)
-                        for (i in favoriteCourses.indices) {
-                            courses[i] = favoriteCourses[i]
-                        }
-                        chooseCourse.setTitle(R.string.choose_main)
-                        chooseCourse.setItems(
-                                courses
-                        ) { _, which ->
-                            addMainCourse(courses[which])
-                            val mainWindow = Intent(applicationContext, MainActivity::class.java)
-                            startActivityForResult(mainWindow, 0)
-                        }
-                        chooseCourse.show()
-                    }
-                } else {
-                    Toast.makeText(
-                            view.context,
-                            view.context.getString(R.string.favorite_one_course),
-                            Toast.LENGTH_SHORT
-                    ).show()
+                chooseCourse.setTitle(R.string.choose_main)
+                chooseCourse.setItems(
+                    courses
+                ) { _, which ->
+                    addMainCourse(courses[which])
+                    val mainWindow = Intent(applicationContext, MainActivity::class.java)
+                    startActivityForResult(mainWindow, 0)
                 }
+                chooseCourse.show()
             }
+        } else {
+            Toast.makeText(
+                view.context,
+                view.context.getString(R.string.favorite_one_course),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -429,8 +386,8 @@ class StartActivity() : AppCompatActivity() {
      */
     private fun createAlertDialogChooseFaculty() {
         val chooseFaculty = AlertDialog.Builder(
-                this@StartActivity,
-                R.style.customAlertDialog
+            this@StartActivity,
+            R.style.customAlertDialog
         )
         val faculties = arrayOfNulls<String>(facultyName.size)
         for (i in facultyName.indices) {
@@ -465,87 +422,73 @@ class StartActivity() : AppCompatActivity() {
                     val `object` = jsonArrayFacultys!!.getJSONObject(i)
                     returnFaculty = `object`["fbid"].toString()
                     Log.d(
-                            "Output Fakultaet",
-                            returnFaculty ?: "No Faculty"
+                        "Output Fakultaet",
+                        returnFaculty ?: "No Faculty"
                     )
                     // Erstelle Shared Pref für die anderen Fragmente
+                    returnFaculty?.let { viewModel.setReturnFaculty(it) }
 
-                    val editorFacultyValidation =
-                            mSharedPreferencesValidation?.edit()
-                    editorFacultyValidation?.putString(
-                            "returnFaculty",
-                            returnFaculty
-                    )
-                    editorFacultyValidation?.apply()
                     // füllt die Liste mit Studiengängena
-                    SCOPE_IO.launch {
-                        val courses =
-                                database?.userDao()
-                                        ?.getAllCoursesByFacultyId(
-                                                returnFaculty
-                                        )
-                        courseChosen.clear()
-                        courseName.clear()
-                        if (courses != null) {
-                            for (course in courses) {
-                                courseName.add(course?.courseName ?: "")
-                                courseChosen.add(
-                                        course?.choosen ?: false
-                                )
-                            }
-                        }
-                    }.invokeOnCompletion {
-                        Handler(Looper.getMainLooper()).post {
-                            val faculty = faculties[which]
-                                    ?: "No Faculty"
-                            if (faculty.contains(" ")) {
-                                buttonForSpinner.text =
-                                        faculty
-                                                .substring(
-                                                        0,
-                                                        faculty
-                                                                .indexOf(' ')
-                                                )
-                            } else {
-                                buttonForSpinner.text = faculty
-                            }
-
-                            // füge den Adapter der Recyclerview hinzu
-                            mAdapter = CheckListAdapter(
-                                    courseName,
-                                    courseChosen,
-                                    applicationContext
+                    val courses = returnFaculty?.let { viewModel.getAllCoursesByFacultyid(it) }
+                    courseChosen.clear()
+                    courseName.clear()
+                    if (courses != null) {
+                        for (course in courses) {
+                            courseName.add(course?.courseName ?: "")
+                            courseChosen.add(
+                                course?.choosen ?: false
                             )
-                            recyclerViewChecklist.adapter = mAdapter
-                            if (chooseCourseId.visibility != View.VISIBLE) {
-                                chooseCourseId.visibility =
-                                        View.VISIBLE
-                            }
-                            if (courseName.size == 0) {
-                                if (buttonOk!!.visibility == View.VISIBLE) {
-                                    buttonOk!!.visibility =
-                                            View.INVISIBLE
-                                }
-                                chooseCourseId.setText(R.string.no_course)
-                                chooseCourseId.setTextColor(
-                                        getColorFromAttr(colorOnPrimary, theme)
-                                )
-                            } else {
-                                if (buttonOk!!.visibility != View.VISIBLE) {
-                                    buttonOk!!.visibility =
-                                            View.VISIBLE
-                                }
-                                chooseCourseId.setText(R.string.choose_course)
-                                chooseCourseId.setTextColor(
-                                        getColorFromAttr(colorOnPrimary, theme)
-                                )
-                            }
                         }
+                    }
+                    val faculty = faculties[which]
+                        ?: "No Faculty"
+                    if (faculty.contains(" ")) {
+                        buttonForSpinner.text =
+                            faculty
+                                .substring(
+                                    0,
+                                    faculty
+                                        .indexOf(' ')
+                                )
+                    } else {
+                        buttonForSpinner.text = faculty
+                    }
+
+                    // füge den Adapter der Recyclerview hinzu
+                    mAdapter = CheckListAdapter(
+                        courseName,
+                        courseChosen,
+                        applicationContext,
+                        viewModel
+                    )
+                    recyclerViewChecklist.adapter = mAdapter
+                    if (chooseCourseId.visibility != View.VISIBLE) {
+                        chooseCourseId.visibility =
+                            View.VISIBLE
+                    }
+                    if (courseName.size == 0) {
+                        if (buttonOk!!.visibility == View.VISIBLE) {
+                            buttonOk!!.visibility =
+                                View.INVISIBLE
+                        }
+                        chooseCourseId.setText(R.string.no_course)
+                        chooseCourseId.setTextColor(
+                            getColorFromAttr(colorOnPrimary, theme)
+                        )
+                    } else {
+                        if (buttonOk!!.visibility != View.VISIBLE) {
+                            buttonOk!!.visibility =
+                                View.VISIBLE
+                        }
+                        chooseCourseId.setText(R.string.choose_course)
+                        chooseCourseId.setTextColor(
+                            getColorFromAttr(colorOnPrimary, theme)
+                        )
                     }
                 } catch (e: Exception) {
                     Log.d(
-                            "uebergabeAnSpinner",
-                            "Fehler: Parsen von 'uebergabeAnSpinner'"
+                        "uebergabeAnSpinner",
+                        "Fehler: Parsen von 'uebergabeAnSpinner'"
                     )
                 }
             } //if
@@ -563,30 +506,28 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     fun checkFaculties(address: String?) {
-        SCOPE_IO.launch {
-            //Verbindungsaufbau zum Webserver
-            try {
-                updateFaculties(address)
-            } catch (e: Exception) {
-                val strFacultys: String? = sharedPrefsFaculty?.getString("faculty", "0")
-                if (strFacultys != null) {
-                    try {
-                        jsonArrayFacultys = JSONArray(strFacultys)
-                        var i: Int = 0
-                        while (i < jsonArrayFacultys!!.length()) {
-                            val json: JSONObject = jsonArrayFacultys!!.getJSONObject(i)
-                            facultyName.add(json.get("facName").toString())
-                            i++
-                        }
-                    } catch (b: Exception) {
-                        Log.d(
-                                "uebergabeAnSpinner",
-                                "Fehler beim Parsen des Fakultätsnamen."
-                        )
+        //Verbindungsaufbau zum Webserver
+        try {
+            updateFaculties(address)
+        } catch (e: Exception) {
+            val strFacultys = viewModel.getFaculties()
+            if (strFacultys != null) {
+                try {
+                    jsonArrayFacultys = JSONArray(strFacultys)
+                    var i: Int = 0
+                    while (i < jsonArrayFacultys!!.length()) {
+                        val json: JSONObject = jsonArrayFacultys!!.getJSONObject(i)
+                        facultyName.add(json.get("facName").toString())
+                        i++
                     }
+                } catch (b: Exception) {
+                    Log.d(
+                        "uebergabeAnSpinner",
+                        "Fehler beim Parsen des Fakultätsnamen."
+                    )
                 }
-                Handler(Looper.getMainLooper()).post { noConnection() }
             }
+            Handler(Looper.getMainLooper()).post { noConnection() }
         }
     }
 
@@ -603,7 +544,7 @@ class StartActivity() : AppCompatActivity() {
         val result = StringBuilder()
         val url = URL(address)
         val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
-        urlConn.setConnectTimeout(1000 * 10) // mTimeout is in seconds
+        urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
         urlConn.connect()
 
         //Parsen von den  erhaltene Werte
@@ -622,21 +563,21 @@ class StartActivity() : AppCompatActivity() {
             e.printStackTrace()
         }
         val x: Iterator<*> = jsonObj!!.keys()
-        val jsonArray: JSONArray = JSONArray()
+        val jsonArray = JSONArray()
         while (x.hasNext()) {
             val key: String = x.next() as String
             jsonArray.put(jsonObj.get(key))
         }
 
         //Werte von JSONARRay in JSONObject konvertieren
-        val receivesFacultys: JSONArray = JSONArray()
+        val receivesFacultys = JSONArray()
         for (i in 0 until jsonArray.length()) {
             val `object`: JSONObject = jsonArray.getJSONObject(i)
             receivesFacultys.put(`object`.get("faculty"))
         }
         val convertedToString: String = receivesFacultys.toString()
         val deletedCling: String =
-                convertedToString.substring(1, convertedToString.length - 1)
+            convertedToString.substring(1, convertedToString.length - 1)
         //konvertieren zu JSONArray
         jsonArrayFacultys = JSONArray(deletedCling)
         for (i in 0 until jsonArrayFacultys!!.length()) {
@@ -645,22 +586,17 @@ class StartActivity() : AppCompatActivity() {
         }
 
         // Werte Speichern für die offline Verwendung
-        //Log.d("Output fakultaet", jsonArrayFakultaeten.get(0).toString());
-        val facultyEditor = sharedPrefsFaculty?.edit()
         try {
-            facultyEditor?.clear()
-            facultyEditor?.apply()
-            facultyEditor?.putString("faculty", deletedCling)
-            facultyEditor?.apply()
+            viewModel.setFaculties(deletedCling)
         } catch (e: Exception) {
             Log.d(
-                    "Output checkFakultaet",
-                    "Fehler: Parsen von Fakultaet"
+                "Output checkFakultaet",
+                "Fehler: Parsen von Fakultaet"
             )
         }
         Log.d("Output checkFakultaet", "abgeschlossen")
     }
-    
+
 
     companion object {
         var returnCourse: String? = null

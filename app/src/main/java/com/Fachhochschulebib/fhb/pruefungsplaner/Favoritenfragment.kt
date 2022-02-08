@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import java.lang.Exception
@@ -43,17 +44,14 @@ import kotlinx.coroutines.launch
  * @see Fragment
  */
 class Favoritenfragment : Fragment() {
-    val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
-
-    var mAdapter: RecyclerViewFavoritAdapter? = null
-    var check: MutableList<Boolean> = ArrayList()
+    private var mAdapter: RecyclerViewFavoritAdapter? = null
+    private var check: MutableList<Boolean> = ArrayList()
 
     //TODO Alexander Lange Start
-    var filterChangeListenerPosition: Int? = null
+    private var filterChangeListenerPosition: Int? = null
 
     //TODO Alexander Lange End
-    //Datenbank initialisierung
-    var database: AppDatabase? = null
+    private lateinit var viewModel: MainViewModel
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -68,9 +66,10 @@ class Favoritenfragment : Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        database = AppDatabase.getAppDatabase(context!!)
-
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            MainViewModelFactory(requireActivity().application)
+        )[MainViewModel::class.java]
     }
 
     /**
@@ -139,39 +138,35 @@ class Favoritenfragment : Fragment() {
         val examNo: MutableList<String> = ArrayList()
         val room: MutableList<String> = ArrayList()
         val form: MutableList<String> = ArrayList()
-        scope_io.launch {
-            val ppeList = database?.userDao()?.getFavorites(true)
+        val ppeList = viewModel.getFavorites(true)
 
-            // Abfrage ob Prüfungen favorisiert wurden
-            // Favorisierte Prüfungen für die Anzeige vorbereiten
-            if (ppeList != null) {
-                for (entry in ppeList) {
-                    if (!MainActivity.Filter.validateFilter(context, entry)) {
-                        continue
-                    }
-                    courses.add(
-                        entry?.module + " "
-                                + entry?.course
-                    )
-                    profnames.add(
-                        entry?.firstExaminer + " "
-                                + entry?.secondExaminer + " "
-                                + entry?.semester
-                    )
-                    dates.add(entry?.date ?: "")
-                    examNo.add(entry?.id ?: "")
-                    room.add(entry?.room ?: "")
-                    form.add(entry?.examForm ?: "")
-                    check.add(true)
+        // Abfrage ob Prüfungen favorisiert wurden
+        // Favorisierte Prüfungen für die Anzeige vorbereiten
+        if (ppeList != null) {
+            for (entry in ppeList) {
+                if (!MainActivity.Filter.validateFilter(context, entry)) {
+                    continue
                 }
-            }
-            // definiere adapter
-            // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-            mAdapter = RecyclerViewFavoritAdapter(courses, profnames, dates, examNo, room, form)
-            Handler(Looper.getMainLooper()).post {
-                recyclerView4?.adapter = mAdapter
+                courses.add(
+                    entry.module + " "
+                            + entry?.course
+                )
+                profnames.add(
+                    entry.firstExaminer + " "
+                            + entry.secondExaminer + " "
+                            + entry.semester
+                )
+                dates.add(entry.date ?: "")
+                examNo.add(entry.id ?: "")
+                room.add(entry.room ?: "")
+                form.add(entry.examForm ?: "")
+                check.add(true)
             }
         }
+        // definiere adapter
+        // übergabe der variablen an den Recyclerview Adapter, für die darstellung
+        mAdapter = RecyclerViewFavoritAdapter(courses, profnames, dates, examNo, room, form,viewModel)
+        recyclerView4?.adapter = mAdapter
     }
 
     //TODO Alexander Lange Start

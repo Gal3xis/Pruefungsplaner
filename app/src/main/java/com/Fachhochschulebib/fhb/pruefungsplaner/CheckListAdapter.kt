@@ -34,9 +34,9 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
     (
     private val coursesList: List<String>,
     private val chosenList: MutableList<Boolean>,
-    private val context: Context
+    private val context: Context,
+    private val viewModel: MainViewModel
 ) : RecyclerView.Adapter<CheckListAdapter.ViewHolder>() {
-    var selectedCourse: String? = null
     private var globalVariable: StartClass? = null
 
     /**
@@ -70,12 +70,6 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
         val vh = ViewHolder(v)
 
         globalVariable = context as StartClass
-
-        //Get selected Course
-        val sharedPreferencesSelectedCourse =
-            context.getSharedPreferences("validation", Context.MODE_PRIVATE)
-        selectedCourse = sharedPreferencesSelectedCourse.getString("selectedCourse", "0")
-
         //Return ViewHolder
         return vh
     }
@@ -119,7 +113,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * @since 1.6
      */
     private fun addFavorite(position: Int): Boolean {
-        if (coursesList[position] != selectedCourse || globalVariable!!.isChangeFaculty) {
+        if (coursesList[position] != viewModel.getSelectedCourse() || globalVariable!!.isChangeFaculty) {
             chosenList[position] = !chosenList[position]
         } else {
             Toast.makeText(

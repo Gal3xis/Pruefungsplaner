@@ -13,6 +13,7 @@ import android.content.SharedPreferences
 import android.os.Handler
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.feedback.*
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.CoroutineScope
@@ -41,11 +42,7 @@ import kotlinx.coroutines.launch
  * @since 1.6
  */
 class FeedbackFragment : Fragment() {
-    val scope_io = CoroutineScope(CoroutineName("IO-Scope")+Dispatchers.IO)
-    var mSharedPreferencesPPServerAdress:SharedPreferences? = null
-
-    var database:AppDatabase? = null
-
+    private lateinit var viewModel: MainViewModel
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -60,8 +57,9 @@ class FeedbackFragment : Fragment() {
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mSharedPreferencesPPServerAdress = view?.context?.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
-        database = view?.context?.let { AppDatabase.getAppDatabase(it) }
+        viewModel = ViewModelProvider(
+            requireActivity(), MainViewModelFactory(requireActivity().application)
+        )[MainViewModel::class.java]
     }
 
     /**
@@ -77,28 +75,23 @@ class FeedbackFragment : Fragment() {
 
         //From onCreateView
         buttonSend.setOnClickListener { view ->
-            val serverAddress = mSharedPreferencesPPServerAdress?.getString("ServerIPAddress", "0")
-            val relativePPlanURL = mSharedPreferencesPPServerAdress?.getString("ServerRelUrlPath", "0")
+            val serverAddress = viewModel.getServerIPAddress()
+            val relativePPlanURL = viewModel.getServerRelUrlPath()
             //retrofit auruf
-            val retrofit = RetrofitConnect(relativePPlanURL ?: "")
-            scope_io.launch {
-                if (database != null) {
-                    retrofit.sendFeedBack(
-                        view.context, database!!, serverAddress,
-                        ratingBarUsability.rating, ratingBarFuntions.rating,
-                        ratingBarStability.rating, feedBackInput.text.toString()
-                    )
-                }
-                Handler(Looper.getMainLooper()).post { // Sende eine Nachricht nachdem senden des Feedbacks
-                    Toast.makeText(
-                        view.context,
-                        view.context.getString(R.string.sendedFeedBack),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    val mainWindow = Intent(view.context, MainActivity::class.java)
-                    startActivity(mainWindow)
-                }
-            }
+            val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+                retrofit?.sendFeedBack(
+                    ratingBarUsability.rating,
+                    ratingBarFuntions.rating,
+                    ratingBarStability.rating,
+                    feedBackInput.text.toString(),
+                )
+            Toast.makeText(
+                view.context,
+                view.context.getString(R.string.sendedFeedBack),
+                Toast.LENGTH_SHORT
+            ).show()
+            val mainWindow = Intent(view.context, MainActivity::class.java)
+            startActivity(mainWindow)
         }
     }
 

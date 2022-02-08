@@ -48,18 +48,12 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     private val datesList: List<String>,
     private val ppIdList: List<String>,
     private val roomList: List<String>,
-    private val formList: List<String>
+    private val formList: List<String>,
+    private val viewModel: MainViewModel
 ) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null
     private var name: String? = null
     private var context: Context? = null
-
-    private val scope_io = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
-
-    private var database: AppDatabase? = null
-
-    private var sharedPreferencesValidation: SharedPreferences? = null
-
     private var openItem: ViewHolder? = null
 
     /**
@@ -121,15 +115,8 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         val v = inflater.inflate(R.layout.favoriten, parent, false)
         // set the view's size, margins, paddings and layout parameters
         val vh: ViewHolder = ViewHolder(v)
-
         // Merlin Gürtler für den globalen Context
         context = parent.context
-
-        context?.let { database = AppDatabase.getAppDatabase(it) }
-
-        sharedPreferencesValidation =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-
         return vh
     }
 
@@ -162,14 +149,12 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                     openItem?.txtSecondScreen?.visibility = View.GONE
                 }
                 holder.txtSecondScreen.visibility = View.VISIBLE
-                scope_io.launch {
-                    holder.txtSecondScreen.text =
-                        context?.let { it1 ->
-                            database?.userDao()?.getEntryById(ppIdList[position])?.getString(
-                                it1
-                            )
-                        }
-                }
+                holder.txtSecondScreen.text =
+                    context?.let { it1 ->
+                        viewModel.getEntryById(ppIdList[position])?.getString(
+                            it1
+                        )
+                    }
                 //Make previous details invisible
                 openItem = holder
             }
@@ -247,24 +232,18 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      */
     private fun deleteItem(position: Int) {
         var selectedEntry: TestPlanEntry? = null
-        scope_io.launch {
-            selectedEntry = database?.userDao()?.getEntryById(ppIdList[position])
-            database?.userDao()
-                ?.update(false, Integer.valueOf(ppIdList[position]))
-            //Entferne den Eintrag aus dem Calendar falls vorhanden
-            context?.let {
-                selectedEntry?.let { it1 ->
-                    GoogleCalendarIO.deleteEntry(it, it1)
-                }
-            }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(
-                    context,
-                    context!!.getString(R.string.delete), Toast.LENGTH_SHORT
-                ).show()
+        selectedEntry = viewModel.getEntryById(ppIdList[position])
+        viewModel.updateEntryFavorit(false, Integer.valueOf(ppIdList[position]))
+        //Entferne den Eintrag aus dem Calendar falls vorhanden
+        context?.let {
+            selectedEntry?.let { it1 ->
+                GoogleCalendarIO.deleteEntry(it, it1)
             }
         }
+        Toast.makeText(
+            context,
+            context!!.getString(R.string.delete), Toast.LENGTH_SHORT
+        ).show()
     }
 
     // Provide a reference to the views for each data item

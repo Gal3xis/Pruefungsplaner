@@ -12,7 +12,7 @@ import kotlinx.coroutines.withContext
  *
  * **See Also:**[MVVM](https://itnext.io/android-architecture-hilt-mvvm-kotlin-coroutines-live-data-room-and-retrofit-ft-8b746cab4a06)
  */
-class AppRepository(
+class DatabaseRepository(
     application: Application
 ) {
     private var localDataSource: UserDao = AppDatabase.getAppDatabase(application).userDao()

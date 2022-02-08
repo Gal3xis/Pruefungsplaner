@@ -14,6 +14,7 @@ import android.provider.CalendarContract
 import android.util.Log
 import android.view.View
 import android.widget.*
+import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import kotlinx.android.synthetic.main.terminefragment.*
 import kotlinx.coroutines.*
@@ -49,22 +50,16 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     private val examForm: List<String>,
     mLayout: RecyclerView.LayoutManager?,
     private val room: List<String>,
-    private val statusHintList: List<String>
+    private val statusHintList: List<String>,
+    private val viewModel: MainViewModel
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
-
-    private val scopeIO = CoroutineScope(CoroutineName("IO-Scope") + Dispatchers.IO)
-
-    private var database: AppDatabase? = null
-
-    private var sharedPreferencesValidation: SharedPreferences? = null
-
-
     private var save = false
     private var moduleName: String? = null
     private var context: Context? = null
     private var calDate = GregorianCalendar()
 
     private var openItem: ViewHolder? = null
+
 
     // Create new views (invoked by the layout manager)
     /**
@@ -90,12 +85,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         )
         val view = inflater.inflate(R.layout.termine, parent, false)
         context = view.context
-
-        context?.let { database = AppDatabase.getAppDatabase(it) }
-
-        sharedPreferencesValidation =
-            context?.getSharedPreferences("validation", Context.MODE_PRIVATE)
-
         return ViewHolder(view)
     }
 
@@ -124,14 +113,12 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                         openItem?.txtSecondScreen?.visibility = View.GONE
                     }
                     holder.txtSecondScreen.visibility = View.VISIBLE
-                    scopeIO.launch {
-                        holder.txtSecondScreen.text =
-                            context?.let { it1 ->
-                                database?.userDao()?.getEntryById(planId[position])?.getString(
-                                    it1
-                                )
-                            }
-                    }
+                    holder.txtSecondScreen.text =
+                        context?.let { it1 ->
+                            viewModel.getEntryById(planId[position])?.getString(
+                                it1
+                            )
+                        }
                     //Make previous details invisible
                     openItem = holder
                 }
@@ -151,7 +138,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         } catch (ex: Exception) {
             Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
         }
-
     }
 
     /**
@@ -226,44 +212,39 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         holder: ViewHolder
     ) {
         var selectedEntry: TestPlanEntry? = null
-        scopeIO.launch {
-            try {
-                selectedEntry = database?.userDao()?.getEntryById(planId[position])
-                //Datenbank und Pruefplan laden
-                save = false
-            } catch (ex: Exception) {
-                Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
+        try {
+            selectedEntry = viewModel.getEntryById(planId[position])
+            //Datenbank und Pruefplan laden
+            save = false
+        } catch (ex: Exception) {
+            Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
+        }
+        try {
+            if (position < 0) {
+                return
             }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                try {
-                    if (position < 0) {
-                        return@post
-                    }
-                    val pruefid = planId[position]?.toInt()
-                    if (Integer.valueOf(selectedEntry?.id) != pruefid) {
-                        return@post
-                    }
-                    // Start Merlin Gürtler
-                    // Setze die Farbe des Icons
-                    if (context != null) {
-                        holder.statusIcon.setColorFilter(
-                            Utils.getColorFromAttr(
-                                Utils.statusColors[selectedEntry?.status]
-                                    ?: R.attr.defaultStatusColor, context!!.theme
-                            )
-                        )
-                        holder.ivicon.setImageDrawable(
-                            context!!.resources.getDrawable(
-                                Utils.favoritIcons[selectedEntry?.favorit ?: false]!!,
-                                context!!.theme
-                            )
-                        )
-                    }
-                } catch (ex: Exception) {
-                    Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
-                }
+            val pruefid = planId[position]?.toInt()
+            if (Integer.valueOf(selectedEntry?.id) != pruefid) {
+                return
             }
+            // Start Merlin Gürtler
+            // Setze die Farbe des Icons
+            if (context != null) {
+                holder.statusIcon.setColorFilter(
+                    Utils.getColorFromAttr(
+                        Utils.statusColors[selectedEntry?.status]
+                            ?: R.attr.defaultStatusColor, context!!.theme
+                    )
+                )
+                holder.ivicon.setImageDrawable(
+                    context!!.resources.getDrawable(
+                        Utils.favoritIcons[selectedEntry?.favorit ?: false]!!,
+                        context!!.theme
+                    )
+                )
+            }
+        } catch (ex: Exception) {
+            Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
         }
         //OnClickListener
         // Start Merlin Gürtler
@@ -276,17 +257,14 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             ).show()
         }
         // Ende Merlin Gürtler
-        holder.ivicon.setOnClickListener { v: View? ->
-            scopeIO.launch {
-                val isFavorite = checkFavorite(position)
-                // toggelt den Favoriten
-                if (!isFavorite) {
-                    addToFavorites(position, holder)
-                } else {
-                    deleteFromFavorites(position, holder)
-                }
+        holder.ivicon.setOnClickListener {
+            val isFavorite = checkFavorite(position)
+            // toggelt den Favoriten
+            if (!isFavorite) {
+                addToFavorites(position, holder)
+            } else {
+                deleteFromFavorites(position, holder)
             }
-            // Ende Merlin Gürtler
         }
     }
 
@@ -301,23 +279,17 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      */
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
         var selectedEntry: TestPlanEntry? = null
-        scopeIO.launch {
-            selectedEntry = database?.userDao()?.getEntryById(planId[position])
-            //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-            database?.userDao()
-                ?.update(false, planId[position].toInt())
-            context?.let {
-                selectedEntry?.let { it1 ->
-                    GoogleCalendarIO.deleteEntry(it, it1)
-                }
-            }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
-                    .show()
-                this.notifyItemChanged(position)
+        selectedEntry = viewModel.getEntryById(planId[position])
+        //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
+        viewModel.updateEntryFavorit(false, planId[position].toInt())
+        context?.let {
+            selectedEntry?.let { it1 ->
+                GoogleCalendarIO.deleteEntry(it, it1)
             }
         }
+        Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
+            .show()
+        this.notifyItemChanged(position)
     }
 
     /**
@@ -331,28 +303,17 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      */
     fun addToFavorites(position: Int, holder: ViewHolder) {
         var selectedEntry: TestPlanEntry? = null
-        scopeIO.launch {
-            selectedEntry = database?.userDao()?.getEntryById(planId[position])
-            //Speichern des Prüfitem als Favorit
-            database?.userDao()
-                ?.update(true, planId[position].toInt())
-            context?.let {
-                selectedEntry?.let { it1 ->
-                    GoogleCalendarIO.insertEntry(it, it1,true)
-                }
-            }
-        }.invokeOnCompletion {
-            Handler(Looper.getMainLooper()).post {
-                //Speichern des Prüfitem als Favorit
-
-                //TODO REMOVE saveInCalendar(position, holder)
-
-                Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
-                    .show()
-                this.notifyItemChanged(position)
+        selectedEntry = viewModel.getEntryById(planId[position])
+        //Speichern des Prüfitem als Favorit
+        viewModel.updateEntryFavorit(true, planId[position].toInt())
+        context?.let {
+            selectedEntry?.let { it1 ->
+                GoogleCalendarIO.insertEntry(it, it1, true)
             }
         }
-
+        Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
+            .show()
+        this.notifyItemChanged(position)
     }
 
     /**
@@ -367,15 +328,14 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @since 1.6
      */
     fun checkFavorite(position: Int): Boolean {
-        try {
-            val selectedEntry = database?.userDao()?.getEntryById(planId[position])
-
+        return try {
+            val selectedEntry = viewModel.getEntryById(planId[position])
             //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
 
-            return selectedEntry?.favorit ?: false
+            selectedEntry?.favorit ?: false
         } catch (ex: Exception) {
             Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
-            return false
+            false
         }
     }
 
