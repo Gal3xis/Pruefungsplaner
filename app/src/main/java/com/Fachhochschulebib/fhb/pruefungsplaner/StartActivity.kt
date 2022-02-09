@@ -2,23 +2,19 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import android.content.SharedPreferences
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.content.Intent
 import android.os.Bundle
 import android.content.pm.ActivityInfo
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.Fachhochschulebib.fhb.pruefungsplaner.R.attr.colorOnPrimary
-import com.Fachhochschulebib.fhb.pruefungsplaner.Utils.getColorFromAttr
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Faculty
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -27,25 +23,12 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
-import org.json.XML
-import java.io.BufferedInputStream
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.*
 
 //Alexander Lange Start
 import kotlinx.android.synthetic.main.start.*
-import kotlinx.coroutines.CoroutineName
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 //Alexander Lange End
 
@@ -64,7 +47,7 @@ import kotlinx.coroutines.launch
  * @since 1.6
  */
 class StartActivity() : AppCompatActivity() {
-    var mAdapter: CheckListAdapter? = null
+    var mCourses: CoursesCheckList? = null
 
     private var updateManager: AppUpdateManager? = null
     private val UPDATE_REQUEST_CODE = 100
@@ -84,7 +67,6 @@ class StartActivity() : AppCompatActivity() {
     //KlassenVariablen
     private var courseMain: String? = null
     private var jsonArrayFacultys: JSONArray? = null
-    val courseChosen: MutableList<Boolean> = ArrayList()
     val courseName: MutableList<String> = ArrayList()
     val facultyName: MutableList<String> = ArrayList()
 
@@ -92,6 +74,10 @@ class StartActivity() : AppCompatActivity() {
     // List<String> idList = new ArrayList<String>();
     private lateinit var context: Context
     private lateinit var viewModel: MainViewModel
+
+    private fun addMainCourse(course:Courses){
+        course.courseName?.let { addMainCourse(it) }
+    }
 
     // Start Merlin Gürtler
     // Fügt den Hauptstudiengang zu den Shared Preferences hinzu
@@ -103,21 +89,14 @@ class StartActivity() : AppCompatActivity() {
      * @author Alexander Lange
      * @since 1.6
      */
-    private fun addMainCourse(choosenCourse: String?) {
+    private fun addMainCourse(choosenCourse: String) {
         returnCourse = choosenCourse?.let { viewModel.getCourseId(it) }
         choosenCourse?.let { viewModel.setSelectedCourse(it) }
         returnCourse?.let { viewModel.setReturnCourse(it) }
-
-        val retrofit = RetrofitConnect(viewModel,context)
-
-        // Überprüfe ob die App schonmal gestartet wurde
-
         if (viewModel.getUuid() == null) {
-            // Sende nur ans Backend wenn die App wirklich zum ersten mal
-            // gestartet wurde
-            retrofit?.firstStart()
+            RetrofitConnect(context).firstStart()
         } else {
-            retrofit?.setUserCourses()
+            RetrofitConnect(context).setUserCourses()
         }
     }
 
@@ -165,26 +144,9 @@ class StartActivity() : AppCompatActivity() {
             this,
             MainViewModelFactory(application)
         )[MainViewModel::class.java]
+        initUpdateManager()
         initSharedPreferences()
-        updateManager = AppUpdateManagerFactory.create(this)
-        updateManager?.appUpdateInfo?.addOnSuccessListener {
-            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
-                    AppUpdateType.FLEXIBLE
-                )
-            ) {
-                updateManager?.startUpdateFlowForResult(
-                    it,
-                    AppUpdateType.FLEXIBLE,
-                    this,
-                    UPDATE_REQUEST_CODE
-                )
-            }
-        }
-        updateManager?.registerListener(installStateUpdateListener)
-
-
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-
         recyclerViewChecklist.setHasFixedSize(true)
         recyclerViewChecklist.layoutManager = LinearLayoutManager(applicationContext)
 
@@ -204,20 +166,13 @@ class StartActivity() : AppCompatActivity() {
         try {
             initServer()
             initButtons()
-            val globalVariable = applicationContext as StartClass
-            if (courseMain != "0" && !globalVariable.isChangeFaculty) {
-                val mainWindow = Intent(applicationContext, MainActivity::class.java)
-                startActivityForResult(mainWindow, 0)
-            }
-            //Creating editor to store uebergebeneModule to shared preferencess
-            //second parameter is necessary ie.,Value to return if this preference does not exist.
-        } //Wenn Verbindung zum Server nicht möglich, dann Daten aus der Datenbank nehmen
-        catch (e: Exception) {
+            //checkLoginStatus()
+        } catch (e: Exception) {
             if (strJson != null) {
                 try {
                     jsonArrayFacultys = JSONArray(strJson)
                     var i = 0
-                    while (i < jsonArrayFacultys!!.length()) {//TODO Try Remove !!
+                    while (i < jsonArrayFacultys!!.length()) {
                         val json = jsonArrayFacultys!!.getJSONObject(i)
                         facultyName.add(json["facName"].toString())
                         initButtons()
@@ -228,6 +183,32 @@ class StartActivity() : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    //TODO
+    private fun checkLoginStatus() {
+        val globalVariable = applicationContext as StartClass
+        if (courseMain != "0" && !globalVariable.isChangeFaculty) {
+            startApplication()
+        }
+    }
+
+    private fun initUpdateManager() {
+        updateManager = AppUpdateManagerFactory.create(this)
+        updateManager?.appUpdateInfo?.addOnSuccessListener {
+            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
+                    AppUpdateType.FLEXIBLE
+                )
+            ) {
+                updateManager?.startUpdateFlowForResult(
+                    it,
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    UPDATE_REQUEST_CODE
+                )
+            }
+        }
+        updateManager?.registerListener(installStateUpdateListener)
     }
 
 
@@ -264,35 +245,20 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     private fun initServer() {
-        checkFaculties(viewModel.getServerIPAddress() + viewModel.getServerRelUrlPath() + "entity.faculty")
+        viewModel.fetchFaculties()
+        viewModel.fetchCourses()
+
+
         // Start Merlin Gürtler
         val globalVariable = applicationContext as StartClass
-        val retrofit =  RetrofitConnect(viewModel,context)
-
-        retrofit.getCourses()
-
 
         // Thread für die UUid
         val uuid = viewModel.getUuid()
         if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
             globalVariable.appStarted = true
-            retrofit.anotherStart()
+            //TODO retrofit.anotherStart()
         }
 
-    }
-
-    /**
-     * Shows a Toast for the case, that No connection to the server is available.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun noConnection() {
-        Toast.makeText(
-            applicationContext,
-            applicationContext.getString(R.string.noConnection),
-            Toast.LENGTH_SHORT
-        ).show()
     }
 
     /**
@@ -303,13 +269,11 @@ class StartActivity() : AppCompatActivity() {
      */
     private fun initButtons() {
         runOnUiThread {
-            // Start Merlin Gürtler
-            //TODO Shorten
+
             buttonForSpinner.setOnClickListener {
                 createAlertDialogChooseFaculty()
             }
             buttonOk.setOnClickListener { v ->
-                // Erstele einen Dialog um den Hauptstudiengang zu wählen
                 createAlertDialogSelectMainCourse(v)
             }
         }
@@ -328,45 +292,30 @@ class StartActivity() : AppCompatActivity() {
             this@StartActivity,
             R.style.customAlertDialog
         )
-        var oneFavorite = false
-        val favoriteCourses: MutableList<String> = ArrayList()
-        // prüfe ob mindesten ein Studiengang favorisiert wurde
-        for (chosen: Boolean in courseChosen) {
-            if (chosen) {
-                oneFavorite = true
-                break
+        val checkList = (recyclerViewChecklist.adapter as CoursesCheckList)
+        val chosen = checkList.getChosen()
+        var oneFavorite = chosen.isNotEmpty()
+        val courses = checkList.courseList
+        if (oneFavorite) {
+            courses.forEach {
+                viewModel.updateCourse(it)
             }
         }
         if (oneFavorite) {
-            // aktualisiere die db
-            for (i in courseChosen.indices) {
-                viewModel.updateCourse(
-                    courseName[i],
-                    courseChosen[i]
-                )
-                if (courseChosen[i]) {
-                    favoriteCourses.add(courseName[i])
-                }
-            }
-        }
-        if (oneFavorite) {
-            if (favoriteCourses.size == 1) {
-                addMainCourse(favoriteCourses[0])
-                val mainWindow = Intent(applicationContext, MainActivity::class.java)
-                startActivityForResult(mainWindow, 0)
+            if (chosen.size == 1) {
+                addMainCourse(chosen[0])
+                startApplication()
             } else {
-                val courses =
-                    arrayOfNulls<String>(favoriteCourses.size)
-                for (i in favoriteCourses.indices) {
-                    courses[i] = favoriteCourses[i]
+                val stringCourses = mutableListOf<String>()
+                chosen.forEach {
+                    it.courseName?.let { it1 -> stringCourses.add(it1) }
                 }
                 chooseCourse.setTitle(R.string.choose_main)
                 chooseCourse.setItems(
-                    courses
+                    stringCourses.toTypedArray()
                 ) { _, which ->
-                    addMainCourse(courses[which])
-                    val mainWindow = Intent(applicationContext, MainActivity::class.java)
-                    startActivityForResult(mainWindow, 0)
+                    addMainCourse(stringCourses[which])
+                    startApplication()
                 }
                 chooseCourse.show()
             }
@@ -379,29 +328,36 @@ class StartActivity() : AppCompatActivity() {
         }
     }
 
+    private fun startApplication() {
+        val mainWindow = Intent(applicationContext, MainActivity::class.java)
+        startActivityForResult(mainWindow, 0)
+    }
+
     /**
      * Creates a dialog that asks the user to select a faculty.
      * @author Alexander Lange
      * @since 1.6
      */
     private fun createAlertDialogChooseFaculty() {
+
         val chooseFaculty = AlertDialog.Builder(
             this@StartActivity,
             R.style.customAlertDialog
         )
-        val faculties = arrayOfNulls<String>(facultyName.size)
-        for (i in facultyName.indices) {
-            faculties[i] = facultyName[i]
+        viewModel.liveFaculties.observe(this) { items ->
+            val stringFaculties = mutableListOf<String>()
+            items?.forEach {
+                stringFaculties.add(it.facultyName)
+            }
+            chooseFaculty.setItems(
+                stringFaculties.toTypedArray()
+            ) { dialog, which ->
+                items?.let { facultyChosen(it[which]) }
+                dialog.dismiss()
+            }
+            chooseFaculty.create()
+            chooseFaculty.show()
         }
-
-        // Der Listener für die Item Auswahl
-        chooseFaculty.setItems(faculties) { dialog, which ->
-            facultyChosen(faculties, which) //for
-            dialog.dismiss()
-            // Intent hauptfenster = new Intent(getApplicationContext(), Tabelle.class);
-            // startActivity(hauptfenster);
-        }
-        chooseFaculty.show()
     }
 
     /**
@@ -414,187 +370,98 @@ class StartActivity() : AppCompatActivity() {
      * @author Alexander Lange
      * @since 1.6
      */
-    private fun facultyChosen(faculties: Array<String?>, which: Int) {
-        for (i in facultyName.indices) {
-            if ((faculties[which] == facultyName[i])
-            ) {
-                try {
-                    val `object` = jsonArrayFacultys!!.getJSONObject(i)
-                    returnFaculty = `object`["fbid"].toString()
-                    Log.d(
-                        "Output Fakultaet",
-                        returnFaculty ?: "No Faculty"
-                    )
-                    // Erstelle Shared Pref für die anderen Fragmente
-                    returnFaculty?.let { viewModel.setReturnFaculty(it) }
+    private fun facultyChosen(faculty: Faculty) {
+        viewModel.setReturnFaculty(faculty)
+        viewModel.fetchCourses()
+        viewModel.liveCoursesForFacultyId?.observe(this){ items ->
+            recyclerViewChecklist.adapter = items?.let {
+                CoursesCheckList(
+                    it,
+                    viewModel,
+                    applicationContext
+                )
+            }
+        }
 
-                    // füllt die Liste mit Studiengängena
-                    val courses = returnFaculty?.let { viewModel.getAllCoursesByFacultyid(it) }
-                    courseChosen.clear()
-                    courseName.clear()
-                    if (courses != null) {
-                        for (course in courses) {
-                            courseName.add(course?.courseName ?: "")
-                            courseChosen.add(
-                                course?.choosen ?: false
-                            )
-                        }
-                    }
-                    val faculty = faculties[which]
-                        ?: "No Faculty"
-                    if (faculty.contains(" ")) {
-                        buttonForSpinner.text =
-                            faculty
-                                .substring(
-                                    0,
-                                    faculty
-                                        .indexOf(' ')
-                                )
-                    } else {
-                        buttonForSpinner.text = faculty
-                    }
-
-                    // füge den Adapter der Recyclerview hinzu
-                    mAdapter = CheckListAdapter(
-                        courseName,
-                        courseChosen,
-                        applicationContext,
-                        viewModel
-                    )
-                    recyclerViewChecklist.adapter = mAdapter
-                    if (chooseCourseId.visibility != View.VISIBLE) {
-                        chooseCourseId.visibility =
-                            View.VISIBLE
-                    }
-                    if (courseName.size == 0) {
-                        if (buttonOk!!.visibility == View.VISIBLE) {
-                            buttonOk!!.visibility =
-                                View.INVISIBLE
-                        }
-                        chooseCourseId.setText(R.string.no_course)
-                        chooseCourseId.setTextColor(
-                            getColorFromAttr(colorOnPrimary, theme)
+        /*
+            for (i in facultyName.indices) {
+                if ((faculties[which] == facultyName[i])
+                ) {
+                    try {
+                        val `object` = jsonArrayFacultys!!.getJSONObject(i)
+                        returnFaculty = `object`["fbid"].toString()
+                        Log.d(
+                            "Output Fakultaet",
+                            returnFaculty ?: "No Faculty"
                         )
-                    } else {
-                        if (buttonOk!!.visibility != View.VISIBLE) {
-                            buttonOk!!.visibility =
+                        // Erstelle Shared Pref für die anderen Fragmente
+                        returnFaculty?.let { viewModel.setReturnFaculty(it) }
+
+                        // füllt die Liste mit Studiengängena
+                        val courses = returnFaculty?.let { viewModel.getAllCoursesByFacultyid(it) }
+                        courseChosen.clear()
+                        courseName.clear()
+                        if (courses != null) {
+                            for (course in courses) {
+                                courseName.add(course?.courseName ?: "")
+                                courseChosen.add(
+                                    course?.choosen ?: false
+                                )
+                            }
+                        }
+                        val faculty = faculties[which]
+                            ?: "No Faculty"
+                        if (faculty.contains(" ")) {
+                            buttonForSpinner.text =
+                                faculty
+                                    .substring(
+                                        0,
+                                        faculty
+                                            .indexOf(' ')
+                                    )
+                        } else {
+                            buttonForSpinner.text = faculty
+                        }
+
+                        // füge den Adapter der Recyclerview hinzu
+                        mAdapter = CheckListAdapter(
+                            courseName,
+                            courseChosen,
+                            applicationContext,
+                            viewModel
+                        )
+                        recyclerViewChecklist.adapter = mAdapter
+                        if (chooseCourseId.visibility != View.VISIBLE) {
+                            chooseCourseId.visibility =
                                 View.VISIBLE
                         }
-                        chooseCourseId.setText(R.string.choose_course)
-                        chooseCourseId.setTextColor(
-                            getColorFromAttr(colorOnPrimary, theme)
+                        if (courseName.size == 0) {
+                            if (buttonOk!!.visibility == View.VISIBLE) {
+                                buttonOk!!.visibility =
+                                    View.INVISIBLE
+                            }
+                            chooseCourseId.setText(R.string.no_course)
+                            chooseCourseId.setTextColor(
+                                getColorFromAttr(colorOnPrimary, theme)
+                            )
+                        } else {
+                            if (buttonOk!!.visibility != View.VISIBLE) {
+                                buttonOk!!.visibility =
+                                    View.VISIBLE
+                            }
+                            chooseCourseId.setText(R.string.choose_course)
+                            chooseCourseId.setTextColor(
+                                getColorFromAttr(colorOnPrimary, theme)
+                            )
+                        }
+                    } catch (e: Exception) {
+                        Log.d(
+                            "uebergabeAnSpinner",
+                            "Fehler: Parsen von 'uebergabeAnSpinner'"
                         )
                     }
-                } catch (e: Exception) {
-                    Log.d(
-                        "uebergabeAnSpinner",
-                        "Fehler: Parsen von 'uebergabeAnSpinner'"
-                    )
-                }
-            } //if
-        }
-    }
-
-    //Methode zum Überprüfen der fakultaeten
-    //Aufruf in checkVerbindung()
-    /**
-     * Get a list of faculties from the webserver and stores them into the SharedPreferences.
-     *
-     * @param[address] The address of the server.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun checkFaculties(address: String?) {
-        //Verbindungsaufbau zum Webserver
-        try {
-            updateFaculties(address)
-        } catch (e: Exception) {
-            val strFacultys = viewModel.getFaculties()
-            if (strFacultys != null) {
-                try {
-                    jsonArrayFacultys = JSONArray(strFacultys)
-                    var i: Int = 0
-                    while (i < jsonArrayFacultys!!.length()) {
-                        val json: JSONObject = jsonArrayFacultys!!.getJSONObject(i)
-                        facultyName.add(json.get("facName").toString())
-                        i++
-                    }
-                } catch (b: Exception) {
-                    Log.d(
-                        "uebergabeAnSpinner",
-                        "Fehler beim Parsen des Fakultätsnamen."
-                    )
-                }
-            }
-            Handler(Looper.getMainLooper()).post { noConnection() }
-        }
-    }
-
-    /**
-     * Updates the faculties. Get all faculties from the webserver and synchronize them withe the SharedPreferences.
-     *
-     * @param[address] The address of the server.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     */
-    private fun updateFaculties(address: String?) {
-        val result = StringBuilder()
-        val url = URL(address)
-        val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
-        urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
-        urlConn.connect()
-
-        //Parsen von den  erhaltene Werte
-        val `in`: InputStream = BufferedInputStream(urlConn.getInputStream())
-        val reader: BufferedReader = BufferedReader(InputStreamReader(`in`))
-        var line: String?
-        while ((reader.readLine().also { line = it }) != null) {
-            result.append(line)
-        }
-
-        //Erstellen von JSON
-        var jsonObj: JSONObject? = null
-        try {
-            jsonObj = XML.toJSONObject(result.toString())
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        val x: Iterator<*> = jsonObj!!.keys()
-        val jsonArray = JSONArray()
-        while (x.hasNext()) {
-            val key: String = x.next() as String
-            jsonArray.put(jsonObj.get(key))
-        }
-
-        //Werte von JSONARRay in JSONObject konvertieren
-        val receivesFacultys = JSONArray()
-        for (i in 0 until jsonArray.length()) {
-            val `object`: JSONObject = jsonArray.getJSONObject(i)
-            receivesFacultys.put(`object`.get("faculty"))
-        }
-        val convertedToString: String = receivesFacultys.toString()
-        val deletedCling: String =
-            convertedToString.substring(1, convertedToString.length - 1)
-        //konvertieren zu JSONArray
-        jsonArrayFacultys = JSONArray(deletedCling)
-        for (i in 0 until jsonArrayFacultys!!.length()) {
-            val json: JSONObject = jsonArrayFacultys!!.getJSONObject(i)
-            facultyName.add(json.get("facName").toString())
-        }
-
-        // Werte Speichern für die offline Verwendung
-        try {
-            viewModel.setFaculties(deletedCling)
-        } catch (e: Exception) {
-            Log.d(
-                "Output checkFakultaet",
-                "Fehler: Parsen von Fakultaet"
-            )
-        }
-        Log.d("Output checkFakultaet", "abgeschlossen")
+                } //if
+            }*/
     }
 
 

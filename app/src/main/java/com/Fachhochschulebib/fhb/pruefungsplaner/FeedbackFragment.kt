@@ -78,13 +78,13 @@ class FeedbackFragment : Fragment() {
             val serverAddress = viewModel.getServerIPAddress()
             val relativePPlanURL = viewModel.getServerRelUrlPath()
             //retrofit auruf
-            val retrofit = context?.let { RetrofitConnect(viewModel, it) }
-                retrofit?.sendFeedBack(
+            //TODO val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+                /*TODO retrofit?.sendFeedBack(
                     ratingBarUsability.rating,
                     ratingBarFuntions.rating,
                     ratingBarStability.rating,
                     feedBackInput.text.toString(),
-                )
+                )*/
             Toast.makeText(
                 view.context,
                 view.context.getString(R.string.sendedFeedBack),

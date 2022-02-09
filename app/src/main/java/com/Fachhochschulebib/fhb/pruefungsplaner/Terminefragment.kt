@@ -37,6 +37,8 @@ import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.*
+import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 
 //////////////////////////////
 // Terminefragment
@@ -124,7 +126,17 @@ class Terminefragment : Fragment() {
             requireActivity(),
             MainViewModelFactory(requireActivity().application)
         )[MainViewModel::class.java]
-
+        viewModel.fetchCourses()
+        viewModel.liveCourses.observe(viewLifecycleOwner) { items ->
+            items?.forEach { item ->
+                Log.d("TestCourse", item.courseName ?: "")
+            }
+        }
+        viewModel.liveFaculties.observe(viewLifecycleOwner) { items ->
+            items?.forEach { item ->
+                Log.d("TestFaculty",item.facultyName)
+            }
+        }
         getCalendarPermission()
         updateDataFromServer()
         enableSwipeToDelete()
@@ -295,7 +307,7 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun updateRoomDatabase() {
-        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+        val retrofit = context?.let { RetrofitConnect(it) }
 
         // IDs der zu aktualisierenden Kurse
         val courseIds = getUnknownCourseIds()
@@ -303,7 +315,7 @@ class Terminefragment : Fragment() {
         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
 
         if (courseIds.toString().length > 2) {
-            retrofit?.UpdateUnkownCourses(courseIds.toString())
+            // TODO retrofit?.UpdateUnkownCourses(courseIds.toString())
         }
     }
 
@@ -360,7 +372,7 @@ class Terminefragment : Fragment() {
     //TODO Shorten
     fun updatePruefperiode() {
 
-        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+        val retrofit = context?.let { RetrofitConnect( it) }
 
         // Erhalte die gewählte Fakultät aus den Shared Preferences
         try {
@@ -480,10 +492,10 @@ class Terminefragment : Fragment() {
             )?.size == 0
         ) {
             viewModel.deleteAllEntries()
-            retrofit?.RetrofitWebAccess()
+            //TODO retrofit?.RetrofitWebAccess()
             3000
         } else {
-            retrofit?.retroUpdate()
+            //TODO retrofit?.retroUpdate()
             2000
         }
         try {
@@ -575,8 +587,7 @@ class Terminefragment : Fragment() {
         var statusMessage: MutableList<String> = ArrayList()
 
 
-        validation =
-            viewModel.getExamineYear() + viewModel.getReturnCourse() + viewModel.getCurrentPeriode()
+        validation = viewModel.getExamineYear() + viewModel.getReturnCourse() + viewModel.getCurrentPeriode()
         //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
         val ppeList = viewModel.getAllEntries()
         if (ppeList != null) {

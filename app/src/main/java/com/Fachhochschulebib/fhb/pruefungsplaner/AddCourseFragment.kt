@@ -1,10 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
-import android.content.Context
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Bundle
-import android.content.SharedPreferences
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,8 +8,10 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
 import android.widget.Toast
 import android.content.Intent
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -38,7 +36,7 @@ import kotlinx.coroutines.launch
 class AddCourseFragment : Fragment() {
     private lateinit var viewModel: MainViewModel
 
-    var mAdapter: CheckListAdapter? = null
+    var mCourses: CoursesCheckList? = null
     var courseChosen: MutableList<Boolean> = ArrayList()
     var courseName: MutableList<String> = ArrayList()
 
@@ -70,7 +68,6 @@ class AddCourseFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.choose_courses, container, false)
-
         return v
     }
 
@@ -83,9 +80,7 @@ class AddCourseFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        //From onCreateView
-        //Komponenten  initialisieren für die Verwendung
+        viewModel = ViewModelProvider(requireActivity(),MainViewModelFactory(requireActivity().application))[MainViewModel::class.java]
         initRecyclerview()
         initOkButton()
     }
@@ -105,15 +100,14 @@ class AddCourseFragment : Fragment() {
                 )
             }
             updateDbEntries()
-            // Feedback nach Update
-            Toast.makeText(
-                view.context,
-                view.context.getString(R.string.courseActualisation),
-                Toast.LENGTH_SHORT
-            ).show()
-            val mainWindow = Intent(view.context, MainActivity::class.java)
-            startActivity(mainWindow)
+            Toast.makeText(view.context,view.context.getString(R.string.courseActualisation),Toast.LENGTH_SHORT).show()
+            returnToMainscreen(view)
         }
+    }
+
+    private fun returnToMainscreen(view: View) {
+        val mainWindow = Intent(view.context, MainActivity::class.java)
+        startActivity(mainWindow)
     }
 
     /**
@@ -123,15 +117,7 @@ class AddCourseFragment : Fragment() {
      * @author Alexander Lange
      */
     private fun updateDbEntries() {
-        // die Retrofitdaten aus den Shared Preferences
-        val relativePPlanURL = viewModel.getServerRelUrlPath()
-
-        val serverAddress = viewModel.getServerIPAddress()
-        val currentDate = viewModel.getCurrentTermin()
-        val examineYear = viewModel.getExamineYear()
-        val currentExamine = viewModel.getCurrentPeriode()
         val courses = viewModel.getAllCourses()
-
         // aktualsiere die db Einträge
         val courseIds = JSONArray()
         var courseName: String
@@ -140,7 +126,6 @@ class AddCourseFragment : Fragment() {
                 try {
                     courseName = course.courseName ?: ""
                     if (course.choosen == false) {
-                        // lösche nicht die Einträge der gewählten Studiengänge und Favorit
                         val toDelete = viewModel.getEntriesByCourseName(courseName, false)
                         toDelete?.let { viewModel.deleteEntries(it) }
                     }
@@ -158,14 +143,9 @@ class AddCourseFragment : Fragment() {
                 }
             }
         }
-        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
+        val retrofit = context?.let { RetrofitConnect(it) }
         // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-        if (courseIds.toString().length > 2 && context != null && examineYear != null && currentExamine != null && currentDate != null && serverAddress != null) {
-            retrofit?.UpdateUnkownCourses(
-                courseIds.toString(),
-                )
-        }
-        retrofit?.setUserCourses()
+        //TODO retrofit?.setUserCourses()
     }
 
     /**
@@ -182,20 +162,7 @@ class AddCourseFragment : Fragment() {
         recyclerViewChecklist.layoutManager = layoutManager
         val faculty = viewModel.getReturnFaculty()
 
-        // Fülle die Recylcerview
-        val courses = faculty?.let { viewModel.getAllCoursesByFacultyid(it) }
-        if (courses != null) {
-            for (course in courses) {
-                courseName.add(course.courseName ?: "")
-                courseChosen.add(course.choosen ?: false)
-            }
-        }
-        mAdapter = CheckListAdapter(
-            courseName,
-            courseChosen,
-            activity?.applicationContext!!,
-            viewModel
-        )
-        recyclerViewChecklist?.adapter = mAdapter
+        Log.d("FacultyTest",faculty?:"")
+        recyclerViewChecklist?.adapter = mCourses
     }
 }

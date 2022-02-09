@@ -2,15 +2,13 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
-import com.Fachhochschulebib.fhb.pruefungsplaner.StartClass
 import android.view.ViewGroup
 import android.view.LayoutInflater
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import android.content.SharedPreferences
 import android.view.View
 import android.widget.Toast
 import android.widget.TextView
 import android.widget.CheckBox
+import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
 
 //////////////////////////////
 // CheckListAdapter
@@ -30,14 +28,24 @@ import android.widget.CheckBox
  * @see AddCourseFragment
  * @see RecyclerView.Adapter
  */
-class CheckListAdapter     // Provide a suitable constructor (depends on the kind of dataset)
-    (
-    private val coursesList: List<String>,
-    private val chosenList: MutableList<Boolean>,
-    private val context: Context,
-    private val viewModel: MainViewModel
-) : RecyclerView.Adapter<CheckListAdapter.ViewHolder>() {
-    private var globalVariable: StartClass? = null
+class CoursesCheckList(val courseList:List<Courses>,private val viewModel: MainViewModel, private val context: Context) : RecyclerView.Adapter<CoursesCheckList.ViewHolder>() {
+    private var globalVariable:StartClass? = null
+
+    fun getChosen():List<Courses>{
+        val ret = mutableListOf<Courses>()
+        courseList.forEach {
+            if(it.choosen==true) ret.add(it)
+        }
+        return ret
+    }
+
+    fun getNotChosen():List<Courses>{
+        val ret = mutableListOf<Courses>()
+        courseList.forEach {
+            if(it.choosen==false) ret.add(it)
+        }
+        return ret
+    }
 
     /**
      * Called when Recyclerview needs a new ViewHolder.
@@ -92,8 +100,8 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
     // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Initialisierung der Komponenten
-        holder.nameCourse.text = coursesList[position]
-        holder.checkBoxCourse.isChecked = chosenList[position]
+        holder.nameCourse.text = courseList[position].courseName
+        holder.checkBoxCourse.isChecked = courseList[position].choosen == true
         holder.checkBoxCourse.setOnClickListener { // Speichere die auswahl in der Liste
             holder.checkBoxCourse.isChecked = addFavorite(position)
         }
@@ -113,15 +121,15 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      * @since 1.6
      */
     private fun addFavorite(position: Int): Boolean {
-        if (coursesList[position] != viewModel.getSelectedCourse() || globalVariable!!.isChangeFaculty) {
-            chosenList[position] = !chosenList[position]
+        if (courseList[position].courseName != viewModel.getSelectedCourse() || globalVariable?.isChangeFaculty == true) {
+            courseList[position].choosen?.let { courseList[position].choosen = !it }
         } else {
             Toast.makeText(
                 context, context.getString(R.string.favorite_main_course),
                 Toast.LENGTH_SHORT
             ).show()
         }
-        return chosenList[position]
+        return courseList[position].choosen == true
     }
 
     /**
@@ -137,7 +145,7 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      */
     //Item anzahl
     override fun getItemCount(): Int {
-        return coursesList.size
+        return courseList.size
     }
 
     /**
@@ -167,12 +175,8 @@ class CheckListAdapter     // Provide a suitable constructor (depends on the kin
      */
     inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case
-        val nameCourse: TextView
-        val checkBoxCourse: CheckBox
+        val nameCourse: TextView = v.findViewById<View>(R.id.courseName) as TextView
+        val checkBoxCourse: CheckBox = v.findViewById<View>(R.id.checkBox) as CheckBox
 
-        init {
-            nameCourse = v.findViewById<View>(R.id.courseName) as TextView
-            checkBoxCourse = v.findViewById<View>(R.id.checkBox) as CheckBox
-        }
     }
 }

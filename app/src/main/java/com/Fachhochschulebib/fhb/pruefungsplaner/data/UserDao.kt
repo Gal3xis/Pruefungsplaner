@@ -22,6 +22,9 @@ interface UserDao {
     @Query("INSERT INTO Uuid VALUES (:uuid)")
     suspend fun insertUuid(uuid: String)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertFaculty(faculty: Faculty)
+
     //Updates
     @Update
     suspend fun updateExam(testPlanEntry: TestPlanEntry)
@@ -32,6 +35,9 @@ interface UserDao {
     @Query("UPDATE Courses SET choosen = :choosen WHERE couresName = :courseName")
     suspend fun updateCourse(courseName: String, choosen: Boolean)
 
+    @Update
+    suspend fun updateFaculty(faculty: Faculty)
+
     //Deletes
     @Delete
     suspend fun deleteEntries(entries: List<TestPlanEntry>)
@@ -39,6 +45,17 @@ interface UserDao {
     @Query("DELETE FROM TestPlanEntry ")
     suspend fun deleteAllEntries()
 
+    @Delete
+    suspend fun deleteCourses(courses:List<Courses>)
+
+    @Query("DELETE FROM Courses")
+    suspend fun deleteAllCourses()
+
+    @Delete
+    suspend fun deleteFaculties(faculty: List<Faculty>)
+
+    @Query("DELETE FROM Faculty")
+    suspend fun deleteAllFaculties()
     //Queries
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
@@ -46,6 +63,18 @@ interface UserDao {
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     fun getAllEntriesLiveData(): LiveData<List<TestPlanEntry>?>
+
+    @Query("SELECT * FROM Courses ORDER BY couresName")
+    fun getAllCoursesLiveData():LiveData<List<Courses>?>
+
+    @Query("SELECT * FROM TestPlanEntry WHERE favorit = 1")
+    fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?>
+
+    @Query("SELECT * FROM Faculty ORDER BY facName LIMIT 100 OFFSET 1 ")
+    fun getAllFacultiesLiveData():LiveData<List<Faculty>?>
+
+    @Query("SELECT * FROM Courses WHERE facultyId = :id")
+    fun getCoursesForFacultyIdLiveData(id:String):LiveData<List<Courses>?>
 
     @Query("SELECT * FROM Courses")
     suspend fun getAllCourses(): List<Courses>?

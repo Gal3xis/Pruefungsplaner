@@ -2,11 +2,23 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.data
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import androidx.room.*
-import kotlinx.coroutines.CoroutineScope
+import androidx.room.Query
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import org.json.XML
+import retrofit2.awaitResponse
+import java.io.BufferedInputStream
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
+import java.lang.StringBuilder
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  *
@@ -16,7 +28,74 @@ class DatabaseRepository(
     application: Application
 ) {
     private var localDataSource: UserDao = AppDatabase.getAppDatabase(application).userDao()
+    private var remoteDataSource = RetrofitHelper.getInstance().create(API::class.java)
 
+    //Retrofit
+    suspend fun fetchCourses(): List<GSONCourse>? {
+        return withContext(Dispatchers.IO){
+            return@withContext async { remoteDataSource.getCourses()}.await().awaitResponse().body()
+        }
+    }
+
+
+    /**
+     * Updates the faculties. Get all faculties from the webserver and synchronize them withe the SharedPreferences.
+     *
+     * @param[address] The address of the server.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     */
+    suspend fun fetchFaculties():JSONArray {
+        return withContext(Dispatchers.IO) {
+            val result = StringBuilder()
+            val url =
+                URL("http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.faculty/")
+            val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
+            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
+            urlConn.connect()
+
+            //Parsen von den  erhaltene Werte
+            val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var line: String?
+            while ((reader.readLine().also { line = it }) != null) {
+                result.append(line)
+            }
+
+            //Erstellen von JSON
+            var jsonObj: JSONObject? = null
+            try {
+                jsonObj = XML.toJSONObject(result.toString())
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            val x: Iterator<*> = jsonObj!!.keys()
+            val jsonArray = JSONArray()
+            while (x.hasNext()) {
+                val key: String = x.next() as String
+                jsonArray.put(jsonObj.get(key))
+            }
+
+            //Werte von JSONARRay in JSONObject konvertieren
+            val receivesFaculties = JSONArray()
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                receivesFaculties.put(jsonObject.get("faculty"))
+            }
+            val convertedToString = receivesFaculties.toString()
+            val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
+
+            //konvertieren zu JSONArray
+            return@withContext JSONArray(deletedCling)
+        }
+    }
+    /*fun fetchEntries(): Call<List<GSONEntry>> {
+        return remoteDataSource.getEntries()
+    }*/
+
+    //Room Databas
     suspend fun insertEntry(testPlanEntry: TestPlanEntry) {
         withContext(Dispatchers.IO) {
             localDataSource.insertEntry(testPlanEntry)
@@ -33,6 +112,13 @@ class DatabaseRepository(
     suspend fun insertUuid(uuid: String) {
         withContext(Dispatchers.IO) {
             localDataSource.insertUuid(uuid)
+        }
+    }
+
+    suspend fun insertFaculty(faculty: Faculty)
+    {
+        withContext(Dispatchers.IO){
+            localDataSource.insertFaculty(faculty)
         }
     }
 
@@ -54,6 +140,13 @@ class DatabaseRepository(
         }
     }
 
+    suspend fun updateFaculty(faculty: Faculty)
+    {
+        withContext(Dispatchers.IO){
+            localDataSource.updateFaculty(faculty)
+        }
+    }
+
     suspend fun deleteEntries(entries: List<TestPlanEntry>) {
         withContext(Dispatchers.IO) {
             localDataSource.deleteEntries(entries)
@@ -63,6 +156,31 @@ class DatabaseRepository(
     suspend fun deleteAllEntries() {
         withContext(Dispatchers.IO) {
             localDataSource.deleteAllEntries()
+        }
+    }
+
+    suspend fun deleteCourses(courses:List<Courses>){
+        withContext(Dispatchers.IO){
+            localDataSource.deleteCourses(courses)
+        }
+    }
+
+    suspend fun deleteAllCourses(){
+        withContext(Dispatchers.IO){
+            localDataSource.deleteAllCourses()
+        }
+    }
+
+    suspend fun deleteFaculties(faculties: List<Faculty>)
+    {
+        withContext(Dispatchers.IO){
+            localDataSource.deleteFaculties(faculties)
+        }
+    }
+
+    suspend fun deleteAllFaculties(){
+        withContext(Dispatchers.IO){
+            localDataSource.deleteAllFaculties()
         }
     }
 
@@ -76,6 +194,14 @@ class DatabaseRepository(
 
     fun getAllEntriesLiveData(): LiveData<List<TestPlanEntry>?> =
         localDataSource.getAllEntriesLiveData()
+
+    fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?> = localDataSource.getAllFavoritsLiveData()
+
+    fun getAllCoursesLiveData():LiveData<List<Courses>?> = localDataSource.getAllCoursesLiveData()
+
+    fun getAllFacultiesLiveData():LiveData<List<Faculty>?> = localDataSource.getAllFacultiesLiveData()
+
+    fun getCoursesForFacultyIdLiveData(id:String) = localDataSource.getCoursesForFacultyIdLiveData(id)
 
     suspend fun getAllCourses(): List<Courses>? {
         var ret: List<Courses>? = null

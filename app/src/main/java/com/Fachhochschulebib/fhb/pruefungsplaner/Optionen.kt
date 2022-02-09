@@ -203,8 +203,8 @@ class Optionen() : Fragment() {
         viewModel.deleteAllEntries()
         // Start Merlin Gürtler
         //Get the default entries for the user from the REST-API and store them in the room-database
-        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
-        retrofit?.RetrofitWebAccess()
+        val retrofit = context?.let { RetrofitConnect( it) }
+        //TODO retrofit?.RetrofitWebAccess()
         // Ende Merlin Gürtler
         Toast.makeText(
             view?.context,
@@ -343,8 +343,8 @@ class Optionen() : Fragment() {
      * @see RetrofitConnect
      */
     fun updateCheckPlan() {
-        val retrofit = context?.let { RetrofitConnect(viewModel, it) }
-        retrofit?.retroUpdate()
+        val retrofit = context?.let { RetrofitConnect( it) }
+        //TODO retrofit?.retroUpdate()
         Toast.makeText(
             context,
             context!!.getString(R.string.add_favorite),

@@ -114,7 +114,7 @@ class SharedPreferencesRepository(application: Application) {
 
     fun setChosenDarkmode(darkmode:Boolean){
         val editor = settings.edit()
-        editor.putBoolean("currentPeriode",darkmode)
+        editor.putBoolean("darkmode",darkmode)
         editor.apply()
     }
 

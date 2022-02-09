@@ -11,8 +11,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import androidx.room.Room
 
 @Database(
-    entities = [TestPlanEntry::class, Uuid::class, Courses::class],
-    version = 1,
+    entities = [TestPlanEntry::class, Uuid::class, Courses::class, Faculty::class],
+    version = 2,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -25,7 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
                 INSTANCE = Room.databaseBuilder(
                     context.applicationContext,
                     AppDatabase::class.java, "pruefplandaten"
-                )
+                ).fallbackToDestructiveMigration()
                     .build()
             }
             return INSTANCE!!
