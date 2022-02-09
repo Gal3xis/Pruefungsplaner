@@ -43,10 +43,6 @@ class PrivacyDeclarationFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //From onCreate
-
-        //From onCreateView
-        //TODO REMOVE val okButton = v.findViewById<Button>(R.id.privacyDeclarationButton)
 
         privacyDeclarationButton.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
