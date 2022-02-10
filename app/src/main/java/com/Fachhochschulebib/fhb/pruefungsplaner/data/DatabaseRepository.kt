@@ -321,11 +321,9 @@ class DatabaseRepository(
     }
 
     suspend fun getChoosenCourseIds(choosen: Boolean):List<String>?{
-        var ret:List<String>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getChoosenCourseIds(choosen)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getChoosenCourseIds(choosen)
         }
-        return ret
     }
 
     suspend fun getAllCoursesByFacultyid(facultyId: String):List<Courses>?{

@@ -188,7 +188,7 @@ class StartActivity() : AppCompatActivity() {
     //TODO
     private fun checkLoginStatus() {
         Log.d("ReturnCourse",viewModel.getReturnCourse().toString())
-        if(viewModel.getReturnCourse()!=null){
+        if(viewModel.getReturnCourse()!=null&& viewModel.getChoosenCourses(true)?.isNotEmpty() == true){
             startApplication()
         }
     }
@@ -333,7 +333,6 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     private fun createAlertDialogChooseFaculty() {
-
         val chooseFaculty = AlertDialog.Builder(
             this@StartActivity,
             R.style.customAlertDialog
@@ -366,8 +365,7 @@ class StartActivity() : AppCompatActivity() {
      */
     private fun facultyChosen(faculty: Faculty) {
         viewModel.setReturnFaculty(faculty)
-        viewModel.fetchCourses()
-        viewModel.liveCoursesForFacultyId?.observe(this) { items ->
+        viewModel.liveCoursesForFacultyId.observe(this) { items ->
             recyclerViewChecklist.adapter = items?.let {
                 CoursesCheckList(
                     it,

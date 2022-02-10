@@ -60,8 +60,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val periode = getCurrentPeriode()
             val termin = getCurrentTermin()
             val examinYear = getExamineYear()
-            val ids = getChoosenCourseIds(true)
-            if(periode==null||termin==null||examinYear==null||ids==null){
+            val ids = repository.getChoosenCourseIds(true)
+            if(periode==null||termin==null||examinYear==null||ids.isNullOrEmpty()){
                 return@launch
             }
             val entries = repository.fetchEntries(periode,termin,examinYear.toInt(),ids)
@@ -176,10 +176,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                                 year2.toString()
                             )
                         )
-                        setCurrentPeriode(currentExamineDateFormatted)
-                        fetchEntries()
                     }
                 }
+                fetchEntries()
+
                 // Ende Merlin Gürtler
             } catch (e: Exception) {
                 Log.e("UpdatePruefperioden",e.stackTraceToString())
@@ -550,6 +550,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun setReturnFaculty(faculty: Faculty) {
         setReturnFaculty(faculty.fbid)
+        fetchCourses()
     }
 
     fun getExamineYear(): String? {
