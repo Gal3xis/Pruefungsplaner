@@ -2,14 +2,10 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.Manifest
 import android.app.ProgressDialog
-import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
-import android.content.SharedPreferences
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.os.Looper
 import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
-import org.json.XML
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -26,19 +22,10 @@ import kotlinx.android.synthetic.main.terminefragment.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedInputStream
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlinx.coroutines.*
-import androidx.lifecycle.*
-import androidx.lifecycle.Observer
 
 //////////////////////////////
 // Terminefragment
@@ -127,24 +114,13 @@ class Terminefragment : Fragment() {
             MainViewModelFactory(requireActivity().application)
         )[MainViewModel::class.java]
         viewModel.updatePruefperiode()
-        //viewModel.fetchEntries()
-        viewModel.liveEntryList.observe(viewLifecycleOwner){
-            it?.forEach {
-                Log.d("TestEntry",it.module.toString())
-            }
-        }
-        viewModel.liveFaculties.observe(viewLifecycleOwner) { items ->
-            items?.forEach { item ->
-                Log.d("TestFaculty",item.facultyName)
-            }
-        }
-        /*getCalendarPermission()
-        updateDataFromServer()
+
+        getCalendarPermission()
+        //updateDataFromServer()
         enableSwipeToDelete()
         initRecyclerview()
-        MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged() }
-        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size - 1
-        */
+        Filter.onFilterChangedListener.add { OnFilterChanged() }
+        filterChangeListenerPosition = Filter.onFilterChangedListener.size - 1
     }
 
 
@@ -160,8 +136,8 @@ class Terminefragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            if (filterChangeListenerPosition != null && MainActivity.Filter.onFilterChangedListener.size >= filterChangeListenerPosition!!) {
-                MainActivity.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+            if (filterChangeListenerPosition != null && Filter.onFilterChangedListener.size >= filterChangeListenerPosition!!) {
+                Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
             }
 
         } catch (ex: Exception) {
@@ -222,15 +198,16 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun initRecyclerview() {
+        viewModel.Filter()
+        viewModel.liveFilteredEntriesByDate.observe(viewLifecycleOwner){
+            recyclerView4.adapter = it?.let { RecyclerViewExamAdapter(Filter.validateList(context,it).toMutableList(),viewModel) }
+            termineFragment_swiperefres.isRefreshing = false
+        }
         recyclerView4?.visibility = View.VISIBLE
         recyclerView4?.setHasFixedSize(true)
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
         termineFragment_swiperefres.setOnRefreshListener {
-            val globalVariable = this.context?.applicationContext as StartClass
-            globalVariable.isShowNoProgressBar = false
-            updateDataFromServer()
-            initRecyclerview()
-            termineFragment_swiperefres.isRefreshing = false
+            viewModel.updatePruefperiode()
         }
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
@@ -247,7 +224,7 @@ class Terminefragment : Fragment() {
                 }
             }
         })
-        createView()
+        //createView()
     }
 
     //TODO place into viewmodel
@@ -374,43 +351,30 @@ class Terminefragment : Fragment() {
         validation = viewModel.getExamineYear() + viewModel.getReturnCourse() + viewModel.getCurrentPeriode()
         //val ppeList = database?.userDao()?.getEntriesByValidation(validation)
         val ppeList = viewModel.getAllEntries()
-        if (ppeList != null) {
-            for (entry in ppeList) {
-                if (!MainActivity.Filter.validateFilter(context, entry)) {
-                    continue
-                }
-                moduleAndCourseList.add(
-                    """${entry?.module}
-     ${entry?.course}"""
-                )
-                examinerAndSemester.add(
-                    entry?.firstExaminer
-                            + " " + entry?.secondExaminer
-                            + " " + entry?.semester + " "
-                )
-                dateList.add(entry?.date ?: "")
-                moduleList.add(entry?.module ?: "")
-                idList.add(entry?.id ?: "")
-                formList.add(entry?.examForm ?: "")
-                roomList.add(entry?.room ?: "")
-                statusMessage.add(entry?.hint ?: "")
-                checkList.add(true)
-            }
-        } // define an adapter
-        mAdapter = RecyclerViewExamAdapter(
-            moduleAndCourseList,
-            examinerAndSemester,
-            dateList,
-            moduleList,
-            idList,
-            formList,
-            mLayout,
-            roomList,
-            statusMessage,
-            viewModel
-        )
         Handler(Looper.getMainLooper()).post {
-            recyclerView4?.adapter = mAdapter
+            if (ppeList != null) {
+                for (entry in ppeList) {
+                    if (!Filter.validateFilter(context, entry)) {
+                        continue
+                    }
+                    moduleAndCourseList.add(
+                        """${entry?.module}
+     ${entry?.course}"""
+                    )
+                    examinerAndSemester.add(
+                        entry?.firstExaminer
+                                + " " + entry?.secondExaminer
+                                + " " + entry?.semester + " "
+                    )
+                    dateList.add(entry?.date ?: "")
+                    moduleList.add(entry?.module ?: "")
+                    idList.add(entry?.id ?: "")
+                    formList.add(entry?.examForm ?: "")
+                    roomList.add(entry?.room ?: "")
+                    statusMessage.add(entry?.hint ?: "")
+                    checkList.add(true)
+                }
+            } // define an adapter
             setPruefungszeitraum()
         }
     }
@@ -427,9 +391,9 @@ class Terminefragment : Fragment() {
 
         val sdf_write = SimpleDateFormat("dd.MM.yyyy")
 
-        val strJson = start?.let { start->end?.let { end->sdf_write.format(start) + "-" + sdf_write.format(end) } }
-        if (strJson != "0") {
-            currentPeriode?.text = strJson
+        val str = start?.let { start->end?.let { end->sdf_write.format(start) + "-" + sdf_write.format(end) } }
+        if (str != "0") {
+            currentPeriode?.text = str
         }
     }
 
@@ -442,7 +406,7 @@ class Terminefragment : Fragment() {
      * @see MainActivity.Filter.onFilterChangedListener
      */
     fun OnFilterChanged() {
-        createView()
+        viewModel.Filter()
     }
 
     /**

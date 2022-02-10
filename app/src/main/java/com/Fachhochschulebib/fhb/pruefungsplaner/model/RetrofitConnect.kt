@@ -23,12 +23,12 @@ interface API{
     fun getCourses():Call<List<GSONCourse>>
 
 
-    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pId}/")
+    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pIds}/")
     fun getEntries(
         @Path("ppSemester") ppSemetser:String,
         @Path("pTermin")pTermin:String,
         @Path("pYear")pYear:String,
-        @Path("pId")pId:String):Call<List<GSONEntry>>
+        @Path("pIds")pIds:String):Call<List<GSONEntry>>
 }
 
 object RetrofitHelper{
@@ -189,7 +189,7 @@ class RetrofitConnect(
         testPlanEntry.firstExaminer = entryResponse.firstExaminer
         testPlanEntry.secondExaminer = entryResponse.secondExaminer
         testPlanEntry.date = dateLastExamFormatted
-        testPlanEntry.id = entryResponse.id
+        testPlanEntry.id = entryResponse.id?:"0"
         testPlanEntry.course = entryResponse.courseName
         testPlanEntry.module = entryResponse.module
         testPlanEntry.semester = entryResponse.semester
@@ -226,7 +226,7 @@ class RetrofitConnect(
         existingEntry?.firstExaminer = entryResponse.firstExaminer
         existingEntry?.secondExaminer = entryResponse.secondExaminer
         existingEntry?.date = dateLastExamFormatted
-        existingEntry?.id = entryResponse.id
+        existingEntry?.id = entryResponse.id?:"0"
         existingEntry?.course = entryResponse.courseName
         existingEntry?.module = entryResponse.module
         existingEntry?.semester = entryResponse.semester

@@ -1,16 +1,16 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.data
 
+import androidx.annotation.NonNull
 import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
 @Entity(tableName = "testPlanEntry")
 class TestPlanEntry {
-    @PrimaryKey(autoGenerate = true)
-    var count = 0
-
+    @PrimaryKey
     @ColumnInfo(name = "ID")
-    var id: String? = null
+    @NonNull
+    var id: String = "0"
 
     @ColumnInfo(name = "Favorit")
     var favorit = false

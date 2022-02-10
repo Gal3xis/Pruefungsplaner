@@ -1,12 +1,9 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner
 
-import androidx.appcompat.app.AppCompatActivity
+//Alexander Lange Start
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.DialogInterface
-import androidx.core.view.GravityCompat
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.*
@@ -16,21 +13,18 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
+import androidx.appcompat.widget.SearchView.SearchAutoComplete
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
-import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import java.lang.Exception
-
-//Alexander Lange Start
+import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
-import java.lang.Runnable
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.appcompat.widget.SearchView
-import androidx.appcompat.widget.SearchView.SearchAutoComplete
-import androidx.lifecycle.ViewModelProvider
 
 //Alexander Lange End
 
@@ -54,295 +48,6 @@ import androidx.lifecycle.ViewModelProvider
  * @see Filter
  */
 class MainActivity : AppCompatActivity() {
-
-    /**
-     * Inner Class to filter the table of moduls. Used by TermineFragment-fragment and FavoritenFragment-fragment.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see Terminefragment
-     * @see Favoritenfragment
-     */
-    object Filter {
-        /**
-         * Parameter to lock the Filter.
-         * If it is set to true, all listener are not going to be called when a value is changed.
-         * If it is set back to false, the [filterChanged()]-Method is called.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         */
-        var locked = false
-            set(value) {
-                field = value
-                if (!value) {
-                    filterChanged()
-                }
-            }
-
-        /**
-         * Parameter to Filter with the Modulename.
-         * Calls the [onModuleNameChangedListener] and the [onFilterChangedListener].
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onModulNameChangedListener
-         * @see onFilterChangedListener
-         */
-        var modulName: String? = null
-            set(value) {
-                field = value
-                if (locked) {
-                    return
-                }
-                modulNameChanged()
-                filterChanged()
-            }
-
-        /**
-         * Parameter to Filter with the Coursename.
-         * Calls the [onCourseNameChangedListener] and the [onFilterChangedListener].
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onCourseNameChangedListener
-         * @see onFilterChangedListener
-         */
-        var courseName: String? = null
-            set(value) {
-                field = value
-                if (locked) {
-                    return
-                }
-                courseNameChanged()
-                filterChanged()
-            }
-
-        /**
-         * Parameter to Filter with a specific date.
-         * Calls the [onDateChangedListener] and the [onFilterChangedListener].
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onDateChangedListener
-         * @see onFilterChangedListener
-         */
-        var datum: Date? = null
-            set(value) {
-                field = value
-                if (locked) {
-                    return
-                }
-                dateChanged()
-                filterChanged()
-            }
-
-        /**
-         * Parameter to filter with a specific examiner.
-         * Calls the [onExaminerChangedListener] and [onFilterChangedListener].
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onExaminerChangedListener
-         * @see onFilterChangedListener
-         */
-        var examiner: String? = null
-            set(value) {
-                field = value
-                if (locked) {
-                    return
-                }
-                examinerChanged()
-                filterChanged()
-            }
-
-        /**
-         * Array of 6 semester, where each field contains a boolean, if the semester is selected (true), or not (false)
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         */
-        var semester: Array<Boolean> = arrayOf(true, true, true, true, true, true)
-            set(value) {
-                return
-            }
-
-        /**
-         * Public method to set the value for a specific semester.
-         * Calls the [onSemesterChangedListener] and the [onFilterChangedListener]
-         * @param[pSemester] The semester to set the value.
-         * @param[active] If the semester is checked or not.
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onSemesterChangedListener
-         * @see onFilterChangedListener
-
-         */
-        fun SetSemester(pSemester: Int, active: Boolean) {
-            semester[pSemester] = active
-            if (locked) {
-                return
-            }
-            semesterChanged()
-            filterChanged()
-        }
-
-
-        /**
-         * Invokes every Method, appended to the onModuleNameChangedListener.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onModulNameChangedListener
-         */
-        private fun modulNameChanged() {
-            Log.d("Filter", "Modul changed")
-            for (i in onModulNameChangedListener) {
-                i.invoke()
-            }
-        }
-
-        /**
-         * Invokes every Method, appended to the onCourseNameChangedListener.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onCourseNameChangedListener
-         */
-        private fun courseNameChanged() {
-            Log.d("Filter", "Course changed")
-            for (i in onCourseNameChangedListener) {
-                i.invoke()
-            }
-        }
-
-        /**
-         * Invokes every Method, appended to the onDateChangedListener.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onDateChangedListener
-         */
-        private fun dateChanged() {
-            for (i in onDateChangedListener) {
-                i.invoke()
-            }
-        }
-
-        /**
-         * Invokes every method, appended to the onExaminerChangedListener.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onExaminerChangedListener
-         */
-        private fun examinerChanged() {
-            for (i in onExaminerChangedListener) {
-                i.invoke()
-            }
-
-        }
-
-        /**
-         * Invokes every method, appended to the [onSemesterChangedListener].
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onSemesterChangedListener
-         */
-        private fun semesterChanged() {
-            for (i in onSemesterChangedListener) {
-                i.invoke()
-            }
-
-        }
-
-        /**
-         * Invokes every Method, appended to the onFilterChangedListener.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         * @see onFilterChangedListener
-         */
-        private fun filterChanged() {
-            for (i in onFilterChangedListener) {
-                i.invoke()
-            }
-        }
-
-        /**
-         * Validates a testplanentry-Object. Checks if all Filter-values agree with the given entry.
-         *
-         * @param[context] Current context
-         * @param[entry] The Entry that needs to be validated
-         * @return true->The entry agrees with the filter,false->the entry does not agree with the filter
-         * @author Alexander Lange
-         * @since 1.6
-         */
-        fun validateFilter(context: Context?, entry: TestPlanEntry?): Boolean {
-            if (context == null) {
-                return false
-            }
-            val database = AppDatabase.getAppDatabase(context)
-            if (entry == null) {
-                return false
-            }
-            if (entry.module?.lowercase()?.startsWith(
-                    modulName?.lowercase() ?: entry.module?.lowercase() ?: "-1"
-                ) == false
-            ) {
-                return false
-            }
-            if (entry.course?.lowercase()?.startsWith(
-                    courseName?.lowercase() ?: entry.course?.lowercase() ?: "-1"
-                ) == false
-            ) {
-                return false
-            }
-            if (this.datum != null) {
-                val sdf = SimpleDateFormat("yyyy-MM-dd")
-                val date = sdf.parse(entry.date)
-                if (!this.datum!!.atDay(date)) {
-                    return false
-                }
-            }
-            if (entry.firstExaminer?.lowercase()?.startsWith(
-                    examiner?.lowercase() ?: entry.firstExaminer?.lowercase() ?: "-1"
-                ) == false
-            ) {
-                return false
-            }
-            if (entry.semester != null && !semester[entry.semester!!.toInt().minus(1)]) {
-                return false
-            }
-            return true
-        }
-
-        /**
-         * Resets the Filter, sets every value to null.
-         * Calls the onResetListener.
-         *
-         * @author Alexander Lange
-         * @since 1.6
-         */
-        fun reset() {
-            courseName = null
-            modulName = null
-            datum = null
-            semester.fill(true)
-            for (i in onResetListener) {
-                i.invoke()
-            }
-        }
-
-        //Declaration and empty initilization of every listener. To add an Method, write: listenerX.add{ ... }
-        var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onExaminerChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onSemesterChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
-        var onResetListener: MutableList<() -> Unit> = mutableListOf()
-    }
 
     private lateinit var viewModel: MainViewModel
 
@@ -633,8 +338,8 @@ class MainActivity : AppCompatActivity() {
      *
      * @author Alexander Lange
      * @since 1.6
-     * @see UpdateModulFilter
-     * @see UpdateCourseFilter
+     * @see InitModulFilter
+     * @see InitCourseFilter
      * @see initFacultyFilter
      * @see Filter
      */
@@ -650,11 +355,13 @@ class MainActivity : AppCompatActivity() {
         val sp_modul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
         val sp_course = view.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
 
-        val sp_examiner =
+        val spExaminer =
             view.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
 
-        initFacultyFilter(this, tv_faculty)
-
+        viewModel.liveSelectedFaculty.observe(this){
+            tv_faculty.text = it?.facultyName?:"No Faculty selected"
+        }
+        viewModel.updateFaculty()
 
         val c1 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
         val c2 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
@@ -664,13 +371,12 @@ class MainActivity : AppCompatActivity() {
         val c6 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_6)
 
         //Initializes the view-components
-        UpdateCourseFilter(this, sp_course)
-        UpdateModulFilter(this, sp_modul)
+        InitCourseFilter(this, sp_course)
+        InitModulFilter(this, sp_modul)
 
-        btn_reset?.setOnClickListener { MainActivity.Filter.reset() }
+        btn_reset?.setOnClickListener { Filter.reset() }
 
-        initFilterExaminer(sp_examiner)
-
+        initFilterExaminer(spExaminer)
         initFilterCheckbox(c1, 1)
         initFilterCheckbox(c2, 2)
         initFilterCheckbox(c3, 3)
@@ -678,17 +384,6 @@ class MainActivity : AppCompatActivity() {
         initFilterCheckbox(c5, 5)
         initFilterCheckbox(c6, 6)
 
-        //Sets filterhooks, so the menu dynamically changes when the filter changes
-        Filter.onCourseNameChangedListener.add {
-            UpdateModulFilter(this, sp_modul)
-        }
-
-        Filter.onResetListener.add {
-            UpdateCourseFilter(this, sp_course)
-            UpdateModulFilter(this, sp_modul)
-        }
-
-        val now = Calendar.getInstance().time
         Filter.onDateChangedListener.add {
             tv_date.text =
                 if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
@@ -707,7 +402,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Ok", null)
             .setNegativeButton(
                 "Reset",
-                DialogInterface.OnClickListener { dialog, which -> UserFilter(this) })
+                { _, _ -> UserFilter(this) })
             .setView(view)
             .create()
         dialog.show()
@@ -716,13 +411,13 @@ class MainActivity : AppCompatActivity() {
     /**
      * Initializes the examiner-filter in the filtermenu.
      * Creates an adapter with all first-examiners to imlement an autocompletion.
-     * @param[sp_examiner] The [Spinner] that shall be initialized.
+     * @param[spExaminer] The [Spinner] that shall be initialized.
      * @author Alexander Lange
      * @since 1.6
      * @see AdapterView.OnItemSelectedListener.onItemSelected
      */
-    private fun initFilterExaminer(sp_examiner: Spinner) {
-        sp_examiner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+    private fun initFilterExaminer(spExaminer: Spinner) {
+        spExaminer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -741,7 +436,7 @@ class MainActivity : AppCompatActivity() {
                         )
                     }
                 }
-                Filter.examiner = if (position == 0) null else sp_examiner.selectedItem.toString()
+                Filter.examiner = if (position == 0) null else spExaminer.selectedItem.toString()
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -749,18 +444,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
         val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
-        val selectedCourse = viewModel.getSelectedCourse()
-        spinnerProfArrayList.addAll(
-            selectedCourse?.let { viewModel.getFirstExaminerSortedByName(it)?.toList() }
-                ?: mutableListOf()
-        )
+        viewModel.liveFilteredEntriesByDate.observe(this){
+            it?.forEach {
+               spinnerProfArrayList.add(it.firstExaminer)
+            }
+        }
         val adapterProfAutoComplete = ArrayAdapter(
             applicationContext,
             android.R.layout.simple_list_item_1,
-            spinnerProfArrayList ?: mutableListOf()
+            spinnerProfArrayList
         )
-        sp_examiner.adapter = adapterProfAutoComplete
-        sp_examiner.setSelection(Filter.examiner)
+        spExaminer.adapter = adapterProfAutoComplete
+        spExaminer.setSelection(Filter.examiner)
     }
 
     /**
@@ -803,34 +498,62 @@ class MainActivity : AppCompatActivity() {
      * Creates a list of coursenames from the room-database and passes them to the spinner.
      *
      * @param[context] the current context
-     * @param[sp_course] the spinner from the filtermenu
+     * @param[spCourse] the spinner from the filtermenu
      * @author Alexander Lange
      * @since 1.6
      * @see setCourseSpinner
      * @see OpenFilterMenu
      * @see initFacultyFilter
-     * @see UpdateModulFilter
+     * @see InitModulFilter
      * @see Filter
      */
-    private fun UpdateCourseFilter(context: Context, sp_course: Spinner) {
+    private fun InitCourseFilter(context: Context, spCourse: Spinner) {
         try {
-            var sp_course_adapter: ArrayAdapter<String>? = null
-            val list: MutableList<String?> =
-                mutableListOf<String?>("Alle")//TODO extract String
-
-            //Get Courses from Room-Database
-            val courses = viewModel.getChoosenCourses(true)
-            //Create a list of Course-Names
-            courses?.forEach { course ->
-                list.add(course.toString())
+            var spCourseAdapter: ArrayAdapter<String>? = null
+            viewModel.liveCourses.observe(this) {
+                val list = mutableListOf<String>("Alle")//TODO extract String
+                it?.forEach {
+                    it.courseName?.let { it1 -> list.add(it1) }
+                }
+                spCourse.adapter = ArrayAdapter<String>(
+                    context,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    list
+                )
+                //Set selection of spinner to selection from filter (retrieve previous filter)
+                spCourse.setSelection(Filter.courseName)
+                //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
             }
-            //Create Spinneradapter from coursename-list
-            sp_course_adapter = ArrayAdapter<String>(
-                context,
-                android.R.layout.simple_spinner_dropdown_item,
-                list
-            )
-            setCourseSpinner(sp_course_adapter, sp_course)
+            spCourse.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (parent?.childCount ?: 0 > 0) {
+                        val child = parent?.getChildAt(0)
+                        //Set accurate textcolor for the selected item
+                        if (child != null) {
+                            (child as TextView).setTextColor(
+                                Utils.getColorFromAttr(
+                                    R.attr.colorOnPrimary,
+                                    theme
+                                )
+                            )
+                        }
+                    }
+                    Filter.courseName =
+                        if (position == 0) null else spCourse.selectedItem.toString()
+                }
+
+                //Should never been called.
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    Filter.courseName = null
+                }
+            }
+
 
         } catch (ex: Exception) {
             Log.e("table-UpdateCourseFilter:", ex.stackTraceToString())
@@ -844,48 +567,10 @@ class MainActivity : AppCompatActivity() {
      * @param[sp_course] the spinner from the filtermenu
      * @author Alexander Lange
      * @since 1.6
-     * @see UpdateCourseFilter
+     * @see InitCourseFilter
      * @see Filter
      */
     private fun setCourseSpinner(sp_course_adapter: ArrayAdapter<String>?, sp_course: Spinner) {
-        //Pass created adapter to spinner
-        sp_course.adapter = sp_course_adapter
-        //Set selection of spinner to selection from filter (retrieve previous filter)
-        sp_course.setSelection(Filter.courseName)
-        //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
-        sp_course.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if (parent?.childCount ?: 0 > 0) {
-                    val child = parent?.getChildAt(0)
-                    //Set accurate textcolor for the selected item
-                    if (child != null) {
-                        (child as TextView).setTextColor(
-                            Utils.getColorFromAttr(
-                                R.attr.colorOnPrimary,
-                                theme
-                            )
-                        )
-                    }
-                }/*TODO REMOVE
-                        //Return if user al
-                        if (Filter.courseName == null && position == 0) {
-                            return
-                        }*/
-                Filter.courseName =
-                    if (position == 0) null else sp_course.selectedItem.toString()
-            }
-
-            //Should never been called.
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                Filter.courseName = null
-            }
-        }
     }
 
     /**
@@ -898,8 +583,8 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see setCourseSpinner
      * @see OpenFilterMenu
-     * @see UpdateCourseFilter
-     * @see UpdateModulFilter
+     * @see InitCourseFilter
+     * @see InitModulFilter
      * @see Filter
      */
     private fun initFacultyFilter(context: Context, tv_faculty: TextView) {
@@ -944,84 +629,62 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see setCourseSpinner
      * @see OpenFilterMenu
-     * @see UpdateCourseFilter
-     * @see UpdateModulFilter
+     * @see InitCourseFilter
+     * @see InitModulFilter
      * @see Filter
      */
-    private fun UpdateModulFilter(context: Context, sp_modul: Spinner) {
+    private fun InitModulFilter(context: Context, spModul: Spinner) {
         try {
             var sp_modul_adapter: ArrayAdapter<String>? = null
-            var pos_selected: Int = 0
             val list: MutableList<String?> = mutableListOf("Alle")
             //Get filtered list of modules from room-database
-            val modules =
-                if (Filter.courseName == null) viewModel.getAllEntries() else Filter.courseName?.let {
-                    viewModel.getEntriesByCourseName(
-                        it
-                    )
+            viewModel.liveFilteredEntriesByDate.observe(this){
+                it?.forEach {
+                    list.add(it.module)
                 }
-            //Loop through modules and create list of modulnames
-            modules?.forEach { i ->
-                list.add(i?.module)
             }
             //Create spinneradapter from list
-            sp_modul_adapter = ArrayAdapter<String>(
+            spModul.adapter = ArrayAdapter<String>(
                 context,
                 android.R.layout.simple_spinner_dropdown_item,
                 list
             )
-            setModuleSpinner(sp_modul_adapter, sp_modul)
+            //Pass spinneradapter to spinner
+            //Set selection of spinner to selection from filter (retrieve previous filter)
+            spModul.setSelection(Filter.modulName)
+            //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
+            spModul.onItemSelectedListener = object :
+                AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    //Set accurate textcolor for the selected item
+                    if (parent?.childCount ?: 0 > 0) {
+                        val child = parent?.getChildAt(0)
+                        if (child != null) {
+                            (child as TextView).setTextColor(
+                                Utils.getColorFromAttr(
+                                    R.attr.colorOnPrimary,
+                                    theme
+                                )
+                            )
+                        }
+                    }
+                    /*if (Filter.modulName == null && position == 0) {
+                        return
+                    }*/
+                    Filter.modulName = if (position == 0) null else spModul.selectedItem.toString()
+                }
+                //Should never been called
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    Filter.modulName = null
+                }
+            }
         } catch (ex: Exception) {
             Log.e("UpdateModuleFilter", ex.stackTraceToString())
-        }
-    }
-
-    /**
-     * Initializes the modulespinner with an adapter and an onItemSelectedListener.
-     *
-     * @param[sp_modul_adapter] The adapter to pass to the spinner
-     * @param[sp_modul] the spinner from the filtermenu
-     * @author Alexander Lange
-     * @since 1.6
-     * @see UpdateModulFilter
-     * @see Filter
-     */
-    private fun setModuleSpinner(sp_modul_adapter: ArrayAdapter<String>?, sp_modul: Spinner) {
-        //Pass spinneradapter to spinner
-        sp_modul.adapter = sp_modul_adapter
-        //Set selection of spinner to selection from filter (retrieve previous filter)
-        sp_modul.setSelection(Filter.modulName)
-        //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
-        sp_modul.onItemSelectedListener = object :
-            AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                //Set accurate textcolor for the selected item
-                if (parent?.childCount ?: 0 > 0) {
-                    val child = parent?.getChildAt(0)
-                    if (child != null) {
-                        (child as TextView).setTextColor(
-                            Utils.getColorFromAttr(
-                                R.attr.colorOnPrimary,
-                                theme
-                            )
-                        )
-                    }
-                }
-                /*if (Filter.modulName == null && position == 0) {
-                    return
-                }*/
-                Filter.modulName = if (position == 0) null else sp_modul.selectedItem.toString()
-            }
-
-            //Should never been called
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                Filter.modulName = null
-            }
         }
     }
 

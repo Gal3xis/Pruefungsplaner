@@ -10,10 +10,10 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
 interface UserDao {
 
     //Inserts
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertEntry(testPlanEntry: TestPlanEntry)
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertEntries(testPlanEntries: List<TestPlanEntry>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -62,21 +62,21 @@ interface UserDao {
     suspend fun getAllEntries(): List<TestPlanEntry>?
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
-    fun getAllEntriesLiveData(): LiveData<List<TestPlanEntry>?>
+    fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
 
     @Query("SELECT * FROM Courses ORDER BY couresName")
     fun getAllCoursesLiveData():LiveData<List<Courses>?>
 
-    @Query("SELECT * FROM TestPlanEntry WHERE favorit = 1")
+    @Query("SELECT * FROM TestPlanEntry WHERE favorit = 1 ORDER BY date, termin, module")
     fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?>
 
-    @Query("SELECT * FROM Faculty ORDER BY facName LIMIT 100 OFFSET 1 ")
+    @Query("SELECT * FROM Faculty ORDER BY facName LIMIT 100 OFFSET 1")
     fun getAllFacultiesLiveData():LiveData<List<Faculty>?>
 
-    @Query("SELECT * FROM Courses WHERE facultyId = :id")
+    @Query("SELECT * FROM Courses WHERE facultyId = :id ORDER BY couresName")
     fun getCoursesForFacultyIdLiveData(id:String):LiveData<List<Courses>?>
 
-    @Query("SELECT * FROM Courses")
+    @Query("SELECT * FROM Courses ORDER BY couresName")
     suspend fun getAllCourses(): List<Courses>?
 
     @Query("SELECT * FROM TestPlanEntry WHERE favorit = :favorit ORDER BY date, termin, module")
@@ -184,4 +184,7 @@ interface UserDao {
 
     @Query("UPDATE TestPlanEntry SET Choosen = :exams ")
     suspend fun searchAndReset(exams: Boolean)
+
+    @Query("SELECT * FROM Faculty WHERE fbid = :id")
+    suspend fun getFacultyById(id:String):Faculty?
 }

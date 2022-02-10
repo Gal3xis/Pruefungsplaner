@@ -34,7 +34,10 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private val spRepository = SharedPreferencesRepository(application)
     private val sdf = SimpleDateFormat("dd/MM/yyyy")
 
-    val liveEntryList = repository.getAllEntriesLiveData()
+    val liveEntriesByDate = repository.getAllEntriesLiveDataByDate()
+
+    val liveFilteredEntriesByDate = MutableLiveData<List<TestPlanEntry>?>()
+    val liveFilteredEntriesByName = MutableLiveData<List<TestPlanEntry>?>()
 
     val liveCourses = repository.getAllCoursesLiveData()
 
@@ -42,7 +45,17 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val liveFaculties = repository.getAllFacultiesLiveData()
 
+    val liveSelectedFaculty = MutableLiveData<Faculty?>()
+
     var liveCoursesForFacultyId = MutableLiveData<List<Courses>?>()
+
+    fun Filter(){
+        viewModelScope.launch {
+            val entries = repository.getAllEntries()
+            val filteredEntries = entries?.let { Filter.validateList(context, it) }
+            liveFilteredEntriesByDate.postValue(filteredEntries)
+        }
+    }
 
     //Remote-Access
     fun fetchCourses() {
@@ -52,21 +65,44 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    /**
+     * Return the ids of all choosen courses in the Room-Database.
+     *
+     * @param[roomData] The Room-Database of the application.
+     *
+     * @return A String containing every course-ID
+     *
+     * @author Alexander Lange
+     * @since 1.5
+     */
+    private suspend fun getIDs(): String {
+        val Ids = repository.getChoosenCourseIds(true)
+        val courseIds = JSONArray()
+        if (Ids != null) {
+            for (id in Ids) {
+                try {
+                    val idJson = JSONObject()
+                    idJson.put("ID", id)
+                    courseIds.put(idJson)
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return courseIds.toString()
+    }
+
     fun fetchEntries(){
         viewModelScope.launch {
             val periode = getCurrentPeriode()
             val termin = getCurrentTermin()
             val examinYear = getExamineYear()
-            val ids = repository.getChoosenCourseIds(true)
+            val ids = getIDs()
             if(periode==null||termin==null||examinYear==null||ids.isNullOrEmpty()){
                 return@launch
             }
-            val entryList = mutableListOf<GSONEntry>()
-            ids.forEach {
-                val entries = repository.fetchEntries(periode,termin,examinYear,it)
-                //entries?.let { entries -> entryList.addAll(entries) }
-            }
-            entryList.forEach {
+            val entries = repository.fetchEntries(periode,termin,examinYear,ids)
+            entries?.forEach {
                 insertEntryJSON(it)
             }
         }
@@ -234,6 +270,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun insertEntries(entries: List<TestPlanEntry>){
+        viewModelScope.launch {
+            repository.insertEntries(entries)
+        }
+    }
+
     fun insertEntryJSON(jsonResponse: GSONEntry) {
         insertEntry(createTestplanEntry(jsonResponse))
     }
@@ -273,6 +315,11 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     fun updateEntryFavorit(favorit: Boolean, id: Int) {
         viewModelScope.launch {
             repository.updateEntryFavorit(favorit, id)
+        }
+    }
+    fun updateEntryFavorit(favorit: Boolean, entry:TestPlanEntry) {
+        viewModelScope.launch {
+             updateEntryFavorit(favorit, entry.id.toInt())
         }
     }
 
@@ -467,7 +514,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         testPlanEntry.firstExaminer = entry.FirstExaminer
         testPlanEntry.secondExaminer = entry.SecondExaminer
         testPlanEntry.date = dateLastExamFormatted
-        testPlanEntry.id = entry.ID
+        testPlanEntry.id = entry.ID?:"0"
         testPlanEntry.course = entry.CourseName
         testPlanEntry.module = entry.Module
         testPlanEntry.semester = entry.Semester
@@ -544,9 +591,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return spRepository.getReturnFaculty()
     }
 
+    fun updateFaculty(){
+        getReturnFaculty()?.let { getFacultyById(it) }
+    }
+
     fun setReturnFaculty(faculty: String) {
         spRepository.setReturnFaculty(faculty)
         getCoursesByFacultyid(faculty)
+        getFacultyById(faculty)
     }
 
     fun setReturnFaculty(faculty: Faculty) {
@@ -833,6 +885,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                 )
             }
             Log.d("Output checkFakultaet", "abgeschlossen")
+        }
+    }
+
+    fun getFacultyById(id:String){
+        viewModelScope.launch {
+            val faculty = repository.getFacultyById(id)
+            liveSelectedFaculty.postValue(faculty)
         }
     }
 }

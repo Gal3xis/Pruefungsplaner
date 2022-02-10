@@ -94,8 +94,8 @@ class Favoritenfragment : Fragment() {
 
         // Ende Merlin Gürtler
         //TODO Alexander Lange Start
-        MainActivity.Filter.onFilterChangedListener.add { OnFilterChanged() }
-        filterChangeListenerPosition = MainActivity.Filter.onFilterChangedListener.size - 1
+        Filter.onFilterChangedListener.add { OnFilterChanged() }
+        filterChangeListenerPosition = Filter.onFilterChangedListener.size - 1
         //TODO Alexander Lange End
     }
 
@@ -144,7 +144,7 @@ class Favoritenfragment : Fragment() {
         // Favorisierte Prüfungen für die Anzeige vorbereiten
         if (ppeList != null) {
             for (entry in ppeList) {
-                if (!MainActivity.Filter.validateFilter(context, entry)) {
+                if (!Filter.validateFilter(context, entry)) {
                     continue
                 }
                 courses.add(
@@ -165,8 +165,9 @@ class Favoritenfragment : Fragment() {
         }
         // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-        mAdapter = RecyclerViewFavoritAdapter(courses, profnames, dates, examNo, room, form,viewModel)
-        recyclerView4?.adapter = mAdapter
+        viewModel.liveFavorits.observe(viewLifecycleOwner){
+            recyclerView4?.adapter = it?.toMutableList()?.let { it1 -> RecyclerViewFavoritAdapter(it1,viewModel) }
+        }
     }
 
     //TODO Alexander Lange Start
@@ -181,7 +182,7 @@ class Favoritenfragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         if (filterChangeListenerPosition != null) {
-            MainActivity.Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+            Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
         }
     }
     //TODO Alexander Lange End

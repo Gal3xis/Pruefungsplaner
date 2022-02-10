@@ -43,12 +43,7 @@ import java.lang.Exception
  */
 class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
     (
-    private val moduleAndCourseList: MutableList<String>,
-    private val examinerAndSemester: List<String>,
-    private val datesList: List<String>,
-    private val ppIdList: List<String>,
-    private val roomList: List<String>,
-    private val formList: List<String>,
+    private val entryList: MutableList<TestPlanEntry>,
     private val viewModel: MainViewModel
 ) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null
@@ -65,9 +60,9 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @author Alexander Lange
      * @since 1.6
      */
-    fun add(position: Int?, item: String) {
+    fun add(position: Int?, entry: TestPlanEntry) {
         notifyItemInserted(
-            moduleAndCourseList.add(position, item)
+            entryList.add(position, entry)
         )
     }
 
@@ -81,13 +76,19 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      */
     fun remove(position: Int) {
         try {
-            moduleAndCourseList.removeAt(position)
-            notifyItemRemoved(position)
-            deleteItem(position)
-        } catch (ex: Exception) {
+            val entry = entryList[position]
+            viewModel.updateEntryFavorit(false, entry)
+            context?.let {
+                entry?.let { it1 ->
+                    GoogleCalendarIO.deleteEntry(it, it1)
+                }
+            }
+            Toast.makeText(
+                context,
+                context!!.getString(R.string.delete), Toast.LENGTH_SHORT
+            ).show()        } catch (ex: Exception) {
             Log.e("MyAdapterfavorits.kt-remove", ex.stackTraceToString())
         }
-
     }
 
     /**
@@ -136,9 +137,10 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         holder: ViewHolder,
         position: Int
     ) {
+        val entry = entryList[position]
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        name = moduleAndCourseList[holder.adapterPosition]
+        name = entry.module
         holder.txtHeader.text = name
 
         holder.layout.setOnClickListener {
@@ -151,7 +153,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                 holder.txtSecondScreen.visibility = View.VISIBLE
                 holder.txtSecondScreen.text =
                     context?.let { it1 ->
-                        viewModel.getEntryById(ppIdList[position])?.getString(
+                        entry.getString(
                             it1
                         )
                     }
@@ -162,7 +164,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
 
         //Prüfitem von der Favoritenliste löschen
         holder.ivicon.setOnClickListener { remove(position) }
-        holder.txtFooter.text = context!!.getString(R.string.prof) + examinerAndSemester[position]
+        holder.txtFooter.text = context!!.getString(R.string.prof) + "${entry.firstExaminer},${entry.secondExaminer}"
 
         val course = name?.split(" ")?.toTypedArray()
         modulName = ""
@@ -189,19 +191,19 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         position: Int,
         holder: ViewHolder
     ) {
+        val entry = entryList[position]
         //darstellen der Informationen für das Prüfitem
-        val splitDateAndTime = datesList[position].split(" ").toTypedArray()
-        val splitDayMonthYear = splitDateAndTime[0].split("-").toTypedArray()
+        val splitDateAndTime = entry.date?.split(" ")?.toTypedArray()
+        val splitDayMonthYear = splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
         holder.txtthirdline.text = (context!!.getString(R.string.clockTime2)
-                + splitDateAndTime[1].substring(0, 5)
+                + splitDateAndTime?.get(1)?.substring(0, 5)
                 + context!!.getString(R.string.date2)
-                + splitDayMonthYear[2] + "."
-                + splitDayMonthYear[1] + "."
-                + splitDayMonthYear[0])
-        val splitExaminerAndSemester = examinerAndSemester[position].split(" ").toTypedArray()
+                + (splitDayMonthYear?.get(2) ?: "") + "."
+                + (splitDayMonthYear?.get(1) ?: "") + "."
+                + (splitDayMonthYear?.get(0) ?: ""))
         holder.txtFooter.text = (context!!.getString(R.string.prof)
-                + splitExaminerAndSemester[0] + ", " + splitExaminerAndSemester[1]
-                + context!!.getString(R.string.semester) + splitExaminerAndSemester[2])
+                + entry.firstExaminer + ", " + entry.secondExaminer
+                + context!!.getString(R.string.semester) + entry.semester)
     }
 
 
@@ -216,36 +218,11 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @see RecyclerView.Adapter.getItemCount
      */
     override fun getItemCount(): Int {
-        return moduleAndCourseList.size
+        return entryList.size
     }
 
 
 // Start Merlin Gürtler
-
-    /**
-     * Delete an item at a given position.
-     *
-     * @param[position] The position of the item, that is to delete.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun deleteItem(position: Int) {
-        var selectedEntry: TestPlanEntry? = null
-        selectedEntry = viewModel.getEntryById(ppIdList[position])
-        viewModel.updateEntryFavorit(false, Integer.valueOf(ppIdList[position]))
-        //Entferne den Eintrag aus dem Calendar falls vorhanden
-        context?.let {
-            selectedEntry?.let { it1 ->
-                GoogleCalendarIO.deleteEntry(it, it1)
-            }
-        }
-        Toast.makeText(
-            context,
-            context!!.getString(R.string.delete), Toast.LENGTH_SHORT
-        ).show()
-    }
-
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder

@@ -93,49 +93,9 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun fetchEntries(ppSemester:String, pTermin:String, pYear:String, pId:String):JSONArray{
+    suspend fun fetchEntries(ppSemester:String, pTermin:String, pYear:String, pId:String):List<GSONEntry>?{
         return withContext(Dispatchers.IO){
-
-            val result = StringBuilder()
-            val url =
-                URL("http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefplaneintrag/${ppSemester}/${pTermin}/${pYear}/${pId}/")
-            val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
-            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
-            urlConn.connect()
-
-            //Parsen von den  erhaltene Werte
-            val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            var line: String?
-            while ((reader.readLine().also { line = it }) != null) {
-                result.append(line)
-            }
-
-            //Erstellen von JSON
-            var jsonObj: JSONObject? = null
-            try {
-                jsonObj = XML.toJSONObject(result.toString())
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            val x: Iterator<*> = jsonObj!!.keys()
-            val jsonArray = JSONArray()
-            while (x.hasNext()) {
-                val key: String = x.next() as String
-                jsonArray.put(jsonObj.get(key))
-            }
-
-            //Werte von JSONARRay in JSONObject konvertieren
-            val receivesFaculties = JSONArray()
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                receivesFaculties.put(jsonObject.get("faculty"))
-            }
-            val convertedToString = receivesFaculties.toString()
-            val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
-
-            //konvertieren zu JSONArray
-            return@withContext JSONArray(deletedCling)
+            return@withContext async {remoteDataSource.getEntries(ppSemester,pTermin,pYear,pId)  }.await().awaitResponse().body()
         }
     }
 
@@ -300,8 +260,8 @@ class DatabaseRepository(
         return ret
     }
 
-    fun getAllEntriesLiveData(): LiveData<List<TestPlanEntry>?> =
-        localDataSource.getAllEntriesLiveData()
+    fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?> =
+        localDataSource.getAllEntriesLiveDataByDate()
 
     fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?> = localDataSource.getAllFavoritsLiveData()
 
@@ -419,5 +379,17 @@ class DatabaseRepository(
             ret = localDataSource.getOneEntryByName(courseName,favorit)
         }
         return ret
+    }
+
+    suspend fun getFacultyById(id:String):Faculty?{
+        return withContext(Dispatchers.IO){
+            return@withContext localDataSource.getFacultyById(id)
+        }
+    }
+
+    suspend fun insertEntries(entries: List<TestPlanEntry>) {
+        withContext(Dispatchers.IO){
+            localDataSource.insertEntries(entries)
+        }
     }
 }
