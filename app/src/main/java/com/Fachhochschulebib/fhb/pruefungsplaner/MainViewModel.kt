@@ -9,10 +9,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.GSONCourse
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.GSONEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -64,8 +61,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             if(periode==null||termin==null||examinYear==null||ids.isNullOrEmpty()){
                 return@launch
             }
-            val entries = repository.fetchEntries(periode,termin,examinYear.toInt(),ids)
-            entries?.forEach {
+            val entryList = mutableListOf<GSONEntry>()
+            ids.forEach {
+                val entries = repository.fetchEntries(periode,termin,examinYear,it)
+                //entries?.let { entries -> entryList.addAll(entries) }
+            }
+            entryList.forEach {
                 insertEntryJSON(it)
             }
         }

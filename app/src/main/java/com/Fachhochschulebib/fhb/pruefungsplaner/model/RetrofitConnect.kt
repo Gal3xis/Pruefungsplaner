@@ -23,12 +23,12 @@ interface API{
     fun getCourses():Call<List<GSONCourse>>
 
 
-    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pIds}")
+    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pId}/")
     fun getEntries(
         @Path("ppSemester") ppSemetser:String,
         @Path("pTermin")pTermin:String,
-        @Path("p<Yyear")pYear:Int,
-        @Path("pIds")pIds:List<String>):Call<List<GSONEntry>>
+        @Path("pYear")pYear:String,
+        @Path("pId")pId:String):Call<List<GSONEntry>>
 }
 
 object RetrofitHelper{

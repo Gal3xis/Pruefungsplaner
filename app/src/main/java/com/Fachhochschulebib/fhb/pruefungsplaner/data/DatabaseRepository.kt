@@ -3,7 +3,6 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.data
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.room.Query
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -94,9 +93,49 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun fetchEntries(ppSemester:String,pTermin:String,pYear:Int,pIds:List<String>):List<GSONEntry>?{
+    suspend fun fetchEntries(ppSemester:String, pTermin:String, pYear:String, pId:String):JSONArray{
         return withContext(Dispatchers.IO){
-            return@withContext async { remoteDataSource.getEntries(ppSemester,pTermin,pYear,pIds) }.await().awaitResponse().body()
+
+            val result = StringBuilder()
+            val url =
+                URL("http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefplaneintrag/${ppSemester}/${pTermin}/${pYear}/${pId}/")
+            val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
+            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
+            urlConn.connect()
+
+            //Parsen von den  erhaltene Werte
+            val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var line: String?
+            while ((reader.readLine().also { line = it }) != null) {
+                result.append(line)
+            }
+
+            //Erstellen von JSON
+            var jsonObj: JSONObject? = null
+            try {
+                jsonObj = XML.toJSONObject(result.toString())
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+            val x: Iterator<*> = jsonObj!!.keys()
+            val jsonArray = JSONArray()
+            while (x.hasNext()) {
+                val key: String = x.next() as String
+                jsonArray.put(jsonObj.get(key))
+            }
+
+            //Werte von JSONARRay in JSONObject konvertieren
+            val receivesFaculties = JSONArray()
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                receivesFaculties.put(jsonObject.get("faculty"))
+            }
+            val convertedToString = receivesFaculties.toString()
+            val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
+
+            //konvertieren zu JSONArray
+            return@withContext JSONArray(deletedCling)
         }
     }
 
