@@ -10,6 +10,8 @@ import kotlinx.coroutines.*
 import okhttp3.ResponseBody
 import retrofit2.*
 import retrofit2.http.GET
+import retrofit2.http.Header
+import retrofit2.http.Path
 import java.lang.reflect.Type
 import java.text.DateFormat
 import java.text.ParseException
@@ -20,8 +22,13 @@ interface API{
     @GET("org.fh.ppv.entity.studiengang/")
     fun getCourses():Call<List<GSONCourse>>
 
-    //@GET("org.fh.ppv.entity.pruefplaneintrag/")
-    //TODO fun getEntries():Call<List<GSONEntry>>
+
+    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pIds}")
+    fun getEntries(
+        @Path("ppSemester") ppSemetser:String,
+        @Path("pTermin")pTermin:String,
+        @Path("p<Yyear")pYear:Int,
+        @Path("pIds")pIds:List<String>):Call<List<GSONEntry>>
 }
 
 object RetrofitHelper{

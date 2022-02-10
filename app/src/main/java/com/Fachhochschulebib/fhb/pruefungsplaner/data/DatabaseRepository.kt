@@ -1,6 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.data
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.room.Query
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
@@ -16,6 +17,7 @@ import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
+import java.lang.Exception
 import java.lang.StringBuilder
 import java.net.HttpURLConnection
 import java.net.URL
@@ -91,6 +93,73 @@ class DatabaseRepository(
             return@withContext JSONArray(deletedCling)
         }
     }
+
+    suspend fun fetchEntries(ppSemester:String,pTermin:String,pYear:Int,pIds:List<String>):List<GSONEntry>?{
+        return withContext(Dispatchers.IO){
+            return@withContext async { remoteDataSource.getEntries(ppSemester,pTermin,pYear,pIds) }.await().awaitResponse().body()
+        }
+    }
+
+    //TODO Move
+    /**
+     * Returns a list of all examperiods in the database.
+     *
+     * @return a JSONArray with all examperiods containing information. The Json-Objects contain data about the first day of the period, the semester (WiSe or SoSe), first or second period, weeknumber and faculty.
+     * @since 1.6
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     */
+    suspend fun fetchPruefperiondenObjects(): JSONArray {
+        return withContext(Dispatchers.IO){
+            val result = StringBuilder()
+
+            //DONE (08/2020 LG)
+            val address = "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
+            val url = URL(address)
+
+            /*
+                        HttpURLConnection anstelle Retrofit, um die XML/Json-Daten abzufragen!!!
+                     */
+            val urlConn = url.openConnection() as HttpURLConnection
+            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
+            try {
+                urlConn.connect()
+            } catch (e: Exception) {
+                Log.d("Output exception", e.toString())
+            }
+
+            //Variablen zum lesen der erhaltenen werte
+            val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var line: String?
+            while (reader.readLine().also { line = it } != null) {
+                result.append(line)
+            }
+            var jsonObj: JSONObject? = null
+            try {
+                jsonObj = XML.toJSONObject(result.toString())
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+            //hinzufügen der erhaltenen JSONObject werte zum JSONArray
+            val x: Iterator<*> = jsonObj!!.keys()
+            val jsonArray = JSONArray()
+            while (x.hasNext()) {
+                val key = x.next() as String
+                jsonArray.put(jsonObj[key])
+            }
+            val examinePeriodArray = JSONArray()
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                examinePeriodArray.put(jsonObject["pruefperioden"])
+            }
+            val arrayZuString = examinePeriodArray.toString()
+            val erstesUndletztesZeichenentfernen =
+                arrayZuString.substring(1, arrayZuString.length - 1)
+            return@withContext JSONArray(erstesUndletztesZeichenentfernen)
+        }
+    }
+
     /*fun fetchEntries(): Call<List<GSONEntry>> {
         return remoteDataSource.getEntries()
     }*/

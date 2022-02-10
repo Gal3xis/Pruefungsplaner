@@ -75,7 +75,7 @@ class StartActivity() : AppCompatActivity() {
     private lateinit var context: Context
     private lateinit var viewModel: MainViewModel
 
-    private fun addMainCourse(course:Courses){
+    private fun addMainCourse(course: Courses) {
         course.courseName?.let { addMainCourse(it) }
     }
 
@@ -146,6 +146,7 @@ class StartActivity() : AppCompatActivity() {
         )[MainViewModel::class.java]
         initUpdateManager()
         initSharedPreferences()
+        checkLoginStatus()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         recyclerViewChecklist.setHasFixedSize(true)
         recyclerViewChecklist.layoutManager = LinearLayoutManager(applicationContext)
@@ -166,7 +167,6 @@ class StartActivity() : AppCompatActivity() {
         try {
             initServer()
             initButtons()
-            //checkLoginStatus()
         } catch (e: Exception) {
             if (strJson != null) {
                 try {
@@ -187,8 +187,8 @@ class StartActivity() : AppCompatActivity() {
 
     //TODO
     private fun checkLoginStatus() {
-        val globalVariable = applicationContext as StartClass
-        if (courseMain != "0" && !globalVariable.isChangeFaculty) {
+        Log.d("ReturnCourse",viewModel.getReturnCourse().toString())
+        if(viewModel.getReturnCourse()!=null){
             startApplication()
         }
     }
@@ -247,11 +247,8 @@ class StartActivity() : AppCompatActivity() {
     private fun initServer() {
         viewModel.fetchFaculties()
         viewModel.fetchCourses()
-
-
         // Start Merlin Gürtler
         val globalVariable = applicationContext as StartClass
-
         // Thread für die UUid
         val uuid = viewModel.getUuid()
         if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
@@ -268,14 +265,11 @@ class StartActivity() : AppCompatActivity() {
      * @since 1.6
      */
     private fun initButtons() {
-        runOnUiThread {
-
-            buttonForSpinner.setOnClickListener {
-                createAlertDialogChooseFaculty()
-            }
-            buttonOk.setOnClickListener { v ->
-                createAlertDialogSelectMainCourse(v)
-            }
+        buttonForSpinner.setOnClickListener {
+            createAlertDialogChooseFaculty()
+        }
+        buttonOk.setOnClickListener { v ->
+            createAlertDialogSelectMainCourse(v)
         }
     }
 
@@ -373,7 +367,7 @@ class StartActivity() : AppCompatActivity() {
     private fun facultyChosen(faculty: Faculty) {
         viewModel.setReturnFaculty(faculty)
         viewModel.fetchCourses()
-        viewModel.liveCoursesForFacultyId?.observe(this){ items ->
+        viewModel.liveCoursesForFacultyId?.observe(this) { items ->
             recyclerViewChecklist.adapter = items?.let {
                 CoursesCheckList(
                     it,

@@ -3,14 +3,16 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.GSONCourse
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.GSONEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse
-import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -45,7 +47,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     var liveCoursesForFacultyId = MutableLiveData<List<Courses>?>()
 
-    //Retrofit
+    //Remote-Access
     fun fetchCourses() {
         viewModelScope.launch {
             val courses = repository.fetchCourses()
@@ -53,13 +55,176 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /*fun fetchEntries():List<GSONEntry>?{
-        var ret:List<GSONEntry>? = null
+    fun fetchEntries(){
         viewModelScope.launch {
-            ret = repository.fetchEntries().await()
+            val periode = getCurrentPeriode()
+            val termin = getCurrentTermin()
+            val examinYear = getExamineYear()
+            val ids = getChoosenCourseIds(true)
+            if(periode==null||termin==null||examinYear==null||ids==null){
+                return@launch
+            }
+            val entries = repository.fetchEntries(periode,termin,examinYear.toInt(),ids)
+            entries?.forEach {
+                insertEntryJSON(it)
+            }
         }
-        return ret
-    }*/
+    }
+
+    /**
+     * Checks for a new exam period and updates the exam-data if necessary.
+     *
+     * @since 1.6
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     */
+    fun updatePruefperiode() {
+        viewModelScope.launch {
+            // Erhalte die gewählte Fakultät aus den Shared Preferences
+            try {
+                //DONE (09/2020 LG) Aktuellen Prüftermin aus JSON-String herausfiltern!
+                //Heutiges Datum als Vergleichsdatum ermitteln und den Formatierer festlegen.
+                val now = GregorianCalendar()
+                val currentDate = now.time
+                val formatter = SimpleDateFormat("yyyy-MM-dd")
+                var currentExamineDate: JSONObject? = null
+                var date: String
+                var facultyIdDB: String
+                var examineDate: Date?
+                var lastDayPp: Date?
+                var examineWeek: Int
+
+                val pruefperiodenObjects = repository.fetchPruefperiondenObjects()
+
+                //Durch-Iterieren durch alle Prüfperioden-Objekte des JSON-Ergebnisses
+                for (i in 0 until pruefperiodenObjects.length()) {
+                    currentExamineDate = pruefperiodenObjects.getJSONObject(i)
+                    date = currentExamineDate["startDatum"].toString()
+                    facultyIdDB = currentExamineDate.getJSONObject("fbFbid")["fbid"].toString()
+                    //Aus dem String das Datum herauslösen
+                    date = date.substring(0, 10)
+                    //und in ein Date-Objekt umwandeln
+                    examineDate = formatter.parse(date)
+
+                    // Erhalte die Anzahl der Wochen
+                    examineWeek = currentExamineDate["PPWochen"].toString().toInt()
+                    val c = Calendar.getInstance()
+                    c.time = examineDate
+                    c.add(Calendar.DATE, 7 * examineWeek - 2) // Anzahl der Tage Klausurenphase
+                    lastDayPp = formatter.parse(formatter.format(c.time))
+
+                    //und mit dem heutigen Datum vergleichen.
+                    //Die erste Prüfperioden dieser Iteration, die nach dem heutigen Datum
+                    //liegt ist die aktuelle Prüfperiode!
+                    // die Fakultäts id wird noch mit der gewählten Fakultät verglichen
+                    if (currentDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) break
+                }
+                examineWeek = currentExamineDate?.get("PPWochen")?.toString()?.toInt() ?: 0
+                //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
+                //-------------------------------------------------------------------
+                //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
+
+                //Set current termin
+                currentExamineDate?.get("pruefTermin")?.toString()
+                    ?.let { setCurrentTermin(it) }
+                //Set examin year
+                currentExamineDate?.get("PPJahr")?.toString()?.let { setExamineYear(it) }
+                //Set current periode
+                currentExamineDate?.get("pruefSemester")?.toString()
+                    ?.let { setCurrentPeriode(it) }
+
+                //-------------------------------------------------------------------
+                val currentPeriode = currentExamineDate?.get("startDatum")?.toString()
+                val arrayCurrentPeriode = currentPeriode?.split("T")?.toTypedArray()
+                val fmt = SimpleDateFormat("yyyy-MM-dd")
+                val inputDate = fmt.parse(arrayCurrentPeriode?.get(0))
+
+                //erhaltenes Datum Parsen als Datum
+                val calendar: Calendar = GregorianCalendar()
+                calendar.time = inputDate
+                val year = calendar[Calendar.YEAR]
+                //Add one to month {0 - 11}
+                val month = calendar[Calendar.MONTH] + 1
+                val day = calendar[Calendar.DAY_OF_MONTH]
+                calendar.add(Calendar.DATE, 7 * examineWeek - 2)
+                val year2 = calendar[Calendar.YEAR]
+                //Add one to month {0 - 11}
+                val month2 = calendar[Calendar.MONTH] + 1
+                val day2 = calendar[Calendar.DAY_OF_MONTH]
+
+                //String Prüfperiode zum Anzeigen
+                val currentExamineDateFormatted = (context!!.getString(R.string.current)
+                        + formatDate(day.toString())
+                        + "." + formatDate(month.toString())
+                        + "." + year + context!!.getString(R.string.bis)
+                        + formatDate(day2.toString())
+                        + "." + formatDate(month2.toString())
+                        + "." + year2) // number of days to add;
+
+                //Prüfperiode für die Offline-Verwendung speichern
+                val strJson = getCurrentPeriode()
+                if (strJson != null) {
+                    if (strJson == currentExamineDateFormatted) {
+                    } else {
+                        // Speichere das Start und Enddatum der Prüfperiode
+                        setStartDate(
+                            formatDate(day.toString())
+                                    + "/" + formatDate(month.toString()) + "/" + formatDate(year.toString())
+                        )
+                        setEndDate(
+                            formatDate(day2.toString())
+                                    + "/" + formatDate(month2.toString()) + "/" + formatDate(
+                                year2.toString()
+                            )
+                        )
+                        setCurrentPeriode(currentExamineDateFormatted)
+                        fetchEntries()
+                    }
+                }
+                // Ende Merlin Gürtler
+            } catch (e: Exception) {
+                Log.e("UpdatePruefperioden",e.stackTraceToString())
+                Log.d("Output", "Konnte nicht die Pruefphase aktualisieren")
+                //Keineverbindung();
+            }
+            // Nun aus Shared Preferences
+            // die Daten für die Periode aus den Shared Preferences
+            val sleepTime: Int
+            val examineYearThread = getExamineYear()
+            val currentExaminePeriodThread = getCurrentPeriode()
+            val currentExamineYearThread = getCurrentTermin()
+            sleepTime = if ((getReturnCourse()
+                    ?.let { getEntriesByCourseName(it)?.size } == 0
+                        || currentExamineYearThread != getTermin()) && getFavorites(
+                    true
+                )?.size == 0
+            ) {
+                deleteAllEntries()
+                fetchEntries()
+                3000
+            } else {
+                //TODO retrofit?.retroUpdate()
+                2000
+            }
+        }
+    }
+
+    /**
+     * Used to format a date with leading zeros. Checks if the given number contains only one digit and then adds the zero.
+     * TODO Change with SimpleDatePattern
+     *
+     * @param[dateToFormat] The Number that needs to be formatted
+     * @return The formatted date
+     * @since 1.6
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     */
+    private fun formatDate(dateToFormat: String): String {
+        var dateToFormat = dateToFormat
+        if (dateToFormat.length == 1) {
+            dateToFormat = "0$dateToFormat"
+        }
+        return dateToFormat
+    }
+
 
     //Room Database
     fun insertEntry(testPlanEntry: TestPlanEntry) {
@@ -68,7 +233,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun insertEntryJSON(jsonResponse: JsonResponse) {
+    fun insertEntryJSON(jsonResponse: GSONEntry) {
         insertEntry(createTestplanEntry(jsonResponse))
     }
 
@@ -288,29 +453,29 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     /**
      * Creates a new [TestPlanEntry] from a [JsonResponse].
      *
-     * @param[entryResponse] The [JsonResponse], that contains the data for the [TestPlanEntry].
+     * @param[entry] The [JsonResponse], that contains the data for the [TestPlanEntry].
      *
      * @return A [TestPlanEntry] containing the data of the [JsonResponse]
      *
      * @author Alexander Lange
      * @since 1.6
      */
-    private fun createTestplanEntry(entryResponse: JsonResponse): TestPlanEntry {
-        val dateLastExamFormatted = getDate(entryResponse.date!!)
+    private fun createTestplanEntry(entry: GSONEntry): TestPlanEntry {
+        val dateLastExamFormatted = getDate(entry.Date!!)
         val testPlanEntry = TestPlanEntry()
-        testPlanEntry.firstExaminer = entryResponse.firstExaminer
-        testPlanEntry.secondExaminer = entryResponse.secondExaminer
+        testPlanEntry.firstExaminer = entry.FirstExaminer
+        testPlanEntry.secondExaminer = entry.SecondExaminer
         testPlanEntry.date = dateLastExamFormatted
-        testPlanEntry.id = entryResponse.id
-        testPlanEntry.course = entryResponse.courseName
-        testPlanEntry.module = entryResponse.module
-        testPlanEntry.semester = entryResponse.semester
-        testPlanEntry.termin = entryResponse.termin
-        testPlanEntry.room = entryResponse.room
-        testPlanEntry.examForm = entryResponse.form
-        testPlanEntry.status = entryResponse.status
-        testPlanEntry.hint = entryResponse.hint
-        testPlanEntry.color = entryResponse.color
+        testPlanEntry.id = entry.ID
+        testPlanEntry.course = entry.CourseName
+        testPlanEntry.module = entry.Module
+        testPlanEntry.semester = entry.Semester
+        testPlanEntry.termin = entry.Termin
+        testPlanEntry.room = entry.Room
+        testPlanEntry.examForm = entry.Form
+        testPlanEntry.status = entry.Status
+        testPlanEntry.hint = entry.Hint
+        testPlanEntry.color = entry.Color
         return testPlanEntry
     }
 
