@@ -6,6 +6,9 @@ import android.widget.Spinner
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import java.lang.Exception
 import java.lang.StringBuilder
@@ -154,4 +157,5 @@ fun <E> MutableList<E>.add(position:Int?,item:E):Int{
     add(position,item)
     return position
 }
+
 //TODO Alexander Lange End

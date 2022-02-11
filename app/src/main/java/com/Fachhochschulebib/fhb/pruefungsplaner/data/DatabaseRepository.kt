@@ -115,15 +115,9 @@ class DatabaseRepository(
     suspend fun fetchPruefperiondenObjects(): JSONArray {
         return withContext(Dispatchers.IO) {
             val result = StringBuilder()
-
-            //DONE (08/2020 LG)
             val address =
                 "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
             val url = URL(address)
-
-            /*
-                        HttpURLConnection anstelle Retrofit, um die XML/Json-Daten abzufragen!!!
-                     */
             val urlConn = url.openConnection() as HttpURLConnection
             urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
             try {
@@ -131,8 +125,6 @@ class DatabaseRepository(
             } catch (e: Exception) {
                 Log.d("Output exception", e.toString())
             }
-
-            //Variablen zum lesen der erhaltenen werte
             val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
             val reader = BufferedReader(InputStreamReader(inputStream))
             var line: String?
@@ -145,8 +137,6 @@ class DatabaseRepository(
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
-
-            //hinzufügen der erhaltenen JSONObject werte zum JSONArray
             val x: Iterator<*> = jsonObj!!.keys()
             val jsonArray = JSONArray()
             while (x.hasNext()) {
@@ -164,10 +154,6 @@ class DatabaseRepository(
             return@withContext JSONArray(erstesUndletztesZeichenentfernen)
         }
     }
-
-    /*fun fetchEntries(): Call<List<GSONEntry>> {
-        return remoteDataSource.getEntries()
-    }*/
 
     //Room Databas
     suspend fun insertEntry(testPlanEntry: TestPlanEntry) {
@@ -294,19 +280,15 @@ class DatabaseRepository(
         localDataSource.getCoursesForFacultyIdLiveData(id)
 
     suspend fun getAllCourses(): List<Courses>? {
-        var ret: List<Courses>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getAllCourses()
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getAllCourses()
         }
-        return ret
     }
 
     suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>? {
-        var ret: List<TestPlanEntry>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getFavorites(favorit)
+       return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getFavorites(favorit)
         }
-        return ret
     }
 
     suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>? {

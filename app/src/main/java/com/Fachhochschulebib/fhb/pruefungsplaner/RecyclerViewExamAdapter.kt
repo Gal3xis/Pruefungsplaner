@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
-import kotlinx.android.synthetic.main.terminefragment.*
-import kotlinx.coroutines.*
 import java.lang.Exception
 import java.util.*
 
@@ -34,7 +32,7 @@ import java.util.*
  */
 class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on the kind of dataset)
     (
-    private val entryList: MutableList<TestPlanEntry>,
+    private var entryList: MutableList<TestPlanEntry>,
     private val viewModel: MainViewModel
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
     private var save = false
@@ -70,6 +68,11 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         val view = inflater.inflate(R.layout.termine, parent, false)
         context = view.context
         return ViewHolder(view)
+    }
+
+    fun updateContent(entryList:List<TestPlanEntry>){
+        this.entryList= entryList.toMutableList()
+        notifyDataSetChanged()
     }
 
 // Replace the contents of a view (invoked by the layout manager)

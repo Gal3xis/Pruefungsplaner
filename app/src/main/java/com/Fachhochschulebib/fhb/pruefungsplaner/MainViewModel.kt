@@ -13,15 +13,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import org.json.XML
-import java.io.BufferedInputStream
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import java.lang.Exception
-import java.lang.StringBuilder
-import java.net.HttpURLConnection
-import java.net.URL
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -31,7 +23,7 @@ import java.util.*
  *
  * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-livedata#2)
  */
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+open class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     init {
         Filter.onFilterChangedListener.add {
@@ -39,24 +31,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    private val context = application.applicationContext
-    private val repository = DatabaseRepository(application)
-    private val spRepository = SharedPreferencesRepository(application)
-    private val sdf = SimpleDateFormat("dd/MM/yyyy")
-
-    val liveEntriesByDate = repository.getAllEntriesLiveDataByDate()
+    protected val repository = DatabaseRepository(application)
+    protected val spRepository = SharedPreferencesRepository(application)
+    protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
+    protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy")
 
     val liveFilteredEntriesByDate = MutableLiveData<List<TestPlanEntry>?>()
 
-    val liveFilteredEntriesByName = MutableLiveData<List<TestPlanEntry>?>()
-
     val liveEntriesForCourse = MutableLiveData<List<TestPlanEntry>?>()
 
-    val liveCourses = repository.getAllCoursesLiveData()
-
     val liveChoosenCourses = repository.getAllChoosenCoursesLiveData()
-
-    val liveFavorits = repository.getAllFavoritsLiveData()
 
     val liveFilteredFavorits = MutableLiveData<List<TestPlanEntry>?>()
 
@@ -180,66 +164,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
                     // die Fakultäts id wird noch mit der gewählten Fakultät verglichen
                     if (currentDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) break
                 }
-                examineWeek = currentExamineDate?.get("PPWochen")?.toString()?.toInt() ?: 0
-                //1 --> 1. Termin; 2 --> 2. Termin des jeweiligen Semesters
-                //-------------------------------------------------------------------
-                //DONE (08/2020) Termin 1 bzw. 2 in den Präferenzen speichern
-
-                //Set current termin
                 currentExamineDate?.get("pruefTermin")?.toString()
                     ?.let { setCurrentTermin(it) }
-                //Set examin year
                 currentExamineDate?.get("PPJahr")?.toString()?.let { setExamineYear(it) }
-                //Set current periode
                 currentExamineDate?.get("pruefSemester")?.toString()
                     ?.let { setCurrentPeriode(it) }
 
-                //-------------------------------------------------------------------
-                val currentPeriode = currentExamineDate?.get("startDatum")?.toString()
-                val arrayCurrentPeriode = currentPeriode?.split("T")?.toTypedArray()
-                val fmt = SimpleDateFormat("yyyy-MM-dd")
-                val inputDate = fmt.parse(arrayCurrentPeriode?.get(0))
-
-                //erhaltenes Datum Parsen als Datum
-                val calendar: Calendar = GregorianCalendar()
-                calendar.time = inputDate
-                val year = calendar[Calendar.YEAR]
-                //Add one to month {0 - 11}
-                val month = calendar[Calendar.MONTH] + 1
-                val day = calendar[Calendar.DAY_OF_MONTH]
-                calendar.add(Calendar.DATE, 7 * examineWeek - 2)
-                val year2 = calendar[Calendar.YEAR]
-                //Add one to month {0 - 11}
-                val month2 = calendar[Calendar.MONTH] + 1
-                val day2 = calendar[Calendar.DAY_OF_MONTH]
-
-                //String Prüfperiode zum Anzeigen
-                val currentExamineDateFormatted = (context!!.getString(R.string.current)
-                        + formatDate(day.toString())
-                        + "." + formatDate(month.toString())
-                        + "." + year + context!!.getString(R.string.bis)
-                        + formatDate(day2.toString())
-                        + "." + formatDate(month2.toString())
-                        + "." + year2) // number of days to add;
-
-                //Prüfperiode für die Offline-Verwendung speichern
-                val strJson = getCurrentPeriode()
-                if (strJson != null) {
-                    if (strJson == currentExamineDateFormatted) {
-                    } else {
-                        // Speichere das Start und Enddatum der Prüfperiode
-                        setStartDate(
-                            formatDate(day.toString())
-                                    + "/" + formatDate(month.toString()) + "/" + formatDate(year.toString())
-                        )
-                        setEndDate(
-                            formatDate(day2.toString())
-                                    + "/" + formatDate(month2.toString()) + "/" + formatDate(
-                                year2.toString()
-                            )
-                        )
-                    }
-                }
                 fetchEntries()
 
                 // Ende Merlin Gürtler
@@ -250,24 +180,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             }
         }
     }
-
-    /**
-     * Used to format a date with leading zeros. Checks if the given number contains only one digit and then adds the zero.
-     * TODO Change with SimpleDatePattern
-     *
-     * @param[dateToFormat] The Number that needs to be formatted
-     * @return The formatted date
-     * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
-     */
-    private fun formatDate(dateToFormat: String): String {
-        var dateToFormat = dateToFormat
-        if (dateToFormat.length == 1) {
-            dateToFormat = "0$dateToFormat"
-        }
-        return dateToFormat
-    }
-
 
     //Room Database
     fun insertEntry(testPlanEntry: TestPlanEntry) {
@@ -439,14 +351,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return ret
     }
 
-    fun getChoosenCourseIds(choosen: Boolean): List<String>? {
-        var ret: List<String>? = null
-        viewModelScope.launch {
-            ret = repository.getChoosenCourseIds(choosen)
-        }
-        return ret
-    }
-
     fun getCoursesByFaculty(faculty: Faculty) {
         getCoursesByFacultyid(faculty.fbid)
     }
@@ -456,14 +360,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             val courses = repository.getAllCoursesByFacultyid(facultyId)
             liveCoursesForFacultyId.postValue(courses)
         }
-    }
-
-    fun getEntryById(id: String): TestPlanEntry? {
-        var ret: TestPlanEntry? = null
-        viewModelScope.launch {
-            ret = repository.getEntryById(id)
-        }
-        return ret
     }
 
     fun getUuid(): Uuid? {
@@ -482,14 +378,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return ret
     }
 
-    fun getTermin(): String? {
-        var ret: String? = null
-        viewModelScope.launch {
-            ret = repository.getTermin()
-        }
-        return ret
-    }
-
     fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
         var ret: TestPlanEntry? = null
         viewModelScope.launch {
@@ -499,7 +387,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     }
 
 
-    //Utilities
     /**
      * Creates a new [TestPlanEntry] from a [JsonResponse].
      *
@@ -529,7 +416,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return testPlanEntry
     }
 
-    // private boolean checkvalidate = false;
     /**
      * Return a formatted date as String to save in the [TestPlanEntry.date]-Paramater.
      *
@@ -571,176 +457,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return course
     }
 
-
-    //Shared Preferences
-    fun getSelectedCourse(): String? {
-        return spRepository.getSelectedCourse()
-    }
-
-    fun setSelectedCourse(course: String) {
-        spRepository.setSelectedCourse(course)
-    }
-
-    fun getReturnCourse(): String? {
-        return spRepository.getReturnCourse()
-    }
-
-    fun setReturnCourse(course: String) {
-        spRepository.setReturnCourse(course)
-    }
-
-    fun getReturnFaculty(): String? {
-        return spRepository.getReturnFaculty()
-    }
-
-    fun updateFaculty() {
-        getReturnFaculty()?.let { getFacultyById(it) }
-    }
-
-    fun setReturnFaculty(faculty: String) {
-        spRepository.setReturnFaculty(faculty)
-        getCoursesByFacultyid(faculty)
-        getFacultyById(faculty)
-    }
-
-    fun setReturnFaculty(faculty: Faculty) {
-        setReturnFaculty(faculty.fbid)
-        fetchCourses()
-    }
-
-    fun getExamineYear(): String? {
-        return spRepository.getExamineYear()
-    }
-
-    fun setExamineYear(year: String) {
-        spRepository.setExamineYear(year)
-    }
-
-    fun getCurrentPeriode(): String? {
-        return spRepository.getCurrentPeriode()
-    }
-
-    fun setCurrentPeriode(periode: String) {
-        spRepository.setCurrentPeriode(periode)
-    }
-
-    fun getCurrentTermin(): String? {
-        return spRepository.getCurrentTermin()
-    }
-
-    fun setCurrentTermin(termin: String) {
-        spRepository.setCurrentTermin(termin)
-    }
-
-    //TODO Needed?
-    fun getCurrentPeriodeString(): String? {
-        return spRepository.getCurrentPeriodeString()
-    }
-
-    fun setCurrentPeriodeString(str: String) {
-        spRepository.setCurrentPeriodeString(str)
-    }
-
-    fun getStartDateString(): String? {
-        return spRepository.getStartDate()
-    }
-
-
-    fun getStartDate(): Date? {
-        return getStartDateString()?.let { sdf.parse(it) }
-    }
-
-    fun setStartDate(date: String) {
-        spRepository.setStartDate(date)
-    }
-
-    fun setStartDate(date: Date) {
-        spRepository.setStartDate(sdf.format(date))
-    }
-
-    fun getEndDateString(): String? {
-        return spRepository.getEndDate()
-    }
-
-    fun getEndDate(): Date? {
-        return getEndDateString()?.let { sdf.parse(it) }
-    }
-
-    fun setEndDate(date: String) {
-        spRepository.setEndDate(date)
-    }
-
-    fun setEndDate(date: Date) {
-        spRepository.setEndDate(sdf.format(date))
-    }
-
-    //Returns false by default
-    fun getChosenDarkmode(): Boolean {
-        return spRepository.getChosenDarkmode()
-    }
-
-    fun setChosenDarkmode(darkmode: Boolean) {
-        spRepository.setChosenDarkmode(darkmode)
-    }
-
-    //Returns -1 by default
-    fun getChosenThemeId(): Int {
-        return spRepository.getChosenThemeId()
-    }
-
-    fun setChosenThemeId(id: Int) {
-        spRepository.setChosenThemeId(id)
-    }
-
-    fun getUpdateIntervalTimeHour(): Int {
-        return spRepository.getUpdateIntervalTimeHour()
-    }
-
-    fun setUpdateIntervalTimeHour(hour: Int) {
-        spRepository.setUpdateIntervalTimeHour(hour)
-    }
-
-    //Return 15 by default
-    fun getUpdateIntervalTimeMinute(): Int {
-        return spRepository.getUpdateIntervalTimeMinute()
-    }
-
-    fun setUpdateIntervalTimeMinute(minute: Int) {
-        spRepository.setUpdateIntervalTimeMinute(minute)
-    }
-
-    fun getCalendarSync(): Boolean {
-        return spRepository.getCalendarSync()
-    }
-
-    fun setCalendarSync(sync: Boolean) {
-        spRepository.setCalendarSync(sync)
-    }
-
-    fun getServerIPAddress(): String? {
-        return spRepository.getServerIPAddress()
-    }
-
-    fun setServerIPAddress(address: String) {
-        spRepository.setServerIPAddress(address)
-    }
-
-    fun getServerRelUrlPath(): String? {
-        return spRepository.getServerRelUrlPath()
-    }
-
-    fun setServerRelUrlPath(path: String) {
-        spRepository.setServerRelUrlPath(path)
-    }
-
-    fun getFaculties(): String? {
-        return spRepository.getFaculties()
-    }
-
-    fun setFaculties(faculties: String) {
-        spRepository.setFaculties(faculties)
-    }
-
     private fun createFaculty(json: JSONObject): Faculty {
         val ret = Faculty()
         ret.fbid = json.getString("fbid")
@@ -748,7 +464,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         ret.facultyShortname = json.getString("facShortName")
         return ret
     }
-
 
     fun fetchFaculties() {
         viewModelScope.launch {
@@ -821,79 +536,172 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    /**
-     * Updates the faculties. Get all faculties from the webserver and synchronize them withe the SharedPreferences.
-     *
-     * @param[address] The address of the server.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     */
-    private fun updateFaculties() {
-        viewModelScope.launch {
-            val result = StringBuilder()
-            val url =
-                URL("http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.faculty/")
-            val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
-            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
-            urlConn.connect()
-
-            //Parsen von den  erhaltene Werte
-            val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            var line: String?
-            while ((reader.readLine().also { line = it }) != null) {
-                result.append(line)
-            }
-
-            //Erstellen von JSON
-            var jsonObj: JSONObject? = null
-            try {
-                jsonObj = XML.toJSONObject(result.toString())
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            val x: Iterator<*> = jsonObj!!.keys()
-            val jsonArray = JSONArray()
-            while (x.hasNext()) {
-                val key: String = x.next() as String
-                jsonArray.put(jsonObj.get(key))
-            }
-
-            //Werte von JSONARRay in JSONObject konvertieren
-            val receivesFaculties = JSONArray()
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                receivesFaculties.put(jsonObject.get("faculty"))
-            }
-            val convertedToString = receivesFaculties.toString()
-            val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
-            //konvertieren zu JSONArray
-            val jsonArrayFacultys = JSONArray(deletedCling)
-            val ret = mutableListOf<String>()
-            for (i in 0 until jsonArrayFacultys.length()) {
-                val json: JSONObject = jsonArrayFacultys.getJSONObject(i)
-                ret.add(json.get("facName").toString())
-            }
-
-            // Werte Speichern für die offline Verwendung
-            try {
-                setFaculties(deletedCling)
-            } catch (e: Exception) {
-                Log.d(
-                    "Output checkFakultaet",
-                    "Fehler: Parsen von Fakultaet"
-                )
-            }
-            Log.d("Output checkFakultaet", "abgeschlossen")
-        }
-    }
-
     fun getFacultyById(id: String) {
         viewModelScope.launch {
             val faculty = repository.getFacultyById(id)
             liveSelectedFaculty.postValue(faculty)
         }
     }
+
+    //Shared Preferences
+    fun getSelectedCourse(): String? {
+        return spRepository.getSelectedCourse()
+    }
+
+    fun setSelectedCourse(course: String) {
+        spRepository.setSelectedCourse(course)
+    }
+
+    fun getReturnCourse(): String? {
+        return spRepository.getReturnCourse()
+    }
+
+    fun setReturnCourse(course: String) {
+        spRepository.setReturnCourse(course)
+    }
+
+    fun getReturnFaculty(): String? {
+        return spRepository.getReturnFaculty()
+    }
+
+    fun updateFaculty() {
+        getReturnFaculty()?.let { getFacultyById(it) }
+    }
+
+    fun setReturnFaculty(faculty: String) {
+        spRepository.setReturnFaculty(faculty)
+        getCoursesByFacultyid(faculty)
+        getFacultyById(faculty)
+    }
+
+    fun setReturnFaculty(faculty: Faculty) {
+        setReturnFaculty(faculty.fbid)
+        fetchCourses()
+    }
+
+    fun getExamineYear(): String? {
+        return spRepository.getExamineYear()
+    }
+
+    fun setExamineYear(year: String) {
+        spRepository.setExamineYear(year)
+    }
+
+    fun getCurrentPeriode(): String? {
+        return spRepository.getCurrentPeriode()
+    }
+
+    fun setCurrentPeriode(periode: String) {
+        spRepository.setCurrentPeriode(periode)
+    }
+
+    fun getCurrentTermin(): String? {
+        return spRepository.getCurrentTermin()
+    }
+
+    fun setCurrentTermin(termin: String) {
+        spRepository.setCurrentTermin(termin)
+    }
+
+    fun getStartDateString(): String? {
+        return spRepository.getStartDate()
+    }
+
+
+    fun getStartDate(): Date? {
+        return getStartDateString()?.let { sdfRetrofit.parse(it) }
+    }
+
+    fun setStartDate(date: String) {
+        spRepository.setStartDate(date)
+    }
+
+    fun setStartDate(date: Date) {
+        spRepository.setStartDate(sdfRetrofit.format(date))
+    }
+
+    fun getEndDateString(): String? {
+        return spRepository.getEndDate()
+    }
+
+    fun getEndDate(): Date? {
+        return getEndDateString()?.let { sdfRetrofit.parse(it) }
+    }
+
+    fun setEndDate(date: String) {
+        spRepository.setEndDate(date)
+    }
+
+    fun setEndDate(date: Date) {
+        spRepository.setEndDate(sdfRetrofit.format(date))
+    }
+
+    //Returns false by default
+    fun getChosenDarkmode(): Boolean {
+        return spRepository.getChosenDarkmode()
+    }
+
+    fun setChosenDarkmode(darkmode: Boolean) {
+        spRepository.setChosenDarkmode(darkmode)
+    }
+
+    //Returns -1 by default
+    fun getChosenThemeId(): Int {
+        return spRepository.getChosenThemeId()
+    }
+
+    fun setChosenThemeId(id: Int) {
+        spRepository.setChosenThemeId(id)
+    }
+
+    fun getUpdateIntervalTimeHour(): Int {
+        return spRepository.getUpdateIntervalTimeHour()
+    }
+
+    fun setUpdateIntervalTimeHour(hour: Int) {
+        spRepository.setUpdateIntervalTimeHour(hour)
+    }
+
+    //Return 15 by default
+    fun getUpdateIntervalTimeMinute(): Int {
+        return spRepository.getUpdateIntervalTimeMinute()
+    }
+
+    fun setUpdateIntervalTimeMinute(minute: Int) {
+        spRepository.setUpdateIntervalTimeMinute(minute)
+    }
+
+    fun getCalendarSync(): Boolean {
+        return spRepository.getCalendarSync()
+    }
+
+    fun setCalendarSync(sync: Boolean) {
+        spRepository.setCalendarSync(sync)
+    }
+
+    fun getServerIPAddress(): String? {
+        return spRepository.getServerIPAddress()
+    }
+
+    fun setServerIPAddress(address: String) {
+        spRepository.setServerIPAddress(address)
+    }
+
+    fun getServerRelUrlPath(): String? {
+        return spRepository.getServerRelUrlPath()
+    }
+
+    fun setServerRelUrlPath(path: String) {
+        spRepository.setServerRelUrlPath(path)
+    }
+
+    fun getFaculties(): String? {
+        return spRepository.getFaculties()
+    }
+
+    fun setFaculties(faculties: String) {
+        spRepository.setFaculties(faculties)
+    }
+
+
 }
