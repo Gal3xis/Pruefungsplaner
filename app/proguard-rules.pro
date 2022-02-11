@@ -24,7 +24,7 @@
 -dontwarn androidx.room.paging.**
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonCourse { *; }
 -keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse { *; }
--keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonUuid { *; }
+-keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.JsonUuid { *; }
 
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable

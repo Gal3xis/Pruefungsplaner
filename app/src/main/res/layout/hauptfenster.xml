@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    tools:context=".MainActivity"
+    tools:context=".view.activities.MainActivity"
     >
 
     <com.google.android.material.appbar.AppBarLayout
@@ -51,7 +51,6 @@
                 android:addStatesFromChildren="true"
                 android:background="?attr/colorPrimaryDark"
                 android:backgroundTint="?attr/colorPrimaryDark"
-                android:minHeight="0dp"
                 app:itemIconTint="?attr/colorOnPrimaryDark"
                 app:itemTextColor="?attr/colorOnPrimaryDark"
                 app:layout_constraintBottom_toBottomOf="parent"
