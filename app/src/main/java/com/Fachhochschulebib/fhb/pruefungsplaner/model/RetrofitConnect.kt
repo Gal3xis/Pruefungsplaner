@@ -20,15 +20,15 @@ import java.util.*
 
 interface API{
     @GET("org.fh.ppv.entity.studiengang/")
-    fun getCourses():Call<List<GSONCourse>>
+    suspend fun getCourses():List<GSONCourse>
 
 
     @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pIds}/")
-    fun getEntries(
+    suspend fun getEntries(
         @Path("ppSemester") ppSemetser:String,
         @Path("pTermin")pTermin:String,
         @Path("pYear")pYear:String,
-        @Path("pIds")pIds:String):Call<List<GSONEntry>>
+        @Path("pIds")pIds:String):List<GSONEntry>
 }
 
 object RetrofitHelper{

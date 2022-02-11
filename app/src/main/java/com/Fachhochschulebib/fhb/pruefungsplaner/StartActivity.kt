@@ -248,14 +248,8 @@ class StartActivity() : AppCompatActivity() {
         viewModel.fetchFaculties()
         viewModel.fetchCourses()
         // Start Merlin Gürtler
-        val globalVariable = applicationContext as StartClass
         // Thread für die UUid
         val uuid = viewModel.getUuid()
-        if (!globalVariable.appStarted && (uuid != null) && !globalVariable.isChangeFaculty) {
-            globalVariable.appStarted = true
-            //TODO retrofit.anotherStart()
-        }
-
     }
 
     /**

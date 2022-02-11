@@ -27,7 +27,17 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ *
+ * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-livedata#2)
+ */
 class MainViewModel(application: Application) : AndroidViewModel(application) {
+
+    init {
+        Filter.onFilterChangedListener.add {
+            filter()
+        }
+    }
 
     private val context = application.applicationContext
     private val repository = DatabaseRepository(application)
@@ -37,11 +47,18 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     val liveEntriesByDate = repository.getAllEntriesLiveDataByDate()
 
     val liveFilteredEntriesByDate = MutableLiveData<List<TestPlanEntry>?>()
+
     val liveFilteredEntriesByName = MutableLiveData<List<TestPlanEntry>?>()
+
+    val liveEntriesForCourse = MutableLiveData<List<TestPlanEntry>?>()
 
     val liveCourses = repository.getAllCoursesLiveData()
 
+    val liveChoosenCourses = repository.getAllChoosenCoursesLiveData()
+
     val liveFavorits = repository.getAllFavoritsLiveData()
+
+    val liveFilteredFavorits = MutableLiveData<List<TestPlanEntry>?>()
 
     val liveFaculties = repository.getAllFacultiesLiveData()
 
@@ -49,12 +66,20 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     var liveCoursesForFacultyId = MutableLiveData<List<Courses>?>()
 
-    fun Filter(){
+    fun filterCoursename(){
         viewModelScope.launch {
-            val entries = repository.getAllEntries()
-            val filteredEntries = entries?.let { Filter.validateList(context, it) }
-            liveFilteredEntriesByDate.postValue(filteredEntries)
+            val entriesForCourse = repository.getEntriesForCourseLiveData(Filter.courseName)
+            liveEntriesForCourse.postValue(entriesForCourse)
         }
+    }
+
+    fun filter() {
+        viewModelScope.launch {
+            val entriesByDate = repository.getAllEntries()?.let { Filter.validateList( it) }
+            val favorits = repository.getFavorites(true)
+            liveFilteredEntriesByDate.postValue(entriesByDate)
+            liveFilteredFavorits.postValue(favorits?.let { Filter.validateList(it) })
+         }
     }
 
     //Remote-Access
@@ -92,16 +117,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return courseIds.toString()
     }
 
-    fun fetchEntries(){
+    fun fetchEntries() {
         viewModelScope.launch {
             val periode = getCurrentPeriode()
             val termin = getCurrentTermin()
             val examinYear = getExamineYear()
             val ids = getIDs()
-            if(periode==null||termin==null||examinYear==null||ids.isNullOrEmpty()){
+            if (periode == null || termin == null || examinYear == null || ids.isNullOrEmpty()) {
                 return@launch
             }
-            val entries = repository.fetchEntries(periode,termin,examinYear,ids)
+            val entries = repository.fetchEntries(periode, termin, examinYear, ids)
             entries?.forEach {
                 insertEntryJSON(it)
             }
@@ -219,28 +244,9 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                 // Ende Merlin Gürtler
             } catch (e: Exception) {
-                Log.e("UpdatePruefperioden",e.stackTraceToString())
+                Log.e("UpdatePruefperioden", e.stackTraceToString())
                 Log.d("Output", "Konnte nicht die Pruefphase aktualisieren")
                 //Keineverbindung();
-            }
-            // Nun aus Shared Preferences
-            // die Daten für die Periode aus den Shared Preferences
-            val sleepTime: Int
-            val examineYearThread = getExamineYear()
-            val currentExaminePeriodThread = getCurrentPeriode()
-            val currentExamineYearThread = getCurrentTermin()
-            sleepTime = if ((getReturnCourse()
-                    ?.let { getEntriesByCourseName(it)?.size } == 0
-                        || currentExamineYearThread != getTermin()) && getFavorites(
-                    true
-                )?.size == 0
-            ) {
-                deleteAllEntries()
-                fetchEntries()
-                3000
-            } else {
-                //TODO retrofit?.retroUpdate()
-                2000
             }
         }
     }
@@ -270,7 +276,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun insertEntries(entries: List<TestPlanEntry>){
+    fun insertEntries(entries: List<TestPlanEntry>) {
         viewModelScope.launch {
             repository.insertEntries(entries)
         }
@@ -316,10 +322,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             repository.updateEntryFavorit(favorit, id)
         }
+        filter()
     }
-    fun updateEntryFavorit(favorit: Boolean, entry:TestPlanEntry) {
+
+    fun updateEntryFavorit(favorit: Boolean, entry: TestPlanEntry) {
         viewModelScope.launch {
-             updateEntryFavorit(favorit, entry.id.toInt())
+            updateEntryFavorit(favorit, entry.id.toInt())
         }
     }
 
@@ -329,7 +337,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun updateCourse(course:Courses){
+    fun updateCourse(course: Courses) {
         course.choosen?.let { course.courseName?.let { it1 -> updateCourse(it1, it) } }
     }
 
@@ -383,14 +391,6 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return ret
     }
 
-    fun getAllCourses(): List<Courses>? {
-        var ret: List<Courses>? = null
-        viewModelScope.launch {
-            ret = repository.getAllCourses()
-        }
-        return ret
-    }
-
     fun getFavorites(favorit: Boolean): List<TestPlanEntry>? {
         var ret: List<TestPlanEntry>? = null
         viewModelScope.launch {
@@ -431,6 +431,14 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return ret
     }
 
+    fun getAllCourses(): List<Courses>? {
+        var ret: List<Courses>? = null
+        viewModelScope.launch {
+            ret = repository.getAllCourses()
+        }
+        return ret
+    }
+
     fun getChoosenCourseIds(choosen: Boolean): List<String>? {
         var ret: List<String>? = null
         viewModelScope.launch {
@@ -438,22 +446,16 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
         return ret
     }
+
     fun getCoursesByFaculty(faculty: Faculty) {
         getCoursesByFacultyid(faculty.fbid)
     }
-    fun getCoursesByFacultyid(facultyId: String){
+
+    fun getCoursesByFacultyid(facultyId: String) {
         viewModelScope.launch {
             val courses = repository.getAllCoursesByFacultyid(facultyId)
             liveCoursesForFacultyId.postValue(courses)
         }
-    }
-
-    fun getEntriesByCourseName(course: String): List<TestPlanEntry>? {
-        var ret: List<TestPlanEntry>? = null
-        viewModelScope.launch {
-            ret = repository.getEntriesByCourseName(course)
-        }
-        return ret
     }
 
     fun getEntryById(id: String): TestPlanEntry? {
@@ -514,7 +516,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         testPlanEntry.firstExaminer = entry.FirstExaminer
         testPlanEntry.secondExaminer = entry.SecondExaminer
         testPlanEntry.date = dateLastExamFormatted
-        testPlanEntry.id = entry.ID?:"0"
+        testPlanEntry.id = entry.ID ?: "0"
         testPlanEntry.course = entry.CourseName
         testPlanEntry.module = entry.Module
         testPlanEntry.semester = entry.Semester
@@ -591,7 +593,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         return spRepository.getReturnFaculty()
     }
 
-    fun updateFaculty(){
+    fun updateFaculty() {
         getReturnFaculty()?.let { getFacultyById(it) }
     }
 
@@ -888,7 +890,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun getFacultyById(id:String){
+    fun getFacultyById(id: String) {
         viewModelScope.launch {
             val faculty = repository.getFacultyById(id)
             liveSelectedFaculty.postValue(faculty)

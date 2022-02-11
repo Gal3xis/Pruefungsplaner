@@ -61,11 +61,20 @@ interface UserDao {
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     suspend fun getAllEntries(): List<TestPlanEntry>?
 
+    @Query("SELECT * FROM TestPlanEntry ORDER BY module")
+    suspend fun getEntriesByModule(): List<TestPlanEntry>?
+
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
 
-    @Query("SELECT * FROM Courses ORDER BY couresName")
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :name ORDER BY module")
+    fun getEntriesForCourseLiveData(name:String):LiveData<List<TestPlanEntry>?>
+
+    @Query("SELECT * FROM Courses ORDER BY couresName ")
     fun getAllCoursesLiveData():LiveData<List<Courses>?>
+
+    @Query("SELECT * FROM Courses WHERE choosen = 1 ORDER BY couresName")
+    fun getAllChoosenCoursesLiveData():LiveData<List<Courses>?>
 
     @Query("SELECT * FROM TestPlanEntry WHERE favorit = 1 ORDER BY date, termin, module")
     fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?>
@@ -102,10 +111,8 @@ interface UserDao {
     @Query("SELECT * FROM Courses WHERE facultyId = :facultyId")
     suspend fun getAllCoursesByFacultyId(facultyId: String): List<Courses>?
 
-    @Query("SELECT * FROM TestPlanEntry WHERE course = :course")
+    @Query("SELECT * FROM TestPlanEntry WHERE course LIKE :course")
     suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>?
-
-
 
     @Query("SELECT * FROM TestPlanEntry WHERE ID = :id")
     suspend fun getEntryById(id: String): TestPlanEntry?
@@ -123,18 +130,9 @@ interface UserDao {
     suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry?
 
 
-
-
-
-
-
-
-
     @Query("SELECT course FROM TestPlanEntry")
     suspend fun getCourse(): List<String?>?
 
-    @Query("SELECT * FROM TestPlanEntry WHERE module LIKE :module")
-    suspend fun getEntriesByModule(module: String?): List<TestPlanEntry?>?
 
     @Update
     suspend fun updateExams(testPlanEntries:List<TestPlanEntry>)
@@ -156,8 +154,6 @@ interface UserDao {
 
     @Query("SELECT module FROM TestPlanEntry WHERE course = :selectedCourse ORDER BY module")
     suspend fun getModuleWithCourseDistinct(selectedCourse: String?): List<String?>?
-
-
 
 
     @Query("SELECT * FROM TestPlanEntry WHERE date LIKE :date ORDER BY termin")

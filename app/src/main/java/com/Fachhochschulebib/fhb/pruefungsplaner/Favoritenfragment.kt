@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -84,7 +85,7 @@ class Favoritenfragment : Fragment() {
         //From onCreate
 
         //From onCreateView
-        createAdapter()
+        //createAdapter()
         //Komponenten  initialisieren für die Verwendung
         initRecyclerview()
         currentPeriode.visibility = View.GONE
@@ -94,8 +95,8 @@ class Favoritenfragment : Fragment() {
 
         // Ende Merlin Gürtler
         //TODO Alexander Lange Start
-        Filter.onFilterChangedListener.add { OnFilterChanged() }
-        filterChangeListenerPosition = Filter.onFilterChangedListener.size - 1
+        //Filter.onFilterChangedListener.add { OnFilterChanged() }
+        //filterChangeListenerPosition = Filter.onFilterChangedListener.size - 1
         //TODO Alexander Lange End
     }
 
@@ -110,6 +111,11 @@ class Favoritenfragment : Fragment() {
         //linear layout manager
         val layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.layoutManager = layoutManager
+        viewModel.liveFilteredFavorits.observe(viewLifecycleOwner){
+            recyclerView4.adapter = it?.let { it1 ->
+                Filter.validateList(it1).toMutableList()
+            }?.let { it2 -> RecyclerViewFavoritAdapter(it2,viewModel) }
+        }
     }
 
 
@@ -144,7 +150,7 @@ class Favoritenfragment : Fragment() {
         // Favorisierte Prüfungen für die Anzeige vorbereiten
         if (ppeList != null) {
             for (entry in ppeList) {
-                if (!Filter.validateFilter(context, entry)) {
+                if (!Filter.validateFilter(entry)) {
                     continue
                 }
                 courses.add(
@@ -165,9 +171,6 @@ class Favoritenfragment : Fragment() {
         }
         // definiere adapter
         // übergabe der variablen an den Recyclerview Adapter, für die darstellung
-        viewModel.liveFavorits.observe(viewLifecycleOwner){
-            recyclerView4?.adapter = it?.toMutableList()?.let { it1 -> RecyclerViewFavoritAdapter(it1,viewModel) }
-        }
     }
 
     //TODO Alexander Lange Start
@@ -182,7 +185,7 @@ class Favoritenfragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         if (filterChangeListenerPosition != null) {
-            Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
+           // Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
         }
     }
     //TODO Alexander Lange End

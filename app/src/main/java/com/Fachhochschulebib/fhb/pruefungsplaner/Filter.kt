@@ -2,11 +2,12 @@ package com.Fachhochschulebib.fhb.pruefungsplaner
 
 import android.content.Context
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.data.TestPlanEntry
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 /**
  * Inner Class to filter the table of moduls. Used by TermineFragment-fragment and FavoritenFragment-fragment.
@@ -28,9 +29,6 @@ object Filter {
     var locked = false
         set(value) {
             field = value
-            if (!value) {
-                filterChanged()
-            }
         }
 
     /**
@@ -68,7 +66,6 @@ object Filter {
                 return
             }
             courseNameChanged()
-            filterChanged()
         }
 
     /**
@@ -149,9 +146,9 @@ object Filter {
      */
     private fun modulNameChanged() {
         Log.d("Filter", "Modul changed")
-        for (i in onModulNameChangedListener) {
+        /*for (i in onModulNameChangedListener) {
             i.invoke()
-        }
+        }*/
     }
 
     /**
@@ -163,9 +160,9 @@ object Filter {
      */
     private fun courseNameChanged() {
         Log.d("Filter", "Course changed")
-        for (i in onCourseNameChangedListener) {
+        /*for (i in onCourseNameChangedListener) {
             i.invoke()
-        }
+        }*/
     }
 
     /**
@@ -176,9 +173,9 @@ object Filter {
      * @see onDateChangedListener
      */
     private fun dateChanged() {
-        for (i in onDateChangedListener) {
+        /*for (i in onDateChangedListener) {
             i.invoke()
-        }
+        }*/
     }
 
     /**
@@ -189,9 +186,9 @@ object Filter {
      * @see onExaminerChangedListener
      */
     private fun examinerChanged() {
-        for (i in onExaminerChangedListener) {
+        /*for (i in onExaminerChangedListener) {
             i.invoke()
-        }
+        }*/
 
     }
 
@@ -203,9 +200,9 @@ object Filter {
      * @see onSemesterChangedListener
      */
     private fun semesterChanged() {
-        for (i in onSemesterChangedListener) {
+        /*for (i in onSemesterChangedListener) {
             i.invoke()
-        }
+        }*/
 
     }
 
@@ -231,11 +228,7 @@ object Filter {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun validateFilter(context: Context?, entry: TestPlanEntry?): Boolean {
-        if (context == null) {
-            return false
-        }
-        val database = AppDatabase.getAppDatabase(context)
+    fun validateFilter(entry: TestPlanEntry?): Boolean {
         if (entry == null) {
             return false
         }
@@ -270,13 +263,21 @@ object Filter {
         return true
     }
 
-    fun validateList(context: Context?,list:List<TestPlanEntry>):List<TestPlanEntry>{
+    fun validateList(list: List<TestPlanEntry>): List<TestPlanEntry> {
         val ret = mutableListOf<TestPlanEntry>()
         list.forEach {
-            if(validateFilter(context,it)){
+            if (validateFilter(it)) {
                 ret.add(it)
             }
         }
+        return ret
+    }
+
+    fun validateList(liveData:LiveData<List<TestPlanEntry>?>):LiveData<List<TestPlanEntry>?>{
+        val list = liveData.value
+        val filtered = list?.let { validateList(it) }
+        val ret = MutableLiveData<List<TestPlanEntry>>()
+        ret.postValue(filtered)
         return ret
     }
 
@@ -292,17 +293,18 @@ object Filter {
         modulName = null
         datum = null
         semester.fill(true)
-        for (i in onResetListener) {
+        filterChanged()
+        /*for (i in onResetListener) {
             i.invoke()
-        }
+        }*/
     }
 
     //Declaration and empty initilization of every listener. To add an Method, write: listenerX.add{ ... }
-    var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onExaminerChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onSemesterChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onResetListener: MutableList<() -> Unit> = mutableListOf()
+//    var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
+//    var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
+//    var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
+//    var onExaminerChangedListener: MutableList<() -> Unit> = mutableListOf()
+//    var onSemesterChangedListener: MutableList<() -> Unit> = mutableListOf()
+      var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
+//    var onResetListener: MutableList<() -> Unit> = mutableListOf()
 }

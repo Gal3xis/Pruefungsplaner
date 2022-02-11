@@ -29,8 +29,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.data.Courses
  * @see RecyclerView.Adapter
  */
 class CoursesCheckList(val courseList:List<Courses>,private val viewModel: MainViewModel, private val context: Context) : RecyclerView.Adapter<CoursesCheckList.ViewHolder>() {
-    private var globalVariable:StartClass? = null
-
     fun getChosen():List<Courses>{
         val ret = mutableListOf<Courses>()
         courseList.forEach {
@@ -76,8 +74,6 @@ class CoursesCheckList(val courseList:List<Courses>,private val viewModel: MainV
         val v = inflater.inflate(R.layout.checkliste, parent, false)
         //Create ViewHolder
         val vh = ViewHolder(v)
-
-        globalVariable = context as StartClass
         //Return ViewHolder
         return vh
     }
@@ -121,8 +117,10 @@ class CoursesCheckList(val courseList:List<Courses>,private val viewModel: MainV
      * @since 1.6
      */
     private fun addFavorite(position: Int): Boolean {
-        if (courseList[position].courseName != viewModel.getSelectedCourse() || globalVariable?.isChangeFaculty == true) {
-            courseList[position].choosen?.let { courseList[position].choosen = !it }
+        if (courseList[position].courseName != viewModel.getSelectedCourse()) {
+            courseList[position].choosen?.let { courseList[position].choosen = !it
+            }
+            viewModel.updateCourse(courseList[position])
         } else {
             Toast.makeText(
                 context, context.getString(R.string.favorite_main_course),

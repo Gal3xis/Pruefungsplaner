@@ -253,8 +253,6 @@ class MainActivity : AppCompatActivity() {
                     //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
                     drawer_layout.closeDrawer(GravityCompat.START)
                     // globale Variable, damit die Fakultät gewechselt werden kann
-                    val globalVariable = applicationContext as StartClass
-                    globalVariable.isChangeFaculty = true
                     val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
                     recyclerView4.context.startActivity(myIntent)
                     true
@@ -319,7 +317,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see onCreate
      */
-    private fun changeFragment(headertitle: String, fragment: Fragment): Boolean {
+    fun changeFragment(headertitle: String, fragment: Fragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
 
         recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
@@ -352,14 +350,14 @@ class MainActivity : AppCompatActivity() {
         val btn_reset = view.findViewById<Button>(R.id.layout_dialog_filter_reset_btn)
         val tv_faculty = view.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
         val tv_date = view.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
-        val sp_modul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
+        val spModul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
         val sp_course = view.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
 
         val spExaminer =
             view.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
 
-        viewModel.liveSelectedFaculty.observe(this){
-            tv_faculty.text = it?.facultyName?:"No Faculty selected"
+        viewModel.liveSelectedFaculty.observe(this) {
+            tv_faculty.text = it?.facultyName ?: "No Faculty selected"
         }
         viewModel.updateFaculty()
 
@@ -372,7 +370,7 @@ class MainActivity : AppCompatActivity() {
 
         //Initializes the view-components
         InitCourseFilter(this, sp_course)
-        InitModulFilter(this, sp_modul)
+        InitModulFilter(this, spModul)
 
         btn_reset?.setOnClickListener { Filter.reset() }
 
@@ -384,14 +382,14 @@ class MainActivity : AppCompatActivity() {
         initFilterCheckbox(c5, 5)
         initFilterCheckbox(c6, 6)
 
-        Filter.onDateChangedListener.add {
+        /*Filter.onDateChangedListener.add {
             tv_date.text =
                 if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
                     Filter.datum!!
                 )
-        }
+        }*/
 
-        setCalendarBtn(imgbtn_date)
+        InitCalendarBtn(imgbtn_date)
 
         tv_date.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
             Filter.datum!!
@@ -444,9 +442,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
         val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
-        viewModel.liveFilteredEntriesByDate.observe(this){
+        viewModel.liveFilteredEntriesByDate.observe(this) {
             it?.forEach {
-               spinnerProfArrayList.add(it.firstExaminer)
+                spinnerProfArrayList.add(it.firstExaminer)
             }
         }
         val adapterProfAutoComplete = ArrayAdapter(
@@ -509,8 +507,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun InitCourseFilter(context: Context, spCourse: Spinner) {
         try {
-            var spCourseAdapter: ArrayAdapter<String>? = null
-            viewModel.liveCourses.observe(this) {
+            viewModel.liveChoosenCourses.observe(this) {
                 val list = mutableListOf<String>("Alle")//TODO extract String
                 it?.forEach {
                     it.courseName?.let { it1 -> list.add(it1) }
@@ -520,10 +517,11 @@ class MainActivity : AppCompatActivity() {
                     android.R.layout.simple_spinner_dropdown_item,
                     list
                 )
-                //Set selection of spinner to selection from filter (retrieve previous filter)
                 spCourse.setSelection(Filter.courseName)
-                //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
+                //Set selection of spinner to selection from filter (retrieve previous filter)
             }
+            //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
+
             spCourse.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -546,6 +544,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     Filter.courseName =
                         if (position == 0) null else spCourse.selectedItem.toString()
+                    viewModel.filterCoursename()
                 }
 
                 //Should never been called.
@@ -635,23 +634,22 @@ class MainActivity : AppCompatActivity() {
      */
     private fun InitModulFilter(context: Context, spModul: Spinner) {
         try {
-            var sp_modul_adapter: ArrayAdapter<String>? = null
-            val list: MutableList<String?> = mutableListOf("Alle")
             //Get filtered list of modules from room-database
-            viewModel.liveFilteredEntriesByDate.observe(this){
+            viewModel.liveEntriesForCourse.observe(this) {
+                val list: MutableList<String?> = mutableListOf("Alle")
                 it?.forEach {
                     list.add(it.module)
                 }
+                //Create spinneradapter from list
+                spModul.adapter = ArrayAdapter<String>(
+                    context,
+                    android.R.layout.simple_spinner_dropdown_item,
+                    list
+                )
+                //Pass spinneradapter to spinner
+                //Set selection of spinner to selection from filter (retrieve previous filter)
+                spModul.setSelection(Filter.modulName)
             }
-            //Create spinneradapter from list
-            spModul.adapter = ArrayAdapter<String>(
-                context,
-                android.R.layout.simple_spinner_dropdown_item,
-                list
-            )
-            //Pass spinneradapter to spinner
-            //Set selection of spinner to selection from filter (retrieve previous filter)
-            spModul.setSelection(Filter.modulName)
             //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
             spModul.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
@@ -678,6 +676,7 @@ class MainActivity : AppCompatActivity() {
                     }*/
                     Filter.modulName = if (position == 0) null else spModul.selectedItem.toString()
                 }
+
                 //Should never been called
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     Filter.modulName = null
@@ -700,7 +699,7 @@ class MainActivity : AppCompatActivity() {
      * @see DatePickerDialog
      * @see Filter
      */
-    private fun setCalendarBtn(btn_calendar: ImageButton) {
+    private fun InitCalendarBtn(btn_calendar: ImageButton) {
         //Get start-and enddate from sharedPrefs
         val startDate = viewModel.getStartDate()
         val endDate = viewModel.getEndDate()
@@ -715,7 +714,7 @@ class MainActivity : AppCompatActivity() {
                 //Create DatePicker
                 val dialog = DatePickerDialog(
                     this,
-                    DatePickerDialog.OnDateSetListener { view, pyear, pmonthOfYear, pdayOfMonth ->
+                    { _, pyear, pmonthOfYear, pdayOfMonth ->
 
                         Log.d("DatePicker-YEAR", pyear.toString())
                         Log.d("DatePicker-MONTH", pmonthOfYear.toString())
@@ -733,10 +732,10 @@ class MainActivity : AppCompatActivity() {
                 endDate?.let { dialog.datePicker.maxDate = it.time }
                 dialog.setButton(
                     DatePickerDialog.BUTTON_NEUTRAL,
-                    "Alle",
-                    { dialog, which ->
-                        Filter.datum = null
-                    })
+                    "Alle"
+                ) { _, _ ->
+                    Filter.datum = null
+                }
                 dialog.show()
 
             } else {

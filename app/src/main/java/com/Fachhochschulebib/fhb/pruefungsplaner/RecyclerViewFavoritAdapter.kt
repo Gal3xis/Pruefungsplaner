@@ -83,6 +83,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                     GoogleCalendarIO.deleteEntry(it, it1)
                 }
             }
+            notifyItemChanged(position)
             Toast.makeText(
                 context,
                 context!!.getString(R.string.delete), Toast.LENGTH_SHORT

@@ -119,8 +119,8 @@ class Terminefragment : Fragment() {
         //updateDataFromServer()
         enableSwipeToDelete()
         initRecyclerview()
-        Filter.onFilterChangedListener.add { OnFilterChanged() }
-        filterChangeListenerPosition = Filter.onFilterChangedListener.size - 1
+        //Filter.onFilterChangedListener.add { OnFilterChanged() }
+        //filterChangeListenerPosition = Filter.onFilterChangedListener.size - 1
     }
 
 
@@ -136,9 +136,9 @@ class Terminefragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            if (filterChangeListenerPosition != null && Filter.onFilterChangedListener.size >= filterChangeListenerPosition!!) {
+            /*if (filterChangeListenerPosition != null && Filter.onFilterChangedListener.size >= filterChangeListenerPosition!!) {
                 Filter.onFilterChangedListener.removeAt(filterChangeListenerPosition!!)
-            }
+            }*/
 
         } catch (ex: Exception) {
             Log.e("TermineFragment.onStop", ex.stackTraceToString())
@@ -198,9 +198,9 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     private fun initRecyclerview() {
-        viewModel.Filter()
+        viewModel.filter()
         viewModel.liveFilteredEntriesByDate.observe(viewLifecycleOwner){
-            recyclerView4.adapter = it?.let { RecyclerViewExamAdapter(Filter.validateList(context,it).toMutableList(),viewModel) }
+            recyclerView4.adapter = it?.let { RecyclerViewExamAdapter(Filter.validateList(it).toMutableList(),viewModel) }
             termineFragment_swiperefres.isRefreshing = false
         }
         recyclerView4?.visibility = View.VISIBLE
@@ -237,8 +237,7 @@ class Terminefragment : Fragment() {
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun updateDataFromServer() {
-        val globalVariable = this.context?.applicationContext as StartClass
-        if (!globalVariable.isShowNoProgressBar || globalVariable.isChangeFaculty) {
+        /*if (!globalVariable.isShowNoProgressBar || globalVariable.isChangeFaculty) {
             globalVariable.isShowNoProgressBar = true
             globalVariable.isChangeFaculty = false
             progressBar = ProgressDialog(
@@ -259,7 +258,7 @@ class Terminefragment : Fragment() {
                 updateRoomDatabase()
             }
             createView()
-        }
+        }*/
     }
 
     //TODO place into viewmodel
@@ -354,7 +353,7 @@ class Terminefragment : Fragment() {
         Handler(Looper.getMainLooper()).post {
             if (ppeList != null) {
                 for (entry in ppeList) {
-                    if (!Filter.validateFilter(context, entry)) {
+                    if (!Filter.validateFilter(entry)) {
                         continue
                     }
                     moduleAndCourseList.add(
@@ -406,7 +405,7 @@ class Terminefragment : Fragment() {
      * @see MainActivity.Filter.onFilterChangedListener
      */
     fun OnFilterChanged() {
-        viewModel.Filter()
+        viewModel.filter()
     }
 
     /**

@@ -106,8 +106,7 @@ class AddCourseFragment : Fragment() {
     }
 
     private fun returnToMainscreen(view: View) {
-        val mainWindow = Intent(view.context, MainActivity::class.java)
-        startActivity(mainWindow)
+        activity?.recreate()
     }
 
     /**
@@ -161,8 +160,16 @@ class AddCourseFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerViewChecklist.layoutManager = layoutManager
         val faculty = viewModel.getReturnFaculty()
-
-        Log.d("FacultyTest",faculty?:"")
-        recyclerViewChecklist?.adapter = mCourses
+        viewModel.getReturnFaculty()?.let { viewModel.setReturnFaculty(it) }
+        viewModel.liveCoursesForFacultyId.observe(viewLifecycleOwner){
+            recyclerViewChecklist?.adapter = context?.let { it1 ->
+                it?.let { it2 ->
+                    CoursesCheckList(
+                        it2,viewModel,
+                        it1
+                    )
+                }
+            }
+        }
     }
 }

@@ -33,8 +33,8 @@ class DatabaseRepository(
 
     //Retrofit
     suspend fun fetchCourses(): List<GSONCourse>? {
-        return withContext(Dispatchers.IO){
-            return@withContext async { remoteDataSource.getCourses()}.await().awaitResponse().body()
+        return withContext(Dispatchers.IO) {
+            return@withContext remoteDataSource.getCourses()
         }
     }
 
@@ -48,7 +48,7 @@ class DatabaseRepository(
      * @since 1.6
      *
      */
-    suspend fun fetchFaculties():JSONArray {
+    suspend fun fetchFaculties(): JSONArray {
         return withContext(Dispatchers.IO) {
             val result = StringBuilder()
             val url =
@@ -93,9 +93,14 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun fetchEntries(ppSemester:String, pTermin:String, pYear:String, pId:String):List<GSONEntry>?{
-        return withContext(Dispatchers.IO){
-            return@withContext async {remoteDataSource.getEntries(ppSemester,pTermin,pYear,pId)  }.await().awaitResponse().body()
+    suspend fun fetchEntries(
+        ppSemester: String,
+        pTermin: String,
+        pYear: String,
+        pId: String
+    ): List<GSONEntry>? {
+        return withContext(Dispatchers.IO) {
+            return@withContext remoteDataSource.getEntries(ppSemester, pTermin, pYear, pId)
         }
     }
 
@@ -108,11 +113,12 @@ class DatabaseRepository(
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     suspend fun fetchPruefperiondenObjects(): JSONArray {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             val result = StringBuilder()
 
             //DONE (08/2020 LG)
-            val address = "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
+            val address =
+                "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
             val url = URL(address)
 
             /*
@@ -183,9 +189,8 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun insertFaculty(faculty: Faculty)
-    {
-        withContext(Dispatchers.IO){
+    suspend fun insertFaculty(faculty: Faculty) {
+        withContext(Dispatchers.IO) {
             localDataSource.insertFaculty(faculty)
         }
     }
@@ -208,9 +213,8 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun updateFaculty(faculty: Faculty)
-    {
-        withContext(Dispatchers.IO){
+    suspend fun updateFaculty(faculty: Faculty) {
+        withContext(Dispatchers.IO) {
             localDataSource.updateFaculty(faculty)
         }
     }
@@ -227,27 +231,26 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun deleteCourses(courses:List<Courses>){
-        withContext(Dispatchers.IO){
+    suspend fun deleteCourses(courses: List<Courses>) {
+        withContext(Dispatchers.IO) {
             localDataSource.deleteCourses(courses)
         }
     }
 
-    suspend fun deleteAllCourses(){
-        withContext(Dispatchers.IO){
+    suspend fun deleteAllCourses() {
+        withContext(Dispatchers.IO) {
             localDataSource.deleteAllCourses()
         }
     }
 
-    suspend fun deleteFaculties(faculties: List<Faculty>)
-    {
-        withContext(Dispatchers.IO){
+    suspend fun deleteFaculties(faculties: List<Faculty>) {
+        withContext(Dispatchers.IO) {
             localDataSource.deleteFaculties(faculties)
         }
     }
 
-    suspend fun deleteAllFaculties(){
-        withContext(Dispatchers.IO){
+    suspend fun deleteAllFaculties() {
+        withContext(Dispatchers.IO) {
             localDataSource.deleteAllFaculties()
         }
     }
@@ -260,16 +263,35 @@ class DatabaseRepository(
         return ret
     }
 
+    suspend fun getEntriesByModule():List<TestPlanEntry>?{
+        return withContext(Dispatchers.IO){
+            return@withContext localDataSource.getEntriesByModule()
+        }
+    }
+
     fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?> =
         localDataSource.getAllEntriesLiveDataByDate()
 
-    fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?> = localDataSource.getAllFavoritsLiveData()
+    suspend fun getEntriesForCourseLiveData(name: String?): List<TestPlanEntry>? {
+        return withContext(Dispatchers.IO){
+            return@withContext name?.let { localDataSource.getEntriesByCourseName(it) }
+        }
 
-    fun getAllCoursesLiveData():LiveData<List<Courses>?> = localDataSource.getAllCoursesLiveData()
+    }
 
-    fun getAllFacultiesLiveData():LiveData<List<Faculty>?> = localDataSource.getAllFacultiesLiveData()
+    fun getAllFavoritsLiveData(): LiveData<List<TestPlanEntry>?> =
+        localDataSource.getAllFavoritsLiveData()
 
-    fun getCoursesForFacultyIdLiveData(id:String) = localDataSource.getCoursesForFacultyIdLiveData(id)
+    fun getAllCoursesLiveData(): LiveData<List<Courses>?> = localDataSource.getAllCoursesLiveData()
+
+    fun getAllChoosenCoursesLiveData(): LiveData<List<Courses>?> =
+        localDataSource.getAllChoosenCoursesLiveData()
+
+    fun getAllFacultiesLiveData(): LiveData<List<Faculty>?> =
+        localDataSource.getAllFacultiesLiveData()
+
+    fun getCoursesForFacultyIdLiveData(id: String) =
+        localDataSource.getCoursesForFacultyIdLiveData(id)
 
     suspend fun getAllCourses(): List<Courses>? {
         var ret: List<Courses>? = null
@@ -303,92 +325,90 @@ class DatabaseRepository(
         return ret
     }
 
-    suspend fun getEntriesByCourseName(course:String,favorit: Boolean):List<TestPlanEntry>?{
-        var ret:List<TestPlanEntry>? = null
+    suspend fun getEntriesByCourseName(course: String, favorit: Boolean): List<TestPlanEntry>? {
+        var ret: List<TestPlanEntry>? = null
         withContext(Dispatchers.IO) {
-            ret = localDataSource.getEntriesByCourseName(course,favorit)
+            ret = localDataSource.getEntriesByCourseName(course, favorit)
         }
         return ret
     }
 
-    suspend fun getChoosenCourses(choosen: Boolean):List<String>?{
-        var ret:List<String>? = null
+    suspend fun getChoosenCourses(choosen: Boolean): List<String>? {
+        var ret: List<String>? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getChoosenCourses(choosen)
         }
         return ret
     }
 
-    suspend fun getChoosenCourseIds(choosen: Boolean):List<String>?{
+    suspend fun getChoosenCourseIds(choosen: Boolean): List<String>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getChoosenCourseIds(choosen)
         }
     }
 
-    suspend fun getAllCoursesByFacultyid(facultyId: String):List<Courses>?{
-        var ret:List<Courses>? = null
+    suspend fun getAllCoursesByFacultyid(facultyId: String): List<Courses>? {
+        var ret: List<Courses>? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getAllCoursesByFacultyId(facultyId)
         }
         return ret
     }
 
-    suspend fun getEntriesByCourseName(course: String):List<TestPlanEntry>?{
-        var ret:List<TestPlanEntry>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getEntriesByCourseName(course)
+    suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>? {
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getEntriesByCourseName(course)
         }
-        return ret
     }
 
-    suspend fun getEntryById(id: String):TestPlanEntry?{
-        var ret:TestPlanEntry? = null
+    suspend fun getEntryById(id: String): TestPlanEntry? {
+        var ret: TestPlanEntry? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getEntryById(id)
         }
         return ret
     }
 
-    suspend fun getUuid():Uuid?{
-        var ret:Uuid? = null
+    suspend fun getUuid(): Uuid? {
+        var ret: Uuid? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getUuid()
         }
         return ret
     }
 
-    suspend fun getCourseId(courseName: String):String?{
-        var ret:String? = null
+    suspend fun getCourseId(courseName: String): String? {
+        var ret: String? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getCourseId(courseName)
         }
         return ret
     }
 
-    suspend fun getTermin():String?{
-        var ret:String? = null
+    suspend fun getTermin(): String? {
+        var ret: String? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getTermin()
         }
         return ret
     }
 
-    suspend fun getOneEntryByName(courseName: String,favorit: Boolean):TestPlanEntry?{
-        var ret:TestPlanEntry? = null
+    suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
+        var ret: TestPlanEntry? = null
         withContext(Dispatchers.IO) {
-            ret = localDataSource.getOneEntryByName(courseName,favorit)
+            ret = localDataSource.getOneEntryByName(courseName, favorit)
         }
         return ret
     }
 
-    suspend fun getFacultyById(id:String):Faculty?{
-        return withContext(Dispatchers.IO){
+    suspend fun getFacultyById(id: String): Faculty? {
+        return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getFacultyById(id)
         }
     }
 
     suspend fun insertEntries(entries: List<TestPlanEntry>) {
-        withContext(Dispatchers.IO){
+        withContext(Dispatchers.IO) {
             localDataSource.insertEntries(entries)
         }
     }
