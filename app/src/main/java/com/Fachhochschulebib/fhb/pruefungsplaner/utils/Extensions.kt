@@ -1,4 +1,4 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner.controller
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.content.Context
 import android.widget.Spinner
@@ -6,13 +6,10 @@ import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Courses
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.reflect.typeOf
 
 //TODO Alexander Lange Start
 

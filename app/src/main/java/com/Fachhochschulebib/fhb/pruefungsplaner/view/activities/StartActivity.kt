@@ -10,9 +10,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.applySettings
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModelFactory
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.StartViewModel
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
@@ -79,7 +79,7 @@ class StartActivity : AppCompatActivity() {
         setContentView(R.layout.start)
         viewModel = ViewModelProvider(
                 this,
-                MainViewModelFactory(application)
+                ViewModelFactory(application)
         )[StartViewModel::class.java]
 
         initUpdateManager()
@@ -114,7 +114,7 @@ class StartActivity : AppCompatActivity() {
         recyclerViewChecklist.layoutManager = LinearLayoutManager(applicationContext)
         recyclerViewCourses = CoursesCheckList(listOf(),viewModel, applicationContext)
         recyclerViewChecklist.adapter = recyclerViewCourses
-        viewModel.liveCoursesForFacultyId.observe(this) { items ->
+        viewModel.liveCoursesForFaculty.observe(this) { items ->
             if (items != null) {
                 recyclerViewCourses.updateContent(items)
             }

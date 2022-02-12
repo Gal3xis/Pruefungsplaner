@@ -11,14 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoritAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoritenViewModel
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModelFactory
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import java.lang.Exception
-import java.util.ArrayList
 
 import kotlinx.android.synthetic.main.terminefragment.*
 
@@ -60,7 +58,7 @@ class Favoritenfragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
                 requireActivity(),
-                MainViewModelFactory(requireActivity().application)
+                ViewModelFactory(requireActivity().application)
         )[FavoritenViewModel::class.java]
     }
 

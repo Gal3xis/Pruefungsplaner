@@ -1,4 +1,4 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner.controller
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.content.res.Resources
 import android.view.View

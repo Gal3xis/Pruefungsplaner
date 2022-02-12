@@ -7,9 +7,9 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-class TermineViewModel(application: Application) : MainViewModel(application) {
+class TermineViewModel(application: Application) : BaseViewModel(application) {
 
-    val liveEntryList = repository.getAllEntriesLiveDataByData()
+    val liveEntryList = repository.getAllEntriesLiveDataByDate()
 
     init {
         updateDataFromServer()

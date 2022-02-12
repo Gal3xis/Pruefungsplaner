@@ -1,4 +1,4 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner.controller
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.app.NotificationChannel
 import android.app.NotificationManager

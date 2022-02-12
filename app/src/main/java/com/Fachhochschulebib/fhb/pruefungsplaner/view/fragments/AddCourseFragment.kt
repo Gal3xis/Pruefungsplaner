@@ -10,9 +10,10 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModelFactory
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.AddCourseViewModel
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -31,7 +32,7 @@ import kotlinx.android.synthetic.main.choose_courses.*
  * @author Alexander Lange
  */
 class AddCourseFragment : Fragment() {
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: AddCourseViewModel
 
     var mCourses: CoursesCheckList? = null
     var courseChosen: MutableList<Boolean> = ArrayList()
@@ -77,7 +78,7 @@ class AddCourseFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(requireActivity(), MainViewModelFactory(requireActivity().application))[MainViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), ViewModelFactory(requireActivity().application))[AddCourseViewModel::class.java]
         initRecyclerview()
         initOkButton()
     }
@@ -96,7 +97,7 @@ class AddCourseFragment : Fragment() {
                     courseChosen[i]
                 )
             }
-            updateDbEntries()
+            viewModel.updateDbEntries()
             Toast.makeText(view.context,view.context.getString(R.string.courseActualisation),Toast.LENGTH_SHORT).show()
             returnToMainscreen(view)
         }
@@ -106,43 +107,6 @@ class AddCourseFragment : Fragment() {
         activity?.recreate()
     }
 
-    /**
-     * Updates the Room-Database with data from the Server.
-     *
-     * @since 1.6
-     * @author Alexander Lange
-     */
-    private fun updateDbEntries() {
-        val courses = viewModel.getAllCourses()
-        // aktualsiere die db Einträge
-        val courseIds = JSONArray()
-        var courseName: String
-        if (courses != null) {
-            for (course in courses) {
-                try {
-                    courseName = course.courseName ?: ""
-                    if (course.choosen == false) {
-                        val toDelete = viewModel.getEntriesByCourseName(courseName, false)
-                        toDelete?.let { viewModel.deleteEntries(it) }
-                    }
-                    if (viewModel.getOneEntryByName(
-                            courseName,
-                            false
-                        ) == null && course.choosen == true
-                    ) {
-                        val idJson = JSONObject()
-                        idJson.put("ID", course.sgid)
-                        courseIds.put(idJson)
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            }
-        }
-        val retrofit = context?.let { RetrofitConnect(it) }
-        // > 2 da auch bei einem leeren Json Array [] gesetzt werden
-        //TODO retrofit?.setUserCourses()
-    }
 
     /**
      * Initializes the recyclerview. Obtains data from the Room-Database, creates an adapter and passes
@@ -157,8 +121,7 @@ class AddCourseFragment : Fragment() {
         val layoutManager = LinearLayoutManager(context)
         recyclerViewChecklist.layoutManager = layoutManager
         val faculty = viewModel.getReturnFaculty()
-        viewModel.getReturnFaculty()?.let { viewModel.setReturnFaculty(it) }
-        viewModel.liveCoursesForFacultyId.observe(viewLifecycleOwner){
+        viewModel.liveCoursesForFaculty.observe(viewLifecycleOwner){
             recyclerViewChecklist?.adapter = context?.let { it1 ->
                 it?.let { it2 ->
                     CoursesCheckList(
@@ -168,5 +131,6 @@ class AddCourseFragment : Fragment() {
                 }
             }
         }
+        viewModel.getCourses()
     }
 }

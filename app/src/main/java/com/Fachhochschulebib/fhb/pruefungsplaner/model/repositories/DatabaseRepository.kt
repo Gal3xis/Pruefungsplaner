@@ -121,7 +121,7 @@ class DatabaseRepository(
      * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
-    suspend fun fetchPruefperiondenObjects(): JSONArray {
+    suspend fun fetchPruefperiondenObjects(): JSONArray? {
         return withContext(Dispatchers.IO) {
             val result = StringBuilder()
             val address =
@@ -131,36 +131,37 @@ class DatabaseRepository(
             urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
             try {
                 urlConn.connect()
+                val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
+                val reader = BufferedReader(InputStreamReader(inputStream))
+                var line: String?
+                while (reader.readLine().also { line = it } != null) {
+                    result.append(line)
+                }
+                var jsonObj: JSONObject? = null
+                try {
+                    jsonObj = XML.toJSONObject(result.toString())
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+                val x: Iterator<*> = jsonObj!!.keys()
+                val jsonArray = JSONArray()
+                while (x.hasNext()) {
+                    val key = x.next() as String
+                    jsonArray.put(jsonObj[key])
+                }
+                val examinePeriodArray = JSONArray()
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    examinePeriodArray.put(jsonObject["pruefperioden"])
+                }
+                val arrayZuString = examinePeriodArray.toString()
+                val erstesUndletztesZeichenentfernen =
+                        arrayZuString.substring(1, arrayZuString.length - 1)
             } catch (e: Exception) {
                 Log.d("Output exception", e.toString())
             }
-            val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            var line: String?
-            while (reader.readLine().also { line = it } != null) {
-                result.append(line)
-            }
-            var jsonObj: JSONObject? = null
-            try {
-                jsonObj = XML.toJSONObject(result.toString())
-            } catch (e: JSONException) {
-                e.printStackTrace()
-            }
-            val x: Iterator<*> = jsonObj!!.keys()
-            val jsonArray = JSONArray()
-            while (x.hasNext()) {
-                val key = x.next() as String
-                jsonArray.put(jsonObj[key])
-            }
-            val examinePeriodArray = JSONArray()
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                examinePeriodArray.put(jsonObject["pruefperioden"])
-            }
-            val arrayZuString = examinePeriodArray.toString()
-            val erstesUndletztesZeichenentfernen =
-                arrayZuString.substring(1, arrayZuString.length - 1)
-            return@withContext JSONArray(erstesUndletztesZeichenentfernen)
+
+            return@withContext null
         }
     }
 
@@ -171,9 +172,9 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun insertCourses(courses: List<Courses>) {
+    suspend fun insertCourses(cours: List<Course>) {
         withContext(Dispatchers.IO) {
-            localDataSource.insertCourses(courses)
+            localDataSource.insertCourses(cours)
 
         }
     }
@@ -214,6 +215,12 @@ class DatabaseRepository(
         }
     }
 
+    suspend fun unselectAllFavorits(){
+        withContext(Dispatchers.IO){
+            localDataSource.unselectAllFavorits()
+        }
+    }
+
     suspend fun deleteEntries(entries: List<TestPlanEntry>) {
         withContext(Dispatchers.IO) {
             localDataSource.deleteEntries(entries)
@@ -226,9 +233,9 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun deleteCourses(courses: List<Courses>) {
+    suspend fun deleteCourses(cours: List<Course>) {
         withContext(Dispatchers.IO) {
-            localDataSource.deleteCourses(courses)
+            localDataSource.deleteCourses(cours)
         }
     }
 
@@ -264,8 +271,8 @@ class DatabaseRepository(
         }
     }
 
-    fun getAllEntriesLiveDataByData(): LiveData<List<TestPlanEntry>?> =
-        localDataSource.getAllEntriesLiveDataByData()
+    fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?> =
+        localDataSource.getAllEntriesLiveDataByDate()
 
     suspend fun getEntriesForCourseLiveData(name: String?): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO){
@@ -277,9 +284,9 @@ class DatabaseRepository(
     fun getAllFavoritsLiveData(): LiveData<List<TestPlanEntry>?> =
         localDataSource.getAllFavoritsLiveData()
 
-    fun getAllCoursesLiveData(): LiveData<List<Courses>?> = localDataSource.getAllCoursesLiveData()
+    fun getAllCoursesLiveData(): LiveData<List<Course>?> = localDataSource.getAllCoursesLiveData()
 
-    fun getAllChoosenCoursesLiveData(): LiveData<List<Courses>?> =
+    fun getAllChoosenCoursesLiveData(): LiveData<List<Course>?> =
         localDataSource.getAllChoosenCoursesLiveData()
 
     fun getAllFacultiesLiveData(): LiveData<List<Faculty>?> =
@@ -288,13 +295,13 @@ class DatabaseRepository(
     fun getCoursesForFacultyIdLiveData(id: String) =
         localDataSource.getCoursesForFacultyIdLiveData(id)
 
-    suspend fun getAllCourses(): List<Courses>? {
+    suspend fun getAllCourses(): List<Course>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getAllCourses()
         }
     }
 
-    suspend fun getCourseById(id:String):Courses{
+    suspend fun getCourseById(id:String):Course{
         return withContext(Dispatchers.IO){
             return@withContext localDataSource.getCourseById(id)
         }
@@ -344,8 +351,8 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getAllCoursesByFacultyid(facultyId: String): List<Courses>? {
-        var ret: List<Courses>? = null
+    suspend fun getAllCoursesByFacultyid(facultyId: String): List<Course>? {
+        var ret: List<Course>? = null
         withContext(Dispatchers.IO) {
             ret = localDataSource.getAllCoursesByFacultyId(facultyId)
         }
@@ -374,7 +381,7 @@ class DatabaseRepository(
         return ret
     }
 
-    suspend fun getCourseByName(name:String):Courses{
+    suspend fun getCourseByName(name:String):Course{
         return withContext(Dispatchers.IO){
             return@withContext localDataSource.getCourseByName(name)
         }

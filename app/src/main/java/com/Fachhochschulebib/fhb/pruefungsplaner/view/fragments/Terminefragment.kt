@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModelFactory
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.TermineViewModel
 import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.terminefragment.*
@@ -74,7 +74,7 @@ class Terminefragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(
                 requireActivity(),
-                MainViewModelFactory(requireActivity().application)
+                ViewModelFactory(requireActivity().application)
         )[TermineViewModel::class.java]
         viewModel.getCalendarPermission(requireActivity())
         setPruefungszeitraum()

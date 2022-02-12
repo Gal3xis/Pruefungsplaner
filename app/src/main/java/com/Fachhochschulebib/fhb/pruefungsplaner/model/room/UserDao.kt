@@ -14,7 +14,7 @@ interface UserDao {
     suspend fun insertEntries(testPlanEntries: List<TestPlanEntry>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCourses(courses: List<Courses>)
+    suspend fun insertCourses(cours: List<Course>)
 
     @Query("INSERT INTO Uuid VALUES (:uuid)")
     suspend fun insertUuid(uuid: String)
@@ -29,11 +29,15 @@ interface UserDao {
     @Query("UPDATE TestPlanEntry SET favorit = :favorit WHERE ID = :id")
     suspend fun update(favorit: Boolean, id: Int)
 
-    @Query("UPDATE Courses SET choosen = :choosen WHERE couresName = :courseName")
+    @Query("UPDATE Course SET choosen = :choosen WHERE couresName = :courseName")
     suspend fun updateCourse(courseName: String, choosen: Boolean)
 
     @Update
     suspend fun updateFaculty(faculty: Faculty)
+
+    @Query("UPDATE testPlanEntry SET favorit = 0")
+    suspend fun unselectAllFavorits()
+
 
     //Deletes
     @Delete
@@ -43,9 +47,9 @@ interface UserDao {
     suspend fun deleteAllEntries()
 
     @Delete
-    suspend fun deleteCourses(courses:List<Courses>)
+    suspend fun deleteCourses(cours:List<Course>)
 
-    @Query("DELETE FROM Courses")
+    @Query("DELETE FROM Course")
     suspend fun deleteAllCourses()
 
     @Delete
@@ -55,6 +59,7 @@ interface UserDao {
     suspend fun deleteAllFaculties()
     //Queries
 
+
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     suspend fun getAllEntries(): List<TestPlanEntry>?
 
@@ -62,16 +67,16 @@ interface UserDao {
     suspend fun getEntriesByModule(): List<TestPlanEntry>?
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
-    fun getAllEntriesLiveDataByData(): LiveData<List<TestPlanEntry>?>
+    fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
 
     @Query("SELECT * FROM TestPlanEntry WHERE course = :name ORDER BY module")
     fun getEntriesForCourseLiveData(name:String):LiveData<List<TestPlanEntry>?>
 
-    @Query("SELECT * FROM Courses ORDER BY couresName ")
-    fun getAllCoursesLiveData():LiveData<List<Courses>?>
+    @Query("SELECT * FROM Course ORDER BY couresName ")
+    fun getAllCoursesLiveData():LiveData<List<Course>?>
 
-    @Query("SELECT * FROM Courses WHERE choosen = 1 ORDER BY couresName")
-    fun getAllChoosenCoursesLiveData():LiveData<List<Courses>?>
+    @Query("SELECT * FROM Course WHERE choosen = 1 ORDER BY couresName")
+    fun getAllChoosenCoursesLiveData():LiveData<List<Course>?>
 
     @Query("SELECT * FROM TestPlanEntry WHERE favorit = 1 ORDER BY date, termin, module")
     fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?>
@@ -79,14 +84,14 @@ interface UserDao {
     @Query("SELECT * FROM Faculty ORDER BY facName LIMIT 100 OFFSET 1")
     fun getAllFacultiesLiveData():LiveData<List<Faculty>?>
 
-    @Query("SELECT * FROM Courses WHERE facultyId = :id ORDER BY couresName")
-    fun getCoursesForFacultyIdLiveData(id:String):LiveData<List<Courses>?>
+    @Query("SELECT * FROM Course WHERE facultyId = :id ORDER BY couresName")
+    fun getCoursesForFacultyIdLiveData(id:String):LiveData<List<Course>?>
 
-    @Query("SELECT * FROM Courses WHERE cId = :id LIMIT 1")
-    suspend fun getCourseById(id:String):Courses
+    @Query("SELECT * FROM Course WHERE cId = :id LIMIT 1")
+    suspend fun getCourseById(id:String):Course
 
-    @Query("SELECT * FROM Courses ORDER BY couresName")
-    suspend fun getAllCourses(): List<Courses>?
+    @Query("SELECT * FROM Course ORDER BY couresName")
+    suspend fun getAllCourses(): List<Course>?
 
     @Query("SELECT * FROM TestPlanEntry WHERE favorit = :favorit ORDER BY date, termin, module")
     suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>?
@@ -102,14 +107,14 @@ interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE course = :course AND Favorit = :favorit")
     suspend fun getEntriesByCourseName(course: String, favorit: Boolean): List<TestPlanEntry>?
 
-    @Query("SELECT couresName FROM Courses WHERE choosen = :choosen ORDER BY couresName")
+    @Query("SELECT couresName FROM Course WHERE choosen = :choosen ORDER BY couresName")
     suspend fun getChoosenCourses(choosen: Boolean): List<String>?
 
-    @Query("SELECT cId FROM Courses WHERE choosen = :choosen")
+    @Query("SELECT cId FROM Course WHERE choosen = :choosen")
     suspend fun getChoosenCourseIds(choosen: Boolean): List<String>?
 
-    @Query("SELECT * FROM Courses WHERE facultyId = :facultyId")
-    suspend fun getAllCoursesByFacultyId(facultyId: String): List<Courses>?
+    @Query("SELECT * FROM Course WHERE facultyId = :facultyId")
+    suspend fun getAllCoursesByFacultyId(facultyId: String): List<Course>?
 
     @Query("SELECT * FROM TestPlanEntry WHERE course LIKE :course")
     suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>?
@@ -120,7 +125,7 @@ interface UserDao {
     @Query("SELECT * FROM Uuid")
     suspend fun getUuid(): Uuid?
 
-    @Query("SELECT cId from Courses WHERE couresName = :courseName")
+    @Query("SELECT cId from Course WHERE couresName = :courseName")
     suspend fun getCourseId(courseName: String): String?
 
     @Query("SELECT DISTINCT termin FROM TestPlanEntry LIMIT 1")
@@ -159,22 +164,17 @@ interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE date LIKE :date ORDER BY termin")
     suspend fun getEntriesByDate(date: String?): List<TestPlanEntry?>?
 
-
-    // Ende Merlin Gürtler
     @Query("SELECT * FROM TestPlanEntry WHERE validation = :validation ORDER BY date, termin, module")
     suspend fun getEntriesByValidation(validation: String?): List<TestPlanEntry?>?
 
     @Query("SELECT * FROM TestPlanEntry WHERE Choosen = :choosen ORDER BY date, termin, module")
     suspend fun getAllChoosen(choosen: Boolean?): List<TestPlanEntry?>?
 
-    @Query("SELECT * FROM Courses WHERE couresName = :name")
-    suspend fun getCourseByName(name:String):Courses
+    @Query("SELECT * FROM Course WHERE couresName = :name")
+    suspend fun getCourseByName(name:String):Course
 
-    //TODO Alexander Lange Start
-    @Query("SELECT facultyId FROM Courses WHERE couresName =:courseName")
+    @Query("SELECT facultyId FROM Course WHERE couresName =:courseName")
     suspend fun getFacultyByCourse(courseName: String?): String?
-    //TODO Alexander Lange End
-
 
     @Query("UPDATE TestPlanEntry SET Choosen = :exams WHERE ID = :id")
     suspend fun update2(exams: Boolean, id: Int)

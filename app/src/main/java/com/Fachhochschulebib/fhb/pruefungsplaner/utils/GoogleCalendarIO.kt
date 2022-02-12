@@ -1,4 +1,4 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner.controller
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.content.ContentUris
 import android.content.ContentValues
@@ -8,6 +8,7 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -164,11 +165,6 @@ object GoogleCalendarIO {
      * @since 1.6
      */
     fun insertEntry(context: Context, e: TestPlanEntry, force: Boolean = false) {
-        if (!context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-                .getBoolean("calSync", false)
-        ) {
-            return
-        }
         if (force) {
             if (findEventSingle(context, e) != null) {
                 deleteEntry(context, e)
@@ -273,11 +269,6 @@ object GoogleCalendarIO {
      * @since 1.6
      */
     fun deleteEntry(context: Context, entryId: Long) {
-        if (!context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-                .getBoolean("calSync", false)
-        ) {
-            return
-        }
         val numRows = context.contentResolver?.delete(
             ContentUris.withAppendedId(EVENTS_URI, entryId),
             null,
@@ -318,8 +309,11 @@ object GoogleCalendarIO {
             "calendar_id=$CAL_ID", null, null
         )
         while (cursor?.moveToNext() == true) {
-            ret.add(cursor.getLong(cursor.getColumnIndex("_id")))
-            Log.d("EventTestCalId", cursor.getString(cursor.getColumnIndex("_id")))
+            val index = cursor.getColumnIndex("_id")
+            if(index>=0)
+            {
+                ret.add(cursor.getLong(index))
+            }
         }
         cursor?.close()
         return ret
@@ -343,13 +337,18 @@ object GoogleCalendarIO {
             "calendar_id=$CAL_ID", null, null
         )
         while (cursor?.moveToNext() == true) {
-            val id = cursor.getLong(cursor.getColumnIndex("_id"))
-            val module = cursor.getString(cursor.getColumnIndex("title"))
-            val description = cursor.getString(cursor.getColumnIndex("description"))
-            if (module == entry.module && description == entry.getString(context)) {
-                Log.d("EventTest", "$id;$module")
-                cursor.close()
-                return id
+            val indexId = cursor.getColumnIndex("_id")
+            val indexTitle = cursor.getColumnIndex("title")
+            val indexDescription = cursor.getColumnIndex("description")
+            if(indexId>=0&&indexTitle>=0&&indexDescription>=0){
+                val id = cursor.getLong(indexId)
+                val module = cursor.getString(indexTitle)
+                val description = cursor.getString(indexDescription)
+                if (module == entry.module && description == entry.getString(context)) {
+                    Log.d("EventTest", "$id;$module")
+                    cursor.close()
+                    return id
+                }
             }
         }
         cursor?.close()

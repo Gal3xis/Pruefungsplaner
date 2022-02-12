@@ -44,7 +44,7 @@ class PrivacyDeclarationFragment : Fragment() {
 
         privacyDeclarationButton.setOnClickListener {
             val ft = activity?.supportFragmentManager?.beginTransaction()
-            ft?.replace(R.id.frame_placeholder, Optionen())
+            ft?.replace(R.id.frame_placeholder, SettingsFragment())
             ft?.commit()
         }
     }

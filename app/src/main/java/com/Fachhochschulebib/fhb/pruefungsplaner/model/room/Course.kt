@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
-@Entity(tableName = "Courses")
-class Courses {
+@Entity(tableName = "Course")
+class Course {
     @PrimaryKey
     @ColumnInfo(name = "cId")
     @NonNull

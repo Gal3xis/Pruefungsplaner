@@ -10,12 +10,11 @@ import android.widget.ImageView
 import android.widget.Toast
 import android.widget.TextView
 import android.widget.LinearLayout
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.GoogleCalendarIO
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.add
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.getString
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.add
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.lang.Exception
 
 //////////////////////////////
@@ -38,13 +37,13 @@ import java.lang.Exception
  * @see RecyclerView
  */
 class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
-    (
-            private var entryList: MutableList<TestPlanEntry>,
-            private val viewModel: MainViewModel
+(
+        private var entryList: MutableList<TestPlanEntry>,
+        private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null
     private var name: String? = null
-    private var context: Context? = null
+    private lateinit var context: Context
     private var openItem: ViewHolder? = null
 
     /**
@@ -58,7 +57,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      */
     fun add(position: Int?, entry: TestPlanEntry) {
         notifyItemInserted(
-            entryList.add(position, entry)
+                entryList.add(position, entry)
         )
     }
 
@@ -73,17 +72,13 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     fun remove(position: Int) {
         try {
             val entry = entryList[position]
-            viewModel.updateEntryFavorit(false, entry)
-            context?.let {
-                entry?.let { it1 ->
-                    GoogleCalendarIO.deleteEntry(it, it1)
-                }
-            }
+            viewModel.updateEntryFavorit(context, false, entry)
             notifyItemChanged(position)
             Toast.makeText(
-                context,
-                context!!.getString(R.string.delete), Toast.LENGTH_SHORT
-            ).show()        } catch (ex: Exception) {
+                    context,
+                    context!!.getString(R.string.delete), Toast.LENGTH_SHORT
+            ).show()
+        } catch (ex: Exception) {
             Log.e("MyAdapterfavorits.kt-remove", ex.stackTraceToString())
         }
     }
@@ -103,12 +98,12 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      */
     // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): ViewHolder {
         // create a new view
         val inflater = LayoutInflater.from(
-            parent.context
+                parent.context
         )
         val v = inflater.inflate(R.layout.favoriten, parent, false)
         // set the view's size, margins, paddings and layout parameters
@@ -148,12 +143,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                     openItem?.txtSecondScreen?.visibility = View.GONE
                 }
                 holder.txtSecondScreen.visibility = View.VISIBLE
-                holder.txtSecondScreen.text =
-                    context?.let { it1 ->
-                        entry.getString(
-                            it1
-                        )
-                    }
+                holder.txtSecondScreen.text = entry.getString(context)
                 //Make previous details invisible
                 openItem = holder
             }
@@ -174,10 +164,11 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         displayExamInformation(position, holder)
     }
 
-    fun updateContent(entryList:List<TestPlanEntry>){
-        this.entryList= entryList.toMutableList()
+    fun updateContent(entryList: List<TestPlanEntry>) {
+        this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
     }
+
     /**
      * Displays the examinformation. Passes the information to the corresponding UI-Elements.
      *
@@ -189,8 +180,8 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      *
      */
     private fun displayExamInformation(
-        position: Int,
-        holder: ViewHolder
+            position: Int,
+            holder: ViewHolder
     ) {
         val entry = entryList[position]
         //darstellen der Informationen für das Prüfitem
@@ -236,7 +227,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @see RecyclerView.ViewHolder
      */
     inner class ViewHolder(var layout: View) : RecyclerView.ViewHolder(
-        layout
+            layout
     ) {
         // each data item is just a string in this case
         var txtHeader: TextView

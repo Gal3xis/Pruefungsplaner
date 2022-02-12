@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import kotlinx.android.synthetic.main.fragment_impressum.*
 
 /**

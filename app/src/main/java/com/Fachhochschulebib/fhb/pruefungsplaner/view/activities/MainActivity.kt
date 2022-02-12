@@ -20,19 +20,18 @@ import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.Filter
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.Utils
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.applySettings
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.setSelection
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.setSelection
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModelFactory
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
-import java.time.LocalDateTime
 import java.util.*
 
 //Alexander Lange End
@@ -68,51 +67,28 @@ class MainActivity : AppCompatActivity() {
      * @see Fragment.onCreate
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        applySettings()
         super.onCreate(savedInstanceState)
+        applySettings()
         setContentView(R.layout.hauptfenster)
         viewModel = ViewModelProvider(
                 this,
-                MainViewModelFactory(application)
+                ViewModelFactory(application)
         )[MainViewModel::class.java]
 
-        // Start Merlin Gürtler
-        // registriert die Toolbar
-        setSupportActionBar(header)
-        header.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, theme))
-        val inputMethodManager = baseContext.getSystemService(
-                INPUT_METHOD_SERVICE
-        ) as InputMethodManager
-        header.setNavigationOnClickListener { // Merlin Gürtler schließe die Tastatur falls offen
-            try {
-                inputMethodManager.hideSoftInputFromWindow(
-                        this@MainActivity.currentFocus!!.windowToken, 0
-                )
-            } catch (e: Exception) {
-                Log.d("Exception", "Keyboard not open")
-            }
-            // Änderung Merlin Gürtler
-            // Toggelt die Sichtbarkeit des Drawers
-            if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
-                drawer_layout.closeDrawer(GravityCompat.START)
-            } else {
-                drawer_layout.openDrawer(GravityCompat.START)
-            }
-        }
-
+        initActionBar()
         initNavigationDrawer()
         initBottomNavigationView()
 
-        //TODO Alexander Lange Start
         UserFilter(applicationContext)
-        //TODO Alexander Lange End
 
-        val ft = supportFragmentManager.beginTransaction()
-        ft.replace(R.id.frame_placeholder, Terminefragment())
-        ft.commit()
+        changeFragment("Termine", Terminefragment())
     }
 
-    //Start Alexander Lange
+    private fun initActionBar() {
+        setSupportActionBar(header)
+        header.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, theme))
+    }
+
     /**
      * Overrides the onCreateOptionsMenu()-Method, used to create the action menu in the top-right corner.
      * The menu contains the Filter-button and the search-button.
@@ -125,37 +101,49 @@ class MainActivity : AppCompatActivity() {
      * @see SearchView.autofill
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        initMenu(menu)
+        initSearchView(menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun initMenu(menu: Menu) {
         menu.clear()
         menuInflater.inflate(R.menu.action_menu, menu);
         menu.findItem(R.id.menu_item_filter).isVisible = true
         menu.findItem(R.id.menu_item_save).isVisible = false
+    }
+
+    private fun initSearchView(menu: Menu) {
         val search: SearchView = menu.findItem(R.id.menu_item_search).actionView as SearchView
         val searchAutoComplete: SearchAutoComplete = search.findViewById(R.id.search_src_text)
-        val list: MutableList<String> = mutableListOf()
-        viewModel.getModulesOrdered()?.forEach { action -> list.add(action ?: "") }
-        searchAutoComplete.setAdapter(
-                ArrayAdapter(
-                        this,
-                        R.layout.simple_spinner_item,
-                        list
-                )
-        )
+        viewModel.liveEntriesOrdered.observe(this) { entryList ->
+            val list: MutableList<String> = mutableListOf()
+
+            entryList?.forEach { entry -> list.add(entry.module ?: "") }
+            searchAutoComplete.setAdapter(
+                    ArrayAdapter(
+                            this,
+                            R.layout.simple_spinner_item,
+                            list
+                    )
+            )
+        }
 
         searchAutoComplete.setOnItemClickListener { adapterView, view, i, l ->
             search.setQuery(adapterView.getItemAtPosition(i).toString(), true)
         }
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(text: String?): Boolean {
-                Filter.modulName = if (text.isNullOrBlank()) null else text
                 return true
             }
 
             override fun onQueryTextSubmit(text: String?): Boolean {
-                changeFragment(Filter.modulName ?: "Suche", Terminefragment())
+                Filter.reset()
+                Filter.modulName = if (text.isNullOrBlank()) null else text
+                changeFragment("Suche", Terminefragment())
                 return true
             }
         })
-        return super.onCreateOptionsMenu(menu)
     }
 
     /**
@@ -170,7 +158,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return (when (item.itemId) {
             R.id.menu_item_filter -> {
-                OpenFilterMenu()
+                openFilterMenu()
                 false
             }
             else ->
@@ -207,75 +195,73 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initNavigationDrawer() {
-        val inputMethodManager = baseContext.getSystemService(
-                INPUT_METHOD_SERVICE
-        ) as InputMethodManager
-
-        nav_view.setBackgroundColor(Utils.getColorFromAttr(R.attr.colorBackground, theme))
-
         val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
         val colors = intArrayOf(
                 Utils.getColorFromAttr(R.attr.colorOnBackground, theme)
         )
 
+        nav_view.setBackgroundColor(Utils.getColorFromAttr(R.attr.colorBackground, theme))
         nav_view.itemTextColor = ColorStateList(states, colors)
         nav_view.itemIconTintList = ColorStateList(states, colors)
 
-        //Drawer Navigation Menü mit den Menüpunkten
-        //Set listener for NavigationDrawer
+        header.setNavigationOnClickListener {
+            onNavigationDrawerButtonClicked()
+        }
         nav_view.setNavigationItemSelectedListener { item ->
-            // Merlin Gürtler schließe die Tastatur falls offen
-            try {
-                inputMethodManager.hideSoftInputFromWindow(
-                        this@MainActivity.currentFocus!!.windowToken, 0
-                )
-            } catch (e: Exception) {
-                Log.d("Exception", "Keyboard not open")
-            }
-            //Fragmentmanager initialisierung
-            val id = item.itemId
-            when (id) {
-                R.id.navigation_calender -> {
-                    changeFragment(
-                            applicationContext.getString(R.string.title_calender),
-                            Terminefragment()
-                    )
-                }
-                R.id.navigation_settings -> {
-                    changeFragment(
-                            applicationContext.getString(R.string.title_settings),
-                            Optionen()
-                    )
-                }
-                R.id.navigation_feedback -> {
-                    changeFragment(
-                            applicationContext.getString(R.string.title_feedback),
-                            FeedbackFragment()
-                    )
-                }
-                //TODO CHANGE
-                R.id.navigation_changeFaculty -> {
-                    header?.title =
-                            applicationContext.getString(R.string.title_changeFaculty)
-                    recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
-                    //TODO Check if needed or remove:caCalender?.visibility = View.GONE
-                    //TODO Check if needed or remove:btnDatum?.visibility = View.GONE
-                    drawer_layout.closeDrawer(GravityCompat.START)
-                    // globale Variable, damit die Fakultät gewechselt werden kann
-                    val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
-                    recyclerView4.context.startActivity(myIntent)
-                    true
-                }
-                R.id.navigation_addCourse -> {
-                    changeFragment(
-                            applicationContext.getString(R.string.title_changeCourse),
-                            AddCourseFragment()
-                    )
-                }
-                else -> true
-            }
+            onNavigationDrawerItemClicked(item)
         }
     }
+
+    private fun onNavigationDrawerButtonClicked() {
+        closeKeyboard()
+        if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
+            drawer_layout.closeDrawer(GravityCompat.START)
+        } else {
+            drawer_layout.openDrawer(GravityCompat.START)
+        }
+    }
+
+    private fun onNavigationDrawerItemClicked(item: MenuItem): Boolean {
+        closeKeyboard()
+        return when (item.itemId) {
+            R.id.navigation_calender -> {
+                changeFragment(
+                        applicationContext.getString(R.string.title_calender),
+                        Terminefragment()
+                )
+            }
+            R.id.navigation_settings -> {
+                changeFragment(
+                        applicationContext.getString(R.string.title_settings),
+                        SettingsFragment()
+                )
+            }
+            R.id.navigation_feedback -> {
+                changeFragment(
+                        applicationContext.getString(R.string.title_feedback),
+                        FeedbackFragment()
+                )
+            }
+            //TODO CHANGE
+            R.id.navigation_changeFaculty -> {
+                /*header?.title = TODO CHECK
+                        applicationContext.getString(R.string.title_changeFaculty)
+                recyclerView4?.visibility = View.INVISIBLE
+                drawer_layout.closeDrawer(GravityCompat.START)*/
+                val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
+                recyclerView4.context.startActivity(myIntent)
+                true
+            }
+            R.id.navigation_addCourse -> {
+                changeFragment(
+                        applicationContext.getString(R.string.title_changeCourse),
+                        AddCourseFragment()
+                )
+            }
+            else -> true
+        }
+    }
+
 
     /**
      * Initializes the BottomNavigationView
@@ -286,17 +272,8 @@ class MainActivity : AppCompatActivity() {
     private fun initBottomNavigationView() {
         //Set listener for BottomNavigationView
 
-        bottom_navigation.setOnNavigationItemSelectedListener { item -> // Merlin Gürtler schließe die Tastatur falls offen
-            val inputMethodManager = baseContext.getSystemService(
-                    INPUT_METHOD_SERVICE
-            ) as InputMethodManager
-            try {
-                inputMethodManager.hideSoftInputFromWindow(
-                        this@MainActivity.currentFocus!!.windowToken, 0
-                )
-            } catch (e: Exception) {
-                Log.d("Exception", "Keyboard not open")
-            }
+        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+            closeKeyboard()
             when (item.itemId) {
                 R.id.navigation_calender -> {
                     changeFragment(
@@ -315,6 +292,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun closeKeyboard() {
+        val inputMethodManager = baseContext.getSystemService(
+                INPUT_METHOD_SERVICE
+        ) as InputMethodManager
+        try {
+            inputMethodManager.hideSoftInputFromWindow(
+                    this@MainActivity.currentFocus!!.windowToken, 0
+            )
+        } catch (e: Exception) {
+            Log.d("Exception", "Keyboard not open")
+        }
+    }
+
 
     /**
      * Changes the Fragment.
@@ -326,15 +316,11 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see onCreate
      */
-    fun changeFragment(headertitle: String, fragment: Fragment): Boolean {
+    fun changeFragment(headertitle: String? = null, fragment: Fragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
-
-        recyclerView4?.visibility = View.INVISIBLE//TODO REMOVE?
-
-        header?.title = headertitle
-
+        recyclerView4?.visibility = View.INVISIBLE
+        header?.title = headertitle ?: this.localClassName//TODO CHECK
         drawer_layout.closeDrawer(GravityCompat.START)
-
         ft.replace(R.id.frame_placeholder, fragment)
         ft.commit()
         return true
@@ -345,74 +331,62 @@ class MainActivity : AppCompatActivity() {
      *
      * @author Alexander Lange
      * @since 1.6
-     * @see InitModulFilter
-     * @see InitCourseFilter
+     * @see initFilterModule
+     * @see initFilterCourse
      * @see initFacultyFilter
      * @see Filter
      */
-    private fun OpenFilterMenu() {
+    private fun openFilterMenu() {
         //Create view for the dialog
         val view = layoutInflater.inflate(R.layout.layout_dialog_filter, null, false)
 
-        //Get view-Components
-        val imgbtn_date = view.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
-        val btn_reset = view.findViewById<Button>(R.id.layout_dialog_filter_reset_btn)
-        val tv_faculty = view.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
-        val tv_date = view.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
-        val spModul = view.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
-        val sp_course = view.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
-
-        val spExaminer =
-                view.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
-
-//        viewModel.liveSelectedFaculty.observe(this) {
-//            tv_faculty.text = it?.facultyName ?: "No Faculty selected"
-//        }
-        //viewModel.updateFaculty()
-
-        val c1 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
-        val c2 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
-        val c3 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_3)
-        val c4 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_4)
-        val c5 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_5)
-        val c6 = view.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_6)
-
         //Initializes the view-components
-        InitCourseFilter(this, sp_course)
-        InitModulFilter(this, spModul)
+        initFilterHeader(this, view)
+        initFilterCourse(this, view)
+        initFilterModule(this, view)
+        initFilterSemesterBoxes(this, view)
+        initFilterExaminer(this, view)
+        initFilterCalendar(this, view)
+        initFilterButtons(this, view)
 
-        btn_reset?.setOnClickListener { Filter.reset() }
+        val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
+                .setTitle("Filter")
+                .setPositiveButton("Ok", null)
+                .setNegativeButton(
+                        "Reset"
+                ) { _, _ -> UserFilter(this) }
+                .setView(view)
+                .create()
+        dialog.show()
+    }
 
-        initFilterExaminer(spExaminer)
+    private fun initFilterButtons(context: Context, filterView: View) {
+        val btnReset = filterView.findViewById<Button>(R.id.layout_dialog_filter_reset_btn)
+        btnReset?.setOnClickListener { Filter.reset() }
+    }
+
+    private fun initFilterHeader(context: Context, filterVIew: View) {
+        val tvFaculty = filterVIew.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
+        viewModel.liveSelectedFaculty.observe(this) {
+            tvFaculty.text = it?.facultyName ?: "No Faculty selected"
+        }
+        viewModel.getSelectedFaculty()
+    }
+
+    private fun initFilterSemesterBoxes(context: Context, filterView: View) {
+        val c1 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
+        val c2 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
+        val c3 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_3)
+        val c4 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_4)
+        val c5 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_5)
+        val c6 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_6)
+
         initFilterCheckbox(c1, 1)
         initFilterCheckbox(c2, 2)
         initFilterCheckbox(c3, 3)
         initFilterCheckbox(c4, 4)
         initFilterCheckbox(c5, 5)
         initFilterCheckbox(c6, 6)
-
-        /*Filter.onDateChangedListener.add {
-            tv_date.text =
-                if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
-                    Filter.datum!!
-                )
-        }*/
-
-        InitCalendarBtn(imgbtn_date)
-
-        tv_date.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
-                Filter.datum!!
-        )
-        //Create and open the dialog
-        val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
-                .setTitle("Filter")
-                .setPositiveButton("Ok", null)
-                .setNegativeButton(
-                        "Reset",
-                        { _, _ -> UserFilter(this) })
-                .setView(view)
-                .create()
-        dialog.show()
     }
 
     /**
@@ -423,7 +397,8 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see AdapterView.OnItemSelectedListener.onItemSelected
      */
-    private fun initFilterExaminer(spExaminer: Spinner) {
+    private fun initFilterExaminer(context: Context, filterView: View) {
+        val spExaminer = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
         spExaminer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -450,19 +425,19 @@ class MainActivity : AppCompatActivity() {
                 Filter.examiner = null
             }
         }
-        val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
         viewModel.liveFilteredEntriesByDate.observe(this) {
+            val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
             it?.forEach {
                 spinnerProfArrayList.add(it.firstExaminer)
             }
+            val adapterProfAutoComplete = ArrayAdapter(
+                    applicationContext,
+                    android.R.layout.simple_list_item_1,
+                    spinnerProfArrayList
+            )
+            spExaminer.adapter = adapterProfAutoComplete
+            spExaminer.setSelection(Filter.examiner)
         }
-        val adapterProfAutoComplete = ArrayAdapter(
-                applicationContext,
-                android.R.layout.simple_list_item_1,
-                spinnerProfArrayList
-        )
-        spExaminer.adapter = adapterProfAutoComplete
-        spExaminer.setSelection(Filter.examiner)
     }
 
     /**
@@ -490,12 +465,12 @@ class MainActivity : AppCompatActivity() {
      * @see Filter
      */
     fun UserFilter(context: Context) {
-        val cou_sel = viewModel.getSelectedCourse()
+        val selectedCourse = viewModel.getSelectedCourse()
 
         //Disable the callback from Filter. Only sets its values.
         Filter.locked = true
         Filter.reset()
-        Filter.courseName = cou_sel
+        Filter.courseName = selectedCourse
         //Resets the callbacks from the Filter
         Filter.locked = false
     }
@@ -508,18 +483,19 @@ class MainActivity : AppCompatActivity() {
      * @param[spCourse] the spinner from the filtermenu
      * @author Alexander Lange
      * @since 1.6
-     * @see setCourseSpinner
-     * @see OpenFilterMenu
+     * @see openFilterMenu
      * @see initFacultyFilter
-     * @see InitModulFilter
+     * @see initFilterModule
      * @see Filter
      */
-    private fun InitCourseFilter(context: Context, spCourse: Spinner) {
+    private fun initFilterCourse(context: Context, filterView: View) {
         try {
+            val spCourse = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
+
             viewModel.liveChoosenCourses.observe(this) {
                 val list = mutableListOf<String>("Alle")//TODO extract String
-                it?.forEach {
-                    it.courseName?.let { it1 -> list.add(it1) }
+                it?.forEach { course ->
+                    list.add(course.courseName)
                 }
                 spCourse.adapter = ArrayAdapter<String>(
                         context,
@@ -527,9 +503,7 @@ class MainActivity : AppCompatActivity() {
                         list
                 )
                 spCourse.setSelection(Filter.courseName)
-                //Set selection of spinner to selection from filter (retrieve previous filter)
             }
-            //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
 
             spCourse.onItemSelectedListener = object :
                     AdapterView.OnItemSelectedListener {
@@ -541,7 +515,6 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     if (parent?.childCount ?: 0 > 0) {
                         val child = parent?.getChildAt(0)
-                        //Set accurate textcolor for the selected item
                         if (child != null) {
                             (child as TextView).setTextColor(
                                     Utils.getColorFromAttr(
@@ -556,7 +529,6 @@ class MainActivity : AppCompatActivity() {
                     viewModel.filterCoursename()
                 }
 
-                //Should never been called.
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     Filter.courseName = null
                 }
@@ -569,19 +541,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Initializes the coursespinner with an adapter and an onItemSelectedListener.
-     *
-     * @param[sp_course_adapter] The adapter to pass to the spinner
-     * @param[sp_course] the spinner from the filtermenu
-     * @author Alexander Lange
-     * @since 1.6
-     * @see InitCourseFilter
-     * @see Filter
-     */
-    private fun setCourseSpinner(sp_course_adapter: ArrayAdapter<String>?, sp_course: Spinner) {
-    }
-
-    /**
      * Updates the Faculty-Filter-Spinner in the Filter-dialog.
      * Creates a list of faucultynames from the room-database and passes them to the spinner.
      *
@@ -589,39 +548,29 @@ class MainActivity : AppCompatActivity() {
      * @param[tv_faculty] the spinner from the filtermenu
      * @author Alexander Lange
      * @since 1.6
-     * @see setCourseSpinner
-     * @see OpenFilterMenu
-     * @see InitCourseFilter
-     * @see InitModulFilter
+     * @see openFilterMenu
+     * @see initFilterCourse
+     * @see initFilterModule
      * @see Filter
      */
     private fun initFacultyFilter(context: Context, tv_faculty: TextView) {
         try {
-            //Get a list of facultys from shared preferences
             val strFaculties = viewModel.getFaculties()
             val returnFaculty = viewModel.getReturnFaculty()
-            //Create a jsonarray from faculty-list
             val jsonArrayFacultys = JSONArray(strFaculties)
-
-            var selected_faculty: String? = null
-
+            var selectedFaculty: String? = null
             if (strFaculties != null) {
-                //Loop through jsonarray and create list of facultynames
                 var i = 0
                 while (i < jsonArrayFacultys.length()) {
-                    //Get json-object from jsonarray
                     val json: JSONObject? = jsonArrayFacultys.getJSONObject(i)
-                    //compare facultyid from filter with selected facultyid
                     if (json?.get("fbid").toString() == returnFaculty) {
-                        //if the facultys agree, save position as selected. Retrieve selection from filter
-                        selected_faculty = json?.get("facName")?.toString()
+                        selectedFaculty = json?.get("facName")?.toString()
                     }
                     i++
                 }
 
             }
-            //Create spinneradapter from stringlist
-            tv_faculty.setText(selected_faculty)
+            tv_faculty.text = selectedFaculty
         } catch (ex: Exception) {
             System.err.println(ex.stackTrace)
         }
@@ -635,31 +584,26 @@ class MainActivity : AppCompatActivity() {
      * @param[sp_faculty] the spinner from the filtermenu
      * @author Alexander Lange
      * @since 1.6
-     * @see setCourseSpinner
-     * @see OpenFilterMenu
-     * @see InitCourseFilter
-     * @see InitModulFilter
+     * @see openFilterMenu
+     * @see initFilterCourse
+     * @see initFilterModule
      * @see Filter
      */
-    private fun InitModulFilter(context: Context, spModul: Spinner) {
+    private fun initFilterModule(context: Context, filterView: View) {
         try {
-            //Get filtered list of modules from room-database
+            val spModul = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
             viewModel.liveEntriesForCourse.observe(this) {
                 val list: MutableList<String?> = mutableListOf("Alle")
                 it?.forEach {
                     list.add(it.module)
                 }
-                //Create spinneradapter from list
                 spModul.adapter = ArrayAdapter<String>(
                         context,
                         android.R.layout.simple_spinner_dropdown_item,
                         list
                 )
-                //Pass spinneradapter to spinner
-                //Set selection of spinner to selection from filter (retrieve previous filter)
                 spModul.setSelection(Filter.modulName)
             }
-            //Set the onItemSelectedListener (called when the user selects a new item from this spinner)
             spModul.onItemSelectedListener = object :
                     AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -668,7 +612,6 @@ class MainActivity : AppCompatActivity() {
                         position: Int,
                         id: Long
                 ) {
-                    //Set accurate textcolor for the selected item
                     if (parent?.childCount ?: 0 > 0) {
                         val child = parent?.getChildAt(0)
                         if (child != null) {
@@ -680,13 +623,9 @@ class MainActivity : AppCompatActivity() {
                             )
                         }
                     }
-                    /*if (Filter.modulName == null && position == 0) {
-                        return
-                    }*/
                     Filter.modulName = if (position == 0) null else spModul.selectedItem.toString()
                 }
 
-                //Should never been called
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                     Filter.modulName = null
                 }
@@ -708,19 +647,24 @@ class MainActivity : AppCompatActivity() {
      * @see DatePickerDialog
      * @see Filter
      */
-    private fun InitCalendarBtn(btn_calendar: ImageButton) {
+    private fun initFilterCalendar(context: Context, filterView: View) {
+        val imgbtnDate = filterView.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
+        val tvDate = filterView.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
+
+
         //Get start-and enddate from sharedPrefs
-
-
-        btn_calendar.setOnClickListener {
+        tvDate.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
+                Filter.datum!!
+        )
+        imgbtnDate.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val startDate = viewModel.getStartDate()
                 val endDate = viewModel.getEndDate()
                 val pickedDate = Filter.datum ?: viewModel.getStartDate()
                 //Extract day,month and year from startDate as startParameter for the Calendar
-                val year: Int = pickedDate?.let { SimpleDateFormat("yyyy").format(it).toInt() }?:0
-                val month: Int = pickedDate?.let { SimpleDateFormat("MM").format(it).toInt() }?:0
-                val day: Int = pickedDate?.let { SimpleDateFormat("dd").format(it).toInt() }?:0
+                val year: Int = pickedDate?.let { SimpleDateFormat("yyyy").format(it).toInt() } ?: 0
+                val month: Int = pickedDate?.let { SimpleDateFormat("MM").format(it).toInt() } ?: 0
+                val day: Int = pickedDate?.let { SimpleDateFormat("dd").format(it).toInt() } ?: 0
                 //Create DatePicker
                 val dialog = DatePickerDialog(
                         this,

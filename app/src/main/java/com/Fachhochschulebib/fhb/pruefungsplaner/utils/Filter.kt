@@ -1,4 +1,4 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner.controller
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -230,7 +230,7 @@ object Filter {
         if (entry == null) {
             return false
         }
-        if (entry.module?.lowercase()?.startsWith(
+        if (modulName!=null&&entry.module?.lowercase()?.startsWith(
                 modulName?.lowercase() ?: entry.module?.lowercase() ?: "-1"
             ) == false
         ) {

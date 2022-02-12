@@ -7,12 +7,12 @@ import android.content.Context
 import android.util.Log
 import android.view.View
 import android.widget.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.GoogleCalendarIO
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.GoogleCalendarIO
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.Utils
-import com.Fachhochschulebib.fhb.pruefungsplaner.controller.getString
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.lang.Exception
 import java.util.*
 
@@ -36,13 +36,13 @@ import java.util.*
  * @see RecyclerView
  */
 class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on the kind of dataset)
-    (
-            private var entryList: MutableList<TestPlanEntry>,
-            private val viewModel: MainViewModel
+(
+        private var entryList: MutableList<TestPlanEntry>,
+        private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
     private var save = false
     private var moduleName: String? = null
-    private var context: Context? = null
+    private lateinit var context: Context
     private var calDate = GregorianCalendar()
 
     private var openItem: ViewHolder? = null
@@ -63,20 +63,20 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @see RecyclerView.Adapter.onCreateViewHolder
      */
     override fun onCreateViewHolder(
-        parent: ViewGroup,
-        viewType: Int
+            parent: ViewGroup,
+            viewType: Int
     ): ViewHolder {
         // create a new view
         val inflater = LayoutInflater.from(
-            parent.context
+                parent.context
         )
         val view = inflater.inflate(R.layout.termine, parent, false)
         context = view.context
         return ViewHolder(view)
     }
 
-    fun updateContent(entryList:List<TestPlanEntry>){
-        this.entryList= entryList.toMutableList()
+    fun updateContent(entryList: List<TestPlanEntry>) {
+        this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
     }
 
@@ -105,12 +105,8 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                         openItem?.txtSecondScreen?.visibility = View.GONE
                     }
                     holder.txtSecondScreen.visibility = View.VISIBLE
-                    holder.txtSecondScreen.text =
-                        context?.let { it1 ->
-                            entryList[position].getString(
-                                it1
-                            )
-                        }
+                    holder.txtSecondScreen.text = entryList[position].getString(context)
+
                     //Make previous details invisible
                     openItem = holder
                 }
@@ -150,7 +146,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         val entry = entryList[position]
         val splitMonthDayYear = splitDay[0].split("-").toTypedArray()
         holder.txtthirdline.text =
-            context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
+                context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
         holder.button.text = (splitMonthDayYear[2] + "."
                 + splitMonthDayYear[1] + "."
                 + splitMonthDayYear[0])
@@ -173,13 +169,13 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @since 1.6
      */
     private fun splitInDays(
-        position: Int,
-        holder: ViewHolder
+            position: Int,
+            holder: ViewHolder
     ): Array<String>? {
         val entry = entryList[position]
         val splitDay = entry.date?.split(" ")?.toTypedArray()
         if (position > 0) {
-            val splitDayBefore = entryList[position-1].date?.split(" ")?.toTypedArray()
+            val splitDayBefore = entryList[position - 1].date?.split(" ")?.toTypedArray()
 
             //Vergleich der beiden Tage
             //wenn ungleich, dann blaue box mit Datumseintrag
@@ -201,12 +197,12 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @since 1.6
      */
     private fun setIcons(
-        position: Int,
-        holder: ViewHolder
+            position: Int,
+            holder: ViewHolder
     ) {
         var entry: TestPlanEntry? = null
         try {
-             entry = entryList[position]
+            entry = entryList[position]
             //Datenbank und Pruefplan laden
             save = false
         } catch (ex: Exception) {
@@ -230,10 +226,13 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
                         )
                 )
                 holder.ivicon.setImageDrawable(
-                    context!!.resources.getDrawable(
-                        Utils.favoritIcons[entry?.favorit ?: false]!!,
-                        context!!.theme
-                    )
+                        Utils.favoritIcons[entry?.favorit ?: false]?.let {
+                            context.resources.getDrawable(
+                                    it,
+                                    context.theme
+                            )
+                        }
+
                 )
             }
         } catch (ex: Exception) {
@@ -244,9 +243,9 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         // Gibt die Statusmeldung aus
         holder.statusIcon.setOnClickListener { v: View ->
             Toast.makeText(
-                v.context,
-                entry?.status,
-                Toast.LENGTH_SHORT
+                    v.context,
+                    entry?.status,
+                    Toast.LENGTH_SHORT
             ).show()
         }
         // Ende Merlin Gürtler
@@ -273,14 +272,9 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     fun deleteFromFavorites(position: Int, holder: ViewHolder) {
         val entry = entryList[position]
         //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-        viewModel.updateEntryFavorit(false, entry)
-        context?.let {
-            entry.let { it1 ->
-                GoogleCalendarIO.deleteEntry(it, it1)
-            }
-        }
+        viewModel.updateEntryFavorit(context, false, entry)
         Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
-            .show()
+                .show()
         this.notifyItemChanged(position)
     }
 
@@ -294,16 +288,11 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @since 1.6
      */
     fun addToFavorites(position: Int, holder: ViewHolder) {
-        var entry=entryList[position]
+        var entry = entryList[position]
         //Speichern des Prüfitem als Favorit
-        viewModel.updateEntryFavorit(true, entry)
-        context?.let {
-            entry.let { it1 ->
-                GoogleCalendarIO.insertEntry(it, it1, true)
-            }
-        }
+        viewModel.updateEntryFavorit(context, true, entry)
         Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
-            .show()
+                .show()
         this.notifyItemChanged(position)
     }
 

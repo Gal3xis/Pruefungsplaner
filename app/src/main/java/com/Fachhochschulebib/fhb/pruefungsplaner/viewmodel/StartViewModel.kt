@@ -3,19 +3,18 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Courses
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Course
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import kotlinx.coroutines.launch
 
-class StartViewModel(application: Application) : MainViewModel(application) {
+class StartViewModel(application: Application) : BaseViewModel(application) {
 
 
 
     val liveFaculties = repository.getAllFacultiesLiveData()
+    val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
 
-    val liveSelectedFaculty = MutableLiveData<Faculty>()
-
-    fun addMainCourse(course: Courses) {
+    fun addMainCourse(course: Course) {
         addMainCourse(course.courseName)
     }
 
@@ -28,19 +27,23 @@ class StartViewModel(application: Application) : MainViewModel(application) {
      * @since 1.6
      */
     fun addMainCourse(choosenCourse: String) {
-        val returnCourse =  getCourseId(choosenCourse)
-        setSelectedCourse(choosenCourse)
-        returnCourse?.let { setReturnCourse(it) }
-        if (getUuid() == null) {
-            //TODO RetrofitConnect(context).firstStart()
-        } else {
-            //TODO RetrofitConnect(context).setUserCourses()
+        viewModelScope.launch {
+            val returnCourse =  getCourseId(choosenCourse)
+            setSelectedCourse(choosenCourse)
+            returnCourse?.let { setReturnCourse(it) }
+            if (getUuid() == null) {
+                //TODO RetrofitConnect(context).firstStart()
+            } else {
+                //TODO RetrofitConnect(context).setUserCourses()
+            }
         }
     }
 
-    fun fetchSelectedFaculty(){
+    override fun setReturnFaculty(faculty: Faculty){
+        super.setReturnFaculty(faculty)
         viewModelScope.launch {
-            liveSelectedFaculty.postValue(getReturnCourse()?.let { getFacultyById(it) })
+            val courses = getCoursesByFacultyid(faculty.fbid)
+            liveCoursesForFaculty.postValue(courses)
         }
     }
 

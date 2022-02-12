@@ -9,9 +9,8 @@ import android.widget.Toast
 import android.widget.TextView
 import android.widget.CheckBox
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Courses
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Course
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 
 //////////////////////////////
 // CheckListAdapter
@@ -31,24 +30,24 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
  * @see AddCourseFragment
  * @see RecyclerView.Adapter
  */
-class CoursesCheckList(var courseList:List<Courses>, private val viewModel: MainViewModel, private val context: Context) : RecyclerView.Adapter<CoursesCheckList.ViewHolder>() {
-    fun getChosen():List<Courses>{
-        val ret = mutableListOf<Courses>()
+class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseViewModel, private val context: Context) : RecyclerView.Adapter<CoursesCheckList.ViewHolder>() {
+    fun getChosen():List<Course>{
+        val ret = mutableListOf<Course>()
         courseList.forEach {
             if(it.choosen==true) ret.add(it)
         }
         return ret
     }
 
-    fun getNotChosen():List<Courses>{
-        val ret = mutableListOf<Courses>()
+    fun getNotChosen():List<Course>{
+        val ret = mutableListOf<Course>()
         courseList.forEach {
             if(it.choosen==false) ret.add(it)
         }
         return ret
     }
 
-    fun updateContent(courseList:List<Courses>){
+    fun updateContent(courseList:List<Course>){
         this.courseList= courseList.toMutableList()
         notifyDataSetChanged()
     }
