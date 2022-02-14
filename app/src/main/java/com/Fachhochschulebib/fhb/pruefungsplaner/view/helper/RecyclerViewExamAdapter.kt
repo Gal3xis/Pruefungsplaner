@@ -37,7 +37,7 @@ import java.util.*
  */
 class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on the kind of dataset)
 (
-        private var entryList: MutableList<TestPlanEntry>,
+        var entryList: MutableList<TestPlanEntry>,
         private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
     private var save = false

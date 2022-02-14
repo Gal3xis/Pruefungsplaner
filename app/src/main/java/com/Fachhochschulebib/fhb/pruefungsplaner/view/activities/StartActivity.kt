@@ -74,8 +74,8 @@ class StartActivity : AppCompatActivity() {
      */
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         applySettings()
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
         viewModel = ViewModelProvider(
                 this,

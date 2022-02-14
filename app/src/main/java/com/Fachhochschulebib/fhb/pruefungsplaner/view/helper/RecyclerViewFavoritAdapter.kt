@@ -38,7 +38,7 @@ import java.lang.Exception
  */
 class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
 (
-        private var entryList: MutableList<TestPlanEntry>,
+        var entryList: MutableList<TestPlanEntry>,
         private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null

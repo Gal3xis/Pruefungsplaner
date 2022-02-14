@@ -67,8 +67,8 @@ class MainActivity : AppCompatActivity() {
      * @see Fragment.onCreate
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
         applySettings()
+        super.onCreate(savedInstanceState)
         setContentView(R.layout.hauptfenster)
         viewModel = ViewModelProvider(
                 this,
@@ -425,17 +425,15 @@ class MainActivity : AppCompatActivity() {
                 Filter.examiner = null
             }
         }
-        viewModel.liveFilteredEntriesByDate.observe(this) {
-            val spinnerProfArrayList: MutableList<String?> = mutableListOf("Alle")
-            it?.forEach {
-                spinnerProfArrayList.add(it.firstExaminer)
-            }
-            val adapterProfAutoComplete = ArrayAdapter(
+        viewModel.liveProfList.observe(this) {
+            val list = mutableListOf("Alle")
+            it?.let { it1 -> list.addAll(it1) }
+            val profAdapter = ArrayAdapter(
                     applicationContext,
                     android.R.layout.simple_list_item_1,
-                    spinnerProfArrayList
+                    list
             )
-            spExaminer.adapter = adapterProfAutoComplete
+            spExaminer.adapter = profAdapter
             spExaminer.setSelection(Filter.examiner)
         }
     }

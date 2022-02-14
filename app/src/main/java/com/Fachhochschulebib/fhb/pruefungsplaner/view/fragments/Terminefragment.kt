@@ -44,6 +44,9 @@ class Terminefragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        Filter.onFilterChangedListener.add {
+            viewModel.liveEntryList.value?.let { Filter.validateList(it) }?.let { recyclerViewExamAdapter.updateContent(it) }
+        }
     }
 
     /**
@@ -98,7 +101,9 @@ class Terminefragment : Fragment() {
         }
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
         termineFragment_swiperefres.setOnRefreshListener {
-            viewModel.updatePruefperiode()//TODO
+            viewModel.updatePruefperiode()
+            viewModel.updateDataFromServer()
+            termineFragment_swiperefres.isRefreshing = false
         }
         recyclerView4?.layoutManager = LinearLayoutManager(view?.context)
         recyclerView4?.addOnChildAttachStateChangeListener(object :

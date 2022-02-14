@@ -26,6 +26,8 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     var liveCoursesForFacultyId = MutableLiveData<List<Course>?>()
 
+    var liveProfList = repository.getFirstExaminerNames()
+
     fun getSelectedFaculty(){
         viewModelScope.launch {
             val id = getReturnFaculty()

@@ -59,46 +59,48 @@ class DatabaseRepository(
                         URL("http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.faculty/")
                 val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
-                urlConn.connect()
-
-                //Parsen von den  erhaltene Werte
-                val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
-                val reader = BufferedReader(InputStreamReader(inputStream))
-                var line: String?
-                while ((reader.readLine().also { line = it }) != null) {
-                    result.append(line)
-                }
-
-                //Erstellen von JSON
-                var jsonObj: JSONObject? = null
                 try {
-                    jsonObj = XML.toJSONObject(result.toString())
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-                val x: Iterator<*> = jsonObj!!.keys()
-                val jsonArray = JSONArray()
-                while (x.hasNext()) {
-                    val key: String = x.next() as String
-                    jsonArray.put(jsonObj.get(key))
-                }
+                    urlConn.connect()
+                    //Parsen von den  erhaltene Werte
+                    val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
+                    val reader = BufferedReader(InputStreamReader(inputStream))
+                    var line: String?
+                    while ((reader.readLine().also { line = it }) != null) {
+                        result.append(line)
+                    }
 
-                //Werte von JSONARRay in JSONObject konvertieren
-                val receivesFaculties = JSONArray()
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
-                    receivesFaculties.put(jsonObject.get("faculty"))
+                    //Erstellen von JSON
+                    var jsonObj: JSONObject? = null
+                    try {
+                        jsonObj = XML.toJSONObject(result.toString())
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                    val x: Iterator<*> = jsonObj!!.keys()
+                    val jsonArray = JSONArray()
+                    while (x.hasNext()) {
+                        val key: String = x.next() as String
+                        jsonArray.put(jsonObj.get(key))
+                    }
+
+                    //Werte von JSONARRay in JSONObject konvertieren
+                    val receivesFaculties = JSONArray()
+                    for (i in 0 until jsonArray.length()) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        receivesFaculties.put(jsonObject.get("faculty"))
+                    }
+                    val convertedToString = receivesFaculties.toString()
+                    val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
+                    return@withContext JSONArray(deletedCling)
+
+                }catch (e:Exception){
+                    Log.d("DataBaseRepository:fetchFaculties",e.stackTraceToString())
+                    return@withContext null
                 }
-                val convertedToString = receivesFaculties.toString()
-                val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
-                
-                //konvertieren zu JSONArray
-                return@withContext JSONArray(deletedCling)
             }catch (e:Exception){
-                Log.e("FetchFaculties",e.stackTraceToString())
+                Log.d("FetchFaculties",e.stackTraceToString())
                 return@withContext null
             }
-
         }
     }
 
@@ -123,45 +125,49 @@ class DatabaseRepository(
      */
     suspend fun fetchPruefperiondenObjects(): JSONArray? {
         return withContext(Dispatchers.IO) {
-            val result = StringBuilder()
-            val address =
-                "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
-            val url = URL(address)
-            val urlConn = url.openConnection() as HttpURLConnection
-            urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
             try {
-                urlConn.connect()
-                val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
-                val reader = BufferedReader(InputStreamReader(inputStream))
-                var line: String?
-                while (reader.readLine().also { line = it } != null) {
-                    result.append(line)
-                }
-                var jsonObj: JSONObject? = null
+                val result = StringBuilder()
+                val address =
+                        "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
+                val url = URL(address)
+                val urlConn = url.openConnection() as HttpURLConnection
+                urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
-                    jsonObj = XML.toJSONObject(result.toString())
-                } catch (e: JSONException) {
-                    e.printStackTrace()
+                    urlConn.connect()
+                    val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
+                    val reader = BufferedReader(InputStreamReader(inputStream))
+                    var line: String?
+                    while (reader.readLine().also { line = it } != null) {
+                        result.append(line)
+                    }
+                    var jsonObj: JSONObject? = null
+                    try {
+                        jsonObj = XML.toJSONObject(result.toString())
+                    } catch (e: JSONException) {
+                        e.printStackTrace()
+                    }
+                    val x: Iterator<*> = jsonObj!!.keys()
+                    val jsonArray = JSONArray()
+                    while (x.hasNext()) {
+                        val key = x.next() as String
+                        jsonArray.put(jsonObj[key])
+                    }
+                    val examinePeriodArray = JSONArray()
+                    for (i in 0 until jsonArray.length()) {
+                        val jsonObject = jsonArray.getJSONObject(i)
+                        examinePeriodArray.put(jsonObject["pruefperioden"])
+                    }
+                    val arrayZuString = examinePeriodArray.toString()
+                    val erstesUndletztesZeichenentfernen =
+                            arrayZuString.substring(1, arrayZuString.length - 1)
+                } catch (e: Exception) {
+                    Log.d("Output exception", e.stackTraceToString())
                 }
-                val x: Iterator<*> = jsonObj!!.keys()
-                val jsonArray = JSONArray()
-                while (x.hasNext()) {
-                    val key = x.next() as String
-                    jsonArray.put(jsonObj[key])
-                }
-                val examinePeriodArray = JSONArray()
-                for (i in 0 until jsonArray.length()) {
-                    val jsonObject = jsonArray.getJSONObject(i)
-                    examinePeriodArray.put(jsonObject["pruefperioden"])
-                }
-                val arrayZuString = examinePeriodArray.toString()
-                val erstesUndletztesZeichenentfernen =
-                        arrayZuString.substring(1, arrayZuString.length - 1)
-            } catch (e: Exception) {
-                Log.d("Output exception", e.toString())
+                return@withContext null
+            }catch (e:Exception){
+                Log.d("Output exception", e.stackTraceToString())
+                return@withContext null
             }
-
-            return@withContext null
         }
     }
 
@@ -294,6 +300,8 @@ class DatabaseRepository(
 
     fun getCoursesForFacultyIdLiveData(id: String) =
         localDataSource.getCoursesForFacultyIdLiveData(id)
+
+    fun getFirstExaminerNames() = localDataSource.getFirstExaminerNames()
 
     suspend fun getAllCourses(): List<Course>? {
         return withContext(Dispatchers.IO) {

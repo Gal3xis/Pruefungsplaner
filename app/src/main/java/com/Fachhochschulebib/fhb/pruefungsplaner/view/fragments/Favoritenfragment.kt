@@ -60,6 +60,20 @@ class Favoritenfragment : Fragment() {
                 requireActivity(),
                 ViewModelFactory(requireActivity().application)
         )[FavoritenViewModel::class.java]
+
+        Filter.onFilterChangedListener.add {
+            viewModel.liveFavorits.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
+        }
+    }
+
+    /**
+     * Sets the text for the current period with content from shared preferences
+     *
+     * @since 1.6
+     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     */
+    fun setPruefungszeitraum() {
+        viewModel.getPruefungszeitraum()?.let { currentPeriode?.text = it }
     }
 
     /**
@@ -89,6 +103,7 @@ class Favoritenfragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerview()
         enableSwipeToDelete()
+        setPruefungszeitraum()
     }
 
     /**
@@ -101,7 +116,6 @@ class Favoritenfragment : Fragment() {
         recyclerViewFavoritAdapter = RecyclerViewFavoritAdapter(mutableListOf(),viewModel)
         recyclerView4.adapter = recyclerViewFavoritAdapter
         recyclerView4?.layoutManager =  LinearLayoutManager(view?.context)
-
         viewModel.liveFavorits.observe(viewLifecycleOwner) { entryList ->
             if (entryList != null) {
                 recyclerViewFavoritAdapter.updateContent(Filter.validateList(entryList))

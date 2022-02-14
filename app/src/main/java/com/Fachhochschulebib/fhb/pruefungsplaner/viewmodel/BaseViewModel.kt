@@ -15,6 +15,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Uuid
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.GoogleCalendarIO
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -36,6 +37,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     protected val spRepository = SharedPreferencesRepository(application)
     protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
     protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy")
+
+    private val coroutineExceptionHandler = CoroutineExceptionHandler{_,exception->
+        Log.d("CoroutineException",exception.stackTraceToString())
+    }
 
     init {
         initServer()
@@ -69,14 +74,19 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun fetchFaculties() {
-        viewModelScope.launch {
-            val faculties = repository.fetchFaculties()
-            if (faculties != null) {
-                for (i in 0 until faculties.length()) {
-                    val faculty = createFaculty(faculties.getJSONObject(i))
-                    insertFaculty(faculty)
+        viewModelScope.launch (coroutineExceptionHandler){
+            try {
+                val faculties = repository.fetchFaculties()
+                if (faculties != null) {
+                    for (i in 0 until faculties.length()) {
+                        val faculty = createFaculty(faculties.getJSONObject(i))
+                        insertFaculty(faculty)
+                    }
                 }
+            }catch (e:Exception){
+                Log.d("BaseViewModel:fetchFaculties()",e.stackTraceToString())
             }
+
         }
     }
 
@@ -120,7 +130,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
     fun updatePruefperiode() {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             try {
                 val now = GregorianCalendar()
                 val currentDate = now.time

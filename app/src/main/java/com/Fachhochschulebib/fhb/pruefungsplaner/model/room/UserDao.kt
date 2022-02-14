@@ -84,6 +84,9 @@ interface UserDao {
     @Query("SELECT * FROM Faculty ORDER BY facName LIMIT 100 OFFSET 1")
     fun getAllFacultiesLiveData():LiveData<List<Faculty>?>
 
+    @Query("SELECT DISTINCT firstExaminer FROM testPlanEntry ORDER BY firstExaminer")
+    fun getFirstExaminerNames():LiveData<List<String>?>
+
     @Query("SELECT * FROM Course WHERE facultyId = :id ORDER BY couresName")
     fun getCoursesForFacultyIdLiveData(id:String):LiveData<List<Course>?>
 
