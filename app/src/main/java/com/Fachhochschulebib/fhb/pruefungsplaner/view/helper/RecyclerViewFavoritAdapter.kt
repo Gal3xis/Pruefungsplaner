@@ -189,6 +189,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         val splitDayMonthYear = splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
         holder.txtthirdline.text = (context!!.getString(R.string.clockTime2)
                 + splitDateAndTime?.get(1)?.substring(0, 5)
+                +"\n"
                 + context!!.getString(R.string.date2)
                 + (splitDayMonthYear?.get(2) ?: "") + "."
                 + (splitDayMonthYear?.get(1) ?: "") + "."

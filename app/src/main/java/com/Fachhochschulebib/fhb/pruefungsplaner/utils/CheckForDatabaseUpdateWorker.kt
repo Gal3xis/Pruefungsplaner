@@ -1,13 +1,9 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.RetrofitConnect
-import com.google.common.util.concurrent.*
-import retrofit2.Retrofit
-import java.util.concurrent.ScheduledExecutorService
 
 /**
  * A background worker, that checks the Server-Database for changes and then notifies the user.

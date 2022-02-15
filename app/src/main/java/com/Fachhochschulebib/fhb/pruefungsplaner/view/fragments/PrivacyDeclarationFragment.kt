@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import kotlinx.android.synthetic.main.privacy_declaration.*
 
 //////////////////////////////

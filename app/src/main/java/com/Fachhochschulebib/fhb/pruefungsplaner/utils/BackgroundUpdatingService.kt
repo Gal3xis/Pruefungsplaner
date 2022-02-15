@@ -1,4 +1,4 @@
-package com.Fachhochschulebib.fhb.pruefungsplaner
+package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.content.Context
 import androidx.work.*
