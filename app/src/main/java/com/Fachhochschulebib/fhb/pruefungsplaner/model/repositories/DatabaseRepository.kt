@@ -157,13 +157,11 @@ class DatabaseRepository(
                         val jsonObject = jsonArray.getJSONObject(i)
                         examinePeriodArray.put(jsonObject["pruefperioden"])
                     }
-                    val arrayZuString = examinePeriodArray.toString()
-                    val erstesUndletztesZeichenentfernen =
-                            arrayZuString.substring(1, arrayZuString.length - 1)
+                    return@withContext examinePeriodArray
                 } catch (e: Exception) {
                     Log.d("Output exception", e.stackTraceToString())
+                    return@withContext null
                 }
-                return@withContext null
             }catch (e:Exception){
                 Log.d("Output exception", e.stackTraceToString())
                 return@withContext null

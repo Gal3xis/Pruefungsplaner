@@ -67,19 +67,21 @@ class MainActivity : AppCompatActivity() {
      * @see Fragment.onCreate
      */
     override fun onCreate(savedInstanceState: Bundle?) {
-        applySettings()
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(application)
+        )[MainViewModel::class.java]
+        applySettings(viewModel)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.hauptfenster)
-        viewModel = ViewModelProvider(
-                this,
-                ViewModelFactory(application)
-        )[MainViewModel::class.java]
 
         initActionBar()
         initNavigationDrawer()
         initBottomNavigationView()
 
         UserFilter(applicationContext)
+
+        viewModel.updatePruefperiode()
 
         changeFragment("Termine", Terminefragment())
     }
@@ -464,13 +466,8 @@ class MainActivity : AppCompatActivity() {
      */
     fun UserFilter(context: Context) {
         val selectedCourse = viewModel.getSelectedCourse()
-
-        //Disable the callback from Filter. Only sets its values.
-        Filter.locked = true
         Filter.reset()
         Filter.courseName = selectedCourse
-        //Resets the callbacks from the Filter
-        Filter.locked = false
     }
 
     /**

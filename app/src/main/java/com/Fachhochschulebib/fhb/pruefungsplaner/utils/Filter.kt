@@ -17,19 +17,6 @@ import java.util.*
  */
 object Filter {
     /**
-     * Parameter to lock the Filter.
-     * If it is set to true, all listener are not going to be called when a value is changed.
-     * If it is set back to false, the [filterChanged()]-Method is called.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    var locked = false
-        set(value) {
-            field = value
-        }
-
-    /**
      * Parameter to Filter with the Modulename.
      * Calls the [onModuleNameChangedListener] and the [onFilterChangedListener].
      *
@@ -41,10 +28,6 @@ object Filter {
     var modulName: String? = null
         set(value) {
             field = value
-            if (locked) {
-                return
-            }
-            modulNameChanged()
             filterChanged()
         }
 
@@ -60,10 +43,7 @@ object Filter {
     var courseName: String? = null
         set(value) {
             field = value
-            if (locked) {
-                return
-            }
-            courseNameChanged()
+            filterChanged()
         }
 
     /**
@@ -78,10 +58,6 @@ object Filter {
     var datum: Date? = null
         set(value) {
             field = value
-            if (locked) {
-                return
-            }
-            dateChanged()
             filterChanged()
         }
 
@@ -96,10 +72,6 @@ object Filter {
     var examiner: String? = null
         set(value) {
             field = value
-            if (locked) {
-                return
-            }
-            examinerChanged()
             filterChanged()
         }
 
@@ -127,81 +99,7 @@ object Filter {
      */
     fun SetSemester(pSemester: Int, active: Boolean) {
         semester[pSemester] = active
-        if (locked) {
-            return
-        }
-        semesterChanged()
         filterChanged()
-    }
-
-
-    /**
-     * Invokes every Method, appended to the onModuleNameChangedListener.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see onModulNameChangedListener
-     */
-    private fun modulNameChanged() {
-        Log.d("Filter", "Modul changed")
-        /*for (i in onModulNameChangedListener) {
-            i.invoke()
-        }*/
-    }
-
-    /**
-     * Invokes every Method, appended to the onCourseNameChangedListener.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see onCourseNameChangedListener
-     */
-    private fun courseNameChanged() {
-        Log.d("Filter", "Course changed")
-        /*for (i in onCourseNameChangedListener) {
-            i.invoke()
-        }*/
-    }
-
-    /**
-     * Invokes every Method, appended to the onDateChangedListener.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see onDateChangedListener
-     */
-    private fun dateChanged() {
-        /*for (i in onDateChangedListener) {
-            i.invoke()
-        }*/
-    }
-
-    /**
-     * Invokes every method, appended to the onExaminerChangedListener.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see onExaminerChangedListener
-     */
-    private fun examinerChanged() {
-        /*for (i in onExaminerChangedListener) {
-            i.invoke()
-        }*/
-
-    }
-
-    /**
-     * Invokes every method, appended to the [onSemesterChangedListener].
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see onSemesterChangedListener
-     */
-    private fun semesterChanged() {
-        /*for (i in onSemesterChangedListener) {
-            i.invoke()
-        }*/
-
     }
 
     /**
@@ -230,7 +128,7 @@ object Filter {
         if (entry == null) {
             return false
         }
-        if (modulName!=null&&entry.module?.lowercase()?.startsWith(
+        if (modulName != null && entry.module?.lowercase()?.startsWith(
                 modulName?.lowercase() ?: entry.module?.lowercase() ?: "-1"
             ) == false
         ) {
@@ -271,7 +169,7 @@ object Filter {
         return ret
     }
 
-    fun validateList(liveData:LiveData<List<TestPlanEntry>?>):LiveData<List<TestPlanEntry>?>{
+    fun validateList(liveData: LiveData<List<TestPlanEntry>?>): LiveData<List<TestPlanEntry>?> {
         val list = liveData.value
         val filtered = list?.let { validateList(it) }
         val ret = MutableLiveData<List<TestPlanEntry>>()
@@ -292,17 +190,6 @@ object Filter {
         datum = null
         semester.fill(true)
         filterChanged()
-        /*for (i in onResetListener) {
-            i.invoke()
-        }*/
     }
-
-    //Declaration and empty initilization of every listener. To add an Method, write: listenerX.add{ ... }
-//    var onModulNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-//    var onCourseNameChangedListener: MutableList<() -> Unit> = mutableListOf()
-//    var onDateChangedListener: MutableList<() -> Unit> = mutableListOf()
-//    var onExaminerChangedListener: MutableList<() -> Unit> = mutableListOf()
-//    var onSemesterChangedListener: MutableList<() -> Unit> = mutableListOf()
-      var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
-//    var onResetListener: MutableList<() -> Unit> = mutableListOf()
+    var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
 }

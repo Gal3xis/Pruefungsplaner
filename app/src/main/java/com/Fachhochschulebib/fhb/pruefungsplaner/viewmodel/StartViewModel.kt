@@ -12,8 +12,6 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
 
 
     val liveFaculties = repository.getAllFacultiesLiveData()
-    val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
-
     fun addMainCourse(course: Course) {
         addMainCourse(course.courseName)
     }
@@ -39,6 +37,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
+    val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
     override fun setReturnFaculty(faculty: Faculty){
         super.setReturnFaculty(faculty)
         viewModelScope.launch {

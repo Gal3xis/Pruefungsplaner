@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
@@ -114,12 +115,10 @@ fun Date.atDay(date: Date): Boolean {
  *
  * @see Optionen
  */
-fun AppCompatActivity.applySettings() {
-    val sharedPreferencesSettings = getSharedPreferences("settings", Context.MODE_PRIVATE)
-
+fun AppCompatActivity.applySettings(viewModel:BaseViewModel) {
     //Set Theme
-    val themeToApply = sharedPreferencesSettings?.getInt("themeid", R.style.Theme_AppTheme_1)
-            ?: R.style.Theme_AppTheme_1
+    val themeToApply = if(viewModel.getChosenThemeId()==-1)Utils.themeList[0] else viewModel.getChosenThemeId()
+
 
     if (Utils.themeList.contains(themeToApply)) {
         theme.applyStyle(themeToApply, true)
@@ -128,7 +127,7 @@ fun AppCompatActivity.applySettings() {
     }
 
     //Set Darkmode
-    val darkMode = sharedPreferencesSettings.getBoolean("darkmode", false)
+    val darkMode = viewModel.getChosenDarkMode()
     AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 }
 

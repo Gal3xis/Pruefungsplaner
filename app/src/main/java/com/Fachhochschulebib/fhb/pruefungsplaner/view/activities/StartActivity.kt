@@ -74,13 +74,14 @@ class StartActivity : AppCompatActivity() {
      */
 
     public override fun onCreate(savedInstanceState: Bundle?) {
-        applySettings()
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelFactory(application)
+        )[StartViewModel::class.java]
+        applySettings(viewModel)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
-        viewModel = ViewModelProvider(
-                this,
-                ViewModelFactory(application)
-        )[StartViewModel::class.java]
+
 
         initUpdateManager()
         initSharedPreferences()
