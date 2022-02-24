@@ -33,6 +33,8 @@ import java.util.*
  * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-livedata#2)
  */
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
+
+    protected val context = application.applicationContext
     protected val repository = DatabaseRepository(application)
     protected val spRepository = SharedPreferencesRepository(application)
     protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
@@ -404,6 +406,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         spRepository.setUpdateIntervalTimeMinute(minute)
     }
 
+    open fun setBackgroundUpdates(status:Boolean){
+        spRepository.setBackgroundUpdates(status)
+    }
+
     open fun setCalendarSync(sync: Boolean) {
         spRepository.setCalendarSync(sync)
     }
@@ -477,6 +483,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     open fun getUpdateIntervalTimeMinute(): Int {
         return spRepository.getUpdateIntervalTimeMinute()
     } //Return 15 by default
+
+    open fun getBackgroundUpdates():Boolean{
+        return spRepository.getBackgroundUpdates()
+    }
 
     open fun getCalendarSync(): Boolean {
         return spRepository.getCalendarSync()
@@ -560,6 +570,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         testPlanEntry.status = entry.Status
         testPlanEntry.hint = entry.Hint
         testPlanEntry.color = entry.Color
+        testPlanEntry.timeStamp = entry.Timestamp
         return testPlanEntry
     }
 

@@ -4,9 +4,9 @@ import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 
-class SharedPreferencesRepository(application: Application) {
+class SharedPreferencesRepository(context: Context) {
 
-    private val context = application.applicationContext
+    private val context = context
 
     private val validation = context.getSharedPreferences("validation", Context.MODE_PRIVATE)
     private val settings = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
@@ -153,6 +153,16 @@ class SharedPreferencesRepository(application: Application) {
     fun setUpdateIntervalTimeMinute(minute:Int){
         val editor = settings.edit()
         editor.putInt("update_intervall_time_minute",minute)
+        editor.apply()
+    }
+
+    fun getBackgroundUpdates():Boolean{
+        return settings.getBoolean("backgroundUpdates",false)
+    }
+
+    fun setBackgroundUpdates(status:Boolean){
+        val editor = settings.edit()
+        editor.putBoolean("backgroundUpdates",status)
         editor.apply()
     }
 

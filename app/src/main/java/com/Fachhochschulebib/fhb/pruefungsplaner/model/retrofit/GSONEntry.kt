@@ -14,5 +14,6 @@ data class GSONEntry(
     val CourseId:String?,
     val Status:String?,
     val Hint:String?,
-    val Color:String?
+    val Color:String?,
+    val Timestamp:String?
 )

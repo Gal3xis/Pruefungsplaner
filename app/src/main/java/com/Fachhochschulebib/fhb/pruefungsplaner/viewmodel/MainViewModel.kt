@@ -1,13 +1,21 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.work.ListenableWorker
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Course
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.PushService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 
 class MainViewModel(application: Application) : BaseViewModel(application) {
 
@@ -27,6 +35,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     var liveCoursesForFacultyId = MutableLiveData<List<Course>?>()
 
     var liveProfList = repository.getFirstExaminerNames()
+
+
+
 
     fun getSelectedFaculty(){
         viewModelScope.launch {

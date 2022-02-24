@@ -57,4 +57,7 @@ class TestPlanEntry {
 
     @ColumnInfo(name = "Color")
     var color: String? = null
+
+    @ColumnInfo(name = "TimeStamp")
+    var timeStamp:String? = null
 }

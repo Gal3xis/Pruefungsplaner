@@ -2,6 +2,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.content.Context
 import androidx.work.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories.SharedPreferencesRepository
 import java.util.concurrent.TimeUnit
 
 private const val updateWorkerName = "updateWorker"
@@ -23,16 +24,14 @@ object BackgroundUpdatingService {
      * **See Also:**[Youtube](https://www.youtube.com/watch?v=pe_yqM16hPQ)
      */
     fun initPeriodicRequests(context: Context) {
-        val sharedPreferencesSettings = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-        if(!sharedPreferencesSettings.getBoolean("auto_updates",false)){
+        val spRepository = SharedPreferencesRepository(context)
+        if(!spRepository.getBackgroundUpdates()){
             return
         }
         val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
-        val interval = ((sharedPreferencesSettings?.getInt("update_intervall_time_hour", 0)
-                ?: 0) * 60 + (sharedPreferencesSettings?.getInt("update_intervall_time_minute", 15)
-                ?: 15)).toLong()
+        val interval = spRepository.getUpdateIntervalTimeHour()* 60 + spRepository.getUpdateIntervalTimeMinute().toLong()
         val checkRequest = PeriodicWorkRequestBuilder<CheckForDatabaseUpdateWorker>(interval, TimeUnit.MINUTES)
                 .setConstraints(constraints)
                 .build()

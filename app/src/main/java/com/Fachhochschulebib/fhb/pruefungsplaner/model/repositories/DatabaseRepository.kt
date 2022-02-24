@@ -1,6 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories
 
 import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
@@ -29,9 +30,9 @@ import java.net.URL
  * **See Also:**[MVVM](https://itnext.io/android-architecture-hilt-mvvm-kotlin-coroutines-live-data-room-and-retrofit-ft-8b746cab4a06)
  */
 class DatabaseRepository(
-    application: Application
+    context: Context
 ) {
-    private var localDataSource: UserDao = AppDatabase.getAppDatabase(application).userDao()
+    private var localDataSource: UserDao = AppDatabase.getAppDatabase(context).userDao()
     private var remoteDataSource = RetrofitHelper.getInstance().create(API::class.java)
 
     //Retrofit

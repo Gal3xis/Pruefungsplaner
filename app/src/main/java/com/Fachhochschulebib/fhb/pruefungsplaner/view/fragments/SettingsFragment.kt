@@ -13,11 +13,8 @@ import java.net.URL
 import android.view.*
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.GoogleCalendarIO
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Theme
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.ThemeAdapter
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
@@ -147,6 +144,7 @@ class SettingsFragment() : Fragment() {
         initUpdateCalendarButton()
         initDeleteFavoritsButton()
         initSaveButton()
+        initBackgroundUpdateSwitch()
     }
 
     private fun initSaveButton() {
@@ -265,6 +263,15 @@ class SettingsFragment() : Fragment() {
 
         }
     }
+
+    private fun initBackgroundUpdateSwitch(){
+        optionenfragment_auto_updates.isChecked = viewModel.getBackgroundUpdates()
+        optionenfragment_auto_updates.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.setBackgroundUpdates(isChecked)
+            context?.let { BackgroundUpdatingService.initPeriodicRequests(it) }
+        }
+    }
+
     /**
      * Save the current selected options and recreate the activity to change the theme and the darkmmode.
      *

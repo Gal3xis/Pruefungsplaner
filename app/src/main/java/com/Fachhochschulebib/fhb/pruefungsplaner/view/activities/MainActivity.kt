@@ -19,17 +19,17 @@ import androidx.appcompat.widget.SearchView.SearchAutoComplete
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.work.ListenableWorker
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.setSelection
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -82,8 +82,11 @@ class MainActivity : AppCompatActivity() {
         UserFilter(applicationContext)
 
         viewModel.updatePruefperiode()
+        BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
+        viewModel.doWork()
         changeFragment("Termine", Terminefragment())
+
     }
 
     private fun initActionBar() {
