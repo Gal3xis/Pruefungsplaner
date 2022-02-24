@@ -85,7 +85,7 @@ class CheckForDatabaseUpdateWorker(context: Context, workerParams: WorkerParamet
             {
                 return@withContext false
             }
-            if(remoteEntries?.size!=localEntries?.size){
+            if(remoteEntries.size != localEntries.size){
                 return@withContext true
             }
             for(i in remoteEntries.indices){

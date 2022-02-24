@@ -272,6 +272,10 @@ class SettingsFragment() : Fragment() {
         }
     }
 
+    private fun initBackgroundUpdateIntervallButton(){
+        optionenfragment_auto_updates_intervall_button.
+    }
+
     /**
      * Save the current selected options and recreate the activity to change the theme and the darkmmode.
      *
