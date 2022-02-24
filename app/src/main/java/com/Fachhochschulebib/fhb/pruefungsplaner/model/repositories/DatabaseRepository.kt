@@ -155,9 +155,12 @@ class DatabaseRepository(
                     val examinePeriodArray = JSONArray()
                     for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
-                        examinePeriodArray.put(jsonObject["pruefperioden"])
+                        val obj = jsonObject["pruefperioden"]
+                        examinePeriodArray.put(obj)
                     }
-                    return@withContext examinePeriodArray
+                    val convertedToString = examinePeriodArray.toString()
+                    val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
+                    return@withContext JSONArray(deletedCling)
                 } catch (e: Exception) {
                     Log.d("Output exception", e.stackTraceToString())
                     return@withContext null
