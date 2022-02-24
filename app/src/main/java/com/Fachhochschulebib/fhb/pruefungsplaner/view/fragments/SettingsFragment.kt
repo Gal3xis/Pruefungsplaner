@@ -1,5 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.app.TimePickerDialog
 import android.os.Bundle
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.AppDatabase
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitConnect
@@ -145,6 +146,7 @@ class SettingsFragment() : Fragment() {
         initDeleteFavoritsButton()
         initSaveButton()
         initBackgroundUpdateSwitch()
+        initBackgroundUpdateIntervallButton()
     }
 
     private fun initSaveButton() {
@@ -268,12 +270,36 @@ class SettingsFragment() : Fragment() {
         optionenfragment_auto_updates.isChecked = viewModel.getBackgroundUpdates()
         optionenfragment_auto_updates.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setBackgroundUpdates(isChecked)
-            context?.let { BackgroundUpdatingService.initPeriodicRequests(it) }
+            context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
+        }
+
+        optionenfragment_auto_updates_notificationsound.isChecked = viewModel.getNotificationSounds()
+        optionenfragment_auto_updates_notificationsound.setOnCheckedChangeListener{_,isChecked->
+            viewModel.setNotificationSounds(isChecked)
+            context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
     }
 
     private fun initBackgroundUpdateIntervallButton(){
-        optionenfragment_auto_updates_intervall_button.
+        optionenfragment_auto_updates_intervall_button.setOnClickListener {
+            TimePickerDialog(context, 3,{ _, hour, minute ->
+                var _minute = minute
+                if(hour==0&&_minute<15){
+                    _minute = 15
+                    Toast.makeText(context,"15 Minutes is minimum",Toast.LENGTH_SHORT).show()
+                }
+                setIntervallTime(hour,_minute)
+
+            },viewModel.getUpdateIntervalTimeHour(),viewModel.getUpdateIntervalTimeMinute(),true)
+                .show()
+        }
+    }
+
+    private fun setIntervallTime(hour:Int=viewModel.getUpdateIntervalTimeHour(),minute:Int=viewModel.getUpdateIntervalTimeHour()){
+        viewModel.setUpdateIntervalTimeMinute(minute)
+        viewModel.setUpdateIntervalTimeHour(hour)
+        optionenfragment_auto_updates_intervall_button.text = "%s%02d:%02d".format(resources.getString(R.string.optionenfragment_auto_updates_intervall_text),hour,minute)
+        context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
     }
 
     /**

@@ -166,6 +166,18 @@ class SharedPreferencesRepository(context: Context) {
         editor.apply()
     }
 
+    fun getNotificationSounds():Boolean{
+        return settings.getBoolean("NotificationSounds",false)
+    }
+
+    fun setNotificationSounds(status:Boolean){
+        val editor = settings.edit()
+        editor.putBoolean("NotificationSounds",status)
+        editor.apply()
+    }
+
+
+
     fun getCalendarSync():Boolean{
         return settings.getBoolean("calSync",false)
     }

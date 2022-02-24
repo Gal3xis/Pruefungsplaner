@@ -410,6 +410,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         spRepository.setBackgroundUpdates(status)
     }
 
+    open fun setNotificationSounds(status: Boolean){
+        spRepository.setNotificationSounds(status)
+    }
+
     open fun setCalendarSync(sync: Boolean) {
         spRepository.setCalendarSync(sync)
     }
@@ -486,6 +490,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     open fun getBackgroundUpdates():Boolean{
         return spRepository.getBackgroundUpdates()
+    }
+
+    open fun getNotificationSounds():Boolean{
+        return spRepository.getNotificationSounds()
     }
 
     open fun getCalendarSync(): Boolean {
