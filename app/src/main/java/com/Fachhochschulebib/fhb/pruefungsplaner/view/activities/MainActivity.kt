@@ -84,7 +84,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.updatePruefperiode()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
-        viewModel.doWork()
         changeFragment("Termine", Terminefragment())
 
     }

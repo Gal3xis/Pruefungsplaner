@@ -7,10 +7,10 @@ import androidx.room.*
 interface UserDao {
 
     //Inserts
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntry(testPlanEntry: TestPlanEntry)
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertEntries(testPlanEntries: List<TestPlanEntry>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -19,7 +19,7 @@ interface UserDao {
     @Query("INSERT INTO Uuid VALUES (:uuid)")
     suspend fun insertUuid(uuid: String)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertFaculty(faculty: Faculty)
 
     //Updates

@@ -1,20 +1,21 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
 import android.app.TimePickerDialog
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.AppDatabase
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitConnect
-import android.util.Log
 import android.widget.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import java.lang.Exception
-import java.net.HttpURLConnection
-import java.net.URL
 import android.view.*
+import androidx.annotation.FloatRange
+import androidx.core.animation.doOnEnd
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
@@ -178,6 +179,8 @@ class SettingsFragment() : Fragment() {
             viewModel.deleteCalendarEntries(requireContext())
         }
     }
+
+
 
     private fun initDeleteDatabaseButton() {
         btnDB.setOnClickListener {
