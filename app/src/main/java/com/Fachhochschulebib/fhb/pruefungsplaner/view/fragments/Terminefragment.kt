@@ -13,12 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.TermineViewModel
+import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.terminefragment.*
+import kotlinx.android.synthetic.main.terminefragment.recyclerView4
 
 /**
  * Class to maintain the view for all exams. Requests information about exams and fills the recyclerview with them.
@@ -82,6 +85,7 @@ class Terminefragment : Fragment() {
         viewModel.getCalendarPermission(requireActivity())
         setPruefungszeitraum()
         initRecyclerview()
+        MainActivity.toolbarHeader.title = "Termine"
     }
 
 

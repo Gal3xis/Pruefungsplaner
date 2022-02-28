@@ -13,6 +13,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.AddCourseViewModel
 import org.json.JSONArray
 import org.json.JSONException
@@ -21,6 +22,7 @@ import java.util.ArrayList
 
 //TODO Alexander Lange Start
 import kotlinx.android.synthetic.main.choose_courses.*
+import kotlinx.android.synthetic.main.hauptfenster.*
 
 //TODO Alexander Lange End
 
@@ -81,6 +83,7 @@ class AddCourseFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(), ViewModelFactory(requireActivity().application))[AddCourseViewModel::class.java]
         initRecyclerview()
         initOkButton()
+        MainActivity.toolbarHeader.title = "Studiengänge hinzufügen"
     }
 
     /**

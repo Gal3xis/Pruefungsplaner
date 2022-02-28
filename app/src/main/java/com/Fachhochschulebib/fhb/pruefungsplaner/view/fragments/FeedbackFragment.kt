@@ -12,7 +12,9 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FeedbackViewModel
 import kotlinx.android.synthetic.main.feedback.*
+import kotlinx.android.synthetic.main.hauptfenster.*
 
 //////////////////////////////
 // TerminefragmentSuche
@@ -36,7 +38,7 @@ import kotlinx.android.synthetic.main.feedback.*
  * @since 1.6
  */
 class FeedbackFragment : Fragment() {
-    private lateinit var viewModel: BaseViewModel
+    private lateinit var viewModel: FeedbackViewModel
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -53,7 +55,7 @@ class FeedbackFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             requireActivity(), ViewModelFactory(requireActivity().application)
-        )[BaseViewModel::class.java]
+        )[FeedbackViewModel::class.java]
     }
 
     /**
@@ -66,19 +68,17 @@ class FeedbackFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         //From onCreate
-
+        MainActivity.toolbarHeader.title = "Feedback"
         //From onCreateView
         buttonSend.setOnClickListener { view ->
-            val serverAddress = viewModel.getServerIPAddress()
-            val relativePPlanURL = viewModel.getServerRelUrlPath()
             //retrofit auruf
             //TODO val retrofit = context?.let { RetrofitConnect(viewModel, it) }
-                /*TODO retrofit?.sendFeedBack(
+                viewModel.sendFeedBack(
                     ratingBarUsability.rating,
                     ratingBarFuntions.rating,
                     ratingBarStability.rating,
                     feedBackInput.text.toString(),
-                )*/
+                )
             Toast.makeText(
                 view.context,
                 view.context.getString(R.string.sendedFeedBack),
@@ -88,6 +88,7 @@ class FeedbackFragment : Fragment() {
             startActivity(mainWindow)
         }
     }
+
 
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.

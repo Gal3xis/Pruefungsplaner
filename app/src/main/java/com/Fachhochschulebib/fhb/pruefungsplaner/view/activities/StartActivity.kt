@@ -63,6 +63,10 @@ class StartActivity : AppCompatActivity() {
                 }
             }
 
+    companion object{
+        var CHANGE_FLAG = "changeFlag"
+    }
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      *
@@ -87,6 +91,11 @@ class StartActivity : AppCompatActivity() {
         initSharedPreferences()
         initRecyclerviewCourses()
         initButtons()
+        val changeFlag = intent.getBooleanExtra(CHANGE_FLAG,false)
+        if(changeFlag)
+        {
+            return
+        }
         if (viewModel.checkLoginStatus()) {
             startApplication()
         }

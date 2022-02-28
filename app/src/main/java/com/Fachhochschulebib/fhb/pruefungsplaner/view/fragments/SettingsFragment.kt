@@ -17,6 +17,7 @@ import androidx.core.animation.doOnEnd
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
@@ -94,6 +95,7 @@ class SettingsFragment() : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView()
+        MainActivity.toolbarHeader.title = "Optionen"
     }
 
     /**

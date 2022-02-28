@@ -20,6 +20,7 @@
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/activity_suche.xml" value="0.32916666666666666" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/choose_courses.xml" value="0.13896218117854" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/favoriten.xml" value="0.16944444444444445" />
+        <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/feedback.xml" value="0.47612612612612615" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/fragment_impressum.xml" value="0.28468468468468466" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/hauptfenster.xml" value="0.4466666666666667" />
         <entry key="..\:/FH/Semester_9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_dialog_filter.xml" value="0.28153153153153154" />
@@ -66,9 +67,6 @@
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/activity_main_drawer.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation_bottom.xml" value="0.1" />
-        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_update.xml" value="0.1" />
-        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_dialog_filter.xml" value="0.18333333333333332" />
-        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/optionfragment.xml" value="0.1" />
       </map>
     </option>
   </component>

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import kotlinx.android.synthetic.main.fragment_impressum.*
 
 /**
@@ -49,6 +50,7 @@ class ImpressumFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        impressum_tv.text = Utils.readTextFile(context!!, R.raw.impressum)
+        impressum_tv.text = Utils.readTextFile(requireContext(), R.raw.impressum)
+        MainActivity.toolbarHeader.title = "Impressum"
     }
 }

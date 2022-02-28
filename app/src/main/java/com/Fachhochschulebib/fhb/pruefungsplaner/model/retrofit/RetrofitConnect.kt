@@ -2,12 +2,14 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit
 
 import android.content.Context
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import com.google.gson.GsonBuilder
 import retrofit2.converter.gson.GsonConverterFactory
 import kotlinx.coroutines.*
 import retrofit2.*
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 import java.text.DateFormat
 import java.text.ParseException
@@ -25,6 +27,20 @@ interface API{
         @Path("pTermin")pTermin:String,
         @Path("pYear")pYear:String,
         @Path("pIds")pIds:String):List<GSONEntry>
+
+
+    @GET("org.fh.ppv.entity.user/firstStart/{pFaculty}/")
+    suspend fun getUUID(@Path("pFaculty") ppFaculty: String): JsonUuid?
+
+
+    @POST("org.fh.ppv.entity.feedback/sendFeedback/{pUuid}/{pUsability}/{pFunctions}/{pStability}/{pText}/")
+    suspend fun sendFeedBack(
+        @Path("pUuid")ppUuid:String,
+        @Path("pUsability")ppUsability:String,
+        @Path("pFunctions")ppFunctions:String,
+        @Path("pStability") ppStability:String,
+        @Path("pText")ppText:String
+    )
 }
 
 object RetrofitHelper{
@@ -36,6 +52,8 @@ object RetrofitHelper{
         val gson = GsonBuilder().setLenient().create()
         return Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create(gson)).build()
     }
+
+
 }
 
 /**
@@ -443,48 +461,7 @@ class RetrofitConnect(
 //        }
 //    }
 //
-//    /**
-//     * Initialization of the application on the first start.
-//     *
-//     * @param[ctx] The context of the application.
-//     * @param[roomData] The Room-Database.
-//     * @param[serverAdress] The address of the Web-Server.
-//     *
-//     * @author Alexander Lange
-//     * @since 1.6
-//     */
-//    fun firstStart() {
-//        //Serveradresse
-//        val urlfhb = viewModel.getServerIPAddress()
-//
-//        // Erhalte die gewählte Fakultät aus den Shared Preferences
-//        val faculty = viewModel.getReturnFaculty()
-//
-//        //uebergabe der parameter an die Adresse
-//        val adresse = viewModel.getServerRelUrlPath() + "entity.user/firstStart/" +
-//                faculty + "/"
-//        val URL = urlfhb + adresse
-//        val retrofit = Retrofit.Builder()
-//            .baseUrl(URL)
-//            .addConverterFactory(GsonConverterFactory.create())
-//            .build()
-//        val request = retrofit.create(RequestInterface::class.java)
-//        val call = request.jsonUuid
-//        call?.enqueue(object : Callback<JsonUuid?> {
-//            override fun onResponse(call: Call<JsonUuid?>, response: Response<JsonUuid?>) {
-//                if (response.isSuccessful) {
-//                    response.body()?.uuid?.let { viewModel.insertUuid(it) }
-//
-//                    // sende die gewählten Kurse
-//                    setUserCourses()
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<JsonUuid?>, t: Throwable) {
-//                Log.d("Error", t.message ?: "No Errormessage")
-//            }
-//        })
-//    }
+
 //
 //    /**
 //     * Called on every appstart except the first one.
@@ -555,8 +532,7 @@ class RetrofitConnect(
 //        }
 //
 //        //uebergabe der parameter an die Adresse
-//        val adress = (viewModel.getServerRelUrlPath() + "entity.feedback/sendFeedback/" + uuid?.uuid
-//                + "/" + usability + "/" + functions + "/" + stability + "/" + text + "/")
+//        val adress = (viewModel.getServerRelUrlPath() + )
 //        val URL = urlfhb + adress
 //        val retrofit = Retrofit.Builder()
 //            .baseUrl(URL)

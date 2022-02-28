@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import kotlinx.android.synthetic.main.privacy_declaration.*
 
 //////////////////////////////
@@ -48,6 +49,7 @@ class PrivacyDeclarationFragment : Fragment() {
             ft?.replace(R.id.frame_placeholder, SettingsFragment())
             ft?.commit()
         }
+        MainActivity.toolbarHeader.title = "Datenschutzerklärung"
     }
 
     /**

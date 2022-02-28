@@ -12,13 +12,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoritAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoritenViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import kotlinx.android.synthetic.main.hauptfenster.*
 import java.lang.Exception
 
 import kotlinx.android.synthetic.main.terminefragment.*
+import kotlinx.android.synthetic.main.terminefragment.recyclerView4
 
 //////////////////////////////
 // favoritenfragment
@@ -104,6 +107,7 @@ class Favoritenfragment : Fragment() {
         initRecyclerview()
         enableSwipeToDelete()
         setPruefungszeitraum()
+        MainActivity.toolbarHeader.title = "Favoriten"
     }
 
     /**

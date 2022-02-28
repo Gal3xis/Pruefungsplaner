@@ -40,7 +40,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
     protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy")
 
-    private val coroutineExceptionHandler = CoroutineExceptionHandler{_,exception->
+    protected val coroutineExceptionHandler = CoroutineExceptionHandler{_,exception->
         Log.d("CoroutineException",exception.stackTraceToString())
     }
 
@@ -53,14 +53,14 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     //Remote-Access
     fun fetchCourses() {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             val courses = repository.fetchCourses()
             courses?.let { insertCoursesJSON(it) }
         }
     }
 
     fun fetchEntries() {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             val periode = getCurrentPeriode()
             val termin = getCurrentTermin()
             val examinYear = getExamineYear()

@@ -30,7 +30,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
             setSelectedCourse(choosenCourse)
             returnCourse?.let { setReturnCourse(it) }
             if (getUuid() == null) {
-                //TODO RetrofitConnect(context).firstStart()
+                returnCourse?.let { firstStart(it) }
             } else {
                 //TODO RetrofitConnect(context).setUserCourses()
             }
@@ -50,5 +50,21 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
         return getSelectedCourse()!=null
     }
 
+    fun firstStart(faculty: Faculty){
+        viewModelScope.launch(coroutineExceptionHandler) {
+            if(repository.getUuid()!=null){
+                return@launch
+            }
+            val uuid = repository.fetchUUID(faculty)
+            uuid?.uuid?.let { repository.insertUuid(it) }
+        }
+    }
+
+    fun firstStart(faculty: String){
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val uuid = repository.fetchUUID(faculty)
+            uuid?.uuid?.let { repository.insertUuid(it) }
+        }
+    }
 
 }

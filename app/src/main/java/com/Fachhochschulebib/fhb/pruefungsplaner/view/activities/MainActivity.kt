@@ -26,6 +26,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import com.google.android.material.appbar.MaterialToolbar
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
@@ -57,6 +58,10 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
+    companion object{
+        lateinit var toolbarHeader:MaterialToolbar
+    }
+
     private lateinit var viewModel: MainViewModel
 
     /**
@@ -84,7 +89,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.updatePruefperiode()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
-        changeFragment("Termine", Terminefragment())
+        changeFragment( Terminefragment())
+        toolbarHeader = header
 
     }
 
@@ -230,35 +236,28 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.navigation_calender -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_calender),
                         Terminefragment()
                 )
             }
             R.id.navigation_settings -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_settings),
                         SettingsFragment()
                 )
             }
             R.id.navigation_feedback -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_feedback),
                         FeedbackFragment()
                 )
             }
             //TODO CHANGE
             R.id.navigation_changeFaculty -> {
-                /*header?.title = TODO CHECK
-                        applicationContext.getString(R.string.title_changeFaculty)
-                recyclerView4?.visibility = View.INVISIBLE
-                drawer_layout.closeDrawer(GravityCompat.START)*/
                 val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
+                myIntent.putExtra(StartActivity.CHANGE_FLAG,true)
                 recyclerView4.context.startActivity(myIntent)
                 true
             }
             R.id.navigation_addCourse -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_changeCourse),
                         AddCourseFragment()
                 )
             }
@@ -281,13 +280,11 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_calender -> {
                     changeFragment(
-                            applicationContext.getString(R.string.title_calender),
                             Terminefragment()
                     )
                 }
                 R.id.navigation_diary -> {
                     changeFragment(
-                            applicationContext.getString(R.string.title_exam),
                             Favoritenfragment()
                     )
                 }
@@ -320,10 +317,29 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see onCreate
      */
+    @Deprecated("Headertitle should be set in Fragment directly", ReplaceWith("changeFragment(fragment:Fragment)"),DeprecationLevel.WARNING)
     fun changeFragment(headertitle: String? = null, fragment: Fragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
         recyclerView4?.visibility = View.INVISIBLE
         header?.title = headertitle ?: this.localClassName//TODO CHECK
+        drawer_layout.closeDrawer(GravityCompat.START)
+        ft.replace(R.id.frame_placeholder, fragment)
+        ft.commit()
+        return true
+    }
+
+    /**
+     * Changes the Fragment.
+     *
+     * @param[fragment] The fragment which shall be shown.
+     * @return Returns always true, needed for the listener.
+     * @author Alexander Lange
+     * @since 1.6
+     * @see onCreate
+     */
+    fun changeFragment( fragment: Fragment): Boolean {
+        val ft = supportFragmentManager.beginTransaction()
+        recyclerView4?.visibility = View.INVISIBLE
         drawer_layout.closeDrawer(GravityCompat.START)
         ft.replace(R.id.frame_placeholder, fragment)
         ft.commit()
