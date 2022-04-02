@@ -1,14 +1,10 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories
 
-import android.app.Application
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.API
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.GSONCourse
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.GSONEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitHelper
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -116,7 +112,6 @@ class DatabaseRepository(
         }
     }
 
-    //TODO Move
     /**
      * Returns a list of all examperiods in the database.
      *
@@ -173,7 +168,30 @@ class DatabaseRepository(
         }
     }
 
-    //Room Databas
+    suspend fun sendFeedBack(
+        uuid: String,
+        ratingUsability: Float,
+        ratingFunctions: Float,
+        ratingStability: Float,
+        text: String
+    ) {
+        withContext(Dispatchers.IO){
+            remoteDataSource.sendFeedBack(uuid,ratingUsability.toString(),ratingFunctions.toString(),ratingStability.toString(),text)
+        }
+    }
+
+
+    suspend fun fetchUUID(faculty:String):JsonUuid?{
+        return withContext(Dispatchers.IO){
+            return@withContext remoteDataSource.getUUID(faculty)
+        }
+    }
+
+    suspend fun fetchUUID(faculty:Faculty):JsonUuid?{
+        return fetchUUID(faculty.fbid)
+    }
+
+    //Room Database
     suspend fun insertEntry(testPlanEntry: TestPlanEntry) {
         withContext(Dispatchers.IO) {
             localDataSource.insertEntry(testPlanEntry)
@@ -384,11 +402,9 @@ class DatabaseRepository(
     }
 
     suspend fun getUuid(): Uuid? {
-        var ret: Uuid? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getUuid()
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getUuid()
         }
-        return ret
     }
 
     suspend fun getCourseByName(name:String):Course{

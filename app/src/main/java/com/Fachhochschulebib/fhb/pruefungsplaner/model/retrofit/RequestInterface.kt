@@ -28,9 +28,9 @@ interface RequestInterface {
     val jSON: Call<List<GSONEntry?>?>?
 
     //Start Merlin Gürtler
+
     @get:GET(" ")
     val jsonUuid: Call<JsonUuid?>?
-
     @PUT(" ")
     fun anotherStart(): Call<Void?>?
 

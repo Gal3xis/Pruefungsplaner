@@ -98,7 +98,7 @@
                 android:id="@+id/feedBackInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
+                android:textColor="?attr/colorOnBackground"
                 android:textSize="20sp"
                 android:singleLine="false"
                 android:theme="@style/ProgressStyle"

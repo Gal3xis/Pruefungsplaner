@@ -13,8 +13,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 
 class SpecialButton(context: Context,attrs:AttributeSet): androidx.appcompat.widget.AppCompatButton(context,attrs) {
 
-    private var animation = CreateAnimation()
-    private var reverseAnimation = CreateReverseAnimation()
+    private var animation = createAnimation()
+    private var reverseAnimation = createReverseAnimation()
     private var fingerDown = false
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -40,7 +40,7 @@ class SpecialButton(context: Context,attrs:AttributeSet): androidx.appcompat.wid
     }
 
 
-    private fun CreateAnimation():ValueAnimator {
+    private fun createAnimation():ValueAnimator {
         /** Animation with Image Icon*/
 //        val imageView = ImageView(context)
 //        imageView.setImageDrawable(activity?.getDrawable(R.drawable.ic_update))
@@ -72,7 +72,7 @@ class SpecialButton(context: Context,attrs:AttributeSet): androidx.appcompat.wid
         }
         return animator
     }
-    private fun CreateReverseAnimation():ValueAnimator {
+    private fun createReverseAnimation():ValueAnimator {
         val originalColor = this.backgroundTintList?.defaultColor
 
         val targetColor = context?.theme?.let { Utils.getColorFromAttr(R.attr.colorAccent, it) }
