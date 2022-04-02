@@ -36,7 +36,7 @@
     <string name="title_exam">Meine Prüfungen</string>
     <string name="title_settings">Optionen</string>
     <string name="title_electiveModule">Wahlmodule</string>
-    <string name="title_changeCourse">Studiengänge hinzufügen</string>
+    <string name="title_changeCourse">Studiengänge verwalten</string>
     <string name="title_changeFaculty">Fachbereich ändern</string>
     <string name="title_feedback">Feedback geben</string>
     <string name="title_close_app">Beenden</string>
@@ -158,4 +158,5 @@
     <string name="optionenfragment_auto_updates_intervall_text">Updateintervall:</string>
     <string name="optionenfragment_auto_updates_intervall_button">Intervall</string>
     <string name="optionenfragment_auto_updates_notificationsound_text">Benachrichtigungssound</string>
+    <string name="choose_course_change_main_label_text">Hauptkurs wechseln:</string>
 </resources>

@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoritAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoritenViewModel
@@ -38,11 +39,11 @@ import kotlinx.android.synthetic.main.terminefragment.*
  * @since 1.6
  * @see Fragment
  */
-class Favoritenfragment : Fragment() {
+class Favoritenfragment : MainActivityFragment() {
 
+    override var name: String="Favoriten"
     private lateinit var recyclerViewFavoritAdapter: RecyclerViewFavoritAdapter
     private lateinit var viewModel: FavoritenViewModel
-
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
@@ -57,13 +58,9 @@ class Favoritenfragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
-                requireActivity(),
-                ViewModelFactory(requireActivity().application)
+            requireActivity(),
+            ViewModelFactory(requireActivity().application)
         )[FavoritenViewModel::class.java]
-
-        Filter.onFilterChangedListener.add {
-            viewModel.liveFavorits.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
-        }
     }
 
     /**
@@ -102,6 +99,10 @@ class Favoritenfragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerview()
+
+        Filter.onFilterChangedListener.add {
+            viewModel.liveFavorits.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
+        }
         enableSwipeToDelete()
         setPruefungszeitraum()
     }

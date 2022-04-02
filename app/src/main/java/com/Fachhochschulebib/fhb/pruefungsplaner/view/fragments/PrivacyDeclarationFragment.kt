@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.privacy_declaration.*
 
 //////////////////////////////
@@ -29,7 +30,9 @@ import kotlinx.android.synthetic.main.privacy_declaration.*
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-class PrivacyDeclarationFragment : Fragment() {
+class PrivacyDeclarationFragment : MainActivityFragment() {
+
+    override var name: String="Datenschutzerklärung"
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
@@ -49,7 +52,6 @@ class PrivacyDeclarationFragment : Fragment() {
             ft?.commit()
         }
     }
-
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the privacy_declaration-layout.
      *

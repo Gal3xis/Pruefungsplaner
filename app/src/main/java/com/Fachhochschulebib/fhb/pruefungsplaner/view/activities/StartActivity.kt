@@ -12,6 +12,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.CloseApp
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.StartViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -81,8 +82,6 @@ class StartActivity : AppCompatActivity() {
         applySettings(viewModel)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
-
-
         initUpdateManager()
         initSharedPreferences()
         initRecyclerviewCourses()
@@ -90,6 +89,7 @@ class StartActivity : AppCompatActivity() {
         if (viewModel.checkLoginStatus()) {
             startApplication()
         }
+        viewModel.fetchFaculties()
     }
 
     private fun initUpdateManager() {
@@ -274,4 +274,7 @@ class StartActivity : AppCompatActivity() {
         viewModel.setReturnFaculty(faculty)
     }
 
+    override fun onBackPressed() {
+        CloseApp()
+    }
 }

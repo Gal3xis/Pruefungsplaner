@@ -1,6 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitConnect
@@ -11,7 +12,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
-class AddCourseViewModel(application: Application) : BaseViewModel(application) {
+class ChangeCoursesViewModel(application: Application) : BaseViewModel(application) {
 
     val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
 
@@ -50,6 +51,17 @@ class AddCourseViewModel(application: Application) : BaseViewModel(application) 
             }
         }
     }
+
+    fun changeMainCourse(course:String){
+        if(course == getSelectedCourse()) return
+        viewModelScope.launch {
+            setSelectedCourse(course)
+            repository.updateCourse(course,true)
+            getCourses()
+        }
+    }
+
+
 
     fun getCourses(){
         viewModelScope.launch {

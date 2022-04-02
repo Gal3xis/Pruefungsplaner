@@ -10,6 +10,30 @@
     android:padding="10dp"
     >
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="20dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="@string/choose_course_change_main_label_text"
+            android:textColor="?attr/colorOnPrimaryDark"
+            android:textSize="20sp"
+            />
+
+        <Spinner
+            android:id="@+id/choose_course_change_main_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+             />
+
+
+    </LinearLayout>
+
     <TextView
         android:id="@+id/chooseCourseId"
         android:layout_width="wrap_content"

@@ -28,7 +28,10 @@
             android:launchMode="singleInstance"
             android:name=".view.activities.MainActivity"
             android:label="@string/title_activity_recycleview_tabelle"
-            android:windowSoftInputMode="adjustResize" >
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize"
+
+            >
 
         </activity>
     </application>

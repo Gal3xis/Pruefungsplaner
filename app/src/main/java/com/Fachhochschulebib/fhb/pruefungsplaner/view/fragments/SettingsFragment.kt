@@ -17,6 +17,7 @@ import androidx.core.animation.doOnEnd
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
@@ -43,9 +44,9 @@ import kotlinx.android.synthetic.main.hauptfenster.*
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-class SettingsFragment() : Fragment() {
+class SettingsFragment() : MainActivityFragment() {
+    override var name: String="Einstellungen"
     private lateinit var viewModel: SettingsViewModel
-
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,

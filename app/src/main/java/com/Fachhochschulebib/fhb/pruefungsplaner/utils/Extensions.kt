@@ -1,5 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
+import android.app.AlertDialog
 import android.content.Context
 import android.widget.Spinner
 import androidx.annotation.StringRes
@@ -129,6 +130,19 @@ fun AppCompatActivity.applySettings(viewModel:BaseViewModel) {
     //Set Darkmode
     val darkMode = viewModel.getChosenDarkMode()
     AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+}
+
+fun AppCompatActivity.CloseApp() {
+    AlertDialog.Builder(this)
+        .setMessage(R.string.close_app)
+        .setTitle(R.string.title_close_app)
+        .setPositiveButton(R.string.title_close_app) { _, _ ->
+            setResult(0)
+            finishAffinity()
+        }
+        .setNegativeButton("Cancel", null)
+        .create()
+        .show()
 }
 
 /**

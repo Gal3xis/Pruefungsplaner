@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.fragment_about.*
 import java.lang.StringBuilder
 
@@ -14,7 +15,9 @@ import java.lang.StringBuilder
  * Use the [AboutFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class AboutFragment : Fragment() {
+class AboutFragment : MainActivityFragment() {
+
+    override var name: String = "Über"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

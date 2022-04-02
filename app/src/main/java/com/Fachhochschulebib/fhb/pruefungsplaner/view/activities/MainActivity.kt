@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.content.res.Configuration
 import android.os.*
 import android.util.Log
 import android.view.Menu
@@ -19,17 +20,16 @@ import androidx.appcompat.widget.SearchView.SearchAutoComplete
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.work.ListenableWorker
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.updatePruefperiode()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
-        changeFragment("Termine", Terminefragment())
+        changeFragment( Terminefragment())
 
     }
 
@@ -144,7 +144,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(text: String?): Boolean {
                 Filter.reset()
                 Filter.modulName = if (text.isNullOrBlank()) null else text
-                changeFragment("Suche", Terminefragment())
+                changeFragment( Terminefragment())
                 return true
             }
         })
@@ -175,22 +175,14 @@ class MainActivity : AppCompatActivity() {
      * Ending the App in a controlled manner.
      */
     override fun onBackPressed() {
-        if (fragmentManager.backStackEntryCount > 0) {
-            fragmentManager.popBackStack()
-
-        } else {
-            AlertDialog.Builder(this)
-                    .setMessage(R.string.close_app)
-                    .setTitle(R.string.title_close_app)
-                    .setPositiveButton(R.string.title_close_app) { _, _ ->
-                        setResult(0)
-                        finishAffinity()
-                    }
-                    .setNegativeButton("Cancel", null)
-                    .create()
-                    .show()
+        if(supportFragmentManager.fragments.last()::class==Terminefragment::class){
+            CloseApp()
+            return
         }
+        changeFragment(Terminefragment())
     }
+
+
 
     /**
      * Initializes the NavigationDrawer
@@ -230,19 +222,16 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.navigation_calender -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_calender),
                         Terminefragment()
                 )
             }
             R.id.navigation_settings -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_settings),
                         SettingsFragment()
                 )
             }
             R.id.navigation_feedback -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_feedback),
                         FeedbackFragment()
                 )
             }
@@ -252,14 +241,15 @@ class MainActivity : AppCompatActivity() {
                         applicationContext.getString(R.string.title_changeFaculty)
                 recyclerView4?.visibility = View.INVISIBLE
                 drawer_layout.closeDrawer(GravityCompat.START)*/
+                viewModel.deleteSelectedCourse()
                 val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
                 recyclerView4.context.startActivity(myIntent)
                 true
             }
             R.id.navigation_addCourse -> {
                 changeFragment(
-                        applicationContext.getString(R.string.title_changeCourse),
-                        AddCourseFragment()
+
+                        ChangeCoursesFragment()
                 )
             }
             else -> true
@@ -281,13 +271,11 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_calender -> {
                     changeFragment(
-                            applicationContext.getString(R.string.title_calender),
                             Terminefragment()
                     )
                 }
                 R.id.navigation_diary -> {
                     changeFragment(
-                            applicationContext.getString(R.string.title_exam),
                             Favoritenfragment()
                     )
                 }
@@ -320,13 +308,14 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see onCreate
      */
-    fun changeFragment(headertitle: String? = null, fragment: Fragment): Boolean {
+    fun changeFragment( fragment: MainActivityFragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
         recyclerView4?.visibility = View.INVISIBLE
-        header?.title = headertitle ?: this.localClassName//TODO CHECK
+        header?.title = fragment.name
         drawer_layout.closeDrawer(GravityCompat.START)
         ft.replace(R.id.frame_placeholder, fragment)
         ft.commit()
+
         return true
     }
 
@@ -351,7 +340,6 @@ class MainActivity : AppCompatActivity() {
         initFilterSemesterBoxes(this, view)
         initFilterExaminer(this, view)
         initFilterCalendar(this, view)
-        initFilterButtons(this, view)
 
         val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
                 .setTitle("Filter")
@@ -364,10 +352,6 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun initFilterButtons(context: Context, filterView: View) {
-        val btnReset = filterView.findViewById<Button>(R.id.layout_dialog_filter_reset_btn)
-        btnReset?.setOnClickListener { Filter.reset() }
-    }
 
     private fun initFilterHeader(context: Context, filterVIew: View) {
         val tvFaculty = filterVIew.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
@@ -693,5 +677,9 @@ class MainActivity : AppCompatActivity() {
                 null
             }
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 }

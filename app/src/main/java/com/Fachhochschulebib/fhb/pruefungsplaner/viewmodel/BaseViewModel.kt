@@ -348,7 +348,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     //SET
     open fun setSelectedCourse(course: String) {
         spRepository.setSelectedCourse(course)
-    }
+            }
 
     open fun setReturnCourse(course: String) {
         spRepository.setReturnCourse(course)

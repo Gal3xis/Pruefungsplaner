@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
@@ -26,10 +27,10 @@ import kotlinx.android.synthetic.main.terminefragment.*
  * @since 1.6
  * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
  */
-class Terminefragment : Fragment() {
+class Terminefragment : MainActivityFragment() {
+    override var name: String="Prüfungen"
     private lateinit var viewModel: TermineViewModel
     private lateinit var recyclerViewExamAdapter: RecyclerViewExamAdapter
-
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
@@ -44,9 +45,6 @@ class Terminefragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-        Filter.onFilterChangedListener.add {
-            viewModel.liveEntryList.value?.let { Filter.validateList(it) }?.let { recyclerViewExamAdapter.updateContent(it) }
-        }
     }
 
     /**
@@ -80,6 +78,9 @@ class Terminefragment : Fragment() {
                 ViewModelFactory(requireActivity().application)
         )[TermineViewModel::class.java]
         viewModel.getCalendarPermission(requireActivity())
+        Filter.onFilterChangedListener.add {
+            viewModel.liveEntryList.value?.let { Filter.validateList(it) }?.let { recyclerViewExamAdapter.updateContent(it) }
+        }
         setPruefungszeitraum()
         initRecyclerview()
     }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.fragment_impressum.*
 
 /**
@@ -15,8 +16,8 @@ import kotlinx.android.synthetic.main.fragment_impressum.*
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-class ImpressumFragment : Fragment() {
-
+class ImpressumFragment : MainActivityFragment() {
+    override var name: String="Impressum"
 
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the fragment_impressum-layout.

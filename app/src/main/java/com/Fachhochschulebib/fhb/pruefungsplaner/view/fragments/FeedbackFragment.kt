@@ -12,6 +12,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.feedback.*
 
 //////////////////////////////
@@ -35,9 +36,9 @@ import kotlinx.android.synthetic.main.feedback.*
  * @author Alexander Lange (Email:alexander.lange@fh.bielefeld.de)
  * @since 1.6
  */
-class FeedbackFragment : Fragment() {
+class FeedbackFragment : MainActivityFragment() {
+    override var name: String="Feedback"
     private lateinit var viewModel: BaseViewModel
-
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
