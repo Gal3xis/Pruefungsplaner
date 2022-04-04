@@ -103,6 +103,7 @@
         <item name="android:layout_width">200dp</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:spinnerMode">dialog</item>
+        <item name="singleLine">false</item>
     </style>
 
     <style name="AlertDialog.Filter.CheckBox.TextView" parent="Widget.AppCompat.TextView">

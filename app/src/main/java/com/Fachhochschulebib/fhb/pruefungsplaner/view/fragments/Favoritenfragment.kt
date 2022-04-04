@@ -105,6 +105,7 @@ class Favoritenfragment : MainActivityFragment() {
         }
         enableSwipeToDelete()
         setPruefungszeitraum()
+        
     }
 
     /**

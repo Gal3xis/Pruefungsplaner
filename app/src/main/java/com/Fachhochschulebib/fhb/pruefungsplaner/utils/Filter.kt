@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -58,6 +59,7 @@ object Filter {
     var datum: Date? = null
         set(value) {
             field = value
+            dateChanged(value)
             filterChanged()
         }
 
@@ -113,6 +115,13 @@ object Filter {
         for (i in onFilterChangedListener) {
             i.invoke()
         }
+        Log.d("Filter Changed\n",this.toString())
+    }
+
+    private fun dateChanged(date: Date?){
+        for(i in onDateChangedListener){
+            i.invoke(date)
+        }
     }
 
     /**
@@ -143,7 +152,8 @@ object Filter {
         if (datum != null) {
             val sdf = SimpleDateFormat("yyyy-MM-dd")
             val date = sdf.parse(entry.date)
-            if (!datum!!.atDay(date)) {
+            val comp = Date(date.year,date.month,date.date,0,0,0)
+            if (!datum!!.atDay(comp)) {
                 return false
             }
         }
@@ -192,4 +202,24 @@ object Filter {
         filterChanged()
     }
     var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
+    var onDateChangedListener: MutableList<(date:Date?) -> Unit> = mutableListOf()
+
+    fun removeAllListener(){
+        onFilterChangedListener = mutableListOf()
+        onDateChangedListener = mutableListOf()
+    }
+
+    override fun toString(): String {
+        val sb:StringBuilder = StringBuilder()
+        sb.appendLine("Modul:" + modulName?:"Alle")
+        sb.appendLine("Course:" + courseName?:"Alle")
+        sb.appendLine("Examiner:" + examiner?:"Alle")
+        sb.append("Semester: ")
+        for(s in semester){
+            sb.append(s.toString()+";")
+        }
+        sb.appendLine()
+        sb.append("Datum:" + datum?.let {  SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(it)}?:"Alle")
+        return sb.toString()
+    }
 }

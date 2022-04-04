@@ -96,17 +96,15 @@ private fun createStringWithLabel(context: Context, @StringRes label: Int, info:
  * @see Date
  */
 fun Date.atDay(date: Date): Boolean {
-    val sdfy = SimpleDateFormat("yyyy")
-    val sdfm = SimpleDateFormat("MM")
-    val sdfd = SimpleDateFormat("dd")
 
-    val date1 = Calendar.getInstance()
-    date1.set(sdfy.format(this).toInt(), sdfm.format(this).toInt(), sdfd.format(this).toInt())
+    val year1 = this.year
+    val year2 = date.year
+    val month1 = this.month
+    val month2 = date.month
+    val day1 = this.date
+    val day2 = date.date
 
-    val date2 = Calendar.getInstance()
-    date2.set(sdfy.format(date).toInt(), sdfm.format(date).toInt(), sdfd.format(date).toInt())
-
-    return date1.equals(date2)
+    return year1 == year2&&month1==month2&&day1==day2
 }
 
 /** Applies Settings from sharedPreferences to the activity.

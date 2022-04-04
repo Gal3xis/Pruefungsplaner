@@ -50,6 +50,11 @@ class ImpressumFragment : MainActivityFragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        impressum_tv.text = Utils.readTextFile(context!!, R.raw.impressum)
+        impressum_tv.text = Utils.readTextFile(requireContext(), R.raw.impressum)
+        impressum_backButton.setOnClickListener {
+            val ft = activity?.supportFragmentManager?.beginTransaction()
+            ft?.replace(R.id.frame_placeholder, SettingsFragment())
+            ft?.commit()
+        }
     }
 }

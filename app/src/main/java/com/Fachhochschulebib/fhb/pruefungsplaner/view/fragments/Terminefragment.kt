@@ -27,10 +27,15 @@ import kotlinx.android.synthetic.main.terminefragment.*
  * @since 1.6
  * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
  */
-class Terminefragment : MainActivityFragment() {
+class Terminefragment(var reset: Boolean) : MainActivityFragment() {
     override var name: String="Prüfungen"
     private lateinit var viewModel: TermineViewModel
     private lateinit var recyclerViewExamAdapter: RecyclerViewExamAdapter
+
+    constructor():this(false)
+
+
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
@@ -83,6 +88,9 @@ class Terminefragment : MainActivityFragment() {
         }
         setPruefungszeitraum()
         initRecyclerview()
+        if(reset) {
+            Filter.reset()
+        }
     }
 
 

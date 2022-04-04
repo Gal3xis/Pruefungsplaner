@@ -78,6 +78,7 @@ class MainActivity : AppCompatActivity() {
         initActionBar()
         initNavigationDrawer()
         initBottomNavigationView()
+        initFilterDialog()
 
         UserFilter(applicationContext)
 
@@ -144,7 +145,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(text: String?): Boolean {
                 Filter.reset()
                 Filter.modulName = if (text.isNullOrBlank()) null else text
-                changeFragment( Terminefragment())
+                changeFragment( Terminefragment(false))
                 return true
             }
         })
@@ -271,7 +272,8 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_calender -> {
                     changeFragment(
-                            Terminefragment()
+
+                            Terminefragment(supportFragmentManager.fragments.last()::class==Terminefragment::class)
                     )
                 }
                 R.id.navigation_diary -> {
@@ -319,17 +321,9 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    /**
-     * Creates and opens the Filter-Dialog.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     * @see initFilterModule
-     * @see initFilterCourse
-     * @see initFacultyFilter
-     * @see Filter
-     */
-    private fun openFilterMenu() {
+    private lateinit var filterDialog: AlertDialog
+
+    private fun initFilterDialog(){
         //Create view for the dialog
         val view = layoutInflater.inflate(R.layout.layout_dialog_filter, null, false)
 
@@ -341,15 +335,29 @@ class MainActivity : AppCompatActivity() {
         initFilterExaminer(this, view)
         initFilterCalendar(this, view)
 
-        val dialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
-                .setTitle("Filter")
-                .setPositiveButton("Ok", null)
-                .setNegativeButton(
-                        "Reset"
-                ) { _, _ -> UserFilter(this) }
-                .setView(view)
-                .create()
-        dialog.show()
+        filterDialog = AlertDialog.Builder(this, R.style.AlertDialog_Filter)
+            .setTitle("Filter")
+            .setPositiveButton("Ok", null)
+            .setNegativeButton(
+                "Reset"
+            ) { _, _ -> UserFilter(this) }
+            .setView(view)
+            .create()
+    }
+
+    /**
+     * Creates and opens the Filter-Dialog.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     * @see initFilterModule
+     * @see initFilterCourse
+     * @see initFacultyFilter
+     * @see Filter
+     */
+    private fun openFilterMenu() {
+
+        filterDialog.show()
     }
 
 
@@ -637,6 +645,10 @@ class MainActivity : AppCompatActivity() {
         tvDate.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
                 Filter.datum!!
         )
+        Filter.onDateChangedListener.add{date->
+            val formatter = SimpleDateFormat("dd/MM/yyyy")
+            tvDate.text = date?.let { formatter.format(date) }?:"Alle"
+        }
         imgbtnDate.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val startDate = viewModel.getStartDate()
@@ -650,13 +662,8 @@ class MainActivity : AppCompatActivity() {
                 val dialog = DatePickerDialog(
                         this,
                         { _, pyear, pmonthOfYear, pdayOfMonth ->
-
-                            Log.d("DatePicker-YEAR", pyear.toString())
-                            Log.d("DatePicker-MONTH", pmonthOfYear.toString())
-                            Log.d("DatePicker-DAY", pdayOfMonth.toString())
-
                             val date = Calendar.getInstance()
-                            date.set(pyear, pmonthOfYear, pdayOfMonth)
+                            date.set(pyear, pmonthOfYear, pdayOfMonth,0,0,0)
                             Filter.datum = date.time
                         },
                         year,
