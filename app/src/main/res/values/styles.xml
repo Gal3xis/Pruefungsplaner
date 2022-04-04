@@ -99,11 +99,11 @@
     </style>
 
     <style name="AlertDialog.Filter.Spinner" parent="Widget.AppCompat.Spinner.DropDown">
-        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">50dp</item>
         <item name="android:layout_width">200dp</item>
         <item name="android:textColor">?attr/colorOnPrimary</item>
         <item name="android:spinnerMode">dialog</item>
-        <item name="android:textSize">10sp</item>
     </style>
 
     <style name="AlertDialog.Filter.CheckBox.TextView" parent="Widget.AppCompat.TextView">

@@ -1,19 +1,19 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.helper
 
-import androidx.recyclerview.widget.RecyclerView
-import android.view.ViewGroup
-import android.view.LayoutInflater
 import android.content.Context
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.GoogleCalendarIO
+import androidx.recyclerview.widget.RecyclerView
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.atDay
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
-import java.lang.Exception
+import java.text.SimpleDateFormat
 import java.util.*
 
 //////////////////////////////
@@ -41,9 +41,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
     private var save = false
-    private var moduleName: String? = null
     private lateinit var context: Context
-    private var calDate = GregorianCalendar()
 
     private var openItem: ViewHolder? = null
 
@@ -144,16 +142,9 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             position: Int
     ) {
         val entry = entryList[position]
-        val splitMonthDayYear = splitDay[0].split("-").toTypedArray()
         holder.txtthirdline.text =
-                context!!.getString(R.string.time) + splitDay[1].substring(0, 5)
-        holder.button.text = (splitMonthDayYear[2] + "."
-                + splitMonthDayYear[1] + "."
-                + splitMonthDayYear[0])
-        holder.txtFooter.text = (context!!.getString(R.string.prof)
-                + entry.firstExaminer + ", "
-                + entry.secondExaminer
-                + context!!.getString(R.string.semester) + entry.semester)
+                context!!.getString(R.string.time) + splitDay[1]
+        holder.button.text = splitDay[0]
         //holder.txtthirdline.setText("Semester: " + Semester5.toString());
     }
 
@@ -172,18 +163,26 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             position: Int,
             holder: ViewHolder
     ): Array<String>? {
-        val entry = entryList[position]
-        val splitDay = entry.date?.split(" ")?.toTypedArray()
-        if (position > 0) {
-            val splitDayBefore = entryList[position - 1].date?.split(" ")?.toTypedArray()
+        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        val entry1 = entryList[position]
+        val date1 = sdf.parse(entry1.date)
 
-            //Vergleich der beiden Tage
-            //wenn ungleich, dann blaue box mit Datumseintrag
-            if (splitDay?.get(0) == splitDayBefore?.get(0) ?: splitDay?.get(0)) {
-                holder.button.height = 0
+        val ret = arrayOf(SimpleDateFormat("dd.MM.yyyy").format(date1),SimpleDateFormat("HH:mm").format(date1))
+
+        if (position > 0) {
+
+
+            val entry2 = entryList[position-1]
+            val date2 = sdf.parse(entry2.date)
+
+            if (date1.atDay(date2)) {
+                holder.button.visibility = View.GONE
+            }else
+            {
+                holder.button.visibility = View.VISIBLE
             }
         }
-        return splitDay
+        return ret
     }
 
     /**

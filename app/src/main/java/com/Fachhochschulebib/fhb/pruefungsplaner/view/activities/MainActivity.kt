@@ -236,12 +236,7 @@ class MainActivity : AppCompatActivity() {
                         FeedbackFragment()
                 )
             }
-            //TODO CHANGE
             R.id.navigation_changeFaculty -> {
-                /*header?.title = TODO CHECK
-                        applicationContext.getString(R.string.title_changeFaculty)
-                recyclerView4?.visibility = View.INVISIBLE
-                drawer_layout.closeDrawer(GravityCompat.START)*/
                 viewModel.deleteSelectedCourse()
                 val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
                 recyclerView4.context.startActivity(myIntent)
@@ -403,19 +398,6 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
-                if (parent?.childCount ?: 0 > 0) {
-                    val child = parent?.getChildAt(0)
-                    //Set accurate textcolor for the selected item
-                    if (child != null) {
-                            val tv = child as TextView
-                        tv.setTextColor(
-                                Utils.getColorFromAttr(
-                                        R.attr.colorOnPrimary,
-                                        theme
-                                )
-                        )
-                    }
-                }
                 Filter.examiner = if (position == 0) null else spExaminer.selectedItem.toString()
             }
 
@@ -426,8 +408,8 @@ class MainActivity : AppCompatActivity() {
         viewModel.liveProfList.observe(this) {
             val list = mutableListOf("Alle")
             it?.let { it1 -> list.addAll(it1) }
-            val profAdapter = ArrayAdapter(
-                    applicationContext,
+            val profAdapter = SimpleSpinnerAdapter(
+                context,
                     android.R.layout.simple_spinner_dropdown_item,
                     list
             )
@@ -489,7 +471,7 @@ class MainActivity : AppCompatActivity() {
                 it?.forEach { course ->
                     list.add(course.courseName)
                 }
-                spCourse.adapter = ArrayAdapter<String>(
+                spCourse.adapter = SimpleSpinnerAdapter(
                         context,
                         android.R.layout.simple_spinner_dropdown_item,
                         list
@@ -505,17 +487,6 @@ class MainActivity : AppCompatActivity() {
                         position: Int,
                         id: Long
                 ) {
-                    if (parent?.childCount ?: 0 > 0) {
-                        val child = parent?.getChildAt(0)
-                        if (child != null) {
-                            (child as TextView).setTextColor(
-                                    Utils.getColorFromAttr(
-                                            R.attr.colorOnPrimary,
-                                            theme
-                                    )
-                            )
-                        }
-                    }
                     Filter.courseName =
                             if (position == 0) null else spCourse.selectedItem.toString()
                     viewModel.filterCoursename()
@@ -584,12 +555,12 @@ class MainActivity : AppCompatActivity() {
     private fun initFilterModule(context: Context, filterView: View) {
         try {
             val spModul = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
-            viewModel.liveEntriesForCourse.observe(this) {
-                val list: MutableList<String?> = mutableListOf("Alle")
-                it?.forEach {
-                    list.add(it.module)
+            viewModel.liveEntriesForCourse.observe(this) { it ->
+                val list: MutableList<String> = mutableListOf("Alle")
+                it?.forEach {entry->
+                    list.add(entry.module?:"Unnamed")
                 }
-                spModul.adapter = ArrayAdapter<String>(
+                spModul.adapter = SimpleSpinnerAdapter(
                         context,
                         android.R.layout.simple_spinner_dropdown_item,
                         list
@@ -604,17 +575,6 @@ class MainActivity : AppCompatActivity() {
                         position: Int,
                         id: Long
                 ) {
-                    if (parent?.childCount ?: 0 > 0) {
-                        val child = parent?.getChildAt(0)
-                        if (child != null) {
-                            (child as TextView).setTextColor(
-                                    Utils.getColorFromAttr(
-                                            R.attr.colorOnPrimary,
-                                            theme
-                                    )
-                            )
-                        }
-                    }
                     Filter.modulName = if (position == 0) null else spModul.selectedItem.toString()
                 }
 
