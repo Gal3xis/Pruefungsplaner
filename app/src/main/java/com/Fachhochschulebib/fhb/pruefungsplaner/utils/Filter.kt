@@ -199,7 +199,7 @@ object Filter {
         modulName = null
         datum = null
         semester.fill(true)
-        filterChanged()
+        examiner = null
     }
     var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
     var onDateChangedListener: MutableList<(date:Date?) -> Unit> = mutableListOf()

@@ -321,7 +321,8 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private lateinit var filterDialog: AlertDialog
+    private var filterDialog: AlertDialog?=null
+
 
     private fun initFilterDialog(){
         //Create view for the dialog
@@ -357,7 +358,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun openFilterMenu() {
 
-        filterDialog.show()
+        filterDialog?.show()
     }
 
 
@@ -406,7 +407,8 @@ class MainActivity : AppCompatActivity() {
                     val child = parent?.getChildAt(0)
                     //Set accurate textcolor for the selected item
                     if (child != null) {
-                        (child as TextView).setTextColor(
+                            val tv = child as TextView
+                        tv.setTextColor(
                                 Utils.getColorFromAttr(
                                         R.attr.colorOnPrimary,
                                         theme
@@ -426,7 +428,7 @@ class MainActivity : AppCompatActivity() {
             it?.let { it1 -> list.addAll(it1) }
             val profAdapter = ArrayAdapter(
                     applicationContext,
-                    android.R.layout.simple_list_item_1,
+                    android.R.layout.simple_spinner_dropdown_item,
                     list
             )
             spExaminer.adapter = profAdapter
@@ -462,6 +464,7 @@ class MainActivity : AppCompatActivity() {
         val selectedCourse = viewModel.getSelectedCourse()
         Filter.reset()
         Filter.courseName = selectedCourse
+        initFilterDialog()
     }
 
     /**
@@ -645,10 +648,7 @@ class MainActivity : AppCompatActivity() {
         tvDate.text = if (Filter.datum == null) "Alle" else SimpleDateFormat("dd.MM.yyyy").format(
                 Filter.datum!!
         )
-        Filter.onDateChangedListener.add{date->
-            val formatter = SimpleDateFormat("dd/MM/yyyy")
-            tvDate.text = date?.let { formatter.format(date) }?:"Alle"
-        }
+
         imgbtnDate.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val startDate = viewModel.getStartDate()
@@ -665,6 +665,7 @@ class MainActivity : AppCompatActivity() {
                             val date = Calendar.getInstance()
                             date.set(pyear, pmonthOfYear, pdayOfMonth,0,0,0)
                             Filter.datum = date.time
+                            tvDate.text = Filter.datum?.let { SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).format(it) }
                         },
                         year,
                         month - 1,
@@ -677,6 +678,7 @@ class MainActivity : AppCompatActivity() {
                         "Alle"
                 ) { _, _ ->
                     Filter.datum = null
+                    tvDate.text="Alle"
                 }
                 dialog.show()
 

@@ -5,4 +5,5 @@
     android:background="?attr/colorPrimaryDark"
     android:textColor="?attr/colorOnPrimaryDark"
     android:padding="20dp"
+    android:textSize="10sp"
     />

@@ -49,7 +49,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
 
     fun filterCoursename(){
         viewModelScope.launch {
-            val entriesForCourse = repository.getEntriesForCourseLiveData(Filter.courseName)
+            val entriesForCourse =Filter.courseName?.let {repository.getEntriesForCourseLiveData(it)  }?:repository.getAllEntries()
             liveEntriesForCourse.postValue(entriesForCourse)
         }
     }
