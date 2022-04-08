@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         tools:text="Test"
-        tools:textColor="?attr/colorOnBackground"
+        android:textColor="?attr/colorOnPrimaryDark"
         />
 
 </LinearLayout>
