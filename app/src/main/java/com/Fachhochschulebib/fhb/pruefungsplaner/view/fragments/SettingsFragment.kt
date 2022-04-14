@@ -3,18 +3,24 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
-import android.widget.*
+import android.os.Process
+import android.view.*
+import android.widget.Spinner
+import android.widget.Switch
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import java.lang.Exception
 import android.view.*
+import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
-import com.Fachhochschulebib.fhb.pruefungsplaner.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
+import kotlinx.android.synthetic.main.optionfragment.*
 
 
 //////////////////////////////
@@ -212,20 +218,20 @@ class SettingsFragment() : MainActivityFragment() {
 
     private fun initImpressumButton() {
         optionenfragment_impressum?.setOnClickListener {
-            changeFragment("Impressum", ImpressumFragment())
+            changeFragment( ImpressumFragment())
         }
     }
 
-    private fun changeFragment(title: String, fragment: Fragment) {
+    private fun changeFragment( fragment: MainActivityFragment) {
         val ft = activity?.supportFragmentManager?.beginTransaction()
-        header?.title = title
+        activity?.header?.title = fragment.name
         ft?.replace(R.id.frame_placeholder, fragment)
         ft?.commit()
     }
 
     private fun initPrivacyDeclarationButton() {
         privacyDeclaration.setOnClickListener {
-            changeFragment("Privacy", PrivacyDeclarationFragment())
+            changeFragment( PrivacyDeclarationFragment())
         }
     }
 
@@ -361,11 +367,32 @@ class SettingsFragment() : MainActivityFragment() {
      */
     private fun save() {
         val position = theme.selectedItemPosition
+        val chosenThemeId:Int
         when (position) {
-            1 -> viewModel.setChosenThemeId(R.style.Theme_AppTheme_2)
-            else -> viewModel.setChosenThemeId(R.style.Theme_AppTheme_1)
+            1 -> chosenThemeId = R.style.Theme_AppTheme_2
+            else -> chosenThemeId = R.style.Theme_AppTheme_1
         }
-        viewModel.setChosenDarkMode(darkMode.isChecked)
-        activity?.recreate()
+
+        if(chosenThemeId!=viewModel.getChosenThemeId()||darkMode.isChecked!=viewModel.getChosenDarkMode()){
+            viewModel.setChosenThemeId(chosenThemeId)
+            viewModel.setChosenDarkMode(darkMode.isChecked)
+
+            AlertDialog.Builder(requireContext()).setTitle("Neustart benötigt").setMessage("Jetzt Neustarten?").setPositiveButton("Neustarten"
+                ) {  _,_->
+                val pid = Process.myPid()
+                Process.killProcess(pid)
+                }.setNegativeButton("Nicht Neustarten"){
+                        _,_->
+                    changeFragment(Terminefragment())
+
+                }.create().show()
+        }else{
+            viewModel.setChosenThemeId(chosenThemeId)
+            viewModel.setChosenDarkMode(darkMode.isChecked)
+
+            changeFragment(Terminefragment())
+        }
+
+
     }
 }

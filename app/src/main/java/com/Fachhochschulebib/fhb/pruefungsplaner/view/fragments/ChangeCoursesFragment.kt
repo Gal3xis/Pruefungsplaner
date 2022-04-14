@@ -1,6 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -8,12 +9,14 @@ import android.widget.Toast
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.SimpleSpinnerAdapter
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.setSelection
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel
@@ -21,6 +24,7 @@ import java.util.ArrayList
 
 //TODO Alexander Lange Start
 import kotlinx.android.synthetic.main.choose_courses.*
+import okhttp3.internal.Util
 
 //TODO Alexander Lange End
 
@@ -101,6 +105,8 @@ class ChangeCoursesFragment : MainActivityFragment() {
                 position: Int,
                 id: Long
             ) {
+                if(view == null) return
+                (view as TextView).setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,requireContext().theme))
                 val name:String =choose_course_change_main_spinner.selectedItem.toString()
                 viewModel.changeMainCourse(name)
             }

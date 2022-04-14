@@ -10,7 +10,9 @@
         android:id="@+id/simple_spinner_background_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:minHeight="50dp"
         android:gravity="center_vertical"
+        android:textColor="?attr/colorOnBackground"
         />
 
 </LinearLayout>

@@ -39,7 +39,7 @@ class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList
         val view: View = LayoutInflater.from(context).inflate(R.layout.simple_spinner_background,null,true)
         val text = view.findViewById<TextView>(R.id.simple_spinner_background_text)
         text.text = getItem(position)
-        text.setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimary,context.theme))
+        text.setTextColor(Utils.getColorFromAttr(R.attr.colorOnBackground,context.theme))
         return view(view,position)
     }
 

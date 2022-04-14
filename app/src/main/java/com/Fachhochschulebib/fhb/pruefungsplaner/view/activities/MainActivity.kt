@@ -3,6 +3,7 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.view.activities
 //Alexander Lange Start
 import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -17,6 +18,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.SearchAutoComplete
+import androidx.collection.SimpleArrayMap
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -27,6 +29,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
@@ -126,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
             entryList?.forEach { entry -> list.add(entry.module ?: "") }
             searchAutoComplete.setAdapter(
-                    ArrayAdapter(
+                    SimpleSpinnerAdapter(
                             this,
                             R.layout.simple_spinner_item,
                             list
@@ -398,6 +401,8 @@ class MainActivity : AppCompatActivity() {
                     position: Int,
                     id: Long
             ) {
+                if(view == null) return
+                (view as TextView).setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,context.theme))
                 Filter.examiner = if (position == 0) null else spExaminer.selectedItem.toString()
             }
 
@@ -408,7 +413,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.liveProfList.observe(this) {
             val list = mutableListOf("Alle")
             it?.let { it1 -> list.addAll(it1) }
-            val profAdapter = SimpleSpinnerAdapter(
+            val profAdapter = ArrayAdapter(
                 context,
                     android.R.layout.simple_spinner_dropdown_item,
                     list
@@ -471,9 +476,9 @@ class MainActivity : AppCompatActivity() {
                 it?.forEach { course ->
                     list.add(course.courseName)
                 }
-                spCourse.adapter = SimpleSpinnerAdapter(
+                spCourse.adapter = ArrayAdapter(
                         context,
-                        android.R.layout.simple_spinner_dropdown_item,
+                        android.R.layout.simple_list_item_1,
                         list
                 )
                 spCourse.setSelection(Filter.courseName)
@@ -487,6 +492,8 @@ class MainActivity : AppCompatActivity() {
                         position: Int,
                         id: Long
                 ) {
+                    if(view == null) return
+                    (view as TextView).setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,context.theme))
                     Filter.courseName =
                             if (position == 0) null else spCourse.selectedItem.toString()
                     viewModel.filterCoursename()
@@ -560,9 +567,9 @@ class MainActivity : AppCompatActivity() {
                 it?.forEach {entry->
                     list.add(entry.module?:"Unnamed")
                 }
-                spModul.adapter = SimpleSpinnerAdapter(
+                spModul.adapter = ArrayAdapter(
                         context,
-                        android.R.layout.simple_spinner_dropdown_item,
+                        android.R.layout.simple_list_item_1,
                         list
                 )
                 spModul.setSelection(Filter.modulName)
@@ -575,6 +582,8 @@ class MainActivity : AppCompatActivity() {
                         position: Int,
                         id: Long
                 ) {
+                    if(view == null) return
+                    (view as TextView).setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,context.theme))
                     Filter.modulName = if (position == 0) null else spModul.selectedItem.toString()
                 }
 
