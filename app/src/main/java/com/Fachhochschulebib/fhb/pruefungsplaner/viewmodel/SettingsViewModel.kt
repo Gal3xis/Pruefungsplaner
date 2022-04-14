@@ -20,6 +20,10 @@ class SettingsViewModel(application: Application) : BaseViewModel(application) {
         return GoogleCalendarIO.findEventIds(context)
     }
 
+    fun getCalendarModuleNames(context: Context):List<String>{
+        return GoogleCalendarIO.findEventModuleNames(context)
+    }
+
     fun deleteFavorits(context: Context){
         viewModelScope.launch {
             repository.unselectAllFavorits()

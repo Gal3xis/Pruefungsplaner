@@ -180,10 +180,8 @@ class SettingsFragment() : MainActivityFragment() {
     private fun initDeleteCalendarEntriesButton() {
         btnCalClear.setOnClickListener {
             val eventIds = viewModel.getAllCalendarEntries(requireContext())
-            val events = mutableListOf<String>()
-            eventIds.forEach {
-                events.add(it.toString())
-            }
+            val events = viewModel.getCalendarModuleNames(requireContext())
+
             AlertDialog.Builder(requireContext())
                 .setTitle("Kalendereinträge löschen")
                 .setMessage("Sollen ${eventIds.count()} Einträge gelöscht werden?\n Die Events sind: $events")
