@@ -27,7 +27,7 @@ interface UserDao {
     suspend fun updateExam(testPlanEntry: TestPlanEntry)
 
     @Query("UPDATE TestPlanEntry SET favorit = :favorit WHERE ID = :id")
-    suspend fun update(favorit: Boolean, id: Int)
+    suspend fun update(favorit: Boolean, id: String)
 
     @Query("UPDATE Course SET choosen = :choosen WHERE couresName = :courseName")
     suspend fun updateCourse(courseName: String, choosen: Boolean)

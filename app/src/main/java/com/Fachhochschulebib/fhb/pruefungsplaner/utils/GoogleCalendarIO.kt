@@ -1,5 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
+import android.app.AlertDialog
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
@@ -8,7 +9,6 @@ import android.net.Uri
 import android.provider.CalendarContract
 import android.util.Log
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -23,6 +23,10 @@ import java.util.*
 
  */
 object GoogleCalendarIO {
+
+    enum class InsertionTye {
+        Manuell, Automatisch, Fragen
+    }
 
     private val EVENTS_URI = Uri.parse("content://com.android.calendar/events")
     private const val CAL_ID = 2
@@ -164,14 +168,29 @@ object GoogleCalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun insertEntry(context: Context, e: TestPlanEntry, force: Boolean = false) {
-        if (force) {
-            if (findEventSingle(context, e) != null) {
-                deleteEntry(context, e)
+    fun insertEntry(
+        context: Context,
+        e: TestPlanEntry,
+        insertionTye: InsertionTye = InsertionTye.Fragen
+    ) {
+        when (insertionTye) {
+            InsertionTye.Automatisch -> {
+                findEventSingle(context, e)?.let { deleteEntry(context, it) }
+                forceInsert(context, createEvent(context, e))
             }
-            forceInsert(context, createEvent(context, e))
-        } else {
-            indirectInsert(context, createIntent(context, e))
+            InsertionTye.Manuell -> indirectInsert(context, createIntent(context, e))
+            InsertionTye.Fragen -> {
+                AlertDialog.Builder(context)
+                    .setTitle("Termin Eintragen")
+                    .setPositiveButton("Automatisch") { _, _ ->
+                        findEventSingle(context, e)?.let { deleteEntry(context, it) }
+                        forceInsert(context, createEvent(context, e))
+                    }
+                    .setNegativeButton("Manuell") { _, _ ->
+                        indirectInsert(context, createIntent(context, e))
+                    }
+                    .create().show()
+            }
         }
     }
 
@@ -188,10 +207,10 @@ object GoogleCalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun insertEntries(context: Context, list: List<TestPlanEntry?>, force: Boolean) {
+    fun insertEntries(context: Context, list: List<TestPlanEntry?>, insertionTye: InsertionTye) {
         list.forEach {
             if (it != null) {
-                insertEntry(context, it, force)
+                insertEntry(context, it, insertionTye)
             }
         }
     }
@@ -226,19 +245,6 @@ object GoogleCalendarIO {
         }
     }
 
-    /**
-     * Deletes an event from the google calendar from a given [TestPlanEntry].
-     * This method has no effect when the synchronization is turned of in the settings.
-     *
-     * @param[context] The application context.
-     * @param[e] The [TestPlanEntry] to be removed from the calendar.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun deleteEntry(context: Context, e: TestPlanEntry) {
-        findEventSingle(context, e)?.let { deleteEntry(context, it) }
-    }
 
     /**
      * Deletes multiple events from the google calendar, based on [TestPlanEntry]-Objects.
@@ -250,12 +256,8 @@ object GoogleCalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun deleteEntries(context: Context, list: List<TestPlanEntry?>) {
-        list.forEach {
-            if (it != null) {
-                deleteEntry(context, it)
-            }
-        }
+    fun deleteEntries(context: Context, list: List<TestPlanEntry>) {
+        findEventIds(context, list).forEach { deleteEntry(context, it) }
     }
 
     /**
@@ -277,6 +279,10 @@ object GoogleCalendarIO {
         Log.d("GoogleCalendarIO", "Deleted $numRows events")
     }
 
+    fun deleteEntry(context: Context, entry: TestPlanEntry) {
+        findEventSingle(context, entry)?.let { deleteEntry(context, it) }
+    }
+
     /**
      * Deletes every event from the google calendar, connected with this application.
      * This method has no effect when the synchronization is turned of in the settings.
@@ -286,8 +292,8 @@ object GoogleCalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun deleteAll(context: Context) {
-        findEventIds(context).forEach {
+    fun deleteAll(context: Context, entries: List<TestPlanEntry>) {
+        findEventIds(context, entries).forEach {
             deleteEntry(context, it)
         }
     }
@@ -302,16 +308,20 @@ object GoogleCalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun findEventIds(context: Context): List<Long> {
+    fun findEventIds(context: Context, entries: List<TestPlanEntry>): List<Long> {
+        val moduleNames = mutableListOf<String>()
+        entries.forEach { entry -> entry.module?.let { moduleName -> moduleNames.add(moduleName) } }
         val ret: MutableList<Long> = mutableListOf()
         val cursor = context.contentResolver?.query(
-            EVENTS_URI, arrayOf("_id"),
+            EVENTS_URI, arrayOf("_id", "title"),
             "calendar_id=$CAL_ID", null, null
         )
         while (cursor?.moveToNext() == true) {
             val index = cursor.getColumnIndex("_id")
-            if(index>=0)
-            {
+            val indexTitle = cursor.getColumnIndex("title")
+            val module = cursor.getString(indexTitle)
+            if (!moduleNames.contains(module)) continue
+            if (index >= 0) {
                 ret.add(cursor.getLong(index))
             }
         }
@@ -340,7 +350,7 @@ object GoogleCalendarIO {
             val indexId = cursor.getColumnIndex("_id")
             val indexTitle = cursor.getColumnIndex("title")
             val indexDescription = cursor.getColumnIndex("description")
-            if(indexId>=0&&indexTitle>=0&&indexDescription>=0){
+            if (indexId >= 0 && indexTitle >= 0 && indexDescription >= 0) {
                 val id = cursor.getLong(indexId)
                 val module = cursor.getString(indexTitle)
                 val description = cursor.getString(indexDescription)
@@ -355,16 +365,22 @@ object GoogleCalendarIO {
         return null
     }
 
-    fun findEventModuleNames(context: Context):List<String>{
-        val ret = mutableListOf<String>()
+    fun findEventModuleNames(context: Context, entries: List<TestPlanEntry>): List<String> {
+        val moduleNames = mutableListOf<String>()
+        entries.forEach { entry -> entry.module?.let { moduleName -> moduleNames.add(moduleName) } }
+        val ret: MutableList<String> = mutableListOf()
         val cursor = context.contentResolver?.query(
-            EVENTS_URI, arrayOf( "title"),
+            EVENTS_URI, arrayOf("_id", "title"),
             "calendar_id=$CAL_ID", null, null
         )
         while (cursor?.moveToNext() == true) {
+            val index = cursor.getColumnIndex("_id")
             val indexTitle = cursor.getColumnIndex("title")
+            val module = cursor.getString(indexTitle)
+            if (!moduleNames.contains(module)) continue
+            if (index >= 0) {
                 ret.add(cursor.getString(indexTitle))
-
+            }
         }
         cursor?.close()
         return ret
@@ -379,8 +395,8 @@ object GoogleCalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun update(context: Context,entries:List<TestPlanEntry?>){
-        deleteAll(context)
-        insertEntries(context,entries,true)
+    fun update(context: Context, entries: List<TestPlanEntry>,insertionTye: InsertionTye) {
+        deleteAll(context, entries)
+        insertEntries(context, entries, insertionTye)
     }
 }

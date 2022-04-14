@@ -40,8 +40,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
     protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy")
 
-    protected val coroutineExceptionHandler = CoroutineExceptionHandler{_,exception->
-        Log.d("CoroutineException",exception.stackTraceToString())
+    protected val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
+        Log.d("CoroutineException", exception.stackTraceToString())
     }
 
     init {
@@ -53,14 +53,14 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     //Remote-Access
     fun fetchCourses() {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             val courses = repository.fetchCourses()
             courses?.let { insertCoursesJSON(it) }
         }
     }
 
     fun fetchEntries() {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             val periode = getCurrentPeriode()
             val termin = getCurrentTermin()
             val examinYear = getExamineYear()
@@ -76,7 +76,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun fetchFaculties() {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             try {
                 val faculties = repository.fetchFaculties()
                 if (faculties != null) {
@@ -85,8 +85,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                         insertFaculty(faculty)
                     }
                 }
-            }catch (e:Exception){
-                Log.d("BaseViewModel:fetchFaculties()",e.stackTraceToString())
+            } catch (e: Exception) {
+                Log.d("BaseViewModel:fetchFaculties()", e.stackTraceToString())
             }
 
         }
@@ -144,8 +144,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                 var lastDayPp: Date? = null
                 var examineWeek: Int
                 val pruefperiodenObjects = repository.fetchPruefperiondenObjects()
-                if(pruefperiodenObjects!=null)
-                {
+                if (pruefperiodenObjects != null) {
                     for (i in 0 until pruefperiodenObjects.length()) {
                         currentExamineDate = pruefperiodenObjects.getJSONObject(i)
                         date = currentExamineDate["startDatum"].toString()
@@ -161,18 +160,18 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                         if (currentDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) break
                     }
                 }
-               val prevDate = sdfRetrofit.parse(getCurrentTermin())
+                val prevDate = sdfRetrofit.parse(getCurrentTermin())
                 examineDate?.let {
-                    if(it.after(prevDate)){
+                    if (it.after(prevDate)) {
                         deleteAllEntries()
                     }
                 }
 
                 currentExamineDate?.get("pruefTermin")?.toString()
-                        ?.let { setCurrentTermin(it) }
+                    ?.let { setCurrentTermin(it) }
                 currentExamineDate?.get("PPJahr")?.toString()?.let { setExamineYear(it) }
                 currentExamineDate?.get("pruefSemester")?.toString()
-                        ?.let { setCurrentPeriode(it) }
+                    ?.let { setCurrentPeriode(it) }
                 examineDate?.let { setStartDate(it) }
                 lastDayPp?.let { setEndDate(it) }
                 fetchEntries()
@@ -235,16 +234,20 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    open fun updateEntryFavorit(context: Context, favorit: Boolean, id: Int) {
+    open fun updateEntryFavorit(context: Context, favorit: Boolean, id: String) {
         viewModelScope.launch {
             repository.updateEntryFavorit(favorit, id)
-            updateCalendar(context)
+            if(!getCalendarSync()) return@launch
+            if (!favorit) repository.getEntryById(id)
+                ?.let { GoogleCalendarIO.deleteEntry(context, it) }
+            else
+                repository.getEntryById(id)?.let { GoogleCalendarIO.insertEntry(context, it,getCalendarInsertionType()) }
         }
     }
 
     open fun updateEntryFavorit(context: Context, favorit: Boolean, entry: TestPlanEntry) {
         viewModelScope.launch {
-            updateEntryFavorit(context, favorit, entry.id.toInt())
+            updateEntryFavorit(context, favorit, entry.id)
         }
     }
 
@@ -316,7 +319,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getModulesOrdered()
     }
 
-    open suspend fun getEntriesByCourseName(course: String, favorit: Boolean): List<TestPlanEntry>? {
+    open suspend fun getEntriesByCourseName(
+        course: String,
+        favorit: Boolean
+    ): List<TestPlanEntry>? {
         return repository.getEntriesByCourseName(course, favorit)
     }
 
@@ -355,7 +361,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     //SET
     open fun setSelectedCourse(course: String) {
         spRepository.setSelectedCourse(course)
-            }
+    }
 
     open fun setReturnCourse(course: String) {
         spRepository.setReturnCourse(course)
@@ -413,16 +419,20 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         spRepository.setUpdateIntervalTimeMinute(minute)
     }
 
-    open fun setBackgroundUpdates(status:Boolean){
+    open fun setBackgroundUpdates(status: Boolean) {
         spRepository.setBackgroundUpdates(status)
     }
 
-    open fun setNotificationSounds(status: Boolean){
+    open fun setNotificationSounds(status: Boolean) {
         spRepository.setNotificationSounds(status)
     }
 
     open fun setCalendarSync(sync: Boolean) {
         spRepository.setCalendarSync(sync)
+    }
+
+    open fun setCalendarInserionType(insertionTye: GoogleCalendarIO.InsertionTye){
+        spRepository.setCalendarInsertionType(insertionTye)
     }
 
     open fun setServerIPAddress(address: String) {
@@ -495,16 +505,20 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return spRepository.getUpdateIntervalTimeMinute()
     } //Return 15 by default
 
-    open fun getBackgroundUpdates():Boolean{
+    open fun getBackgroundUpdates(): Boolean {
         return spRepository.getBackgroundUpdates()
     }
 
-    open fun getNotificationSounds():Boolean{
+    open fun getNotificationSounds(): Boolean {
         return spRepository.getNotificationSounds()
     }
 
     open fun getCalendarSync(): Boolean {
         return spRepository.getCalendarSync()
+    }
+
+    open fun getCalendarInsertionType():GoogleCalendarIO.InsertionTye{
+        return spRepository.getCalendarInsertionType()?:GoogleCalendarIO.InsertionTye.Fragen
     }
 
     open fun getServerIPAddress(): String? {
@@ -527,22 +541,23 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     //Calendar
-    fun updateCalendar(context: Context) {
-        deleteCalendarEntries(context)
-        insertCalendarEntries(context)
+    fun updateCalendar(context: Context, entries: List<TestPlanEntry>) {
+        GoogleCalendarIO.update(context, entries,getCalendarInsertionType())
     }
 
     fun insertCalendarEntries(context: Context, favorits: List<TestPlanEntry>? = null) {
         viewModelScope.launch {
             if (getCalendarSync()) {
-                GoogleCalendarIO.insertEntries(context, favorits?:getFavorites(true)?: listOf(), true)
+                GoogleCalendarIO.insertEntries(
+                    context,
+                    favorits ?: getFavorites(true) ?: listOf(),
+                    getCalendarInsertionType()
+                )
             }
         }
     }
 
-    fun deleteCalendarEntries(context: Context) {
-        GoogleCalendarIO.deleteAll(context)
-    }
+
     //UTILS
 
     private fun initServer() {
@@ -607,7 +622,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         var dateLastExamFormatted: String? = null
         try {
             val dateFormat: DateFormat = SimpleDateFormat(
-                    "EEE MMM dd HH:mm:ss yyyy", Locale.US//TODO CHANGE LOCAL
+                "EEE MMM dd HH:mm:ss yyyy", Locale.US//TODO CHANGE LOCAL
             )
             val dateLastExam = dateFormat.parse(dateTimeZone)
             val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")

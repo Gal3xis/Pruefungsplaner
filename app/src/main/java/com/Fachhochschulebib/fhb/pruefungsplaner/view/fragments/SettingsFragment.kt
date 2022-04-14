@@ -1,21 +1,13 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
 import android.app.AlertDialog
 import android.app.TimePickerDialog
-import android.content.DialogInterface
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.widget.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import java.lang.Exception
 import android.view.*
-import androidx.annotation.FloatRange
-import androidx.core.animation.doOnEnd
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
@@ -47,8 +39,9 @@ import kotlinx.android.synthetic.main.hauptfenster.*
  * @since 1.6
  */
 class SettingsFragment() : MainActivityFragment() {
-    override var name: String="Einstellungen"
+    override var name: String = "Einstellungen"
     private lateinit var viewModel: SettingsViewModel
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
@@ -63,8 +56,8 @@ class SettingsFragment() : MainActivityFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
-                requireActivity(),
-                ViewModelFactory(requireActivity().application)
+            requireActivity(),
+            ViewModelFactory(requireActivity().application)
         )[SettingsViewModel::class.java]
         setHasOptionsMenu(true)
     }
@@ -78,12 +71,13 @@ class SettingsFragment() : MainActivityFragment() {
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val v = inflater.inflate(R.layout.optionfragment, container, false)
         return v
     }
+
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
      * In this Method, the UI-Elements choose_course.xml-Layout are being initialized. This cannot be done in the onCreate()-Method,
@@ -142,6 +136,7 @@ class SettingsFragment() : MainActivityFragment() {
         initDarkModeSwitch()
         initUpdateDatabaseButton()
         initCalendarSynchronizationButton()
+        initCalendarInsertionTypeSpinner()
         initPrivacyDeclarationButton()
         initImpressumButton()
         initDeleteDatabaseButton()
@@ -161,19 +156,30 @@ class SettingsFragment() : MainActivityFragment() {
         btnFav.setOnClickListener {
             viewModel.deleteFavorits(requireContext())
             Toast.makeText(
-                    view?.context,
-                    view?.context?.getString(R.string.delete_favorite),
-                    Toast.LENGTH_SHORT
+                view?.context,
+                view?.context?.getString(R.string.delete_favorite),
+                Toast.LENGTH_SHORT
             ).show()
         }
     }
 
     private fun initUpdateCalendarButton() {
         viewModel.liveFavorits.observe(viewLifecycleOwner) {
-            viewModel.updateCalendar(requireContext())
+            if (it != null) {
+                viewModel.updateCalendar(requireContext(), it)
+            }
         }
         btnGoogleUpdate.setOnClickListener {
-            viewModel.updateCalendar(requireContext())
+            AlertDialog.Builder(requireContext())
+                .setTitle("Kalendereinträge aktualisieren")
+                .setMessage("Soll der Kalender aktualisiert werden?")
+                .setPositiveButton("Ja") { _, _ ->
+                    viewModel.updateCalendar(requireContext())
+                }
+                .setNegativeButton("Nein", null)
+                .create()
+                .show()
+
         }
     }
 
@@ -186,21 +192,20 @@ class SettingsFragment() : MainActivityFragment() {
                 .setTitle("Kalendereinträge löschen")
                 .setMessage("Sollen ${eventIds.count()} Einträge gelöscht werden?\n Die Events sind: $events")
                 .setPositiveButton("Ja") { _, _ -> viewModel.deleteCalendarEntries(requireContext()) }
-                .setNegativeButton("Nein",null)
+                .setNegativeButton("Nein", null)
                 .create()
                 .show()
         }
     }
 
 
-
     private fun initDeleteDatabaseButton() {
         btnDB.setOnClickListener {
             viewModel.deleteAllEntries()
             Toast.makeText(
-                    view?.context,
-                    view?.context?.getString(R.string.delete_db),
-                    Toast.LENGTH_SHORT
+                view?.context,
+                view?.context?.getString(R.string.delete_db),
+                Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -230,6 +235,29 @@ class SettingsFragment() : MainActivityFragment() {
 
         }
         switch2.isChecked = viewModel.getCalendarSync()
+    }
+
+    private fun initCalendarInsertionTypeSpinner(){
+        val names = mutableListOf<String>()
+        GoogleCalendarIO.InsertionTye.values().forEach {
+            names.add(it.name)
+        }
+        calendarInsertionTypeSpinner.adapter =  SimpleSpinnerAdapter(requireContext(),android.R.layout.simple_list_item_1,names)
+        calendarInsertionTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                viewModel.setCalendarInserionType(GoogleCalendarIO.InsertionTye.valueOf(calendarInsertionTypeSpinner.selectedItem.toString()))
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+        }
+        calendarInsertionTypeSpinner.setSelection(viewModel.getCalendarInsertionType().name)
     }
 
     private fun initUpdateDatabaseButton() {
@@ -265,9 +293,9 @@ class SettingsFragment() : MainActivityFragment() {
 
         val adapter = view?.context?.let {
             ThemeAdapter(
-                    it,
-                    R.layout.layout_theme_spinner_row,
-                    themeList
+                it,
+                R.layout.layout_theme_spinner_row,
+                themeList
             )
         }
         theme?.adapter = adapter
@@ -281,39 +309,47 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
-    private fun initBackgroundUpdateSwitch(){
+    private fun initBackgroundUpdateSwitch() {
         optionenfragment_auto_updates.isChecked = viewModel.getBackgroundUpdates()
         optionenfragment_auto_updates.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setBackgroundUpdates(isChecked)
             context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
 
-        optionenfragment_auto_updates_notificationsound.isChecked = viewModel.getNotificationSounds()
-        optionenfragment_auto_updates_notificationsound.setOnCheckedChangeListener{_,isChecked->
+        optionenfragment_auto_updates_notificationsound.isChecked =
+            viewModel.getNotificationSounds()
+        optionenfragment_auto_updates_notificationsound.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNotificationSounds(isChecked)
             context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
     }
 
-    private fun initBackgroundUpdateIntervallButton(){
+    private fun initBackgroundUpdateIntervallButton() {
         optionenfragment_auto_updates_intervall_button.setOnClickListener {
-            TimePickerDialog(context, 3,{ _, hour, minute ->
+            TimePickerDialog(context, 3, { _, hour, minute ->
                 var _minute = minute
-                if(hour==0&&_minute<15){
+                if (hour == 0 && _minute < 15) {
                     _minute = 15
-                    Toast.makeText(context,"15 Minutes is minimum",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "15 Minutes is minimum", Toast.LENGTH_SHORT).show()
                 }
-                setIntervallTime(hour,_minute)
+                setIntervallTime(hour, _minute)
 
-            },viewModel.getUpdateIntervalTimeHour(),viewModel.getUpdateIntervalTimeMinute(),true)
+            }, viewModel.getUpdateIntervalTimeHour(), viewModel.getUpdateIntervalTimeMinute(), true)
                 .show()
         }
     }
 
-    private fun setIntervallTime(hour:Int=viewModel.getUpdateIntervalTimeHour(),minute:Int=viewModel.getUpdateIntervalTimeHour()){
+    private fun setIntervallTime(
+        hour: Int = viewModel.getUpdateIntervalTimeHour(),
+        minute: Int = viewModel.getUpdateIntervalTimeHour()
+    ) {
         viewModel.setUpdateIntervalTimeMinute(minute)
         viewModel.setUpdateIntervalTimeHour(hour)
-        optionenfragment_auto_updates_intervall_button.text = "%s%02d:%02d".format(resources.getString(R.string.optionenfragment_auto_updates_intervall_text),hour,minute)
+        optionenfragment_auto_updates_intervall_button.text = "%s%02d:%02d".format(
+            resources.getString(R.string.optionenfragment_auto_updates_intervall_text),
+            hour,
+            minute
+        )
         context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
     }
 

@@ -13,15 +13,23 @@ class SettingsViewModel(application: Application) : BaseViewModel(application) {
 
     fun setCalendarSync(context: Context,sync: Boolean){
         setCalendarSync(sync)
-        updateCalendar(context)
+        if(sync) updateCalendar(context) else deleteCalendarEntries(context)
     }
 
     fun getAllCalendarEntries(context: Context):List<Long>{
-        return GoogleCalendarIO.findEventIds(context)
+        return liveFavorits.value?.let { GoogleCalendarIO.findEventIds(context, it) }?: listOf()
     }
 
     fun getCalendarModuleNames(context: Context):List<String>{
-        return GoogleCalendarIO.findEventModuleNames(context)
+        return liveFavorits.value?.let { GoogleCalendarIO.findEventModuleNames(context, it) }?: listOf()
+    }
+
+    fun deleteCalendarEntries(context: Context){
+        liveFavorits.value?.let{GoogleCalendarIO.deleteAll(context,it)}
+    }
+
+    fun updateCalendar(context: Context){
+        liveFavorits.value?.let { GoogleCalendarIO.update(context,it,getCalendarInsertionType()) }
     }
 
     fun deleteFavorits(context: Context){

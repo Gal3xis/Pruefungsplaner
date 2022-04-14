@@ -223,7 +223,7 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun updateEntryFavorit(favorit: Boolean, id: Int) {
+    suspend fun updateEntryFavorit(favorit: Boolean, id: String) {
         withContext(Dispatchers.IO) {
             localDataSource.update(favorit, id)
         }
@@ -394,11 +394,9 @@ class DatabaseRepository(
     }
 
     suspend fun getEntryById(id: String): TestPlanEntry? {
-        var ret: TestPlanEntry? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getEntryById(id)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getEntryById(id)
         }
-        return ret
     }
 
     suspend fun getUuid(): Uuid? {

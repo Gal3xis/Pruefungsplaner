@@ -1,8 +1,7 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories
 
-import android.app.Application
 import android.content.Context
-import android.content.SharedPreferences
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.GoogleCalendarIO
 
 class SharedPreferencesRepository(context: Context) {
 
@@ -187,7 +186,16 @@ class SharedPreferencesRepository(context: Context) {
         editor.putBoolean("calSync",sync)
         editor.apply()
     }
+    fun setCalendarInsertionType(insertionTye: GoogleCalendarIO.InsertionTye) {
+        val editor = settings.edit()
+        editor.putString("InsertionType",insertionTye.name)
+        editor.apply()
+    }
 
+    fun getCalendarInsertionType() :GoogleCalendarIO.InsertionTye?{
+        return settings.getString("InsertionType",GoogleCalendarIO.InsertionTye.Automatisch.name)
+            ?.let { GoogleCalendarIO.InsertionTye.valueOf(it) }
+    }
     fun getServerIPAddress():String?{
         return serverAddress.getString("ServerIPAddress",null)
     }
@@ -217,5 +225,7 @@ class SharedPreferencesRepository(context: Context) {
         editor.putString("faculty",faculties)
         editor.apply()
     }
+
+
 
 }
