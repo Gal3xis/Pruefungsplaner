@@ -75,7 +75,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@android:color/transparent"
+                    android:backgroundTint="?attr/colorAccent"
                     android:spinnerMode="dialog"
                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
@@ -137,7 +137,7 @@
                     android:layout_gravity="center_vertical"
                     android:text="@string/calendarInsertionTypeLabel"
                     android:textColor="?attr/colorOnPrimaryDark"
-                    android:textSize="18sp" />
+                    android:textSize="15sp" />
 
                 <Spinner
                     android:id="@+id/calendarInsertionTypeSpinner"
@@ -145,7 +145,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@android:color/transparent"
+                    android:backgroundTint="?attr/colorAccent"
                     android:spinnerMode="dialog"
                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 

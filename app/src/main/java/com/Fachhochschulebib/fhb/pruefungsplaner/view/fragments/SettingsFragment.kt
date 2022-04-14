@@ -2,17 +2,16 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
 import android.app.AlertDialog
 import android.app.TimePickerDialog
+import android.os.Build
 import android.os.Bundle
 import android.os.Process
+import android.util.Log
 import android.view.*
-import android.widget.Spinner
-import android.widget.Switch
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import java.lang.Exception
 import android.view.*
-import android.widget.AdapterView
+import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.*
@@ -21,6 +20,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.android.synthetic.main.optionfragment.*
+import okhttp3.internal.Version
+import org.w3c.dom.Text
 
 
 //////////////////////////////
@@ -248,7 +249,7 @@ class SettingsFragment() : MainActivityFragment() {
         GoogleCalendarIO.InsertionTye.values().forEach {
             names.add(it.name)
         }
-        calendarInsertionTypeSpinner.adapter =  SimpleSpinnerAdapter(requireContext(),android.R.layout.simple_list_item_1,names)
+        calendarInsertionTypeSpinner.adapter =  ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,names)
         calendarInsertionTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -256,6 +257,10 @@ class SettingsFragment() : MainActivityFragment() {
                 position: Int,
                 id: Long
             ) {
+                if(view == null) return
+                val textView = (view as TextView)
+                textView.setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,requireContext().theme))
+                textView.textSize = 15f
                 viewModel.setCalendarInserionType(GoogleCalendarIO.InsertionTye.valueOf(calendarInsertionTypeSpinner.selectedItem.toString()))
             }
 

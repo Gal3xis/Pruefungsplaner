@@ -94,7 +94,7 @@ class ChangeCoursesFragment : MainActivityFragment() {
             it?.forEach {
                 courseNames.add(it.courseName)
             }
-            choose_course_change_main_spinner.adapter = SimpleSpinnerAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
+            choose_course_change_main_spinner.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
             choose_course_change_main_spinner.setSelection(viewModel.getSelectedCourse())
         }
         viewModel.getCourses()
