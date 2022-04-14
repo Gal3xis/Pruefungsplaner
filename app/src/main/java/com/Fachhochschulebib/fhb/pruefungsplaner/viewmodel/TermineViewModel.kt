@@ -12,8 +12,8 @@ class TermineViewModel(application: Application) : BaseViewModel(application) {
     val liveEntryList = repository.getAllEntriesLiveDataByDate()
 
     init {
-        updateDataFromServer()
         updatePruefperiode()
+        updateDataFromServer()
     }
 
     /**

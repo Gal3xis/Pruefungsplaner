@@ -161,6 +161,13 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                         if (currentDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) break
                     }
                 }
+               val prevDate = sdfRetrofit.parse(getCurrentTermin())
+                examineDate?.let {
+                    if(it.after(prevDate)){
+                        deleteAllEntries()
+                    }
+                }
+
                 currentExamineDate?.get("pruefTermin")?.toString()
                         ?.let { setCurrentTermin(it) }
                 currentExamineDate?.get("PPJahr")?.toString()?.let { setExamineYear(it) }

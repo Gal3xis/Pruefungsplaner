@@ -7,10 +7,10 @@ import androidx.room.*
 interface UserDao {
 
     //Inserts
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertEntry(testPlanEntry: TestPlanEntry)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertEntries(testPlanEntries: List<TestPlanEntry>)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

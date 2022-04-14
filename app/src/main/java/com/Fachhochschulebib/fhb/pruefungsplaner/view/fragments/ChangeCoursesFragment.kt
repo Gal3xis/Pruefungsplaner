@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.SimpleSpinnerAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.setSelection
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel
@@ -89,7 +90,7 @@ class ChangeCoursesFragment : MainActivityFragment() {
             it?.forEach {
                 courseNames.add(it.courseName)
             }
-            choose_course_change_main_spinner.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
+            choose_course_change_main_spinner.adapter = SimpleSpinnerAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
             choose_course_change_main_spinner.setSelection(viewModel.getSelectedCourse())
         }
         viewModel.getCourses()

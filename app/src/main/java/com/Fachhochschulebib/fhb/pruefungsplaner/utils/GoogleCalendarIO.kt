@@ -25,7 +25,7 @@ import java.util.*
 object GoogleCalendarIO {
 
     private val EVENTS_URI = Uri.parse("content://com.android.calendar/events")
-    private val CAL_ID = 2
+    private const val CAL_ID = 2
 
     /**
      * Creates an intent for a Calendarevent.
@@ -353,6 +353,21 @@ object GoogleCalendarIO {
         }
         cursor?.close()
         return null
+    }
+
+    fun findEventModuleNames(context: Context):List<String>{
+        val ret = mutableListOf<String>()
+        val cursor = context.contentResolver?.query(
+            EVENTS_URI, arrayOf( "title"),
+            "calendar_id=$CAL_ID", null, null
+        )
+        while (cursor?.moveToNext() == true) {
+            val indexTitle = cursor.getColumnIndex("title")
+                ret.add(cursor.getString(indexTitle))
+
+        }
+        cursor?.close()
+        return ret
     }
 
     /**

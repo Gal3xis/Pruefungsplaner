@@ -3,7 +3,9 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 import android.animation.ArgbEvaluator
 import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
+import android.app.AlertDialog
 import android.app.TimePickerDialog
+import android.content.DialogInterface
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -177,7 +179,18 @@ class SettingsFragment() : MainActivityFragment() {
 
     private fun initDeleteCalendarEntriesButton() {
         btnCalClear.setOnClickListener {
-            viewModel.deleteCalendarEntries(requireContext())
+            val eventIds = viewModel.getAllCalendarEntries(requireContext())
+            val events = mutableListOf<String>()
+            eventIds.forEach {
+                events.add(it.toString())
+            }
+            AlertDialog.Builder(requireContext())
+                .setTitle("Kalendereinträge löschen")
+                .setMessage("Sollen ${eventIds.count()} Einträge gelöscht werden?\n Die Events sind: $events")
+                .setPositiveButton("Ja") { _, _ -> viewModel.deleteCalendarEntries(requireContext()) }
+                .setNegativeButton("Nein",null)
+                .create()
+                .show()
         }
     }
 
