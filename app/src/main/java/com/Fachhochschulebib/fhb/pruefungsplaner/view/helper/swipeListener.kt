@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable
 import androidx.recyclerview.widget.RecyclerView
 import androidx.core.content.ContextCompat
 
-// Erweitere die Callback Funktion
+
 /**
  * Provides the possibility to swipe an Recyclerview-Item to save or delete it.
  *

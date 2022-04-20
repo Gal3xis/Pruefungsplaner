@@ -4,6 +4,12 @@ import android.app.Application
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the [com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.FeedbackFragment]
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
 class FeedbackViewModel(application: Application) : BaseViewModel(application) {
 
     fun sendFeedBack(

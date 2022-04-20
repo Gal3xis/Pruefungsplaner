@@ -7,9 +7,16 @@ import android.content.pm.PackageManager
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-class TermineViewModel(application: Application) : BaseViewModel(application) {
+/**
+ * ViewModel for the [com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.ExamOverviewFragment].
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
+class ExamOverviewViewModel(application: Application) : BaseViewModel(application) {
 
-    val liveEntryList = repository.getAllEntriesLiveDataByDate()
+    val liveEntryList = repository.getAllEntriesForChoosenCoursesLiveData()
+
 
     init {
         updatePruefperiode()
@@ -21,8 +28,9 @@ class TermineViewModel(application: Application) : BaseViewModel(application) {
      * Can change the data in the recyclerview and the currentExamPeriod
      * Shows a progressbar while loading the data.
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     fun updateDataFromServer() {
         fetchCourses()
@@ -33,8 +41,9 @@ class TermineViewModel(application: Application) : BaseViewModel(application) {
      * This Method checks, if the user already gave permission to access the Calendar,
      * if not, he is ask to do so.
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     fun getCalendarPermission(activity: Activity) {
         val callbackId = 42
@@ -53,8 +62,9 @@ class TermineViewModel(application: Application) : BaseViewModel(application) {
      * @param[callbackId] Id of Permission which called function
      * @param[permissionsId] List of permissions that need to be requested
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     fun checkPermission(activity:Activity,callbackId: Int, vararg permissionsId: String) {
         var permissions = true
@@ -70,7 +80,15 @@ class TermineViewModel(application: Application) : BaseViewModel(application) {
         )
     }
 
-    fun getPruefungszeitraum(): String? {
+    /**
+     * Gets the timespan for the next period.
+     *
+     * @return The timespan as a string to display in the ui.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getPeriodeTimeSpan(): String? {
         val start = getStartDate()
         val end = getEndDate()
 

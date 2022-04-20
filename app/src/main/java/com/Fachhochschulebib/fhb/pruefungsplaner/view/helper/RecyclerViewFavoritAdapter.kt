@@ -17,15 +17,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.lang.Exception
 
-//////////////////////////////
-// MyAdapterfavoriten für Recycleview
-//
-// autor:
-// inhalt: Anzeigen der favorisierten Prüfungen in einzelnen Tabellen.
-// zugriffsdatum: 11.12.19, Aug. 2020
-//
-//
-//////////////////////////////
 /**
  * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorit exams.
  * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
@@ -96,7 +87,6 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      *
      * @see RecyclerView.Adapter.onCreateViewHolder
      */
-    // Create new views (invoked by the layout manager)
     override fun onCreateViewHolder(
             parent: ViewGroup,
             viewType: Int
@@ -164,6 +154,15 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         displayExamInformation(position, holder)
     }
 
+    /**
+     * Updates the content of the recyclerview with a new List of courses.
+     * Replaces the current list with the new list.
+     *
+     * @param entryList The list of [TestPlanEntry]-Objects to be shown by the recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun updateContent(entryList: List<TestPlanEntry>) {
         this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
@@ -214,11 +213,6 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         return entryList.size
     }
 
-
-// Start Merlin Gürtler
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
     /**
      * Inner class [ViewHolder], that contains the references to the UI-Elements.
      *
@@ -230,7 +224,6 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     inner class ViewHolder(var layout: View) : RecyclerView.ViewHolder(
             layout
     ) {
-        // each data item is just a string in this case
         var txtHeader: TextView
         var txtFooter: TextView
         var txtthirdline: TextView
@@ -245,8 +238,6 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
             txtSecondScreen = layout.findViewById<View>(R.id.txtSecondscreen) as TextView
             txtthirdline = layout.findViewById<View>(R.id.thirdLine) as TextView
             layout2 = layout.findViewById<View>(R.id.linearLayout) as LinearLayout
-            //button.setLayoutParams(new LinearLayout.LayoutParams(
-            // LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         }
     }
 }

@@ -15,43 +15,31 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoritAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoritenViewModel
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoriteOverviewViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import java.lang.Exception
 
 import kotlinx.android.synthetic.main.terminefragment.*
 
-//////////////////////////////
-// favoritenfragment
-//
-//
-// autor:
-// inhalt:  stelllt die favorisierten prüfungen bereit.
-// zugriffsdatum: 11.12.19
-//
-//
-//
-//////////////////////////////
 /**
- * Class for the Fragment, where the user can see his selected exams.
+ * Fragment that displays the favorites of the user. He can display details and delete them from favorites.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
- * @see Fragment
+ *
  */
-class Favoritenfragment : MainActivityFragment() {
-
+class FavoriteOverviewFragment : MainActivityFragment() {
     override var name: String="Favoriten"
     private lateinit var recyclerViewFavoritAdapter: RecyclerViewFavoritAdapter
-    private lateinit var viewModel: FavoritenViewModel
+    private lateinit var viewModel: FavoriteOverviewViewModel
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
+     * @author Alexander Lange
      * @since 1.6
-     *
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
      * @see Fragment.onCreate
      */
@@ -60,40 +48,43 @@ class Favoritenfragment : MainActivityFragment() {
         viewModel = ViewModelProvider(
             requireActivity(),
             ViewModelFactory(requireActivity().application)
-        )[FavoritenViewModel::class.java]
+        )[FavoriteOverviewViewModel::class.java]
     }
 
     /**
      * Sets the text for the current period with content from shared preferences
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     fun setPruefungszeitraum() {
-        viewModel.getPruefungszeitraum()?.let { currentPeriode?.text = it }
+        viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
     }
 
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
      *
      * @return Returns the initialized view of this Fragment
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.terminefragment, container, false)
-        return v
+        return inflater.inflate(R.layout.terminefragment, container, false)
     }
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onViewCreated
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,7 +115,6 @@ class Favoritenfragment : MainActivityFragment() {
             }
         }
     }
-
 
     /**
      * Creates the swipe-gesture on the recyclerview,

@@ -12,7 +12,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.CloseApp
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.StartViewModel
 import com.google.android.material.snackbar.Snackbar
@@ -23,33 +22,25 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import java.util.*
-
-//Alexander Lange Start
 import kotlinx.android.synthetic.main.start.*
 import kotlinx.coroutines.*
 
-//Alexander Lange End
+const val UPDATE_REQUEST_CODE = 100
 
-//////////////////////////////
-// MainActivity
-//
-// autor:
-// inhalt:  Auswahl des Studiengangs mit dazugehörigem PruefJahr und Semester
-// zugriffsdatum: 11.12.19, 08/2020 (LG)
-//
-//////////////////////////////
 /**
  * Activity, that allows the user to pick a faculty and select courses.
+ * First activity called on appstart and can also be opend from navigationdrawer in the [MainActivity].
+ * Also initializes a backgroundworker to look for new Database-updates and an Updatemanager to look for new Appupdates.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
 class StartActivity : AppCompatActivity() {
+
     private lateinit var viewModel: StartViewModel
     private var updateManager: AppUpdateManager? = null
     private lateinit var recyclerViewCourses: CoursesCheckList
 
-    private val UPDATE_REQUEST_CODE = 100
 
     private val installStateUpdateListener: InstallStateUpdatedListener =
             InstallStateUpdatedListener {
@@ -77,7 +68,6 @@ class StartActivity : AppCompatActivity() {
      *
      * @see Fragment.onCreate
      */
-
     public override fun onCreate(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(
             this,
@@ -87,7 +77,6 @@ class StartActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start)
         initUpdateManager()
-        initSharedPreferences()
         initRecyclerviewCourses()
         initButtons()
         val changeFlag = intent.getBooleanExtra(CHANGE_FLAG,false)
@@ -101,6 +90,14 @@ class StartActivity : AppCompatActivity() {
         viewModel.fetchFaculties()
     }
 
+    /**
+     * Initializes the updatemanager. The updatemanager checks the google playstore for new appupdates
+     * and if one was found he starts a dialog in which the user can choose if he wants
+     * to update or not.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initUpdateManager() {
         updateManager = AppUpdateManagerFactory.create(this)
         updateManager?.appUpdateInfo?.addOnSuccessListener {
@@ -119,6 +116,12 @@ class StartActivity : AppCompatActivity() {
         updateManager?.registerListener(installStateUpdateListener)
     }
 
+    /**
+     * Initializes the recyclerview that shows all courses for the selected faculty.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initRecyclerviewCourses() {
         recyclerViewChecklist.setHasFixedSize(true)
         recyclerViewChecklist.layoutManager = LinearLayoutManager(applicationContext)
@@ -131,19 +134,6 @@ class StartActivity : AppCompatActivity() {
         }
 
     }
-
-
-    /**
-     * Initializes the sharedPrefernces and the parameter which are attatched to them.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun initSharedPreferences() {
-        viewModel.setServerIPAddress(applicationContext.getString(R.string.server_adress))
-        viewModel.setServerRelUrlPath(applicationContext.getString(R.string.server_url))
-    }
-
 
     /**
      * Initializes the buttons of the UI.
@@ -248,7 +238,6 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
-
     /**
      * Called when the app is stopped.
      *
@@ -262,12 +251,16 @@ class StartActivity : AppCompatActivity() {
         super.onStop()
     }
 
-
+    /**
+     * Opens the [MainActivity].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun startApplication() {
         val mainWindow = Intent(applicationContext, MainActivity::class.java)
         startActivityForResult(mainWindow, 0)
     }
-
 
     /**
      * Called, when the user picked a faculty.
@@ -281,9 +274,5 @@ class StartActivity : AppCompatActivity() {
      */
     private fun facultyChosen(faculty: Faculty) {
         viewModel.setReturnFaculty(faculty)
-    }
-
-    override fun onBackPressed() {
-        CloseApp()
     }
 }

@@ -1,39 +1,30 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.ViewGroup
-import androidx.recyclerview.widget.LinearLayoutManager
-import android.widget.Toast
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.utils.SimpleSpinnerAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.setSelection
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel
-import java.util.ArrayList
-
-//TODO Alexander Lange Start
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.choose_courses.*
-import okhttp3.internal.Util
-
-//TODO Alexander Lange End
 
 /**
- * Class, that creates a list of all courses, from whom the user can decide,
- * which courses he wants to include in his exam-list.
+ *Fragment to change the courseselection. Lets the user add additional courses and change the main course.
  *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
- * @author Alexander Lange
  */
 class ChangeCoursesFragment : MainActivityFragment() {
     override var name: String="Studiengänge verwalten"
@@ -42,42 +33,30 @@ class ChangeCoursesFragment : MainActivityFragment() {
     var mCourses: CoursesCheckList? = null
     var courseChosen: MutableList<Boolean> = ArrayList()
     var courseName: MutableList<String> = ArrayList()
-    /**
-     * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
-     * In this Method, the global parameter which are independent of the UI get initialized,
-     * like the App-SharedPreferences and the reference to the Room-Database
-     *
-     * @since 1.6
-     *
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
-     *
-     * @see Fragment.onCreate
-     */
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     /**
-     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     * Overrides the onCreateView()-Method.
      *
      * @return Returns the initialized view of this Fragment
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.choose_courses, container, false)
-        return v
+        return inflater.inflate(R.layout.choose_courses, container, false)
     }
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
-
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onViewCreated
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -88,6 +67,12 @@ class ChangeCoursesFragment : MainActivityFragment() {
         initSpinner()
     }
 
+    /**
+     * Initializes the spinner to change the main course.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initSpinner(){
         viewModel.liveCoursesForFaculty.observe(viewLifecycleOwner){
             val courseNames:MutableList<String> = mutableListOf()
@@ -116,6 +101,7 @@ class ChangeCoursesFragment : MainActivityFragment() {
             }
         }
     }
+
     /**
      * Initializes the OK, Button. Implements what happens when the user clicks Ok.
      *
@@ -136,13 +122,18 @@ class ChangeCoursesFragment : MainActivityFragment() {
         }
     }
 
+    /**
+     * Lets the user return to the [MainActivityFragment]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun returnToMainscreen(view: View) {
         activity?.recreate()
     }
 
-
     /**
-     * Initializes the recyclerview. Obtains data from the Room-Database, creates an adapter and passes
+     * Initializes the recyclerview that shows the list of courses an if they are selected or not. Obtains data from the Room-Database, creates an adapter and passes
      * it to the recyclerview.
      *
      * @since 1.6

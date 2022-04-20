@@ -7,11 +7,25 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Course
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import kotlinx.coroutines.launch
 
+/**
+ * ViewModel for the [com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.StartActivity]
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
 class StartViewModel(application: Application) : BaseViewModel(application) {
 
-
-
     val liveFaculties = repository.getAllFacultiesLiveData()
+    val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
+
+    /**
+     * Selects a course a the main course.
+     *
+     * @param[course] The course that is supposed to be the mein course.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun addMainCourse(course: Course) {
         addMainCourse(course.courseName)
     }
@@ -19,7 +33,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
     /**
      * Selects a course a the main course.
      *
-     * @param[choosenCourse] The course that is supposed to be the mein course.
+     * @param[choosenCourse] The name of th course that is supposed to be the mein course.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -37,7 +51,14 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-    val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
+    /**
+     * Sets the selected Faculty. Override to update the liveData.
+     *
+     * @param faculty The new Faculty
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     override fun setReturnFaculty(faculty: Faculty){
         super.setReturnFaculty(faculty)
         viewModelScope.launch {
@@ -46,25 +67,28 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
+    /**
+     * Checks if the user already selected a maincourse. If that is the case, he is not asked again and instead redirected to the MainActivity.
+     *
+     * @return Wheter a course has been picked or not.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun checkLoginStatus():Boolean {
         return getSelectedCourse()!=null
     }
 
-    fun firstStart(faculty: Faculty){
-        viewModelScope.launch(coroutineExceptionHandler) {
-            if(repository.getUuid()!=null){
-                return@launch
-            }
-            val uuid = repository.fetchUUID(faculty)
-            uuid?.uuid?.let { repository.insertUuid(it) }
-        }
-    }
-
+    /**
+     * Updates the UUID on the Rest-Api when the app is started for the first time.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun firstStart(faculty: String){
         viewModelScope.launch(coroutineExceptionHandler) {
             val uuid = repository.fetchUUID(faculty)
             uuid?.uuid?.let { repository.insertUuid(it) }
         }
     }
-
 }

@@ -14,17 +14,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.utils.atDay
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
-import java.util.*
 
-//////////////////////////////
-// MyAdapter Recycleview
-//
-// autor:
-// inhalt:  unterteilung von allen Prüfungen in einzelne tabellen und darstellung
-// zugriffsdatum: 11.12.19
-//
-//
-//////////////////////////////
 /**
  * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about all exams.
  * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
@@ -45,8 +35,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
 
     private var openItem: ViewHolder? = null
 
-
-    // Create new views (invoked by the layout manager)
     /**
      * Inflates the view that shows the information for the passed viewType. In this case the information
      * about the exam.
@@ -73,12 +61,20 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         return ViewHolder(view)
     }
 
+    /**
+     * Updates the content of the recyclerview with a new List of courses.
+     * Replaces the current list with the new list.
+     *
+     * @param entryList The list of [TestPlanEntry]-Objects to be shown by the recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun updateContent(entryList: List<TestPlanEntry>) {
         this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
     }
 
-// Replace the contents of a view (invoked by the layout manager)
     /**
      * Initializes the [ViewHolder] with information of the viewtype. In this case,
      * passes the examinformation to the UI-Elements.
@@ -352,10 +348,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         return position
     }
 
-
-// Provide a reference to the views for each data item
-// Complex data items may need more than one view per item, and
-// you provide access to all the views for a data item in a view holder
     /**
      * Inner class [ViewHolder], that contains the references to the UI-Elements.
      *
@@ -384,9 +376,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             txtSecondScreen = v.findViewById<View>(R.id.txtSecondscreen) as TextView
             txtthirdline = v.findViewById<View>(R.id.thirdLine) as TextView
             button = v.findViewById<View>(R.id.button7) as Button
-
-            //button.setLayoutParams(new LinearLayout.LayoutParams(
-            //    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             layout = v.findViewById<View>(R.id.linearLayout) as LinearLayout
             bigLayout = v.findViewById<View>(R.id.linearLayout6) as LinearLayout
         }

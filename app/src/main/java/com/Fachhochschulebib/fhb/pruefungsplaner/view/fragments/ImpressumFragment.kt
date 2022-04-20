@@ -28,17 +28,11 @@ class ImpressumFragment : MainActivityFragment() {
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_impressum, container, false)
-
-
-        return view
+        return inflater.inflate(R.layout.fragment_impressum, container, false)
     }
-
-
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.

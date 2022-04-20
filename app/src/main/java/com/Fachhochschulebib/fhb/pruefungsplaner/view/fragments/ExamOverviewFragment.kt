@@ -17,33 +17,32 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragmen
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.TermineViewModel
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ExamOverviewViewModel
 import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.terminefragment.*
 
 /**
- * Class to maintain the view for all exams. Requests information about exams and fills the recyclerview with them.
+ * Fragment that shows all Exams in the next period for the selected courses.
+ * The user can pick them as favorites or display details for each exam.
  *
+ * @constructor Whether the filter shall be resetted when opening the fragment.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
- * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+ *
  */
-class Terminefragment(var reset: Boolean) : MainActivityFragment() {
+class ExamOverviewFragment(var reset: Boolean) : MainActivityFragment() {
     override var name: String="Prüfungen"
-    private lateinit var viewModel: TermineViewModel
+    private lateinit var viewModel: ExamOverviewViewModel
     private lateinit var recyclerViewExamAdapter: RecyclerViewExamAdapter
 
     constructor():this(false)
 
-
-
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
-     * In this Method, the global parameter which are independent of the UI get initialized,
-     * like the App-SharedPreferences and the reference to the Room-Database
      *
+     * @author Alexander Lange
      * @since 1.6
-     *
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
      * @see Fragment.onCreate
      */
@@ -53,11 +52,13 @@ class Terminefragment(var reset: Boolean) : MainActivityFragment() {
     }
 
     /**
-     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     * Overrides the onCreateView()-Method.
      *
      * @return Returns the initialized view of this Fragment
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
@@ -72,8 +73,9 @@ class Terminefragment(var reset: Boolean) : MainActivityFragment() {
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onViewCreated
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,7 +83,7 @@ class Terminefragment(var reset: Boolean) : MainActivityFragment() {
         viewModel = ViewModelProvider(
                 requireActivity(),
                 ViewModelFactory(requireActivity().application)
-        )[TermineViewModel::class.java]
+        )[ExamOverviewViewModel::class.java]
         viewModel.getCalendarPermission(requireActivity())
         Filter.onFilterChangedListener.add {
             viewModel.liveEntryList.value?.let { Filter.validateList(it) }?.let { recyclerViewExamAdapter.updateContent(it) }
@@ -93,19 +95,21 @@ class Terminefragment(var reset: Boolean) : MainActivityFragment() {
         }
     }
 
-
     /**
      * Initializes the Recyclerview which shows the information about pending exams.
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     private fun initRecyclerview() {
         recyclerViewExamAdapter = RecyclerViewExamAdapter(mutableListOf(),viewModel)
         recyclerView4.adapter = recyclerViewExamAdapter
         recyclerView4.visibility = RecyclerView.VISIBLE
         viewModel.liveEntryList.observe(viewLifecycleOwner){ entryList ->
-            entryList?.let { recyclerViewExamAdapter.updateContent(Filter.validateList(it).toMutableList()) }
+            entryList?.let {
+                recyclerViewExamAdapter.updateContent(Filter.validateList(it).toMutableList())
+            }
             termineFragment_swiperefres.isRefreshing = false
         }
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
@@ -131,18 +135,20 @@ class Terminefragment(var reset: Boolean) : MainActivityFragment() {
     /**
      * Sets the text for the current period with content from shared preferences
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     fun setPruefungszeitraum() {
-        viewModel.getPruefungszeitraum()?.let { currentPeriode?.text = it }
+        viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
     }
 
     /**
      * Enables the functionality to swipe an entity from the recyclerview to favor or delete it
      *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      */
     private fun enableSwipeToDelete() {
         // try and catch, da es bei einer

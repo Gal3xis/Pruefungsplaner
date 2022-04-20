@@ -12,6 +12,12 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * ViewModel for the [com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.ChangeCoursesFragment].
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
 class ChangeCoursesViewModel(application: Application) : BaseViewModel(application) {
 
     val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
@@ -52,6 +58,13 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
         }
     }
 
+    /**
+     * Changes the maincourse for the user. If the new course is not a favorite yet,
+     * it is also updated.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun changeMainCourse(course:String){
         if(course == getSelectedCourse()) return
         viewModelScope.launch {
@@ -61,8 +74,12 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
         }
     }
 
-
-
+    /**
+     * Loads new courses for a specific faulty in the livadata-object.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getCourses(){
         viewModelScope.launch {
             val courses = getReturnFaculty()?.let { getCoursesByFacultyid(it) }

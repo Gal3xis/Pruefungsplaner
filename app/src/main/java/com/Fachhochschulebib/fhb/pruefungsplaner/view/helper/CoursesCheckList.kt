@@ -12,15 +12,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Course
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 
-//////////////////////////////
-// CheckListAdapter
-//
-// autor:
-// inhalt:  erstellt die Checkliste für die Wahl der Studiengänge
-// zugriffsdatum: 01.10.20
-//
-//
-//////////////////////////////
 /**
  * Adapter-Class for the Recyclerview in the AddCourseFragment-Class
  *
@@ -31,6 +22,15 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
  * @see RecyclerView.Adapter
  */
 class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseViewModel, private val context: Context) : RecyclerView.Adapter<CoursesCheckList.ViewHolder>() {
+
+    /**
+     * Returns a list of all chosen courses in the recyclerview
+     *
+     * @return A list of all chosen courses.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getChosen():List<Course>{
         val ret = mutableListOf<Course>()
         courseList.forEach {
@@ -39,18 +39,20 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
         return ret
     }
 
-    fun getNotChosen():List<Course>{
-        val ret = mutableListOf<Course>()
-        courseList.forEach {
-            if(it.choosen==false) ret.add(it)
-        }
-        return ret
-    }
-
+    /**
+     * Updates the content of the recyclerview with a new List of courses.
+     * Replaces the current list with the new list.
+     *
+     * @param courseList The list of courses to be shown by the recyclerview.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun updateContent(courseList:List<Course>){
         this.courseList= courseList.toMutableList()
         notifyDataSetChanged()
     }
+
     /**
      * Called when Recyclerview needs a new ViewHolder.
      *
@@ -99,7 +101,6 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      * @see RecyclerView.Adapter
      * @see RecyclerView.Adapter.onBindViewHolder
      */
-    // Replace the contents of a view (invoked by the layout manager)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Initialisierung der Komponenten
         holder.nameCourse.text = courseList[position].courseName
@@ -111,7 +112,6 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
             holder.checkBoxCourse.isChecked = addFavorite(position)
         }
     }
-
 
     /**
      * Selects/Unselects a course as favorite.
@@ -147,7 +147,6 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      * @see RecyclerView.Adapter
      * @see RecyclerView.Adapter.getItemCount
      */
-    //Item anzahl
     override fun getItemCount(): Int {
         return courseList.size
     }

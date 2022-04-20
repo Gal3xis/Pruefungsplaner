@@ -9,24 +9,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.privacy_declaration.*
-
-//////////////////////////////
-// TerminefragmentSuche
-//
-//
-//
-// autor:
-// inhalt:  Ermöglicht die Suche nach Wahlmodulen und zur darstelllung an den Recycleview adapter übergeben
-// zugriffsdatum: 01.09.20
-//
-//
-//
-//
-//
-//
-//////////////////////////////
 /**
- * [Fragment], that shows the privacy-declaration.
+ * Fragment, that shows the privacy-declaration.
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
@@ -52,20 +36,21 @@ class PrivacyDeclarationFragment : MainActivityFragment() {
             ft?.commit()
         }
     }
+
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the privacy_declaration-layout.
      *
      * @return Returns the initialized view of this Fragment
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.privacy_declaration, container, false)
-
-        return v
+        return inflater.inflate(R.layout.privacy_declaration, container, false)
     }
 }

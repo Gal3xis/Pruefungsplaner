@@ -11,6 +11,12 @@ import androidx.core.animation.doOnEnd
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 
+/**
+ * A Button with custom touch animations. Used in [com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.SettingsFragment]
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
 class SpecialButton(context: Context,attrs:AttributeSet): androidx.appcompat.widget.AppCompatButton(context,attrs) {
 
     private var animation = createAnimation()
@@ -39,27 +45,7 @@ class SpecialButton(context: Context,attrs:AttributeSet): androidx.appcompat.wid
         return super.onDragEvent(event)
     }
 
-
     private fun createAnimation():ValueAnimator {
-        /** Animation with Image Icon*/
-//        val imageView = ImageView(context)
-//        imageView.setImageDrawable(activity?.getDrawable(R.drawable.ic_update))
-//        val relativeLayout = settings_relative_layout
-//        val params = RelativeLayout.LayoutParams(
-//            RelativeLayout.LayoutParams.WRAP_CONTENT,
-//            RelativeLayout.LayoutParams.WRAP_CONTENT
-//        )
-//
-//        params.addRule(RelativeLayout.CENTER_HORIZONTAL)
-//        params.addRule(RelativeLayout.ALIGN_PARENT_TOP)
-//        val animatorIcon = ObjectAnimator.ofFloat(imageView, "rotation", 360f).setDuration(1000)
-//        animatorIcon.repeatCount = 2
-//        animatorIcon.doOnEnd {
-//            relativeLayout.removeView(imageView)
-//        }
-//
-//        animatorIcon.start()
-//        relativeLayout.addView(imageView, params)
         val originalColor = this.backgroundTintList?.defaultColor
 
         val targetColor = context?.theme?.let { Utils.getColorFromAttr(R.attr.colorAccent, it) }
@@ -72,6 +58,7 @@ class SpecialButton(context: Context,attrs:AttributeSet): androidx.appcompat.wid
         }
         return animator
     }
+
     private fun createReverseAnimation():ValueAnimator {
         val originalColor = this.backgroundTintList?.defaultColor
 

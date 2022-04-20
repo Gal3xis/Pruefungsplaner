@@ -14,24 +14,8 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.feedback.*
-
-//////////////////////////////
-// TerminefragmentSuche
-//
-//
-//
-// autor:
-// inhalt:  Ermöglicht die Suche nach Wahlmodulen und zur darstelllung an den Recycleview adapter übergeben
-// zugriffsdatum: 01.09.20
-//
-//
-//
-//
-//
-//
-//////////////////////////////
 /**
- * Lets the user give Feedback about the app.
+ * Fragment that lets the user give Feedback about the app.
  *
  * @author Alexander Lange (Email:alexander.lange@fh.bielefeld.de)
  * @since 1.6
@@ -39,14 +23,14 @@ import kotlinx.android.synthetic.main.feedback.*
 class FeedbackFragment : MainActivityFragment() {
     override var name: String="Feedback"
     private lateinit var viewModel: BaseViewModel
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      * In this Method, the global parameter which are independent of the UI get initialized,
      * like the App-SharedPreferences and the reference to the Room-Database
      *
+     * @author Alexander Lange
      * @since 1.6
-     *
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      *
      * @see Fragment.onCreate
      */
@@ -59,9 +43,10 @@ class FeedbackFragment : MainActivityFragment() {
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
-
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onViewCreated
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -94,15 +79,16 @@ class FeedbackFragment : MainActivityFragment() {
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
      *
      * @return Returns the initialized view of this Fragment
+     *
+     * @author Alexander Lange
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     *
      * @see Fragment.onCreateView
      */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.feedback, container, false)
-        return v
+        return inflater.inflate(R.layout.feedback, container, false)
     }
 }

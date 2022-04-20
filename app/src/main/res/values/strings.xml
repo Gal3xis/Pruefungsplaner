@@ -3,6 +3,8 @@
     <!-- Database -->
     <string name="server_adress">http://85.214.233.224:8080/</string>
     <string name="server_url">MeinPruefplan/resources/org.fh.ppv.</string>
+    <string name="FacultyUrl">"http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.faculty/</string>
+    <string name="ExamPeriodUrl">"http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"</string>
 
     <!-- Ui -->
     <string name="currentPeriod">Die akutelle Phase konnte nicht geladen werden</string>

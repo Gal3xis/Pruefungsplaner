@@ -29,7 +29,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- *
+ * Viewmodel that contains the logic of the Application. Implements a more specific access to the
+ * Database-Repository and includes the sharedPreferencesRepository. Depper functionalities
+ * for different Fragments and Activities are stored in inheriting classes.
  * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-livedata#2)
  */
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
@@ -133,53 +135,84 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     fun updatePruefperiode() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            try {
-                val now = GregorianCalendar()
-                val currentDate = now.time
-                val formatter = SimpleDateFormat("yyyy-MM-dd")
-                var currentExamineDate: JSONObject? = null
-                var date: String
-                var facultyIdDB: String
-                var examineDate: Date? = null
-                var lastDayPp: Date? = null
-                var examineWeek: Int
-                val pruefperiodenObjects = repository.fetchPruefperiondenObjects()
-                if (pruefperiodenObjects != null) {
-                    for (i in 0 until pruefperiodenObjects.length()) {
-                        currentExamineDate = pruefperiodenObjects.getJSONObject(i)
-                        date = currentExamineDate["startDatum"].toString()
-                        facultyIdDB = currentExamineDate.getJSONObject("fbFbid")["fbid"].toString()
-                        date = date.substring(0, 10)
-                        examineDate = formatter.parse(date)
-                        examineWeek = currentExamineDate["PPWochen"].toString().toInt()
-                        val c = Calendar.getInstance()
-                        c.time = examineDate
-                        c.add(Calendar.DATE, 7 * examineWeek - 2)
-                        lastDayPp = formatter.parse(formatter.format(c.time))
+            val pruefperiodenObjects = repository.fetchExamPeriods() ?: return@launch
+            val currentPeriod= GetCurrentPeriode(pruefperiodenObjects)?:return@launch
+            val numberOfWeeks = currentPeriod["PPWochen"].toString().toInt()
 
-                        if (currentDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) break
-                    }
-                }
-                val prevDate = sdfRetrofit.parse(getCurrentTermin())
-                examineDate?.let {
-                    if (it.after(prevDate)) {
-                        deleteAllEntries()
-                    }
-                }
+            //Set start-and enddate
+            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            var startDateString = currentPeriod["startDatum"].toString()
+            startDateString = startDateString.substring(0, 10)
+            val startDate = Calendar.getInstance()
+            startDate.time = formatter.parse(startDateString)
 
-                currentExamineDate?.get("pruefTermin")?.toString()
-                    ?.let { setCurrentTermin(it) }
-                currentExamineDate?.get("PPJahr")?.toString()?.let { setExamineYear(it) }
-                currentExamineDate?.get("pruefSemester")?.toString()
-                    ?.let { setCurrentPeriode(it) }
-                examineDate?.let { setStartDate(it) }
-                lastDayPp?.let { setEndDate(it) }
-                fetchEntries()
-            } catch (e: Exception) {
-                Log.e("UpdatePruefperioden", e.stackTraceToString())
-                Log.d("Output", "Konnte nicht die Pruefphase aktualisieren")
+            val endDate = Calendar.getInstance()
+            endDate.time = startDate.time
+            endDate.add(Calendar.DATE,numberOfWeeks*7-2)
+
+            //Delete all entries if a new plan is available
+            if(startDate.after(getEndDate())){
+                deleteAllEntries()
             }
+
+            setStartDate(startDate.time)
+            setEndDate(endDate.time)
+            fetchEntries()
+//
+//            currentPeriod.get("pruefTermin").toString()
+//                ?.let { setCurrentTermin(it) }
+//            currentPeriod?.get("PPJahr").toString()?.let { setExamineYear(it) }
+//            currentPeriod?.get("pruefSemester")?.toString()
+//                ?.let { setCurrentPeriode(it) }
+//            examineDate?.let { setStartDate(it) }
+//            lastDayPp?.let { setEndDate(it) }
         }
+    }
+
+    private fun GetCurrentPeriode(pruefperiodenObjects: JSONArray): JSONObject? {
+        val formatter = SimpleDateFormat("yyyy-MM-dd")
+
+        var latestDate:Date? =null
+        var latestPeriode:JSONObject? = null
+        val facultyId = getReturnFaculty()
+
+        for (i in 0 until pruefperiodenObjects.length()) {
+            //Get single object
+            val obj = pruefperiodenObjects.getJSONObject(i)
+
+            //Conitune if the faculitids does not match
+            val facultyIdDB = obj.getJSONObject("fbFbid")["fbid"].toString()
+            if(facultyIdDB!=facultyId){
+                continue
+            }
+
+            //Get Startdate
+            var startDateString = obj["startDatum"].toString()
+            startDateString = startDateString.substring(0, 10)
+            val startDate = formatter.parse(startDateString)
+
+            //If no latest date is set, initialize it and continue the loop
+            if(latestDate==null){
+                latestDate = startDate
+                latestPeriode = obj
+                continue
+            }
+
+            if(startDate.after(latestDate)){
+                latestDate = startDate
+                latestPeriode = obj
+            }
+
+//            val examineWeek = obj["PPWochen"].toString().toInt()
+//            val c = Calendar.getInstance()
+//            c.time = startDate
+//            c.add(Calendar.DATE, 7 * examineWeek - 2)
+//            val lastDayPp = formatter.parse(formatter.format(c.time))
+//            if (startDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) {
+//                return obj
+//            }
+        }
+        return latestPeriode
     }
 
     //Room Database
@@ -237,11 +270,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     open fun updateEntryFavorit(context: Context, favorit: Boolean, id: String) {
         viewModelScope.launch {
             repository.updateEntryFavorit(favorit, id)
-            if(!getCalendarSync()) return@launch
+            if (!getCalendarSync()) return@launch
             if (!favorit) repository.getEntryById(id)
                 ?.let { GoogleCalendarIO.deleteEntry(context, it) }
             else
-                repository.getEntryById(id)?.let { GoogleCalendarIO.insertEntry(context, it,getCalendarInsertionType()) }
+                repository.getEntryById(id)
+                    ?.let { GoogleCalendarIO.insertEntry(context, it, getCalendarInsertionType()) }
         }
     }
 
@@ -431,7 +465,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         spRepository.setCalendarSync(sync)
     }
 
-    open fun setCalendarInserionType(insertionTye: GoogleCalendarIO.InsertionTye){
+    open fun setCalendarInserionType(insertionTye: GoogleCalendarIO.InsertionTye) {
         spRepository.setCalendarInsertionType(insertionTye)
     }
 
@@ -517,8 +551,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return spRepository.getCalendarSync()
     }
 
-    open fun getCalendarInsertionType():GoogleCalendarIO.InsertionTye{
-        return spRepository.getCalendarInsertionType()?:GoogleCalendarIO.InsertionTye.Fragen
+    open fun getCalendarInsertionType(): GoogleCalendarIO.InsertionTye {
+        return spRepository.getCalendarInsertionType() ?: GoogleCalendarIO.InsertionTye.Fragen
     }
 
     open fun getServerIPAddress(): String? {
@@ -542,7 +576,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     //Calendar
     fun updateCalendar(context: Context, entries: List<TestPlanEntry>) {
-        GoogleCalendarIO.update(context, entries,getCalendarInsertionType())
+        GoogleCalendarIO.update(context, entries, getCalendarInsertionType())
     }
 
     fun insertCalendarEntries(context: Context, favorits: List<TestPlanEntry>? = null) {

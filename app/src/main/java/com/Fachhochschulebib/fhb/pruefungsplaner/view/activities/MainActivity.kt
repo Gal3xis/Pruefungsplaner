@@ -1,13 +1,10 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.view.activities
 
-//Alexander Lange Start
 import android.app.AlertDialog
 import android.app.DatePickerDialog
-import android.app.Notification
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.os.*
 import android.util.Log
 import android.view.Menu
@@ -18,7 +15,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.SearchAutoComplete
-import androidx.collection.SimpleArrayMap
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -29,37 +25,23 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.hauptfenster.*
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-
-//Alexander Lange End
-
-//////////////////////////////
-// Tabelle
-//
-// autor:
-// inhalt:  Verwaltung der Aufrufe von Fragmenten. Hier ist der "navigation bar" hinterlegt.
-// zugriffsdatum: 20.2.20
-//
-//
-//////////////////////////////
-// Eigentlich die Hauptklasse wurde noch nicht umgenannt
-// von hier werden die fragmente aufgerufen
 /**
- * Main-Class, Controls the mainpart of the app except the Startpage, where the user picks his faculty and courses in the MainActivity.kt.
- * The MainWindow is the TermineFragment.fragment, where the user can view and pick the exams.
+ * Main-Class, Controls the main part of the app except the Startpage, where the user picks his faculty and courses in the MainActivity.kt.
+ * The MainWindow is the [ExamOverviewFragment], where the user can view and pick exams.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
- * @see Filter
+ *
  */
 class MainActivity : AppCompatActivity() {
 
+    private var filterDialog: AlertDialog?=null
     private lateinit var viewModel: MainViewModel
 
     /**
@@ -83,15 +65,21 @@ class MainActivity : AppCompatActivity() {
         initBottomNavigationView()
         initFilterDialog()
 
-        UserFilter(applicationContext)
+        userFilter(applicationContext)
 
         viewModel.updatePruefperiode()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
-        changeFragment( Terminefragment())
+        changeFragment( ExamOverviewFragment())
 
     }
 
+    /**
+     * Initialized the Actionbar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initActionBar() {
         setSupportActionBar(header)
         header.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, theme))
@@ -114,6 +102,12 @@ class MainActivity : AppCompatActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
+    /**
+     * Initializes the menu in the actionbar, shows the filtericon and hides the savebutton.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initMenu(menu: Menu) {
         menu.clear()
         menuInflater.inflate(R.menu.action_menu, menu);
@@ -121,6 +115,15 @@ class MainActivity : AppCompatActivity() {
         menu.findItem(R.id.menu_item_save).isVisible = false
     }
 
+    /**
+     * Initializes the searchview. The searchview is located in the actionbar, where the user
+     * can search a specific module from everywhere in the Application except the start page.
+     *
+     * @param menu The menu in which the searchview is embedded.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initSearchView(menu: Menu) {
         val search: SearchView = menu.findItem(R.id.menu_item_search).actionView as SearchView
         val searchAutoComplete: SearchAutoComplete = search.findViewById(R.id.search_src_text)
@@ -148,7 +151,7 @@ class MainActivity : AppCompatActivity() {
             override fun onQueryTextSubmit(text: String?): Boolean {
                 Filter.reset()
                 Filter.modulName = if (text.isNullOrBlank()) null else text
-                changeFragment( Terminefragment(false))
+                changeFragment( ExamOverviewFragment(false))
                 return true
             }
         })
@@ -174,22 +177,26 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+
     /**
      * Overrides the onBackPressed()-Method. Is Called when the user presses the back-button on his smartphone.
-     * Ending the App in a controlled manner.
+     * Ending the App in a controlled manner. That means if the [ExamOverviewFragment] is open, then the user is asked if he wants to exit the Application.
+     * Else he is directed to the [ExamOverviewFragment]
+     *
+     * @author Alexander Lange
+     * @since 1.6
      */
     override fun onBackPressed() {
-        if(supportFragmentManager.fragments.last()::class==Terminefragment::class){
+        if(supportFragmentManager.fragments.last()::class==ExamOverviewFragment::class){
             CloseApp()
             return
         }
-        changeFragment(Terminefragment())
+        changeFragment(ExamOverviewFragment())
     }
 
-
-
     /**
-     * Initializes the NavigationDrawer
+     * Initializes the NavigationDrawer. The nvaigationdrawer is the main tool for the user to switch between fragments.
+     * It can be accessed via the hamburger-icon from the actionbar.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -212,6 +219,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handler for when the user clicked the hamburger-icon in the actionbar to open or close the navigationdrawer.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun onNavigationDrawerButtonClicked() {
         closeKeyboard()
         if (drawer_layout.isDrawerOpen(GravityCompat.START)) {
@@ -221,12 +234,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Handler for when the user clicked an icon in the navigationdrawer. Directs him to the selected fragment.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun onNavigationDrawerItemClicked(item: MenuItem): Boolean {
         closeKeyboard()
         return when (item.itemId) {
             R.id.navigation_calender -> {
                 changeFragment(
-                        Terminefragment()
+                        ExamOverviewFragment()
                 )
             }
             R.id.navigation_settings -> {
@@ -255,9 +274,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     /**
-     * Initializes the BottomNavigationView
+     * Initializes the BottomNavigationView. In the bottomnavigationview, the user can switch between the [ExamOverviewFragment] and the [FavoriteOverviewFragment].
+     *
      *
      * @author Alexander Lange
      * @since 1.6
@@ -271,12 +290,12 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_calender -> {
                     changeFragment(
 
-                            Terminefragment(supportFragmentManager.fragments.last()::class==Terminefragment::class)
+                            ExamOverviewFragment(supportFragmentManager.fragments.last()::class==ExamOverviewFragment::class)
                     )
                 }
                 R.id.navigation_diary -> {
                     changeFragment(
-                            Favoritenfragment()
+                            FavoriteOverviewFragment()
                     )
                 }
                 else -> true
@@ -284,6 +303,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Closes the Keyboard of the smartphone.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun closeKeyboard() {
         val inputMethodManager = baseContext.getSystemService(
                 INPUT_METHOD_SERVICE
@@ -297,16 +322,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     /**
-     * Changes the Fragment.
+     * Directs the user to a new Fragment.
      *
-     * @param[headertitle] The title to set in the ActionBar (Toolbar).
      * @param[fragment] The fragment which shall be shown.
+     *
      * @return Returns always true, needed for the listener.
+     *
      * @author Alexander Lange
      * @since 1.6
-     * @see onCreate
+     *
      */
     fun changeFragment( fragment: MainActivityFragment): Boolean {
         val ft = supportFragmentManager.beginTransaction()
@@ -319,9 +344,14 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    private var filterDialog: AlertDialog?=null
-
-
+    /**
+     * Initializes the filterdialog. With the Filterdialog, the user can Filter through the shown exams.
+     * The Filter for the [ExamOverviewFragment] and the [FavoriteOverviewFragment] are the same, so
+     * a change in one Fragment is also a change in the other.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initFilterDialog(){
         //Create view for the dialog
         val view = layoutInflater.inflate(R.layout.layout_dialog_filter, null, false)
@@ -339,7 +369,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Ok", null)
             .setNegativeButton(
                 "Reset"
-            ) { _, _ -> UserFilter(this) }
+            ) { _, _ -> userFilter(this) }
             .setView(view)
             .create()
     }
@@ -349,25 +379,39 @@ class MainActivity : AppCompatActivity() {
      *
      * @author Alexander Lange
      * @since 1.6
-     * @see initFilterModule
-     * @see initFilterCourse
-     * @see initFacultyFilter
-     * @see Filter
+     *
      */
     private fun openFilterMenu() {
 
         filterDialog?.show()
     }
 
-
-    private fun initFilterHeader(context: Context, filterVIew: View) {
-        val tvFaculty = filterVIew.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
+    /**
+     * Initilizes the header of the filter. The header shows the faculty, the user has chosen.
+     *
+     * @param context The applicationcontext.
+     * @param filterView The view of the filter.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initFilterHeader(context: Context, filterView: View) {
+        val tvFaculty = filterView.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
         viewModel.liveSelectedFaculty.observe(this) {
             tvFaculty.text = it?.facultyName ?: "No Faculty selected"
         }
         viewModel.getSelectedFaculty()
     }
 
+    /**
+     * Initializes the checkboxes of the filter, where the user can pick specific semester.
+     *
+     * @param context The applicationcontext.
+     * @param filterView The view of the filter.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initFilterSemesterBoxes(context: Context, filterView: View) {
         val c1 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
         val c2 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
@@ -385,12 +429,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Initializes the examiner-filter in the filtermenu.
-     * Creates an adapter with all first-examiners to imlement an autocompletion.
-     * @param[spExaminer] The [Spinner] that shall be initialized.
+     * Initializes a checkbox of the filter-menu.
+     *
+     * @param[c] The checkbox to be initialized.
+     * @param[semester] The semester, the checkbox is representing
      * @author Alexander Lange
      * @since 1.6
-     * @see AdapterView.OnItemSelectedListener.onItemSelected
+     */
+    private fun initFilterCheckbox(c: CheckBox, semester: Int) {
+        c.isChecked = Filter.semester[semester - 1]
+        c.setOnCheckedChangeListener { buttonView, isChecked ->
+            Filter.SetSemester(semester - 1, isChecked)
+        }
+    }
+
+    /**
+     * Initializes the examiner-filter in the filtermenu.
+     * Creates an adapter with all first-examiners to imlement an autocompletion.
+     *
+     * @param context The applicationcontext.
+     * @param filterView The view of the filter.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
      */
     private fun initFilterExaminer(context: Context, filterView: View) {
         val spExaminer = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
@@ -423,20 +485,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Initializes a checkbox of the filter-menu.
-     *
-     * @param[c] The checkbox to be initialized.
-     * @param[semester] The semester, the checkbox is representing
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun initFilterCheckbox(c: CheckBox, semester: Int) {
-        c.isChecked = Filter.semester[semester - 1]
-        c.setOnCheckedChangeListener { buttonView, isChecked ->
-            Filter.SetSemester(semester - 1, isChecked)
-        }
-    }
 
     /**
      * Sets the Filter for the users default configuration.
@@ -447,7 +495,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see Filter
      */
-    fun UserFilter(context: Context) {
+    fun userFilter(context: Context) {
         val selectedCourse = viewModel.getSelectedCourse()
         Filter.reset()
         Filter.courseName = selectedCourse
@@ -655,9 +703,5 @@ class MainActivity : AppCompatActivity() {
                 null
             }
         }
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
     }
 }

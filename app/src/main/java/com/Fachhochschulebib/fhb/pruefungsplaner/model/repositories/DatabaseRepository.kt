@@ -1,11 +1,15 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories
 
+import android.app.Application
 import android.content.Context
+import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.LiveData
+import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -22,16 +26,42 @@ import java.net.HttpURLConnection
 import java.net.URL
 
 /**
+ * Repository for interacting with different databases.
+ * Combines access to the retrofit interface and the local room database.
+ * Stores only simple requests as Suspendfunctions with the withcontext-Scope,specific
+ * implementations are located in the ViewModels [com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel].
+ * Required for the MVVM-Pattern.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
  *
  * **See Also:**[MVVM](https://itnext.io/android-architecture-hilt-mvvm-kotlin-coroutines-live-data-room-and-retrofit-ft-8b746cab4a06)
+ * @see UserDao
+ * @see RetrofitConnect
  */
 class DatabaseRepository(
     context: Context
 ) {
+    //Access to the Room Database
     private var localDataSource: UserDao = AppDatabase.getAppDatabase(context).userDao()
-    private var remoteDataSource = RetrofitHelper.getInstance().create(API::class.java)
 
-    //Retrofit
+    //Access to the Rest-Api via the Retrofit Interface
+    private var remoteDataSource =
+        RetrofitHelper.getInstance().create(RetrofitInterface::class.java)
+
+
+    //Retrofit-Functions
+    /**
+     * Gets all courses from the Rest-Api.
+     * Needs to be called inside a Coroutinescope.
+     *
+     * @return The list of Courses, can be null if no courses where found.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see RetrofitInterface.getCourses
+     */
     suspend fun fetchCourses(): List<GSONCourse>? {
         return withContext(Dispatchers.IO) {
             return@withContext remoteDataSource.getCourses()
@@ -40,9 +70,12 @@ class DatabaseRepository(
 
 
     /**
-     * Updates the faculties. Get all faculties from the webserver and synchronize them withe the SharedPreferences.
+     * Returns an Array of All Faculties from the Rest-Api.
+     * Needs to be called inside a Coroutinescope.
+     * Can throw errors if the connection fails and prints them with the Tag "FetchFaculties".
      *
-     * @param[address] The address of the server.
+     *
+     * @return A list of all Faculties. Can be null if no faculty was found.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -52,8 +85,7 @@ class DatabaseRepository(
         return withContext(Dispatchers.IO) {
             try {
                 val result = StringBuilder()
-                val url =
-                        URL("http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.faculty/")
+                val url = URL(Resources.getSystem().getString(R.string.FacultyUrl))
                 val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
@@ -87,20 +119,38 @@ class DatabaseRepository(
                         receivesFaculties.put(jsonObject.get("faculty"))
                     }
                     val convertedToString = receivesFaculties.toString()
-                    val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
+                    val deletedCling: String =
+                        convertedToString.substring(1, convertedToString.length - 1)
                     return@withContext JSONArray(deletedCling)
 
-                }catch (e:Exception){
-                    Log.d("DataBaseRepository:fetchFaculties",e.stackTraceToString())
+                } catch (e: Exception) {
+                    Log.d("FetchFaculties", e.stackTraceToString())
                     return@withContext null
                 }
-            }catch (e:Exception){
-                Log.d("FetchFaculties",e.stackTraceToString())
+            } catch (e: Exception) {
+                Log.d("FetchFaculties", e.stackTraceToString())
                 return@withContext null
             }
         }
     }
 
+    /**
+     * Returns an Array of All Entries from the Rest-Api.
+     * Needs to be called inside a Coroutinescope.
+     *
+     * @param ppSemester The current Semester, can be taken from the sharedPreferences[SharedPreferencesRepository.getCurrentPeriode].
+     * @param pTermin Differences between first and second period. Can be taken from sharedPreferences [SharedPreferencesRepository.getCurrentTermin]]
+     * @param pYear The year from where the entries shall be taken. The current year can be taken from [SharedPreferencesRepository.getExamineYear]]
+     * @param pId A string with all the ids from which the entries shall be taken. Can be get from [com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel.getIDs]
+     *
+     * @return A list of all Faculties. Can be null if no faculty was found.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see RetrofitInterface.getEntries
+     *
+     */
     suspend fun fetchEntries(
         ppSemester: String,
         pTermin: String,
@@ -113,19 +163,21 @@ class DatabaseRepository(
     }
 
     /**
-     * Returns a list of all examperiods in the database.
+     * Returns an Array of all examperiods in the retrofit database.
+     * Needs to be called inside a Coroutinescope.
+     * Can throw errors if the connection fails and prints them with the Tag "FetchPeriods".
+     *
      *
      * @return a JSONArray with all examperiods containing information. The Json-Objects contain data about the first day of the period, the semester (WiSe or SoSe), first or second period, weeknumber and faculty.
      * @since 1.6
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @author Alexander Lange
+     *
      */
-    suspend fun fetchPruefperiondenObjects(): JSONArray? {
+    suspend fun fetchExamPeriods(): JSONArray? {
         return withContext(Dispatchers.IO) {
             try {
                 val result = StringBuilder()
-                val address =
-                        "http://85.214.233.224:8080/MeinPruefplan/resources/org.fh.ppv.entity.pruefperioden/"
-                val url = URL(address)
+                val url = URL(Resources.getSystem().getString(R.string.ExamPeriodUrl))
                 val urlConn = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
@@ -155,18 +207,20 @@ class DatabaseRepository(
                         examinePeriodArray.put(obj)
                     }
                     val convertedToString = examinePeriodArray.toString()
-                    val deletedCling: String = convertedToString.substring(1, convertedToString.length - 1)
+                    val deletedCling: String =
+                        convertedToString.substring(1, convertedToString.length - 1)
                     return@withContext JSONArray(deletedCling)
                 } catch (e: Exception) {
-                    Log.d("Output exception", e.stackTraceToString())
+                    Log.d("FetchPeriods", e.stackTraceToString())
                     return@withContext null
                 }
-            }catch (e:Exception){
-                Log.d("Output exception", e.stackTraceToString())
+            } catch (e: Exception) {
+                Log.d("FetchPeriods", e.stackTraceToString())
                 return@withContext null
             }
         }
     }
+
 
     suspend fun sendFeedBack(
         uuid: String,
@@ -175,19 +229,25 @@ class DatabaseRepository(
         ratingStability: Float,
         text: String
     ) {
-        withContext(Dispatchers.IO){
-            remoteDataSource.sendFeedBack(uuid,ratingUsability.toString(),ratingFunctions.toString(),ratingStability.toString(),text)
+        withContext(Dispatchers.IO) {
+            remoteDataSource.sendFeedBack(
+                uuid,
+                ratingUsability.toString(),
+                ratingFunctions.toString(),
+                ratingStability.toString(),
+                text
+            )
         }
     }
 
 
-    suspend fun fetchUUID(faculty:String):JsonUuid?{
-        return withContext(Dispatchers.IO){
+    suspend fun fetchUUID(faculty: String): JsonUuid? {
+        return withContext(Dispatchers.IO) {
             return@withContext remoteDataSource.getUUID(faculty)
         }
     }
 
-    suspend fun fetchUUID(faculty:Faculty):JsonUuid?{
+    suspend fun fetchUUID(faculty: Faculty): JsonUuid? {
         return fetchUUID(faculty.fbid)
     }
 
@@ -241,8 +301,8 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun unselectAllFavorits(){
-        withContext(Dispatchers.IO){
+    suspend fun unselectAllFavorits() {
+        withContext(Dispatchers.IO) {
             localDataSource.unselectAllFavorits()
         }
     }
@@ -291,8 +351,8 @@ class DatabaseRepository(
         return ret
     }
 
-    suspend fun getEntriesByModule():List<TestPlanEntry>?{
-        return withContext(Dispatchers.IO){
+    suspend fun getEntriesByModule(): List<TestPlanEntry>? {
+        return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getEntriesByModule()
         }
     }
@@ -301,13 +361,13 @@ class DatabaseRepository(
         localDataSource.getAllEntriesLiveDataByDate()
 
     suspend fun getEntriesForCourseLiveData(name: String?): List<TestPlanEntry>? {
-        return withContext(Dispatchers.IO){
+        return withContext(Dispatchers.IO) {
             return@withContext name?.let { localDataSource.getEntriesByCourseName(it) }
         }
 
     }
 
-    fun getAllFavoritsLiveData(): LiveData<List<TestPlanEntry>?> =
+    fun getAllFavoritesLiveData(): LiveData<List<TestPlanEntry>?> =
         localDataSource.getAllFavoritsLiveData()
 
     fun getAllCoursesLiveData(): LiveData<List<Course>?> = localDataSource.getAllCoursesLiveData()
@@ -323,20 +383,22 @@ class DatabaseRepository(
 
     fun getFirstExaminerNames() = localDataSource.getFirstExaminerNames()
 
+    fun getAllEntriesForChoosenCoursesLiveData() = localDataSource.getAllEntriesForSelectedCoursesLiveDataByDate()
+
     suspend fun getAllCourses(): List<Course>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getAllCourses()
         }
     }
 
-    suspend fun getCourseById(id:String):Course{
-        return withContext(Dispatchers.IO){
+    suspend fun getCourseById(id: String): Course {
+        return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getCourseById(id)
         }
     }
 
     suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>? {
-       return withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getFavorites(favorit)
         }
     }
@@ -405,8 +467,8 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getCourseByName(name:String):Course{
-        return withContext(Dispatchers.IO){
+    suspend fun getCourseByName(name: String): Course {
+        return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getCourseByName(name)
         }
     }

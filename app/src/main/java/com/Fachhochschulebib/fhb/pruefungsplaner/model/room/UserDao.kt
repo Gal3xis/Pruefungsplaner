@@ -69,6 +69,10 @@ interface UserDao {
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
 
+    @Query("SELECT * FROM TestPlanEntry as t INNER JOIN Course as c ON c.couresName LIKE t.course WHERE c.choosen = 1 ORDER BY date, termin, module")
+    fun getAllEntriesForSelectedCoursesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
+
+
     @Query("SELECT * FROM TestPlanEntry WHERE course = :name ORDER BY module")
     fun getEntriesForCourseLiveData(name:String):LiveData<List<TestPlanEntry>?>
 

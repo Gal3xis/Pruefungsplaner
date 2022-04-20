@@ -17,28 +17,27 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 
+/**
+ * ViewModel for the [com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity]
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
 class MainViewModel(application: Application) : BaseViewModel(application) {
 
-
     val liveEntriesOrdered = repository.getAllEntriesLiveDataByDate()
-
     val liveSelectedFaculty = MutableLiveData<Faculty?>()
-
-    val liveFilteredEntriesByDate = MutableLiveData<List<TestPlanEntry>?>()
-
     val liveEntriesForCourse = MutableLiveData<List<TestPlanEntry>?>()
-
     val liveChoosenCourses = repository.getAllChoosenCoursesLiveData()
-
-    val liveFilteredFavorits = MutableLiveData<List<TestPlanEntry>?>()
-
-    var liveCoursesForFacultyId = MutableLiveData<List<Course>?>()
-
     var liveProfList = repository.getFirstExaminerNames()
 
-
-
-
+    /**
+     * Gets the selected Faculty from the room database.
+     * Stores the result in the [liveSelectedFaculty]-LiveDataObject
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getSelectedFaculty(){
         viewModelScope.launch {
             val id = getReturnFaculty()
@@ -47,19 +46,19 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
+    /**
+     * Gets a list of all entries for the coursename selected in the Filter.
+     * Stores the result in the [liveEntriesForCourse]-LiveDataObject.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun filterCoursename(){
         viewModelScope.launch {
-            val entriesForCourse =Filter.courseName?.let {repository.getEntriesForCourseLiveData(it)  }?:repository.getAllEntries()
+            val entriesForCourse =Filter.courseName?.let {
+                repository.getEntriesForCourseLiveData(it)
+            }?:repository.getAllEntries()
             liveEntriesForCourse.postValue(entriesForCourse)
-        }
-    }
-
-    fun filter() {
-        viewModelScope.launch {
-            val entriesByDate = repository.getAllEntries()?.let { Filter.validateList(it) }
-            val favorits = repository.getFavorites(true)
-            liveFilteredEntriesByDate.postValue(entriesByDate)
-            liveFilteredFavorits.postValue(favorits?.let { Filter.validateList(it) })
         }
     }
 }

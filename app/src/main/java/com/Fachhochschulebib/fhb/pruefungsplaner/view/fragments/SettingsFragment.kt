@@ -2,15 +2,12 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
 import android.app.AlertDialog
 import android.app.TimePickerDialog
-import android.os.Build
 import android.os.Bundle
 import android.os.Process
-import android.util.Log
 import android.view.*
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.optionfragment.*
 import java.lang.Exception
-import android.view.*
 import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
@@ -19,26 +16,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragmen
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.hauptfenster.*
-import kotlinx.android.synthetic.main.optionfragment.*
-import okhttp3.internal.Version
-import org.w3c.dom.Text
 
-
-//////////////////////////////
-// Optionen
-//
-//
-//
-// autor:
-// inhalt:  Abfragen ob prüfungen zum Kalender hinzugefügt werden sollen  und Methoden zum löschen, aktualisieren der Datenbank
-// zugriffsdatum: 20.2.20
-//
-//
-//
-//
-//
-//
-//////////////////////////////
 /**
  * Class to maintain the Options-Fragment.
  *
@@ -161,7 +139,7 @@ class SettingsFragment() : MainActivityFragment() {
 
     private fun initDeleteFavoritsButton() {
         btnFav.setOnClickListener {
-            viewModel.deleteFavorits(requireContext())
+            viewModel.deleteAllFavorites(requireContext())
             Toast.makeText(
                 view?.context,
                 view?.context?.getString(R.string.delete_favorite),
@@ -171,7 +149,7 @@ class SettingsFragment() : MainActivityFragment() {
     }
 
     private fun initUpdateCalendarButton() {
-        viewModel.liveFavorits.observe(viewLifecycleOwner) {
+        viewModel.liveFavorites.observe(viewLifecycleOwner) {
             if (it != null) {
                 viewModel.updateCalendar(requireContext(), it)
             }
@@ -388,14 +366,14 @@ class SettingsFragment() : MainActivityFragment() {
                 Process.killProcess(pid)
                 }.setNegativeButton("Nicht Neustarten"){
                         _,_->
-                    changeFragment(Terminefragment())
+                    changeFragment(ExamOverviewFragment())
 
                 }.create().show()
         }else{
             viewModel.setChosenThemeId(chosenThemeId)
             viewModel.setChosenDarkMode(darkMode.isChecked)
 
-            changeFragment(Terminefragment())
+            changeFragment(ExamOverviewFragment())
         }
 
 

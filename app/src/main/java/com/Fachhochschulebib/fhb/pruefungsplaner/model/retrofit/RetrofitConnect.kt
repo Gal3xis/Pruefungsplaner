@@ -2,46 +2,15 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit
 
 import android.content.Context
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import com.google.gson.GsonBuilder
-import retrofit2.converter.gson.GsonConverterFactory
 import kotlinx.coroutines.*
 import retrofit2.*
-import retrofit2.http.GET
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.converter.gson.GsonConverterFactory
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-
-interface API{
-    @GET("org.fh.ppv.entity.studiengang/")
-    suspend fun getCourses():List<GSONCourse>
-
-
-    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pIds}/")
-    suspend fun getEntries(
-        @Path("ppSemester") ppSemetser:String,
-        @Path("pTermin")pTermin:String,
-        @Path("pYear")pYear:String,
-        @Path("pIds")pIds:String):List<GSONEntry>
-
-
-    @GET("org.fh.ppv.entity.user/firstStart/{pFaculty}/")
-    suspend fun getUUID(@Path("pFaculty") ppFaculty: String): JsonUuid?
-
-
-    @POST("org.fh.ppv.entity.feedback/sendFeedback/{pUuid}/{pUsability}/{pFunctions}/{pStability}/{pText}/")
-    suspend fun sendFeedBack(
-        @Path("pUuid")ppUuid:String,
-        @Path("pUsability")ppUsability:String,
-        @Path("pFunctions")ppFunctions:String,
-        @Path("pStability") ppStability:String,
-        @Path("pText")ppText:String
-    )
-}
 
 object RetrofitHelper{
     private val serverIp = "http://85.214.233.224:8080/"
