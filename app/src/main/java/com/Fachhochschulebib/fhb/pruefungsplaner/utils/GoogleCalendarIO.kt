@@ -25,7 +25,7 @@ import java.util.*
 object GoogleCalendarIO {
 
     enum class InsertionTye {
-        Manuell, Automatisch, Fragen
+        Manuel, Automatic, Ask
     }
 
     private val EVENTS_URI = Uri.parse("content://com.android.calendar/events")
@@ -171,15 +171,15 @@ object GoogleCalendarIO {
     fun insertEntry(
         context: Context,
         e: TestPlanEntry,
-        insertionTye: InsertionTye = InsertionTye.Fragen
+        insertionTye: InsertionTye = InsertionTye.Ask
     ) {
         when (insertionTye) {
-            InsertionTye.Automatisch -> {
+            InsertionTye.Automatic -> {
                 findEventSingle(context, e)?.let { deleteEntry(context, it) }
                 forceInsert(context, createEvent(context, e))
             }
-            InsertionTye.Manuell -> indirectInsert(context, createIntent(context, e))
-            InsertionTye.Fragen -> {
+            InsertionTye.Manuel -> indirectInsert(context, createIntent(context, e))
+            InsertionTye.Ask -> {
                 AlertDialog.Builder(context)
                     .setTitle("Termin Eintragen")
                     .setPositiveButton("Automatisch") { _, _ ->

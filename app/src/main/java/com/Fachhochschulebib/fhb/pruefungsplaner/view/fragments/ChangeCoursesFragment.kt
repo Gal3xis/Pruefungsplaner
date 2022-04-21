@@ -76,11 +76,15 @@ class ChangeCoursesFragment : MainActivityFragment() {
     private fun initSpinner(){
         viewModel.liveCoursesForFaculty.observe(viewLifecycleOwner){
             val courseNames:MutableList<String> = mutableListOf()
-            it?.forEach {
-                courseNames.add(it.courseName)
+            var selectedMainCourseName:String? = null
+            it?.forEach { course ->
+                courseNames.add(course.courseName)
+                if(course.sgid==viewModel.getMainCourse()){
+                    selectedMainCourseName = course.courseName
+                }
             }
             choose_course_change_main_spinner.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
-            choose_course_change_main_spinner.setSelection(viewModel.getSelectedCourse())
+            choose_course_change_main_spinner.setSelection(selectedMainCourseName)
         }
         viewModel.getCourses()
         choose_course_change_main_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
@@ -144,7 +148,6 @@ class ChangeCoursesFragment : MainActivityFragment() {
         //linear layout manager
         val layoutManager = LinearLayoutManager(context)
         recyclerViewChecklist.layoutManager = layoutManager
-        val faculty = viewModel.getReturnFaculty()
         viewModel.liveCoursesForFaculty.observe(viewLifecycleOwner){
             recyclerViewChecklist?.adapter = context?.let { it1 ->
                 it?.let { it2 ->

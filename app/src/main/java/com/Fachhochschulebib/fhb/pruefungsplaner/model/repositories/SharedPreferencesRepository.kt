@@ -2,230 +2,405 @@ package com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories
 
 import android.content.Context
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.GoogleCalendarIO
+import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 
 class SharedPreferencesRepository(context: Context) {
 
     private val context = context
 
-    private val validation = context.getSharedPreferences("validation", Context.MODE_PRIVATE)
+    private val periodInformation = context.getSharedPreferences("periodInformation", Context.MODE_PRIVATE)
     private val settings = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
-    private val serverAddress = context.getSharedPreferences("Server_Address", Context.MODE_PRIVATE)
-    private val faculty = context.getSharedPreferences("faculty",Context.MODE_PRIVATE)
-    private val examineTermin = context.getSharedPreferences("examineTermin",Context.MODE_PRIVATE)
-    private val currentPeriode = context.getSharedPreferences("currentPeriode",Context.MODE_PRIVATE)
-
-
-    fun getSelectedCourse():String?{
-        return validation.getString("selectedCourse",null)
+    private val userSelection = context.getSharedPreferences("userSelection",Context.MODE_PRIVATE)
+//Period information
+    /**
+     * Gets the course, selected as the maincourse
+     *
+     * @return The id of the course, selected as the maincourse
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getMainCourse():String?{
+        return userSelection.getString("mainCourseId",null)
     }
 
-    fun setSelectedCourse(course:String){
-        val editor = validation.edit()
-        editor.putString("selectedCourse",course)
+    /**
+     * Sets the course, selected as the maincourse
+     *
+     * @param courseId The id of the course, selected as the maincourse
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun setMainCourse(courseId: String){
+        val editor = userSelection.edit()
+        editor.putString("mainCourseId",courseId)
         editor.apply()
     }
 
-    fun getReturnCourse():String?{
-        return validation.getString("returnCourse",null)
-    }
-
-    fun setReturnCourse(course: String){
-        val editor = validation.edit()
-        editor.putString("returnCourse",course)
+    /**
+     * Deletes the main course from shared preferences
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun deleteMainCourse() {
+        val editor = userSelection.edit()
+        editor.remove("mainCourseId")
         editor.apply()
     }
 
-    fun getReturnFaculty():String?{
-        return validation.getString("returnFaculty",null)
+    /**
+     * Gets the faculty, selected by the user
+     *
+     * @return The id of the faculty, the user selected
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getSelectedFaculty():String?{
+        return userSelection.getString("selectedFacultyId",null)
     }
 
-    fun setReturnFaculty(faculty:String){
-        val editor = validation.edit()
-        editor.putString("returnFaculty",faculty)
+    /**
+     * Sets the faculty, selected by the user
+     *
+     * @param facultyId The id of the faculty, the user selected
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun setSelectedFaculty(facultyId:String){
+        val editor = userSelection.edit()
+        editor.putString("selectedFacultyId",facultyId)
         editor.apply()
     }
 
-    fun deleteSelectedCourse(){
-        val editor = validation.edit()
-        editor.remove("selectedCourse")
+    /**
+     * Gets the year of the current period
+     *
+     * @return the year of the current period as string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getPeriodYear():String?{
+        return periodInformation.getString("periodYear",null)
+    }
+
+    /**
+     * Sets the year of the current period
+     *
+     * @param year The year of the current period as string (Like '2022')
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun setPeriodYear(year:String){
+        val editor = periodInformation.edit()
+        editor.putString("periodYear",year)
         editor.apply()
     }
 
-    fun getExamineYear():String?{
-        return validation.getString("examineYear",null)
+    /**
+     * Gets the term of the current period (SoSe or WiSe)
+     *
+     * @return The term of the current period (SoSe or WiSe)
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getPeriodTerm():String?{
+        return periodInformation.getString("periodTerm",null)
     }
 
-    fun setExamineYear(year:String){
-        val editor = validation.edit()
-        editor.putString("examineYear",year)
+    /**
+     * Sets the term of the current period (SoSe or WiSe)
+     *
+     * @param period The term of the current period (SoSe or WiSe)
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun setPeriodTerm(period:String){
+        val editor = periodInformation.edit()
+        editor.putString("periodTerm",period)
         editor.apply()
     }
 
-    fun getCurrentPeriode():String?{
-        return validation.getString("currentPeriode",null)
+    /**
+     * TODO Rename
+     */
+    fun getPeriodTermin():String?{
+        return periodInformation.getString("periodTermin",null)
     }
 
-    fun setCurrentPeriode(periode:String){
-        val editor = validation.edit()
-        editor.putString("currentPeriode",periode)
+    fun setPeriodTermin(termin:String){
+        val editor = periodInformation.edit()
+        editor.putString("periodTermin",termin)
         editor.apply()
     }
 
-    fun getCurrentTermin():String?{
-        return examineTermin.getString("currentTermin",null)
-    }
-
-    fun setCurrentTermin(termin:String){
-        val editor = examineTermin.edit()
-        editor.putString("currentTermin",termin)
-        editor.apply()
-    }
-
-    //TODO Needed?
-    fun getCurrentPeriodeString():String?{
-        return currentPeriode.getString("currentPeriode",null)
-    }
-
-    fun setCurrentPeriodeString(str:String){
-        val editor = currentPeriode.edit()
-        editor.putString("currentPeriode",str)
-        editor.apply()
-    }
-
+    /**
+     * Gets the start date of the period
+     *
+     * @return The start date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getStartDate():String?{
-        return currentPeriode.getString("startDate",null)
+        return periodInformation.getString("startDate",null)
     }
 
+    /**
+     * Sets the start date of the period
+     *
+     * @param date The start date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setStartDate(date:String){
-        val editor = currentPeriode.edit()
+        val editor = periodInformation.edit()
         editor.putString("startDate",date)
         editor.apply()
     }
 
+    /**
+     * Gets the end date of the period
+     *
+     * @return The end date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getEndDate():String?{
-        return currentPeriode.getString("endDate",null)
+        return periodInformation.getString("endDate",null)
     }
 
+    /**
+     * Sets the end date of the period
+     *
+     * @param date The end date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setEndDate(date: String){
-        val editor = currentPeriode.edit()
+        val editor = periodInformation.edit()
         editor.putString("endDate",date)
         editor.apply()
     }
 
-    //Returns false by default
+//Settings
+    /**
+     * Gets the setting for the darkmode
+     *
+     * @return true-> darkmode is set; false-> darkmode is not set. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getChosenDarkmode():Boolean{
         return settings.getBoolean("darkmode",false)
     }
 
+    /**
+     * Sets the setting for the darkmode
+     *
+     * @param darkmode true-> darkmode is set; false-> darkmode is not set
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setChosenDarkmode(darkmode:Boolean){
         val editor = settings.edit()
         editor.putBoolean("darkmode",darkmode)
         editor.apply()
     }
 
-    //Returns -1 by default
+    /**
+     * Gets the id of the selected theme
+     *
+     * @return The id of the selected theme. Returns the id of the first theme in the list (green) by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getChosenThemeId():Int{
-        return settings.getInt("themeid",-1)
+        return settings.getInt("themeid", Utils.themeList[0])
     }
 
+    /**
+     * Sets the id of the selected theme
+     *
+     * @param id The id of the selected theme
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setChosenThemeId(id:Int){
         val editor = settings.edit()
         editor.putInt("themeid",id)
         editor.apply()
     }
 
+    /**
+     * Gets the hour component of the update interval for the background worker
+     *
+     * @return The hour component of the update interval for the background worker. Return 0 by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getUpdateIntervalTimeHour():Int{
-        return settings.getInt("update_intervall_time_hour",0)
+        return settings.getInt("updateIntervalTimeHour",0)
     }
 
+    /**
+     * Sets the hour component of the update interval for the background worker
+     *
+     * @param hour The hour component of the update interval for the background worker
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setUpdateIntervalTimeHour(hour:Int){
         val editor = settings.edit()
-        editor.putInt("update_intervall_time_hour",hour)
+        editor.putInt("updateIntervalTimeHour",hour)
         editor.apply()
     }
 
-    //Return 15 by default
+    /**
+     * Gets the minute component of the update interval for the background worker
+     *
+     * @return The minute component of the update interval for the background worker. Returns 15 by default, because 0:15 is the minimum interval for the background worker
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getUpdateIntervalTimeMinute():Int{
-        return settings.getInt("update_intervall_time_minute",15)
+        return settings.getInt("updateIntervalTimeMinute",15)
     }
 
+    /**
+     * Sets the minute component of the update interval for the background worker
+     *
+     * @param minute The hour component of the update interval for the background worker
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setUpdateIntervalTimeMinute(minute:Int){
         val editor = settings.edit()
-        editor.putInt("update_intervall_time_minute",minute)
+        editor.putInt("updateIntervalTimeMinute",minute)
         editor.apply()
     }
 
+    /**
+     * Gets the setting for background updates
+     *
+     * @return true->The app will update in the background; false->The app wont update in the background. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getBackgroundUpdates():Boolean{
         return settings.getBoolean("backgroundUpdates",false)
     }
 
+    /**
+     * Sets the setting for background updates
+     *
+     * @param status true->The app will update in the background; false->The app wont update in the background
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setBackgroundUpdates(status:Boolean){
         val editor = settings.edit()
         editor.putBoolean("backgroundUpdates",status)
         editor.apply()
     }
 
+    /**
+     * Gets the setting for notification sounds for the background worker
+     *
+     * @return true->The app will make a sound for each notification;false->the app will make no sound for a notification. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getNotificationSounds():Boolean{
-        return settings.getBoolean("NotificationSounds",false)
+        return settings.getBoolean("notificationSounds",false)
     }
 
+    /**
+     * Sets the setting for notification sounds for the background worker
+     *
+     * @param status true->The app will make a sound for each notification;false->the app will make no sound for a notification
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setNotificationSounds(status:Boolean){
         val editor = settings.edit()
-        editor.putBoolean("NotificationSounds",status)
+        editor.putBoolean("notificationSounds",status)
         editor.apply()
     }
 
-
-
+    /**
+     * Gets the setting for calendar synchronization
+     *
+     * @return true->The calendar will synchronize with the selected exams;false->The calendar wont sync with the selected courses. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getCalendarSync():Boolean{
         return settings.getBoolean("calSync",false)
     }
 
+    /**
+     * Sets the setting for calendar synchronization
+     *
+     * @param sync true->The calendar will synchronize with the selected exams;false->The calendar wont sync with the selected courses
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setCalendarSync(sync:Boolean){
         val editor = settings.edit()
         editor.putBoolean("calSync",sync)
         editor.apply()
     }
-    fun setCalendarInsertionType(insertionTye: GoogleCalendarIO.InsertionTye) {
-        val editor = settings.edit()
-        editor.putString("InsertionType",insertionTye.name)
-        editor.apply()
-    }
 
+    /**
+     * Gets the setting for the insertion type for each calendar entry
+     *
+     * @return The insertion type for each new calendar entry.
+     * Automatic -> The entry will be placed in the calendar without notifying the user;
+     * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
+     * Ask->The user will be asked each time, if an entry should be manuel ro automatic. Returns automatic by default.
+     */
     fun getCalendarInsertionType() :GoogleCalendarIO.InsertionTye?{
-        return settings.getString("InsertionType",GoogleCalendarIO.InsertionTye.Automatisch.name)
+        return settings.getString("InsertionType",GoogleCalendarIO.InsertionTye.Automatic.name)
             ?.let { GoogleCalendarIO.InsertionTye.valueOf(it) }
     }
-    fun getServerIPAddress():String?{
-        return serverAddress.getString("ServerIPAddress",null)
-    }
 
-    fun setServerIPAddress(address:String){
-        val editor = serverAddress.edit()
-        editor.putString("ServerIPAddress",address)
+    /**
+     * Sets the setting for the insertion type for each calendar entry
+     *
+     * @param insertionType The insertion type for each new calendar entry.
+     * Automatic -> The entry will be placed in the calendar without notifying the user;
+     * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
+     * Ask->The user will be asked each time, if an entry should be manuel ro automatic
+     */
+    fun setCalendarInsertionType(insertionType: GoogleCalendarIO.InsertionTye) {
+        val editor = settings.edit()
+        editor.putString("InsertionType",insertionType.name)
         editor.apply()
     }
-
-    fun getServerRelUrlPath():String?{
-        return serverAddress.getString("ServerRelUrlPath",null)
-    }
-
-    fun setServerRelUrlPath(path:String){
-        val editor = serverAddress.edit()
-        editor.putString("ServerRelUrlPath",path)
-        editor.apply()
-    }
-
-    fun getFaculties():String?{
-        return faculty.getString("faculty",null)
-    }
-
-    fun setFaculties(faculties:String){
-        val editor = faculty.edit()
-        editor.putString("faculty",faculties)
-        editor.apply()
-    }
-
-
 
 }

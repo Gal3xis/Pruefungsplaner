@@ -106,10 +106,10 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
         holder.nameCourse.text = courseList[position].courseName
         holder.checkBoxCourse.isChecked = courseList[position].choosen == true
         holder.checkBoxCourse.setOnClickListener { // Speichere die auswahl in der Liste
-            holder.checkBoxCourse.isChecked = addFavorite(position)
+            holder.checkBoxCourse.isChecked = toggleFavorite(position)
         }
         holder.nameCourse.setOnClickListener { // Speichere die auswahl in der Liste
-            holder.checkBoxCourse.isChecked = addFavorite(position)
+            holder.checkBoxCourse.isChecked = toggleFavorite(position)
         }
     }
 
@@ -122,10 +122,9 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      * @author Alexander Lange
      * @since 1.6
      */
-    private fun addFavorite(position: Int): Boolean {
-        if (courseList[position].courseName != viewModel.getSelectedCourse()) {
-            courseList[position].choosen?.let { courseList[position].choosen = !it
-            }
+    private fun toggleFavorite(position: Int): Boolean {
+        if (courseList[position].sgid != viewModel.getMainCourse()) {
+            courseList[position].choosen = !courseList[position].choosen
             viewModel.updateCourse(courseList[position])
         } else {
             Toast.makeText(
@@ -133,7 +132,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
                 Toast.LENGTH_SHORT
             ).show()
         }
-        return courseList[position].choosen == true
+        return courseList[position].choosen
     }
 
     /**

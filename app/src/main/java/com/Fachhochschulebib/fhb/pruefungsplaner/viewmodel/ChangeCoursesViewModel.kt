@@ -1,12 +1,9 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitConnect
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Course
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
@@ -21,6 +18,8 @@ import org.json.JSONObject
 class ChangeCoursesViewModel(application: Application) : BaseViewModel(application) {
 
     val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
+
+    val liveSelectedCourseName = MutableLiveData<String?>()
 
     /**
      * Updates the Room-Database with data from the Server.
@@ -66,9 +65,10 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
      * @since 1.6
      */
     fun changeMainCourse(course:String){
-        if(course == getSelectedCourse()) return
         viewModelScope.launch {
-            setSelectedCourse(course)
+            val id = getCourseId(course)?:return@launch
+            if(id == getMainCourse()) return@launch
+            setMainCourse(id)
             repository.updateCourse(course,true)
             getCourses()
         }
@@ -82,8 +82,24 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
      */
     fun getCourses(){
         viewModelScope.launch {
-            val courses = getReturnFaculty()?.let { getCoursesByFacultyid(it) }
+            val courses = getSelectedFaculty()?.let { getCoursesByFacultyid(it) }
             liveCoursesForFaculty.postValue(courses)
+        }
+    }
+
+    /**
+     * Returns the name of the selected main courses
+     *
+     * @return The name of the selected main course
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getMainCourseName(){
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val id = getMainCourse()?:return@launch
+            val name = repository.getCourseName(id)
+            liveSelectedCourseName.postValue(name)
         }
     }
 }

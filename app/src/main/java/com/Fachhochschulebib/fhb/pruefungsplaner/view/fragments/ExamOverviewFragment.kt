@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.Fachhochschulebib.fhb.pruefungsplaner.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
@@ -31,12 +32,10 @@ import kotlinx.android.synthetic.main.terminefragment.*
  * @since 1.6
  *
  */
-class ExamOverviewFragment(var reset: Boolean) : MainActivityFragment() {
+class ExamOverviewFragment() : MainActivityFragment() {
     override var name: String="Prüfungen"
     private lateinit var viewModel: ExamOverviewViewModel
     private lateinit var recyclerViewExamAdapter: RecyclerViewExamAdapter
-
-    constructor():this(false)
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -90,9 +89,6 @@ class ExamOverviewFragment(var reset: Boolean) : MainActivityFragment() {
         }
         setPruefungszeitraum()
         initRecyclerview()
-        if(reset) {
-            Filter.reset()
-        }
     }
 
     /**

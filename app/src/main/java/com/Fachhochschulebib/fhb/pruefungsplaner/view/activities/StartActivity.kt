@@ -273,6 +273,6 @@ class StartActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun facultyChosen(faculty: Faculty) {
-        viewModel.setReturnFaculty(faculty)
+        viewModel.setSelectedFaculty(faculty)
     }
 }

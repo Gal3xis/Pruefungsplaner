@@ -12,7 +12,7 @@ class Course {
     @NonNull
     var sgid: String = "0"
 
-    @ColumnInfo(name = "couresName")
+    @ColumnInfo(name = "courseName")
     var courseName: String = ""
 
     @ColumnInfo(name = "facultyId")

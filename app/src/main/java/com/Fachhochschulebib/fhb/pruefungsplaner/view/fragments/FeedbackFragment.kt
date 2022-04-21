@@ -13,6 +13,7 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.Fachhochschulebib.fhb.pruefungsplaner.R
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.Fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
+import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.FeedbackViewModel
 import kotlinx.android.synthetic.main.feedback.*
 /**
  * Fragment that lets the user give Feedback about the app.
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.feedback.*
  */
 class FeedbackFragment : MainActivityFragment() {
     override var name: String="Feedback"
-    private lateinit var viewModel: BaseViewModel
+    private lateinit var viewModel: FeedbackViewModel
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -38,7 +39,7 @@ class FeedbackFragment : MainActivityFragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(
             requireActivity(), ViewModelFactory(requireActivity().application)
-        )[BaseViewModel::class.java]
+        )[FeedbackViewModel::class.java]
     }
 
     /**
@@ -55,16 +56,7 @@ class FeedbackFragment : MainActivityFragment() {
 
         //From onCreateView
         buttonSend.setOnClickListener { view ->
-            val serverAddress = viewModel.getServerIPAddress()
-            val relativePPlanURL = viewModel.getServerRelUrlPath()
-            //retrofit auruf
-            //TODO val retrofit = context?.let { RetrofitConnect(viewModel, it) }
-                /*TODO retrofit?.sendFeedBack(
-                    ratingBarUsability.rating,
-                    ratingBarFuntions.rating,
-                    ratingBarStability.rating,
-                    feedBackInput.text.toString(),
-                )*/
+            viewModel.sendFeedBack(ratingBarUsability.rating,ratingBarFuntions.rating,ratingBarStability.rating,feedBackInput.text.toString())
             Toast.makeText(
                 view.context,
                 view.context.getString(R.string.sendedFeedBack),

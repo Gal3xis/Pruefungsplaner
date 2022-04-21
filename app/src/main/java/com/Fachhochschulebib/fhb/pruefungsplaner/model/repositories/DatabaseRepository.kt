@@ -1,15 +1,10 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.model.repositories
 
-import android.app.Application
 import android.content.Context
-import android.content.res.Resources
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.Fachhochschulebib.fhb.pruefungsplaner.R
-import com.Fachhochschulebib.fhb.pruefungsplaner.model.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.*
-import com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -85,7 +80,7 @@ class DatabaseRepository(
         return withContext(Dispatchers.IO) {
             try {
                 val result = StringBuilder()
-                val url = URL(Resources.getSystem().getString(R.string.FacultyUrl))
+                val url = URL(FacultyUrl)
                 val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
@@ -138,9 +133,9 @@ class DatabaseRepository(
      * Returns an Array of All Entries from the Rest-Api.
      * Needs to be called inside a Coroutinescope.
      *
-     * @param ppSemester The current Semester, can be taken from the sharedPreferences[SharedPreferencesRepository.getCurrentPeriode].
-     * @param pTermin Differences between first and second period. Can be taken from sharedPreferences [SharedPreferencesRepository.getCurrentTermin]]
-     * @param pYear The year from where the entries shall be taken. The current year can be taken from [SharedPreferencesRepository.getExamineYear]]
+     * @param ppSemester The current Semester, can be taken from the sharedPreferences[SharedPreferencesRepository.getPeriodTerm].
+     * @param pTermin Differences between first and second period. Can be taken from sharedPreferences [SharedPreferencesRepository.getPeriodTermin]]
+     * @param pYear The year from where the entries shall be taken. The current year can be taken from [SharedPreferencesRepository.getPeriodYear]]
      * @param pId A string with all the ids from which the entries shall be taken. Can be get from [com.Fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel.getIDs]
      *
      * @return A list of all Faculties. Can be null if no faculty was found.
@@ -177,7 +172,7 @@ class DatabaseRepository(
         return withContext(Dispatchers.IO) {
             try {
                 val result = StringBuilder()
-                val url = URL(Resources.getSystem().getString(R.string.ExamPeriodUrl))
+                val url = URL(ExamPeriodUrl)
                 val urlConn = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
@@ -344,11 +339,9 @@ class DatabaseRepository(
     }
 
     suspend fun getAllEntries(): List<TestPlanEntry>? {
-        var ret: List<TestPlanEntry>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getAllEntries()
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getAllEntries()
         }
-        return ret
     }
 
     suspend fun getEntriesByModule(): List<TestPlanEntry>? {
@@ -383,7 +376,8 @@ class DatabaseRepository(
 
     fun getFirstExaminerNames() = localDataSource.getFirstExaminerNames()
 
-    fun getAllEntriesForChoosenCoursesLiveData() = localDataSource.getAllEntriesForSelectedCoursesLiveDataByDate()
+    fun getAllEntriesForChoosenCoursesLiveData() =
+        localDataSource.getAllEntriesForSelectedCoursesLiveDataByDate()
 
     suspend fun getAllCourses(): List<Course>? {
         return withContext(Dispatchers.IO) {
@@ -404,35 +398,27 @@ class DatabaseRepository(
     }
 
     suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>? {
-        var ret: List<String>? = null
-        withContext(Dispatchers.IO) {
-            localDataSource.getFirstExaminerSortedByName(selectedCourse)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getFirstExaminerSortedByName(selectedCourse)
         }
-        return ret
     }
 
     suspend fun getModulesOrdered(): List<String>? {
-        var ret: List<String>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getModulesOrdered()
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getModulesOrdered()
         }
-        return ret
     }
 
     suspend fun getEntriesByCourseName(course: String, favorit: Boolean): List<TestPlanEntry>? {
-        var ret: List<TestPlanEntry>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getEntriesByCourseName(course, favorit)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getEntriesByCourseName(course, favorit)
         }
-        return ret
     }
 
     suspend fun getChoosenCourses(choosen: Boolean): List<String>? {
-        var ret: List<String>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getChoosenCourses(choosen)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getChoosenCourses(choosen)
         }
-        return ret
     }
 
     suspend fun getChoosenCourseIds(choosen: Boolean): List<String>? {
@@ -442,11 +428,9 @@ class DatabaseRepository(
     }
 
     suspend fun getAllCoursesByFacultyid(facultyId: String): List<Course>? {
-        var ret: List<Course>? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getAllCoursesByFacultyId(facultyId)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getAllCoursesByFacultyId(facultyId)
         }
-        return ret
     }
 
     suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>? {
@@ -467,34 +451,23 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getCourseByName(name: String): Course {
+    suspend fun getCourseByName(name: String): Course? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getCourseByName(name)
         }
     }
 
     suspend fun getCourseId(courseName: String): String? {
-        var ret: String? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getCourseId(courseName)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getCourseId(courseName)
         }
-        return ret
     }
 
-    suspend fun getTermin(): String? {
-        var ret: String? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getTermin()
-        }
-        return ret
-    }
 
     suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
-        var ret: TestPlanEntry? = null
-        withContext(Dispatchers.IO) {
-            ret = localDataSource.getOneEntryByName(courseName, favorit)
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getOneEntryByName(courseName, favorit)
         }
-        return ret
     }
 
     suspend fun getFacultyById(id: String): Faculty? {
@@ -507,6 +480,12 @@ class DatabaseRepository(
     suspend fun insertEntries(entries: List<TestPlanEntry>) {
         withContext(Dispatchers.IO) {
             localDataSource.insertEntries(entries)
+        }
+    }
+
+    suspend fun getCourseName(id: String): String {
+        return withContext(Dispatchers.IO) {
+            return@withContext localDataSource.getCourseById(id).courseName
         }
     }
 }

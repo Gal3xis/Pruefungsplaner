@@ -1,8 +1,6 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.utils
 
-import android.app.Application
 import android.content.Context
-import android.util.Log
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
@@ -60,9 +58,9 @@ class CheckForDatabaseUpdateWorker(context: Context, workerParams: WorkerParamet
 
     private suspend fun checkDatabase():Boolean{
         return withContext(Dispatchers.IO){
-            val periode = spRepository.getCurrentPeriode()
-            val termin = spRepository.getCurrentTermin()
-            val examinYear = spRepository.getExamineYear()
+            val periode = spRepository.getPeriodTerm()
+            val termin = spRepository.getPeriodTermin()
+            val examinYear = spRepository.getPeriodYear()
             val Ids = repository.getChoosenCourseIds(true)
             val courseIds = JSONArray()
             if (Ids != null) {

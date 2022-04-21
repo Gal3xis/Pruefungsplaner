@@ -63,9 +63,9 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun fetchEntries() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val periode = getCurrentPeriode()
-            val termin = getCurrentTermin()
-            val examinYear = getExamineYear()
+            val periode = getPeriodTerm()
+            val termin = getPeriodTermin()
+            val examinYear = getPeriodYear()
             val ids = getIDs()
             if (periode == null || termin == null || examinYear == null || ids.isNullOrEmpty()) {
                 return@launch
@@ -136,7 +136,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     fun updatePruefperiode() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val pruefperiodenObjects = repository.fetchExamPeriods() ?: return@launch
-            val currentPeriod= GetCurrentPeriode(pruefperiodenObjects)?:return@launch
+            val currentPeriod= getCurrentPeriod(pruefperiodenObjects) ?:return@launch
             val numberOfWeeks = currentPeriod["PPWochen"].toString().toInt()
 
             //Set start-and enddate
@@ -157,24 +157,19 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
             setStartDate(startDate.time)
             setEndDate(endDate.time)
+            setPeriodTermin(currentPeriod.get("pruefTermin").toString())
+            setPeriodYear(currentPeriod.get("PPJahr").toString())
+            setPeriodTerm(currentPeriod.get("pruefSemester").toString())
             fetchEntries()
-//
-//            currentPeriod.get("pruefTermin").toString()
-//                ?.let { setCurrentTermin(it) }
-//            currentPeriod?.get("PPJahr").toString()?.let { setExamineYear(it) }
-//            currentPeriod?.get("pruefSemester")?.toString()
-//                ?.let { setCurrentPeriode(it) }
-//            examineDate?.let { setStartDate(it) }
-//            lastDayPp?.let { setEndDate(it) }
         }
     }
 
-    private fun GetCurrentPeriode(pruefperiodenObjects: JSONArray): JSONObject? {
+    private fun getCurrentPeriod(pruefperiodenObjects: JSONArray): JSONObject? {
         val formatter = SimpleDateFormat("yyyy-MM-dd")
 
         var latestDate:Date? =null
         var latestPeriode:JSONObject? = null
-        val facultyId = getReturnFaculty()
+        val facultyId = getSelectedFaculty()
 
         for (i in 0 until pruefperiodenObjects.length()) {
             //Get single object
@@ -231,6 +226,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     open fun insertEntryJSON(jsonResponse: GSONEntry) {
+
         insertEntry(createTestPlanEntry(jsonResponse))
     }
 
@@ -364,8 +360,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return repository.getAllCourses()
     }
 
-    open suspend fun getCourseByName(name: String): Course {
-        return repository.getCourseByName(name)
+    open suspend fun getCourseById(id: String): Course {
+        return repository.getCourseById(id)
     }
 
     open suspend fun getCoursesByFacultyid(facultyId: String): List<Course>? {
@@ -377,7 +373,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     open suspend fun getCourseId(courseName: String): String? {
-        return repository.getCourseId(courseName)
+        return repository.getCourseByName(courseName)?.sgid
     }
 
     open suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
@@ -393,186 +389,415 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     //Shared Preferences
     //SET
-    open fun setSelectedCourse(course: String) {
-        spRepository.setSelectedCourse(course)
+    /**
+     * Sets the course, selected as the maincourse
+     *
+     * @param courseId The id of the course, selected as the maincourse
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun setMainCourse(courseId: String) {
+        spRepository.setMainCourse(courseId)
     }
 
-    open fun setReturnCourse(course: String) {
-        spRepository.setReturnCourse(course)
+    private fun deleteMainCourse() {
+        spRepository.deleteMainCourse();
+    }
+    /**
+     * Sets the faculty, selected by the user
+     *
+     * @param facultyId The id of the faculty, the user selected
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun setSelectedFaculty(facultyId: String) {
+        spRepository.setSelectedFaculty(facultyId)
     }
 
-    open fun setReturnFaculty(faculty: String) {
-        spRepository.setReturnFaculty(faculty)
+    /**
+     * Sets the faculty, selected by the user
+     *
+     * @param faculty The object of the faculty, the user selected
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun setSelectedFaculty(faculty: Faculty) {
+        setSelectedFaculty(faculty.fbid)
     }
 
-    open fun setReturnFaculty(faculty: Faculty) {
-        setReturnFaculty(faculty.fbid)
+    /**
+     * Sets the year of the current period
+     *
+     * @param year The year of the current period as string (Like '2022')
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun setPeriodYear(year: String) {
+        spRepository.setPeriodYear(year)
     }
 
-    open fun setExamineYear(year: String) {
-        spRepository.setExamineYear(year)
+    /**
+     * Sets the term of the current period (SoSe or WiSe)
+     *
+     * @param period The term of the current period (SoSe or WiSe)
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun setPeriodTerm(periode: String) {
+        spRepository.setPeriodTerm(periode)
     }
 
-    open fun setCurrentPeriode(periode: String) {
-        spRepository.setCurrentPeriode(periode)
+    //TODO RENAME
+    open fun setPeriodTermin(termin: String) {
+        spRepository.setPeriodTermin(termin)
     }
 
-    open fun setCurrentTermin(termin: String) {
-        spRepository.setCurrentTermin(termin)
-    }
-
+    /**
+     * Sets the start date of the period
+     *
+     * @param date The start date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setStartDate(date: String) {
         spRepository.setStartDate(date)
     }
 
+    /**
+     * Sets the start date of the period
+     *
+     * @param date The start date of the period
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setStartDate(date: Date) {
         spRepository.setStartDate(sdfRetrofit.format(date))
     }
 
+    /**
+     * Sets the end date of the period
+     *
+     * @param date The end date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setEndDate(date: String) {
         spRepository.setEndDate(date)
     }
 
+    /**
+     * Sets the end date of the period
+     *
+     * @param date The end date of the period
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setEndDate(date: Date) {
         spRepository.setEndDate(sdfRetrofit.format(date))
     }
 
+
+    /**
+     * Sets the setting for the darkmode
+     *
+     * @param darkmode true-> darkmode is set; false-> darkmode is not set
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setChosenDarkMode(darkmode: Boolean) {
         spRepository.setChosenDarkmode(darkmode)
     }
 
+    /**
+     * Sets the id of the selected theme
+     *
+     * @param id The id of the selected theme
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setChosenThemeId(id: Int) {
         spRepository.setChosenThemeId(id)
     }
 
+    /**
+     * Sets the hour component of the update interval for the background worker
+     *
+     * @param hour The hour component of the update interval for the background worker
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setUpdateIntervalTimeHour(hour: Int) {
         spRepository.setUpdateIntervalTimeHour(hour)
     }
 
+    /**
+     * Sets the minute component of the update interval for the background worker
+     *
+     * @param minute The hour component of the update interval for the background worker
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setUpdateIntervalTimeMinute(minute: Int) {
         spRepository.setUpdateIntervalTimeMinute(minute)
     }
 
+    /**
+     * Sets the setting for background updates
+     *
+     * @param status true->The app will update in the background; false->The app wont update in the background
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setBackgroundUpdates(status: Boolean) {
         spRepository.setBackgroundUpdates(status)
     }
 
+    /**
+     * Sets the setting for notification sounds for the background worker
+     *
+     * @param status true->The app will make a sound for each notification;false->the app will make no sound for a notification
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setNotificationSounds(status: Boolean) {
         spRepository.setNotificationSounds(status)
     }
 
+    /**
+     * Sets the setting for calendar synchronization
+     *
+     * @param sync true->The calendar will synchronize with the selected exams;false->The calendar wont sync with the selected courses
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun setCalendarSync(sync: Boolean) {
         spRepository.setCalendarSync(sync)
     }
 
+    /**
+     * Sets the setting for the insertion type for each calendar entry
+     *
+     * @param insertionType The insertion type for each new calendar entry.
+     * Automatic -> The entry will be placed in the calendar without notifying the user;
+     * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
+     * Ask->The user will be asked each time, if an entry should be manuel ro automatic
+     */
     open fun setCalendarInserionType(insertionTye: GoogleCalendarIO.InsertionTye) {
         spRepository.setCalendarInsertionType(insertionTye)
     }
 
-    open fun setServerIPAddress(address: String) {
-        spRepository.setServerIPAddress(address)
-    }
-
-    open fun setServerRelUrlPath(path: String) {
-        spRepository.setServerRelUrlPath(path)
-    }
-
-    open fun setFaculties(faculties: String) {
-        spRepository.setFaculties(faculties)
-    }
-
-
     //GET
-    open fun getSelectedCourse(): String? {
-        return spRepository.getSelectedCourse()
+    /**
+     * Gets the course, selected as the maincourse
+     *
+     * @return The id of the course, selected as the maincourse
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun getMainCourse(): String? {
+        return spRepository.getMainCourse()
     }
 
-    open fun getReturnCourse(): String? {
-        return spRepository.getReturnCourse()
+    /**
+     * Gets the faculty, selected by the user
+     *
+     * @return The id of the faculty, the user selected
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun getSelectedFaculty(): String? {
+        return spRepository.getSelectedFaculty()
     }
 
-    open fun getReturnFaculty(): String? {
-        return spRepository.getReturnFaculty()
+    /**
+     * Gets the year of the current period
+     *
+     * @return the year of the current period as string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun getPeriodYear(): String? {
+        return spRepository.getPeriodYear()
     }
 
-    open fun getExamineYear(): String? {
-        return spRepository.getExamineYear()
+    /**
+     * Gets the term of the current period (SoSe or WiSe)
+     *
+     * @return The term of the current period (SoSe or WiSe)
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun getPeriodTerm(): String? {
+        return spRepository.getPeriodTerm()
     }
 
-    open fun getCurrentPeriode(): String? {
-        return spRepository.getCurrentPeriode()
+    open fun getPeriodTermin(): String? {
+        return spRepository.getPeriodTermin()
     }
 
-    open fun getCurrentTermin(): String? {
-        return spRepository.getCurrentTermin()
-    }
-
+    /**
+     * Gets the start date of the period
+     *
+     * @return The start date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getStartDateString(): String? {
         return spRepository.getStartDate()
     }
 
+    /**
+     * Gets the start date of the period
+     *
+     * @return The start date of the period
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getStartDate(): Date? {
         return getStartDateString()?.let { sdfRetrofit.parse(it) }
     }
 
+    /**
+     * Gets the end date of the period
+     *
+     * @return The end date of the period as a string
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getEndDateString(): String? {
         return spRepository.getEndDate()
     }
 
+    /**
+     * Gets the end date of the period
+     *
+     * @return The end date of the period
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getEndDate(): Date? {
         return getEndDateString()?.let { sdfRetrofit.parse(it) }
     }
 
+    /**
+     * Gets the setting for the darkmode
+     *
+     * @return true-> darkmode is set; false-> darkmode is not set. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getChosenDarkMode(): Boolean {
         return spRepository.getChosenDarkmode()
-    }//Returns false by default
+    }
 
+    /**
+     * Gets the id of the selected theme
+     *
+     * @return The id of the selected theme. Returns the id of the first theme in the list (green) by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getChosenThemeId(): Int {
         return spRepository.getChosenThemeId()
-    }//Returns -1 by default
+    }
 
+    /**
+     * Gets the hour component of the update interval for the background worker
+     *
+     * @return The hour component of the update interval for the background worker. Return 0 by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getUpdateIntervalTimeHour(): Int {
         return spRepository.getUpdateIntervalTimeHour()
     }
 
+    /**
+     * Gets the minute component of the update interval for the background worker
+     *
+     * @return The minute component of the update interval for the background worker. Returns 15 by default, because 0:15 is the minimum interval for the background worker
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getUpdateIntervalTimeMinute(): Int {
         return spRepository.getUpdateIntervalTimeMinute()
-    } //Return 15 by default
+    }
 
+    /**
+     * Gets the setting for background updates
+     *
+     * @return true->The app will update in the background; false->The app wont update in the background. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getBackgroundUpdates(): Boolean {
         return spRepository.getBackgroundUpdates()
     }
 
+    /**
+     * Gets the setting for notification sounds for the background worker
+     *
+     * @return true->The app will make a sound for each notification;false->the app will make no sound for a notification. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getNotificationSounds(): Boolean {
         return spRepository.getNotificationSounds()
     }
 
+    /**
+     * Gets the setting for calendar synchronization
+     *
+     * @return true->The calendar will synchronize with the selected exams;false->The calendar wont sync with the selected courses. Returns false by default
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun getCalendarSync(): Boolean {
         return spRepository.getCalendarSync()
     }
 
+    /**
+     * Gets the setting for the insertion type for each calendar entry
+     *
+     * @return The insertion type for each new calendar entry.
+     * Automatic -> The entry will be placed in the calendar without notifying the user;
+     * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
+     * Ask->The user will be asked each time, if an entry should be manuel ro automatic. Returns automatic by default.
+     */
     open fun getCalendarInsertionType(): GoogleCalendarIO.InsertionTye {
-        return spRepository.getCalendarInsertionType() ?: GoogleCalendarIO.InsertionTye.Fragen
+        return spRepository.getCalendarInsertionType() ?: GoogleCalendarIO.InsertionTye.Ask
     }
-
-    open fun getServerIPAddress(): String? {
-        return spRepository.getServerIPAddress()
-    }
-
-    open fun getServerRelUrlPath(): String? {
-        return spRepository.getServerRelUrlPath()
-    }
-
-    open fun getFaculties(): String? {
-        return spRepository.getFaculties()
-    }
-
-
-    //DELETE
-    fun deleteSelectedCourse() {
-        spRepository.deleteSelectedCourse()
-    }
-
 
     //Calendar
     fun updateCalendar(context: Context, entries: List<TestPlanEntry>) {
@@ -601,12 +826,13 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun checkSustainability() {
         viewModelScope.launch {
-            val mainCourse = getSelectedCourse()?.let { getCourseByName(it) }
+            val mainCourse = getMainCourse()?.let { getCourseById(it) }
             if (mainCourse?.choosen == false) {
-                deleteSelectedCourse()
+                deleteMainCourse()
             }
         }
     }
+
 
     /**
      * Creates a new [TestPlanEntry] from a [JsonResponse].

@@ -31,20 +31,19 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
     }
 
     /**
-     * Selects a course a the main course.
+     * Selects a course as the main course.
      *
-     * @param[choosenCourse] The name of th course that is supposed to be the mein course.
+     * @param[choosenCourse] The name of th course that is supposed to be the main course.
      *
      * @author Alexander Lange
      * @since 1.6
      */
     fun addMainCourse(choosenCourse: String) {
         viewModelScope.launch {
-            val returnCourse =  getCourseId(choosenCourse)
-            setSelectedCourse(choosenCourse)
-            returnCourse?.let { setReturnCourse(it) }
+            val id =  getCourseId(choosenCourse)?:return@launch
+            setMainCourse(id)
             if (getUuid() == null) {
-                returnCourse?.let { firstStart(it) }
+                firstStart(id)
             } else {
                 //TODO RetrofitConnect(context).setUserCourses()
             }
@@ -59,8 +58,8 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
      * @author Alexander Lange
      * @since 1.6
      */
-    override fun setReturnFaculty(faculty: Faculty){
-        super.setReturnFaculty(faculty)
+    override fun setSelectedFaculty(faculty: Faculty){
+        super.setSelectedFaculty(faculty)
         viewModelScope.launch {
             val courses = getCoursesByFacultyid(faculty.fbid)
             liveCoursesForFaculty.postValue(courses)
@@ -76,7 +75,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
      * @since 1.6
      */
     fun checkLoginStatus():Boolean {
-        return getSelectedCourse()!=null
+        return getMainCourse()!=null
     }
 
     /**
