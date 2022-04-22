@@ -111,12 +111,12 @@
                     app:tint="?attr/colorOnBackground" />
             </LinearLayout>
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/btnCalClear"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_del_cal" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/btnGoogleUpdate"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_act_cal" />
@@ -132,7 +132,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:text="@string/calendarInsertionTypeLabel"
@@ -141,6 +141,31 @@
 
                 <Spinner
                     android:id="@+id/calendarInsertionTypeSpinner"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="?attr/colorAccent"
+                    android:spinnerMode="dialog"
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                style="@style/OptionenFragment.Entry"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/calendarIdSpinnerLabel"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp" />
+
+                <Spinner
+                    android:id="@+id/calendarIdSpinner"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"
@@ -179,17 +204,17 @@
                     app:tint="?attr/colorOnBackground" />
             </LinearLayout>
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/btnFav"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_del_fav" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/btnDB"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_del_db" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/btnupdate"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_act_fav" />
@@ -227,7 +252,7 @@
                 android:text="@string/optionenfragment_auto_updates_switch_text"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/optionenfragment_auto_updates_intervall_button"
                 style="@style/OptionenFragment.Entry"
                 android:text = "@string/optionenfragment_auto_updates_intervall_button"
@@ -267,22 +292,22 @@
                     app:tint="?attr/colorOnBackground" />
             </LinearLayout>
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/privacyDeclaration"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/settings_privacy_declaration" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/optionenfragment_impressum"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/optionenfragment_impressum_text" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/optionenfragment_about"
                 style="@style/OptionenFragment.Entry"
                 android:text="@string/optionenfragment_about_text" />
 
-            <com.Fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
+            <com.fachhochschulebib.fhb.pruefungsplaner.view.Components.SpecialButton
                 android:id="@+id/optionenfragment_save_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -158,4 +158,5 @@
     <string name="optionenfragment_auto_updates_notificationsound_text">Benachrichtigungssound</string>
     <string name="choose_course_change_main_label_text">Hauptkurs wechseln:</string>
     <string name="calendarInsertionTypeLabel">Automatisch oder Manuell</string>
+    <string name="calendarIdSpinnerLabel">Kalender für Synchronisation</string>
 </resources>

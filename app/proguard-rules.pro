@@ -22,9 +22,7 @@
 
 -keep class * extends androidx.room.RoomDatabase
 -dontwarn androidx.room.paging.**
--keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonCourse { *; }
--keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.JsonResponse { *; }
--keep class  com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.JsonUuid { *; }
+-keep class  com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.JsonUuid { *; }
 
 -renamesourcefileattribute SourceFile
 -keepattributes SourceFile,LineNumberTable
