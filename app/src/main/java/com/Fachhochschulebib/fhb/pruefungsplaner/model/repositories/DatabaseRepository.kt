@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit.*
 import com.Fachhochschulebib.fhb.pruefungsplaner.model.room.*
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.URLs.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -32,8 +33,10 @@ import java.net.URL
  *
  * **See Also:**[MVVM](https://itnext.io/android-architecture-hilt-mvvm-kotlin-coroutines-live-data-room-and-retrofit-ft-8b746cab4a06)
  * @see UserDao
- * @see RetrofitConnect
+ * @see RetrofitHelper
+ * @see RetrofitInterface
  */
+@Suppress("BlockingMethodInNonBlockingContext")
 class DatabaseRepository(
     context: Context
 ) {
@@ -57,7 +60,7 @@ class DatabaseRepository(
      *
      * @see RetrofitInterface.getCourses
      */
-    suspend fun fetchCourses(): List<GSONCourse>? {
+    suspend fun fetchCourses(): List<GSONCourse> {
         return withContext(Dispatchers.IO) {
             return@withContext remoteDataSource.getCourses()
         }
@@ -80,7 +83,7 @@ class DatabaseRepository(
         return withContext(Dispatchers.IO) {
             try {
                 val result = StringBuilder()
-                val url = URL(FacultyUrl)
+                val url = URL(facultyUrl)
                 val urlConn: HttpURLConnection = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
@@ -151,7 +154,7 @@ class DatabaseRepository(
         pTermin: String,
         pYear: String,
         pId: String
-    ): List<GSONEntry>? {
+    ): List<GSONEntry> {
         return withContext(Dispatchers.IO) {
             return@withContext remoteDataSource.getEntries(ppSemester, pTermin, pYear, pId)
         }
@@ -172,7 +175,7 @@ class DatabaseRepository(
         return withContext(Dispatchers.IO) {
             try {
                 val result = StringBuilder()
-                val url = URL(ExamPeriodUrl)
+                val url = URL(examPeriodUrl)
                 val urlConn = url.openConnection() as HttpURLConnection
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
@@ -242,9 +245,9 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun fetchUUID(faculty: Faculty): JsonUuid? {
-        return fetchUUID(faculty.fbid)
-    }
+//    suspend fun fetchUUID(faculty: Faculty): JsonUuid? {
+//        return fetchUUID(faculty.fbid)
+//    }
 
     //Room Database
     suspend fun insertEntry(testPlanEntry: TestPlanEntry) {
@@ -271,12 +274,12 @@ class DatabaseRepository(
             localDataSource.insertFaculty(faculty)
         }
     }
-
-    suspend fun updateEntry(testPlanEntry: TestPlanEntry) {
-        withContext(Dispatchers.IO) {
-            localDataSource.updateExam(testPlanEntry)
-        }
-    }
+//
+//    suspend fun updateEntry(testPlanEntry: TestPlanEntry) {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.updateExam(testPlanEntry)
+//        }
+//    }
 
     suspend fun updateEntryFavorit(favorit: Boolean, id: String) {
         withContext(Dispatchers.IO) {
@@ -290,11 +293,11 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun updateFaculty(faculty: Faculty) {
-        withContext(Dispatchers.IO) {
-            localDataSource.updateFaculty(faculty)
-        }
-    }
+//    suspend fun updateFaculty(faculty: Faculty) {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.updateFaculty(faculty)
+//        }
+//    }
 
     suspend fun unselectAllFavorits() {
         withContext(Dispatchers.IO) {
@@ -314,29 +317,29 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun deleteCourses(cours: List<Course>) {
-        withContext(Dispatchers.IO) {
-            localDataSource.deleteCourses(cours)
-        }
-    }
-
-    suspend fun deleteAllCourses() {
-        withContext(Dispatchers.IO) {
-            localDataSource.deleteAllCourses()
-        }
-    }
-
-    suspend fun deleteFaculties(faculties: List<Faculty>) {
-        withContext(Dispatchers.IO) {
-            localDataSource.deleteFaculties(faculties)
-        }
-    }
-
-    suspend fun deleteAllFaculties() {
-        withContext(Dispatchers.IO) {
-            localDataSource.deleteAllFaculties()
-        }
-    }
+//    suspend fun deleteCourses(cours: List<Course>) {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.deleteCourses(cours)
+//        }
+//    }
+//
+//    suspend fun deleteAllCourses() {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.deleteAllCourses()
+//        }
+//    }
+//
+//    suspend fun deleteFaculties(faculties: List<Faculty>) {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.deleteFaculties(faculties)
+//        }
+//    }
+//
+//    suspend fun deleteAllFaculties() {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.deleteAllFaculties()
+//        }
+//    }
 
     suspend fun getAllEntries(): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
@@ -344,11 +347,11 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getEntriesByModule(): List<TestPlanEntry>? {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getEntriesByModule()
-        }
-    }
+//    suspend fun getEntriesByModule(): List<TestPlanEntry>? {
+//        return withContext(Dispatchers.IO) {
+//            return@withContext localDataSource.getEntriesByModule()
+//        }
+//    }
 
     fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?> =
         localDataSource.getAllEntriesLiveDataByDate()
@@ -363,7 +366,7 @@ class DatabaseRepository(
     fun getAllFavoritesLiveData(): LiveData<List<TestPlanEntry>?> =
         localDataSource.getAllFavoritsLiveData()
 
-    fun getAllCoursesLiveData(): LiveData<List<Course>?> = localDataSource.getAllCoursesLiveData()
+//    fun getAllCoursesLiveData(): LiveData<List<Course>?> = localDataSource.getAllCoursesLiveData()
 
     fun getAllChoosenCoursesLiveData(): LiveData<List<Course>?> =
         localDataSource.getAllChoosenCoursesLiveData()
@@ -371,8 +374,8 @@ class DatabaseRepository(
     fun getAllFacultiesLiveData(): LiveData<List<Faculty>?> =
         localDataSource.getAllFacultiesLiveData()
 
-    fun getCoursesForFacultyIdLiveData(id: String) =
-        localDataSource.getCoursesForFacultyIdLiveData(id)
+//    fun getCoursesForFacultyIdLiveData(id: String) =
+//        localDataSource.getCoursesForFacultyIdLiveData(id)
 
     fun getFirstExaminerNames() = localDataSource.getFirstExaminerNames()
 
@@ -397,11 +400,11 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>? {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getFirstExaminerSortedByName(selectedCourse)
-        }
-    }
+//    suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>? {
+//        return withContext(Dispatchers.IO) {
+//            return@withContext localDataSource.getFirstExaminerSortedByName(selectedCourse)
+//        }
+//    }
 
     suspend fun getModulesOrdered(): List<String>? {
         return withContext(Dispatchers.IO) {
@@ -415,11 +418,11 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getChoosenCourses(choosen: Boolean): List<String>? {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getChoosenCourses(choosen)
-        }
-    }
+//    suspend fun getChoosenCourses(choosen: Boolean): List<String>? {
+//        return withContext(Dispatchers.IO) {
+//            return@withContext localDataSource.getChoosenCourses(choosen)
+//        }
+//    }
 
     suspend fun getChoosenCourseIds(choosen: Boolean): List<String>? {
         return withContext(Dispatchers.IO) {
@@ -433,11 +436,11 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>? {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getEntriesByCourseName(course)
-        }
-    }
+//    suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>? {
+//        return withContext(Dispatchers.IO) {
+//            return@withContext localDataSource.getEntriesByCourseName(course)
+//        }
+//    }
 
     suspend fun getEntryById(id: String): TestPlanEntry? {
         return withContext(Dispatchers.IO) {
@@ -457,11 +460,11 @@ class DatabaseRepository(
         }
     }
 
-    suspend fun getCourseId(courseName: String): String? {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getCourseId(courseName)
-        }
-    }
+//    suspend fun getCourseId(courseName: String): String? {
+//        return withContext(Dispatchers.IO) {
+//            return@withContext localDataSource.getCourseId(courseName)
+//        }
+//    }
 
 
     suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
@@ -476,12 +479,12 @@ class DatabaseRepository(
         }
     }
 
-
-    suspend fun insertEntries(entries: List<TestPlanEntry>) {
-        withContext(Dispatchers.IO) {
-            localDataSource.insertEntries(entries)
-        }
-    }
+//
+//    suspend fun insertEntries(entries: List<TestPlanEntry>) {
+//        withContext(Dispatchers.IO) {
+//            localDataSource.insertEntries(entries)
+//        }
+//    }
 
     suspend fun getCourseName(id: String): String {
         return withContext(Dispatchers.IO) {

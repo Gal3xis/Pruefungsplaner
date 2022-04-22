@@ -6,8 +6,6 @@ import com.Fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 
 class SharedPreferencesRepository(context: Context) {
 
-    private val context = context
-
     private val periodInformation = context.getSharedPreferences("periodInformation", Context.MODE_PRIVATE)
     private val settings = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
     private val userSelection = context.getSharedPreferences("userSelection",Context.MODE_PRIVATE)
@@ -402,5 +400,4 @@ class SharedPreferencesRepository(context: Context) {
         editor.putString("InsertionType",insertionType.name)
         editor.apply()
     }
-
 }

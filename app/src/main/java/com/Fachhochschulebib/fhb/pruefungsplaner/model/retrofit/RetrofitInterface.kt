@@ -1,15 +1,17 @@
 package com.Fachhochschulebib.fhb.pruefungsplaner.model.retrofit
 
+import com.Fachhochschulebib.fhb.pruefungsplaner.model.URLs.*
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 
+
 interface RetrofitInterface{
-    @GET("org.fh.ppv.entity.studiengang/")
+    @GET(coursesRelativeUrl)
     suspend fun getCourses():List<GSONCourse>
 
 
-    @GET("org.fh.ppv.entity.pruefplaneintrag/{ppSemester}/{pTermin}/{pYear}/{pIds}/")
+    @GET("$entriesRelativeUrl/{ppSemester}/{pTermin}/{pYear}/{pIds}/")
     suspend fun getEntries(
         @Path("ppSemester") ppSemetser:String,
         @Path("pTermin")pTermin:String,
@@ -17,11 +19,11 @@ interface RetrofitInterface{
         @Path("pIds")pIds:String):List<GSONEntry>
 
 
-    @GET("org.fh.ppv.entity.user/firstStart/{pFaculty}/")
+    @GET("$uuidRelativeUrl/{pFaculty}/")
     suspend fun getUUID(@Path("pFaculty") ppFaculty: String): JsonUuid?
 
 
-    @POST("org.fh.ppv.entity.feedback/sendFeedback/{pUuid}/{pUsability}/{pFunctions}/{pStability}/{pText}/")
+    @POST("$feedbackRelativeUrl/{pUuid}/{pUsability}/{pFunctions}/{pStability}/{pText}/")
     suspend fun sendFeedBack(
         @Path("pUuid")ppUuid:String,
         @Path("pUsability")ppUsability:String,

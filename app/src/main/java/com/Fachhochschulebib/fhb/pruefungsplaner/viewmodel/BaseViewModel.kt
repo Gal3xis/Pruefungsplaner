@@ -197,15 +197,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                 latestDate = startDate
                 latestPeriode = obj
             }
-
-//            val examineWeek = obj["PPWochen"].toString().toInt()
-//            val c = Calendar.getInstance()
-//            c.time = startDate
-//            c.add(Calendar.DATE, 7 * examineWeek - 2)
-//            val lastDayPp = formatter.parse(formatter.format(c.time))
-//            if (startDate.before(lastDayPp) && getReturnFaculty() == facultyIdDB) {
-//                return obj
-//            }
         }
         return latestPeriode
     }
@@ -218,12 +209,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             repository.insertEntry(testPlanEntry)
         }
     }
-
-    open fun insertEntries(entries: List<TestPlanEntry>) {
-        viewModelScope.launch {
-            repository.insertEntries(entries)
-        }
-    }
+//
+//    open fun insertEntries(entries: List<TestPlanEntry>) {
+//        viewModelScope.launch {
+//            repository.insertEntries(entries)
+//        }
+//    }
 
     open fun insertEntryJSON(jsonResponse: GSONEntry) {
 
@@ -243,12 +234,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
         insertCourses(courseList)
     }
-
-    open fun insertUuid(uuid: String) {
-        viewModelScope.launch {
-            repository.insertUuid(uuid)
-        }
-    }
+//
+//    open fun insertUuid(uuid: String) {
+//        viewModelScope.launch {
+//            repository.insertUuid(uuid)
+//        }
+//    }
 
     open fun insertFaculty(faculty: Faculty) {
         viewModelScope.launch {
@@ -257,11 +248,11 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     //UPDATE
-    open fun updateEntry(testPlanEntry: TestPlanEntry) {
-        viewModelScope.launch {
-            repository.updateEntry(testPlanEntry)
-        }
-    }
+//    open fun updateEntry(testPlanEntry: TestPlanEntry) {
+//        viewModelScope.launch {
+//            repository.updateEntry(testPlanEntry)
+//        }
+//    }
 
     open fun updateEntryFavorit(context: Context, favorit: Boolean, id: String) {
         viewModelScope.launch {
@@ -290,18 +281,18 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     open fun updateCourse(course: Course) {
         course.choosen?.let { course.courseName?.let { it1 -> updateCourse(it1, it) } }
     }
-
-    open fun updateFaculty(faculty: Faculty) {
-        viewModelScope.launch {
-            repository.updateFaculty(faculty)
-        }
-    }
-
-    open fun unselectAllFavorits() {
-        viewModelScope.launch {
-            repository.unselectAllFavorits()
-        }
-    }
+//
+//    open fun updateFaculty(faculty: Faculty) {
+//        viewModelScope.launch {
+//            repository.updateFaculty(faculty)
+//        }
+//    }
+//
+//    open fun unselectAllFavorits() {
+//        viewModelScope.launch {
+//            repository.unselectAllFavorits()
+//        }
+//    }
 
     //DELETE
     open fun deleteEntries(entries: List<TestPlanEntry>) {
@@ -315,30 +306,30 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             repository.deleteAllEntries()
         }
     }
-
-    open fun deleteCourses(cours: List<Course>) {
-        viewModelScope.launch {
-            repository.deleteCourses(cours)
-        }
-    }
-
-    open fun deleteAllCourses() {
-        viewModelScope.launch {
-            repository.deleteAllCourses()
-        }
-    }
-
-    open fun deleteFaculties(faculties: List<Faculty>) {
-        viewModelScope.launch {
-            repository.deleteFaculties(faculties)
-        }
-    }
-
-    open fun deleteAllFaculties() {
-        viewModelScope.launch {
-            repository.deleteAllFaculties()
-        }
-    }
+//
+//    open fun deleteCourses(cours: List<Course>) {
+//        viewModelScope.launch {
+//            repository.deleteCourses(cours)
+//        }
+//    }
+//
+//    open fun deleteAllCourses() {
+//        viewModelScope.launch {
+//            repository.deleteAllCourses()
+//        }
+//    }
+//
+//    open fun deleteFaculties(faculties: List<Faculty>) {
+//        viewModelScope.launch {
+//            repository.deleteFaculties(faculties)
+//        }
+//    }
+//
+//    open fun deleteAllFaculties() {
+//        viewModelScope.launch {
+//            repository.deleteAllFaculties()
+//        }
+//    }
 
     //GET
     open suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>? {

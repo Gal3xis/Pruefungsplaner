@@ -63,8 +63,8 @@ interface UserDao {
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     suspend fun getAllEntries(): List<TestPlanEntry>?
 
-    @Query("SELECT * FROM TestPlanEntry ORDER BY module")
-    suspend fun getEntriesByModule(): List<TestPlanEntry>?
+//    @Query("SELECT * FROM TestPlanEntry ORDER BY module")
+//    suspend fun getEntriesByModule(): List<TestPlanEntry>?
 
     @Query("SELECT * FROM TestPlanEntry ORDER BY date, termin, module")
     fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
@@ -103,8 +103,8 @@ interface UserDao {
     @Query("SELECT * FROM TestPlanEntry WHERE favorit = :favorit ORDER BY date, termin, module")
     suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>?
 
-    @Query("SELECT DISTINCT firstExaminer FROM TestPlanEntry WHERE course = :selectedCourse ORDER BY firstExaminer")
-    suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>?
+//    @Query("SELECT DISTINCT firstExaminer FROM TestPlanEntry WHERE course = :selectedCourse ORDER BY firstExaminer")
+//    suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>?
 
     @Query("SELECT DISTINCT module FROM TestPlanEntry ORDER BY module")
     suspend fun  getModulesOrdered(): List<String>?
