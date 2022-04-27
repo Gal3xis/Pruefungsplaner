@@ -79,6 +79,7 @@ class StartActivity : AppCompatActivity() {
         initUpdateManager()
         initRecyclerviewCourses()
         initButtons()
+        viewModel.fetchFaculties()
         val changeFlag = intent.getBooleanExtra(CHANGE_FLAG,false)
         if(changeFlag)
         {
@@ -87,7 +88,6 @@ class StartActivity : AppCompatActivity() {
         if (viewModel.checkLoginStatus()) {
             startApplication()
         }
-        viewModel.fetchFaculties()
     }
 
     /**

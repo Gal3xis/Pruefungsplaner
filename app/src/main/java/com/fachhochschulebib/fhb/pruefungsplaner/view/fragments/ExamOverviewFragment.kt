@@ -19,7 +19,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ExamOverviewViewModel
 import kotlinx.android.synthetic.main.termine.*
-import kotlinx.android.synthetic.main.terminefragment.*
+import kotlinx.android.synthetic.main.fragment_exam_overview.*
 
 /**
  * Fragment that shows all Exams in the next period for the selected courses.
@@ -64,7 +64,7 @@ class ExamOverviewFragment() : MainActivityFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.terminefragment, container, false)
+        val v = inflater.inflate(R.layout.fragment_exam_overview, container, false)
         return v
     }
 
@@ -123,8 +123,6 @@ class ExamOverviewFragment() : MainActivityFragment() {
                 }
             }
         })
-
-        enableSwipeToDelete()
     }
 
     /**

@@ -11,11 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.*
+import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.hauptfenster.*
-import kotlinx.android.synthetic.main.optionfragment.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_settings.*
 
 
 /**
@@ -60,7 +61,7 @@ class SettingsFragment() : MainActivityFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.optionfragment, container, false)
+        return inflater.inflate(R.layout.fragment_settings, container, false)
     }
 
     /**
@@ -238,20 +239,13 @@ class SettingsFragment() : MainActivityFragment() {
 
     private fun initImpressumButton() {
         optionenfragment_impressum?.setOnClickListener {
-            changeFragment( ImpressumFragment())
+            (activity as MainActivity).changeFragment(ImpressumFragment())
         }
-    }
-
-    private fun changeFragment( fragment: MainActivityFragment) {
-        val ft = activity?.supportFragmentManager?.beginTransaction()
-        activity?.header?.title = fragment.name
-        ft?.replace(R.id.frame_placeholder, fragment)
-        ft?.commit()
     }
 
     private fun initPrivacyDeclarationButton() {
         privacyDeclaration.setOnClickListener {
-            changeFragment( PrivacyDeclarationFragment())
+            (activity as MainActivity).changeFragment(PrivacyDeclarationFragment())
         }
     }
 
@@ -318,7 +312,7 @@ class SettingsFragment() : MainActivityFragment() {
      */
     private fun initThemeSpinner() {
         val themeList = mutableListOf<Theme>()
-        Utils.themeList.forEach { x -> themeList.add(Theme(x, view)) }
+        Utils.themeList.forEach { x -> themeList.add(Theme(x, requireContext())) }
 
         val adapter = view?.context?.let {
             ThemeAdapter(
@@ -327,12 +321,12 @@ class SettingsFragment() : MainActivityFragment() {
                 themeList
             )
         }
-        theme?.adapter = adapter
+        themeSpinner?.adapter = adapter
         val selectedPos: Int
         val themeid = viewModel.getChosenThemeId()
         selectedPos = Utils.themeList.indexOf(themeid)
         try {
-            theme?.setSelection(selectedPos)
+            themeSpinner?.setSelection(selectedPos)
         } catch (ex: Exception) {
 
         }
@@ -389,7 +383,7 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun save() {
-        val position = theme.selectedItemPosition
+        val position = themeSpinner.selectedItemPosition
         val chosenThemeId:Int
         when (position) {
             1 -> chosenThemeId = R.style.Theme_AppTheme_2
@@ -406,14 +400,14 @@ class SettingsFragment() : MainActivityFragment() {
                 Process.killProcess(pid)
                 }.setNegativeButton("Nicht Neustarten"){
                         _,_->
-                    changeFragment(ExamOverviewFragment())
+                (activity as MainActivity).changeFragment(ExamOverviewFragment())
 
                 }.create().show()
         }else{
             viewModel.setChosenThemeId(chosenThemeId)
             viewModel.setChosenDarkMode(darkMode.isChecked)
+            (activity as MainActivity).changeFragment(ExamOverviewFragment())
 
-            changeFragment(ExamOverviewFragment())
         }
 
 

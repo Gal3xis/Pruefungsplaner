@@ -23,9 +23,12 @@ import com.fachhochschulebib.fhb.pruefungsplaner.utils.*
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.fachhochschulebib.fhb.pruefungsplaner.view.fragments.*
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
+import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainFragmentPagerAdapter
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.hauptfenster.*
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -57,19 +60,62 @@ class MainActivity : AppCompatActivity() {
         )[MainViewModel::class.java]
         applySettings(viewModel)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.hauptfenster)
-
+        setContentView(R.layout.activity_main)
+        initViewPager()
+        initTabLayout()
         initActionBar()
         initNavigationDrawer()
-        initBottomNavigationView()
+        //initBottomNavigationView()
         initFilterDialog()
 
-        userFilter(applicationContext)
+        userFilter()
 
         viewModel.updatePruefperiode()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
         changeFragment(ExamOverviewFragment())
+
+    }
+
+    private fun initTabLayout(){
+        TabLayoutMediator(tabLayout,viewPager
+        ) {
+                tab, position ->
+            tab.text = when(position){
+                1->resources.getString(R.string.title_exam)
+                else->resources.getString(R.string.title_calender)
+            }
+            tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    when(tab?.position){
+                        1->changeFragment(FavoriteOverviewFragment())
+                        else->{
+                            userFilter()
+                            changeFragment(ExamOverviewFragment())
+                        }
+                    }
+                }
+
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    when(tab?.position){
+                        1->changeFragment(FavoriteOverviewFragment())
+                        else->changeFragment(ExamOverviewFragment())
+                    }
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+                }
+            })
+        }.attach()
+    }
+
+    private fun initViewPager(){
+        viewPager.adapter = MainFragmentPagerAdapter(this)
+        TabLayoutMediator(tabLayout,viewPager
+        ) { tab, position -> tab.text = "Test$position"
+        Log.d("TabLayout",position.toString())
+        }.attach()
 
     }
 
@@ -242,35 +288,16 @@ class MainActivity : AppCompatActivity() {
     private fun onNavigationDrawerItemClicked(item: MenuItem): Boolean {
         closeKeyboard()
         return when (item.itemId) {
-            R.id.navigation_calender -> {
-                if(supportFragmentManager.fragments.last()::class == ExamOverviewFragment::class){
-                    userFilter(applicationContext)
-                    true
-                }else{
-                    changeFragment(ExamOverviewFragment())
-                }
-            }
-            R.id.navigation_settings -> {
-                changeFragment(
-                    SettingsFragment()
-                )
-            }
-            R.id.navigation_feedback -> {
-                changeFragment(
-                    FeedbackFragment()
-                )
-            }
+            R.id.navigation_calender -> changeFragment(ExamOverviewFragment())
+            R.id.navigation_settings -> changeFragment(SettingsFragment())
+            R.id.navigation_feedback -> changeFragment(FeedbackFragment())
             R.id.navigation_changeFaculty -> {
-                val myIntent = Intent(recyclerView4.context, StartActivity::class.java)
-                recyclerView4.context.startActivity(myIntent)
+                val intent = Intent(recyclerView4.context, StartActivity::class.java)
+                intent.putExtra(StartActivity.CHANGE_FLAG,true)
+                recyclerView4.context.startActivity(intent)
                 true
             }
-            R.id.navigation_addCourse -> {
-                changeFragment(
-
-                    ChangeCoursesFragment()
-                )
-            }
+            R.id.navigation_addCourse -> changeFragment(ChangeCoursesFragment())
             else -> true
         }
     }
@@ -282,29 +309,29 @@ class MainActivity : AppCompatActivity() {
      * @author Alexander Lange
      * @since 1.6
      */
-    private fun initBottomNavigationView() {
-        //Set listener for BottomNavigationView
-
-        bottom_navigation.setOnNavigationItemSelectedListener { item ->
-            closeKeyboard()
-            when (item.itemId) {
-                R.id.navigation_calender -> {
-                    if(supportFragmentManager.fragments.last()::class == ExamOverviewFragment::class){
-                        userFilter(applicationContext)
-                        true
-                    }else{
-                        changeFragment(ExamOverviewFragment())
-                    }
-                }
-                R.id.navigation_diary -> {
-                    changeFragment(
-                        FavoriteOverviewFragment()
-                    )
-                }
-                else -> true
-            }
-        }
-    }
+//    private fun initBottomNavigationView() {
+//        //Set listener for BottomNavigationView
+//
+//        bottom_navigation.setOnNavigationItemSelectedListener { item ->
+//            closeKeyboard()
+//            when (item.itemId) {
+//                R.id.navigation_calender -> {
+//                    if(supportFragmentManager.fragments.last()::class == ExamOverviewFragment::class){
+//                        userFilter(applicationContext)
+//                        true
+//                    }else{
+//                        changeFragment(ExamOverviewFragment())
+//                    }
+//                }
+//                R.id.navigation_diary -> {
+//                    changeFragment(
+//                        FavoriteOverviewFragment()
+//                    )
+//                }
+//                else -> true
+//            }
+//        }
+//    }
 
     /**
      * Closes the Keyboard of the smartphone.
@@ -337,12 +364,25 @@ class MainActivity : AppCompatActivity() {
      *
      */
     fun changeFragment(fragment: MainActivityFragment): Boolean {
-        val ft = supportFragmentManager.beginTransaction()
         recyclerView4?.visibility = View.INVISIBLE
         header?.title = fragment.name
         drawer_layout.closeDrawer(GravityCompat.START)
-        ft.replace(R.id.frame_placeholder, fragment)
-        ft.commit()
+        if(fragment::class==ExamOverviewFragment::class){
+            frame_placeholder.visibility = View.INVISIBLE
+            viewPager.visibility = View.VISIBLE
+            viewPager.setCurrentItem(0,true)
+        }else if(fragment::class==FavoriteOverviewFragment::class){
+            frame_placeholder.visibility = View.INVISIBLE
+            viewPager.visibility = View.VISIBLE
+            viewPager.setCurrentItem(1,true)
+        }else{
+            val ft = supportFragmentManager.beginTransaction()
+            viewPager.visibility = View.INVISIBLE
+            frame_placeholder.visibility = View.VISIBLE
+            ft.replace(R.id.frame_placeholder, fragment)
+
+            ft.commit()
+        }
 
         return true
     }
@@ -372,7 +412,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Ok", null)
             .setNegativeButton(
                 "Reset"
-            ) { _, _ -> userFilter(this) }
+            ) { _, _ -> userFilter() }
             .setView(view)
             .create()
     }
@@ -387,7 +427,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      * @see Filter
      */
-    fun userFilter(context: Context) {
+    fun userFilter() {
         val id = viewModel.getMainCourse() ?: return
         val name = viewModel.liveChoosenCourses.value?.find { c ->
             c.sgid == id

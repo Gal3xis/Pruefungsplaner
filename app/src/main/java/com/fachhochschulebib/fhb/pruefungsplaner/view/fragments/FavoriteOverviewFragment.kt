@@ -19,7 +19,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoriteOverviewViewM
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import java.lang.Exception
 
-import kotlinx.android.synthetic.main.terminefragment.*
+import kotlinx.android.synthetic.main.fragment_exam_overview.*
 
 /**
  * Fragment that displays the favorites of the user. He can display details and delete them from favorites.
@@ -76,7 +76,7 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.terminefragment, container, false)
+        return inflater.inflate(R.layout.fragment_exam_overview, container, false)
     }
 
     /**
@@ -94,9 +94,7 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         Filter.onFilterChangedListener.add {
             viewModel.liveFavorits.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
         }
-        enableSwipeToDelete()
         setPruefungszeitraum()
-        
     }
 
     /**

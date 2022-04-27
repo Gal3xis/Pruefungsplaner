@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="51dp"
-    android:layout_marginBottom="50dp"
     android:background="?attr/colorBackground"
     android:minHeight="140dp"
     android:screenOrientation="portrait"
@@ -70,7 +68,7 @@
                     android:textSize="18sp" />
 
                 <Spinner
-                    android:id="@+id/theme"
+                    android:id="@+id/themeSpinner"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="10dp"

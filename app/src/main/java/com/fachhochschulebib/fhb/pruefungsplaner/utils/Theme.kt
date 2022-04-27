@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.utils
 
+import android.content.Context
 import android.content.res.Resources
 import android.view.View
 import com.fachhochschulebib.fhb.pruefungsplaner.R
@@ -10,16 +11,16 @@ import com.fachhochschulebib.fhb.pruefungsplaner.R
  * @author Alexander Lange
  * @since 1.6
  */
-class Theme (resId:Int?,view:View?){
+class Theme (resId:Int?,context: Context){
     var name:String? = null
     var theme: Resources.Theme? = null
 
     init {
         if(resId!=null)
         {
-            theme = view?.context?.resources?.newTheme()
+            theme = context.resources?.newTheme()
             theme?.applyStyle(resId,true)
-            val ta = view?.context?.obtainStyledAttributes(resId, intArrayOf(R.attr.themeName))
+            val ta = context.obtainStyledAttributes(resId, intArrayOf(R.attr.themeName))
             name = ta?.getString(0)
             ta?.recycle()
         }
