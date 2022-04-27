@@ -56,7 +56,7 @@
         <item name="actionMenuTextColor">@color/Theme2.colorOnPrimaryDark</item>
     </style>
 
-    <style name="BaseTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="frueherVorschlag">#f50</item>
         <item name="inDiskussion">#ff0</item>
         <item name="veroeffentlicht">#0a0</item>

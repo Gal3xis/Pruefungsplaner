@@ -14,26 +14,26 @@ class SharedPreferencesRepository(context: Context) {
     private val calendarEntries = context.getSharedPreferences("calendarEntries",Context.MODE_PRIVATE)
 
     //Google Calendar
-    fun addId(id:Long){
+    fun addId(id:Long, entryId: String){
         val existing = getIds()
-        existing.add(id)
+        existing[id] = entryId
         val json = Gson().toJson(existing)
         val editor = calendarEntries.edit()
         editor.putString("ids",json)
         editor.apply()
     }
-    fun addIds(ids:List<Long>){
+    fun addIds(ids:Map<Long,String>){
         val existing = getIds()
-        existing.addAll(ids)
+        existing.putAll(ids)
         val json = Gson().toJson(existing)
         val editor = calendarEntries.edit()
         editor.putString("ids",json)
         editor.apply()
     }
 
-    fun getIds():MutableSet<Long>{
+    fun getIds():MutableMap<Long,String>{
         val json = calendarEntries.getString("ids",null)
-        return if(json==null) mutableSetOf<Long>() else Gson().fromJson(json, object :TypeToken<MutableSet<Long>>(){}.type)
+        return if(json==null) mutableMapOf() else Gson().fromJson(json, object :TypeToken<MutableMap<Long,String>>(){}.type)
     }
 
     fun deleteId(id:Long){
@@ -44,9 +44,12 @@ class SharedPreferencesRepository(context: Context) {
         editor.putString("ids",json)
         editor.apply()
     }
+
     fun deleteIds(ids:List<Long>){
         val existing = getIds()
-        existing.removeAll(ids)
+        ids.forEach {
+            existing.remove(it)
+        }
         val json = Gson().toJson(existing)
         val editor = calendarEntries.edit()
         editor.putString("ids",json)

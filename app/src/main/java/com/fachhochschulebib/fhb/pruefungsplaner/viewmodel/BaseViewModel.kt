@@ -2,6 +2,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.viewmodel
 
 import android.app.Application
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
@@ -254,21 +255,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 //        }
 //    }
 
-    open fun updateEntryFavorit(context: Context, favorit: Boolean, id: String) {
+    open fun updateEntryFavorit(context: Context, favorit: Boolean, entry:TestPlanEntry) {
         viewModelScope.launch {
-            repository.updateEntryFavorit(favorit, id)
+            repository.updateEntryFavorit(favorit, entry.id)
             if (!getCalendarSync()) return@launch
-            if (!favorit) repository.getEntryById(id)
-                ?.let {deleteFromGoogleCalendar(context,it) }
+            if (!favorit) {
+                val calendarId = getCalendarId(entry)?:return@launch
+                deleteFromGoogleCalendar(context,calendarId)
+            }
             else
-                repository.getEntryById(id)
-                    ?.let { insertIntoGoogleCalendar(context,it) }
-        }
-    }
-
-    open fun updateEntryFavorit(context: Context, favorit: Boolean, entry: TestPlanEntry) {
-        viewModelScope.launch {
-            updateEntryFavorit(context, favorit, entry.id)
+                insertIntoCalendar(context,entry)
         }
     }
 
@@ -380,22 +376,22 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     //Shared Preferences
 
-    fun addCalendarId(id:Long){
-        spRepository.addId(id)
+    fun addCalendarEntry(id:Long,entry: TestPlanEntry){
+        spRepository.addId(id, entry.id )
     }
-    fun addCalendarIds(ids:List<Long>){
+    fun addCalendarEntries(ids:Map<Long,String>){
         spRepository.addIds(ids)
     }
 
-    fun deleteCalendarId(id:Long){
+    fun deleteCalendarEntry(id:Long){
         spRepository.deleteId(id)
     }
-    fun deleteCalendarIds(ids:List<Long>){
+    fun deleteCalendarEntries(ids:List<Long>){
         spRepository.deleteIds(ids)
     }
 
     fun getCalendarIds():MutableList<Long>{
-        return spRepository.getIds().toMutableList()
+        return spRepository.getIds().keys.toMutableList()
     }
 
     /**
@@ -817,31 +813,49 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     //Calendar
-    fun insertIntoGoogleCalendar(context: Context,entry: TestPlanEntry){
+    fun insertIntoCalendar(context: Context, entry: TestPlanEntry){
         val CAL_ID = getSelectedCalendar()?:return
         val id = CalendarIO.insertEntry(context,CAL_ID, entry, getCalendarInsertionType())
         id?.let {
-            addCalendarId(it)
+            addCalendarEntry(it,entry)
         }
     }
-    fun insertIntoGoogleCalendar(context: Context, entries: List<TestPlanEntry>){
+    fun insertIntoCalendar(context: Context, entries: List<TestPlanEntry>){
         val CAL_ID = getSelectedCalendar()?:return
-        val ids = CalendarIO.insertEntries(context,CAL_ID, entries, getCalendarInsertionType())
-        addCalendarIds(ids)
+        val entryIds = mutableMapOf<Long,String>()
+        entries.forEach {
+            val id = CalendarIO.insertEntry(context,CAL_ID, it, getCalendarInsertionType())
+            if (id != null) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    entryIds.putIfAbsent(id,it.id)
+                }else{
+                    if(!entryIds.containsKey(id)){
+                        entryIds[id] = it.id
+                    }
+                }
+            }
+        }
+        addCalendarEntries(entryIds)
+    }
+
+    fun getCalendarId(entry: TestPlanEntry):Long?{
+        var ret:Long? = null
+        spRepository.getIds().forEach {
+            if(it.value==entry.id){
+                ret = it.key
+            }
+        }
+        return ret
     }
 
     fun deleteFromGoogleCalendar(context: Context,id:Long){
         CalendarIO.deleteEvent(context,id)
-        deleteCalendarId(id)
-    }
-
-    fun deleteFromGoogleCalendar(context: Context,entry: TestPlanEntry){
-        deleteFromGoogleCalendar(context,CalendarIO.getTestPlanEntryId(entry))
+        deleteCalendarEntry(id)
     }
 
     fun deleteFromGoogleCalendar(context: Context,ids:List<Long>){
         CalendarIO.deleteEvents(context,ids)
-        deleteCalendarIds(ids)
+        deleteCalendarEntries(ids)
     }
 
     fun deleteAllFromGoogleCalendar(context: Context){
@@ -864,7 +878,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             val ids = getCalendarIds()
             deleteFromGoogleCalendar(context,ids)
             val favorites = getFavorites()?:return@launch
-            insertIntoGoogleCalendar(context,favorites)
+            insertIntoCalendar(context,favorites)
         }
     }
 

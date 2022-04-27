@@ -19,7 +19,7 @@
             android:screenOrientation="portrait">
 
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/header"
+                android:id="@+id/headerModule"
                 android:layout_width="match_parent"
                 android:layout_height="47dp"
                 android:background="@drawable/nav_background"
@@ -34,7 +34,7 @@
                 android:id="@+id/frame_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_below="@id/header"
+                android:layout_below="@id/headerModule"
                 android:layout_above="@id/tabLayout"
                 >
 
@@ -44,7 +44,7 @@
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/header"
+                android:layout_below="@id/headerModule"
                 android:layout_above="@id/tabLayout"
                 />
 

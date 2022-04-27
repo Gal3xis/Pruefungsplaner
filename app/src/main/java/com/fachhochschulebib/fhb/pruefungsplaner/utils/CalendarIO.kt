@@ -310,7 +310,7 @@ object CalendarIO {
      * @since 1.6
      */
     private fun forceInsert(context: Context,CAL_ID: Long,testPlanEntry: TestPlanEntry ):Long? {
-        val id: Long = getTestPlanEntryId(testPlanEntry)
+        val id: Long = getRandomId()
         val event = createEvent(context,CAL_ID,id,testPlanEntry)
         if(eventExists(context,id)){
             updateEvent(context,id,event)
@@ -320,8 +320,8 @@ object CalendarIO {
         return if(eventExists(context,id)) id else null
     }
 
-    fun getTestPlanEntryId(testPlanEntry: TestPlanEntry): Long {
-        return abs("$calendarEventId-${testPlanEntry.id}".hashCode()).toLong()
+    private fun getRandomId(): Long {
+        return abs(UUID.randomUUID().mostSignificantBits)
     }
 
     private fun insertEvent(context: Context,event: ContentValues){
@@ -388,23 +388,6 @@ object CalendarIO {
         )?:0
     }
 
-    /**
-     * Deletes a testplanentry from the google calendar
-     *
-     * @param context The Applicationcontext
-     * @param entry The [TestPlanEntry] to be deleted
-     *
-     * @return The number of events deleted
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     * @see [deleteEvent]
-     */
-    fun deleteEntry(context: Context, entry: TestPlanEntry?) :Int{
-        if(entry==null) return 0
-        return deleteEvent(context,getTestPlanEntryId(entry))
-    }
 
     fun deleteEvents(context: Context,ids:List<Long>):Int{
         var deleted = 0

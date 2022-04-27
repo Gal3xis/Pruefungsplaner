@@ -1,114 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    android:paddingBottom="2dp"
-    android:screenOrientation="portrait"
-    android:layout_marginTop="4dp">
+    android:layout_margin="20dp"
+    android:backgroundTint="?attr/colorPrimaryDark"
+    android:minHeight="120dp"
+    app:contentPadding="10dp"
+    >
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:visibility="visible">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="3dp"
+            android:layout_height="0dp"
+            android:background="?attr/colorAccent"
+            android:layout_toEndOf="@id/headerDate"
+            android:layout_alignTop="@id/courseModuleInfo"
+            android:layout_alignBottom="@id/courseModuleInfo"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+
+            />
+
+        <TextView
+            android:id="@+id/headerDate"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:textAlignment="center"
+            android:textColor="?attr/colorOnPrimaryDark"
+            android:textSize="15sp"
+            tools:text="22.02.2022" />
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/courseModuleInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:orientation="horizontal"
-            android:paddingBottom="0dp"
-            android:background="?attr/colorPrimaryLight">
+            android:orientation="vertical"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@id/divider"
+            >
 
-
-
-            <LinearLayout
-                android:id="@+id/LinearLayout5"
-                android:layout_width="0dp"
-                android:layout_weight="0.7"
+            <TextView
+                android:id="@+id/headerModule"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="19sp"
+                tools:text="Mathematik" />
 
-                <TextView
-                    android:id="@+id/firstLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignWithParentIfMissing="true"
-                    android:layout_above="@id/secondLine"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_toRightOf="@id/icon"
-                    android:gravity="center_vertical"
-                    android:paddingBottom="0dp"
-                    android:scrollbars="horizontal|vertical"
-                    android:textColor="?attr/colorOnPrimaryLight"
-                    android:textSize="19sp"/>
+            <TextView
+                android:id="@+id/headerCourse"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp"
+                tools:text="Ingenieurinformatik" />
 
-                <TextView
-                    android:id="@+id/secondLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignWithParentIfMissing="true"
-                    android:layout_above="@id/secondLine"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="6dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_toRightOf="@id/icon"
-                    android:textColor="?attr/colorOnPrimaryLight"
-                    android:gravity="center_vertical"
-                    android:paddingTop="0dp"
-                    android:textSize="16sp"
-                    android:visibility="gone"/>
+            <TextView
+                android:id="@+id/headerTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
 
-                <TextView
-                    android:id="@+id/thirdLine"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignWithParentIfMissing="true"
-                    android:layout_above="@id/secondLine"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:textColor="?attr/colorOnPrimaryLight"
-                    android:layout_marginTop="0dp"
-                    android:layout_marginEnd="6dp"
-                    android:layout_marginRight="0dp"
-                    android:layout_marginBottom="0dp"
-                    android:layout_toRightOf="@id/icon"
-                    android:gravity="center_vertical"
-                    android:paddingTop="0dp"
-                    android:textSize="16sp"/>
+                android:layout_marginTop="10dp"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp"
 
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="44dp"
-                android:layout_height="70dp"
-                android:layout_alignParentTop="false"
-                android:src="@android:drawable/ic_delete"
-                tools:layout_editor_absoluteY="50dp"
-                android:background="@android:color/transparent"
+                tools:text = "08:00-10:00"
                 />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/txtSecondscreen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_rounded_corners"
-            android:backgroundTint="?attr/colorPrimaryDark"
-            android:baselineAligned="false"
-            android:padding="5dp"
-            android:textColor="?attr/colorOnPrimaryDark"
-            android:visibility="gone" />
-    </LinearLayout>
-</RelativeLayout>
+    </RelativeLayout>
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/linearLayout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:visibility="visible">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:id="@+id/linearLayout2"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginBottom="0dp"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:paddingBottom="0dp"-->
+    <!--            android:background="?attr/colorPrimaryLight">-->
+
+
+    <!--            <LinearLayout-->
+    <!--                android:id="@+id/LinearLayout5"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_weight="0.7"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:orientation="vertical">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/firstLine"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_alignWithParentIfMissing="true"-->
+    <!--                    android:layout_above="@id/secondLine"-->
+    <!--                    android:layout_alignParentTop="true"-->
+    <!--                    android:layout_alignParentRight="true"-->
+    <!--                    android:layout_toRightOf="@id/icon"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:paddingBottom="0dp"-->
+    <!--                    android:scrollbars="horizontal|vertical"-->
+    <!--                    android:textColor="?attr/colorOnPrimaryLight"-->
+    <!--                    android:textSize="19sp"/>-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/secondLine"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_alignWithParentIfMissing="true"-->
+    <!--                    android:layout_above="@id/secondLine"-->
+    <!--                    android:layout_alignParentTop="true"-->
+    <!--                    android:layout_alignParentRight="true"-->
+    <!--                    android:layout_marginTop="0dp"-->
+    <!--                    android:layout_marginEnd="6dp"-->
+    <!--                    android:layout_marginRight="0dp"-->
+    <!--                    android:layout_marginBottom="0dp"-->
+    <!--                    android:layout_toRightOf="@id/icon"-->
+    <!--                    android:textColor="?attr/colorOnPrimaryLight"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:paddingTop="0dp"-->
+    <!--                    android:textSize="16sp"-->
+    <!--                    android:visibility="gone"/>-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/thirdLine"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_alignWithParentIfMissing="true"-->
+    <!--                    android:layout_above="@id/secondLine"-->
+    <!--                    android:layout_alignParentTop="true"-->
+    <!--                    android:layout_alignParentRight="true"-->
+    <!--                    android:textColor="?attr/colorOnPrimaryLight"-->
+    <!--                    android:layout_marginTop="0dp"-->
+    <!--                    android:layout_marginEnd="6dp"-->
+    <!--                    android:layout_marginRight="0dp"-->
+    <!--                    android:layout_marginBottom="0dp"-->
+    <!--                    android:layout_toRightOf="@id/icon"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:paddingTop="0dp"-->
+    <!--                    android:textSize="16sp"/>-->
+
+    <!--            </LinearLayout>-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/icon"-->
+    <!--                android:layout_width="44dp"-->
+    <!--                android:layout_height="70dp"-->
+    <!--                android:layout_alignParentTop="false"-->
+    <!--                android:src="@android:drawable/ic_delete"-->
+    <!--                tools:layout_editor_absoluteY="50dp"-->
+    <!--                android:background="@android:color/transparent"-->
+    <!--                />-->
+    <!--        </LinearLayout>-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/txtSecondscreen"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@drawable/button_rounded_corners"-->
+    <!--            android:backgroundTint="?attr/colorPrimaryDark"-->
+    <!--            android:baselineAligned="false"-->
+    <!--            android:padding="5dp"-->
+    <!--            android:textColor="?attr/colorOnPrimaryDark"-->
+    <!--            android:visibility="gone" />-->
+    <!--    </LinearLayout>-->
+</com.google.android.material.card.MaterialCardView>
+
+

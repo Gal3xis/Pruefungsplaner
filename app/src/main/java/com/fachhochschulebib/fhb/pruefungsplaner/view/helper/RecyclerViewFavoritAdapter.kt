@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.content.Context
 import android.util.Log
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import android.widget.TextView
-import android.widget.LinearLayout
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.add
-import com.fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
+import com.fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorit exams.
@@ -28,9 +28,9 @@ import java.lang.Exception
  * @see RecyclerView
  */
 class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
-(
-        var entryList: MutableList<TestPlanEntry>,
-        private val viewModel: BaseViewModel
+    (
+    var entryList: MutableList<TestPlanEntry>,
+    private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
     private var modulName: String? = null
     private var name: String? = null
@@ -48,7 +48,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      */
     fun add(position: Int?, entry: TestPlanEntry) {
         notifyItemInserted(
-                entryList.add(position, entry)
+            entryList.add(position, entry)
         )
     }
 
@@ -66,8 +66,8 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
             viewModel.updateEntryFavorit(context, false, entry)
             notifyItemChanged(position)
             Toast.makeText(
-                    context,
-                    context!!.getString(R.string.delete), Toast.LENGTH_SHORT
+                context,
+                context!!.getString(R.string.delete), Toast.LENGTH_SHORT
             ).show()
         } catch (ex: Exception) {
             Log.e("MyAdapterfavorits.kt-remove", ex.stackTraceToString())
@@ -88,12 +88,12 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @see RecyclerView.Adapter.onCreateViewHolder
      */
     override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
+        parent: ViewGroup,
+        viewType: Int
     ): ViewHolder {
         // create a new view
         val inflater = LayoutInflater.from(
-                parent.context
+            parent.context
         )
         val v = inflater.inflate(R.layout.favoriten, parent, false)
         // set the view's size, margins, paddings and layout parameters
@@ -116,33 +116,13 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @see RecyclerView.Adapter.onBindViewHolder
      */
     override fun onBindViewHolder(
-            holder: ViewHolder,
-            position: Int
+        holder: ViewHolder,
+        position: Int
     ) {
         val entry = entryList[position]
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        name = entry.module
-        holder.txtHeader.text = name
-
-        holder.layout.setOnClickListener {
-            if (holder.txtSecondScreen.visibility == View.VISIBLE) {
-                holder.txtSecondScreen.visibility = View.GONE
-            } else {
-                if (openItem?.txtSecondScreen?.visibility == View.VISIBLE) {
-                    openItem?.txtSecondScreen?.visibility = View.GONE
-                }
-                holder.txtSecondScreen.visibility = View.VISIBLE
-                holder.txtSecondScreen.text = entry.getString(context)
-                //Make previous details invisible
-                openItem = holder
-            }
-        }
-
-        //Prüfitem von der Favoritenliste löschen
-        holder.ivicon.setOnClickListener { remove(position) }
-        holder.txtFooter.text = context!!.getString(R.string.prof) + "${entry.firstExaminer},${entry.secondExaminer}"
-
+        holder.Set(entry)
         val course = name?.split(" ")?.toTypedArray()
         modulName = ""
         var b: Int
@@ -179,23 +159,14 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      *
      */
     private fun displayExamInformation(
-            position: Int,
-            holder: ViewHolder
+        position: Int,
+        holder: ViewHolder
     ) {
         val entry = entryList[position]
         //darstellen der Informationen für das Prüfitem
         val splitDateAndTime = entry.date?.split(" ")?.toTypedArray()
         val splitDayMonthYear = splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
-        holder.txtthirdline.text = (context!!.getString(R.string.clockTime2)
-                + splitDateAndTime?.get(1)?.substring(0, 5)
-                +"\n"
-                + context!!.getString(R.string.date2)
-                + (splitDayMonthYear?.get(2) ?: "") + "."
-                + (splitDayMonthYear?.get(1) ?: "") + "."
-                + (splitDayMonthYear?.get(0) ?: ""))
-        holder.txtFooter.text = (context!!.getString(R.string.prof)
-                + entry.firstExaminer + ", " + entry.secondExaminer
-                + context!!.getString(R.string.semester) + entry.semester)
+
     }
 
 
@@ -222,22 +193,74 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
      * @see RecyclerView.ViewHolder
      */
     inner class ViewHolder(var layout: View) : RecyclerView.ViewHolder(
-            layout
+        layout
     ) {
-        var txtHeader: TextView
-        var txtFooter: TextView
-        var txtthirdline: TextView
-        var ivicon: ImageView
-        var layout2: LinearLayout
-        val txtSecondScreen: TextView
+        private var headerModule = layout.findViewById<TextView>(R.id.headerModule)
+        private var headerCourse = layout.findViewById<TextView>(R.id.headerCourse)
+        private var headerDate = layout.findViewById<TextView>(R.id.headerDate)
+        private var headerTime = layout.findViewById<TextView>(R.id.headerTime)
+//        private var txtHeader: TextView
+//        private var txtFooter: TextView
+//        private var txtthirdline: TextView
+//        private var ivicon: ImageView
+//        private var layout2: LinearLayout
+//        private val txtSecondScreen: TextView
 
         init {
-            ivicon = layout.findViewById<View>(R.id.icon) as ImageView
-            txtHeader = layout.findViewById<View>(R.id.firstLine) as TextView
-            txtFooter = layout.findViewById<View>(R.id.secondLine) as TextView
-            txtSecondScreen = layout.findViewById<View>(R.id.txtSecondscreen) as TextView
-            txtthirdline = layout.findViewById<View>(R.id.thirdLine) as TextView
-            layout2 = layout.findViewById<View>(R.id.linearLayout) as LinearLayout
+            //            ivicon = layout.findViewById<View>(R.id.icon) as ImageView
+//            txtHeader = layout.findViewById<View>(R.id.firstLine) as TextView
+//            txtFooter = layout.findViewById<View>(R.id.secondLine) as TextView
+//            txtSecondScreen = layout.findViewById<View>(R.id.txtSecondscreen) as TextView
+//            txtthirdline = layout.findViewById<View>(R.id.thirdLine) as TextView
+//            layout2 = layout.findViewById<View>(R.id.linearLayout) as LinearLayout
+        }
+
+        fun Set(entry: TestPlanEntry) {
+            val dateParser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val dateFormatterDay = SimpleDateFormat("dd.MM.yyyy")
+            val dateFormatterTime = SimpleDateFormat("HH:mm")
+
+            headerModule.text = entry.module
+            headerCourse.text = "(${entry.course})"
+
+
+            val dateStart = dateParser.parse(entry.date)
+            val dateEnd = Calendar.getInstance()
+            dateEnd.time = dateStart
+            dateEnd.add(Calendar.MINUTE, Utils.getExamDuration(entry.examForm))
+            headerDate.text = dateStart?.let { dateFormatterDay.format(it) }
+            headerTime.text = "${dateFormatterTime.format(dateStart)}-${dateFormatterTime.format(dateEnd.time)}"
+/*            name = entry.module
+            txtHeader.text = name
+
+            layout.setOnClickListener {
+                if (txtSecondScreen.visibility == View.VISIBLE) {
+                    txtSecondScreen.visibility = View.GONE
+                } else {
+                    if (openItem?.txtSecondScreen?.visibility == View.VISIBLE) {
+                        openItem?.txtSecondScreen?.visibility = View.GONE
+                    }
+                    txtSecondScreen.visibility = View.VISIBLE
+                    txtSecondScreen.text = entry.getString(context)
+                    //Make previous details invisible
+                    openItem = this
+                }
+            }
+
+            //Prüfitem von der Favoritenliste löschen
+            ivicon.setOnClickListener { remove(position) }
+            txtFooter.text = context!!.getString(R.string.prof) + "${entry.firstExaminer},${entry.secondExaminer}"*/
+//
+//            holder.txtthirdline.text = (context!!.getString(R.string.clockTime2)
+//                    + splitDateAndTime?.get(1)?.substring(0, 5)
+//                    +"\n"
+//                    + context!!.getString(R.string.date2)
+//                    + (splitDayMonthYear?.get(2) ?: "") + "."
+//                    + (splitDayMonthYear?.get(1) ?: "") + "."
+//                    + (splitDayMonthYear?.get(0) ?: ""))
+//            holder.txtFooter.text = (context!!.getString(R.string.prof)
+//                    + entry.firstExaminer + ", " + entry.secondExaminer
+//                    + context!!.getString(R.string.semester) + entry.semester)
         }
     }
 }

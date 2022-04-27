@@ -126,8 +126,8 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initActionBar() {
-        setSupportActionBar(header)
-        header.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, theme))
+        setSupportActionBar(headerModule)
+        headerModule.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, theme))
     }
 
     /**
@@ -256,7 +256,7 @@ class MainActivity : AppCompatActivity() {
         nav_view.itemTextColor = ColorStateList(states, colors)
         nav_view.itemIconTintList = ColorStateList(states, colors)
 
-        header.setNavigationOnClickListener {
+        headerModule.setNavigationOnClickListener {
             onNavigationDrawerButtonClicked()
         }
         nav_view.setNavigationItemSelectedListener { item ->
@@ -365,7 +365,7 @@ class MainActivity : AppCompatActivity() {
      */
     fun changeFragment(fragment: MainActivityFragment): Boolean {
         recyclerView4?.visibility = View.INVISIBLE
-        header?.title = fragment.name
+        headerModule?.title = fragment.name
         drawer_layout.closeDrawer(GravityCompat.START)
         if(fragment::class==ExamOverviewFragment::class){
             frame_placeholder.visibility = View.INVISIBLE
