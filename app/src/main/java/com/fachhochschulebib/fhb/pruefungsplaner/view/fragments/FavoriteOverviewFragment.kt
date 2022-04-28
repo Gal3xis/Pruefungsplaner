@@ -97,6 +97,11 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         setPruefungszeitraum()
     }
 
+    override fun onResume() {
+        super.onResume()
+        recyclerViewFavoritAdapter.notifyDataSetChanged()
+    }
+
     /**
      * Initializes the recyclerview, that shows the selected courses.
      *
@@ -111,6 +116,12 @@ class FavoriteOverviewFragment : MainActivityFragment() {
             if (entryList != null) {
                 recyclerViewFavoritAdapter.updateContent(Filter.validateList(entryList))
             }
+        }
+        termineFragment_swiperefres.setDistanceToTriggerSync(800)
+        termineFragment_swiperefres.setOnRefreshListener {
+            viewModel.updatePruefperiode()
+            viewModel.updateDatabase()
+            termineFragment_swiperefres.isRefreshing = false
         }
     }
 

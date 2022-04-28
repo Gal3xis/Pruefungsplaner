@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
@@ -26,9 +27,9 @@ import java.text.SimpleDateFormat
  * @see RecyclerView
  */
 class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on the kind of dataset)
-(
-        var entryList: MutableList<TestPlanEntry>,
-        private val viewModel: BaseViewModel
+    (
+    var entryList: MutableList<TestPlanEntry>,
+    private val viewModel: BaseViewModel
 ) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
     private var save = false
     private lateinit var context: Context
@@ -49,12 +50,12 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @see RecyclerView.Adapter.onCreateViewHolder
      */
     override fun onCreateViewHolder(
-            parent: ViewGroup,
-            viewType: Int
+        parent: ViewGroup,
+        viewType: Int
     ): ViewHolder {
         // create a new view
         val inflater = LayoutInflater.from(
-                parent.context
+            parent.context
         )
         val view = inflater.inflate(R.layout.termine, parent, false)
         context = view.context
@@ -88,231 +89,68 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @see RecyclerView.Adapter.onBindViewHolder
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        try {
-            val name = entryList[position].module
-            holder.txtHeader.text = name
-            holder.layout.setOnClickListener {
-                if (holder.txtSecondScreen.visibility == View.VISIBLE) {
-                    holder.txtSecondScreen.visibility = View.GONE
-                } else {
-                    if (openItem?.txtSecondScreen?.visibility == View.VISIBLE) {
-                        openItem?.txtSecondScreen?.visibility = View.GONE
-                    }
-                    holder.txtSecondScreen.visibility = View.VISIBLE
-                    holder.txtSecondScreen.text = entryList[position].getString(context)
-
-                    //Make previous details invisible
-                    openItem = holder
-                }
-            }
-
-            // Start Merlin Gürtler
-            // erhalte den ausgewählten Studiengang
-            val course = name?.split(" ")?.toTypedArray()
-
-            setIcons(position, holder)
-            //Aufteilung nach verschiedenen Tagen
-            val splitDay = splitInDays(position, holder)
-
-            //Darstellen der Werte in der Prüfitem Komponente
-            splitDay?.let { initFooter(it, holder, position) }
-
-        } catch (ex: Exception) {
-            Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
-        }
+        holder.set(entryList[position])
     }
-
-    /**
-     * Initializes the UI-Elements, that hold deeper information about the exam.
-     *
-     * @param[splitDay] The day, the exam takes place.
-     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-     * @param[position] The position of the item in the Recyclerview.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun initFooter(
-            splitDay: Array<String>,
-            holder: ViewHolder,
-            position: Int
-    ) {
-        val entry = entryList[position]
-        holder.txtthirdline.text =
-                context!!.getString(R.string.time) + splitDay[1]
-        holder.button.text = splitDay[0]
-        //holder.txtthirdline.setText("Semester: " + Semester5.toString());
-    }
-
-    /**
-     * Tests if the exam before that takes place at the same time as itself.
-     * If that is the case, it removes the date-indicator, so its placed under the indicator
-     * of the first exam that day.
-     *
-     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-     * @param[position] The position of the item in the Recyclerview.
-     * @return The day the exam takes place.
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun splitInDays(
-            position: Int,
-            holder: ViewHolder
-    ): Array<String>? {
-        val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        val entry1 = entryList[position]
-        val date1 = sdf.parse(entry1.date)
-
-        val ret = arrayOf(SimpleDateFormat("dd.MM.yyyy").format(date1),SimpleDateFormat("HH:mm").format(date1))
-
-        if (position > 0) {
-
-
-            val entry2 = entryList[position-1]
-            val date2 = sdf.parse(entry2.date)
-
-            if (date1.atDay(date2)) {
-                holder.button.visibility = View.GONE
-            }else
-            {
-                holder.button.visibility = View.VISIBLE
-            }
-        }
-        return ret
-    }
-
-    /**
-     * Sets the icons for the items. Determines, the status of the exam an whether it is a favorit
-     * or not and sets the corresponding colors.
-     *
-     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-     * @param[position] The position of the item in the Recyclerview.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun setIcons(
-            position: Int,
-            holder: ViewHolder
-    ) {
-        var entry: TestPlanEntry? = null
-        try {
-            entry = entryList[position]
-            //Datenbank und Pruefplan laden
-            save = false
-        } catch (ex: Exception) {
-            Log.d("MyAdapter.kt-onBindViewHolder", ex.stackTraceToString())
-        }
-        try {
-            if (position < 0) {
-                return
-            }
-            val pruefid = entry?.id?.toInt()
-            if (Integer.valueOf(entry?.id) != pruefid) {
-                return
-            }
-            // Start Merlin Gürtler
-            // Setze die Farbe des Icons
-            if (context != null) {
-                holder.statusIcon.setColorFilter(
-                        Utils.getColorFromAttr(
-                                Utils.statusColors[entry?.status]
-                                        ?: R.attr.defaultStatusColor, context!!.theme
-                        )
-                )
-                holder.ivicon.setImageDrawable(
-                        Utils.favoritIcons[entry?.favorit ?: false]?.let {
-                            context.resources.getDrawable(
-                                    it,
-                                    context.theme
-                            )
-                        }
-
-                )
-            }
-        } catch (ex: Exception) {
-            Log.d("onBindViewer-ThreadHandler", ex.stackTraceToString())
-        }
-        //OnClickListener
-        // Start Merlin Gürtler
-        // Gibt die Statusmeldung aus
-        holder.statusIcon.setOnClickListener { v: View ->
-            Toast.makeText(
-                    v.context,
-                    entry?.status,
-                    Toast.LENGTH_SHORT
-            ).show()
-        }
-        // Ende Merlin Gürtler
-        holder.ivicon.setOnClickListener {
-            val isFavorite = checkFavorite(position)
-            // toggelt den Favoriten
-            if (!isFavorite) {
-                addToFavorites(position, holder)
-            } else {
-                deleteFromFavorites(position, holder)
-            }
-        }
-    }
-
-    /**
-     * Deletes the exam from favorits. Executed after clicking the add/remove-icon.
-     *
-     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-     * @param[position] The position of the item in the Recyclerview.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun deleteFromFavorites(position: Int, holder: ViewHolder) {
-        val entry = entryList[position]
-        //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-        viewModel.updateEntryFavorit(context, false, entry)
-        Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
-                .show()
-        this.notifyItemChanged(position)
-    }
-
-    /**
-     * Adds the exam to the favorits. Executed after clicking the add/remove-icon.
-     *
-     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-     * @param[position] The position of the item in the Recyclerview.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun addToFavorites(position: Int, holder: ViewHolder) {
-        var entry = entryList[position]
-        //Speichern des Prüfitem als Favorit
-        viewModel.updateEntryFavorit(context, true, entry)
-        Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
-                .show()
-        this.notifyItemChanged(position)
-    }
-
-    /**
-     * Checks if an exam is a favorit.
-     * Needs to be called in a Coroutine-Scope.
-     *
-     * @param[position] The position of the item in the Recyclerview.
-     *
-     * @return true->The exam is a favorit;false->The exam is not a favorit.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun checkFavorite(position: Int): Boolean {
-        return try {
-            val entry = entryList[position]
-            //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-
-            entry.favorit ?: false
-        } catch (ex: Exception) {
-            Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
-            false
-        }
-    }
+//
+//
+//    /**
+//     * Deletes the exam from favorits. Executed after clicking the add/remove-icon.
+//     *
+//     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+//     * @param[position] The position of the item in the Recyclerview.
+//     *
+//     * @author Alexander Lange
+//     * @since 1.6
+//     */
+//    fun deleteFromFavorites(position: Int, holder: ViewHolder) {
+//        val entry = entryList[position]
+//        //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
+//        viewModel.updateEntryFavorit(context, false, entry)
+//        Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
+//            .show()
+//        this.notifyItemChanged(position)
+//    }
+//
+//    /**
+//     * Adds the exam to the favorits. Executed after clicking the add/remove-icon.
+//     *
+//     * @param[holder] The [ViewHolder] that holds the UI-Elements.
+//     * @param[position] The position of the item in the Recyclerview.
+//     *
+//     * @author Alexander Lange
+//     * @since 1.6
+//     */
+//    fun addToFavorites(position: Int, holder: ViewHolder) {
+//        var entry = entryList[position]
+//        //Speichern des Prüfitem als Favorit
+//        viewModel.updateEntryFavorit(context, true, entry)
+//        Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
+//            .show()
+//        this.notifyItemChanged(position)
+//    }
+//
+//    /**
+//     * Checks if an exam is a favorit.
+//     * Needs to be called in a Coroutine-Scope.
+//     *
+//     * @param[position] The position of the item in the Recyclerview.
+//     *
+//     * @return true->The exam is a favorit;false->The exam is not a favorit.
+//     *
+//     * @author Alexander Lange
+//     * @since 1.6
+//     */
+//    fun checkFavorite(position: Int): Boolean {
+//        return try {
+//            val entry = entryList[position]
+//            //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
+//
+//            entry.favorit ?: false
+//        } catch (ex: Exception) {
+//            Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
+//            false
+//        }
+//    }
 
     /**
      * Returns the amount of items in the recyclerview, based on the size of the moduleslist.
@@ -358,26 +196,125 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      */
     inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case
-        val txtHeader: TextView
-        val txtFooter: TextView
-        val txtthirdline: TextView
-        val layout: LinearLayout
-        val bigLayout: LinearLayout
-        val ivicon: ImageView
-        val statusIcon: ImageView
-        val button: Button
-        val txtSecondScreen: TextView
+        val txtModule: TextView = v.findViewById(R.id.moduleTextView)
+        val layout: LinearLayout = v.findViewById(R.id.examInfoLayout)
+        val ivicon: ImageView = v.findViewById(R.id.favoriteIcon)
+        val statusIcon: ImageView = v.findViewById(R.id.statusIcon)
+        val dateTextView: TextView = v.findViewById(R.id.date)
+        val secondScreen:LinearLayout = v.findViewById(R.id.secondScreen)
+        val txtSecondScreen: TextView = v.findViewById(R.id.txtSecondscreen)
 
-        init {
-            ivicon = v.findViewById<View>(R.id.icon) as ImageView
-            statusIcon = v.findViewById<View>(R.id.icon2) as ImageView
-            txtHeader = v.findViewById<View>(R.id.firstLine) as TextView
-            txtFooter = v.findViewById<View>(R.id.secondLine) as TextView
-            txtSecondScreen = v.findViewById<View>(R.id.txtSecondscreen) as TextView
-            txtthirdline = v.findViewById<View>(R.id.thirdLine) as TextView
-            button = v.findViewById<View>(R.id.button7) as Button
-            layout = v.findViewById<View>(R.id.linearLayout) as LinearLayout
-            bigLayout = v.findViewById<View>(R.id.linearLayout6) as LinearLayout
+        fun set(entry: TestPlanEntry) {
+            val name = entry.module
+            txtModule.text = name
+            txtSecondScreen.text =  entry.getString(context)
+
+            layout.setOnClickListener {
+                secondScreen.visibility = if(secondScreen.isVisible)View.GONE else View.VISIBLE
+            }
+
+            // Start Merlin Gürtler
+            // erhalte den ausgewählten Studiengang
+            val course = name?.split(" ")?.toTypedArray()
+
+            setIcons(entry)
+            //Aufteilung nach verschiedenen Tagen
+            val splitDay = splitInDays(entry)
+
+            //Darstellen der Werte in der Prüfitem Komponente
+            splitDay?.let { initFooter(it) }
+        }
+
+
+        /**
+         * Tests if the exam before that takes place at the same time as itself.
+         * If that is the case, it removes the date-indicator, so its placed under the indicator
+         * of the first exam that day.
+         *
+         * @param[holder] The [ViewHolder] that holds the UI-Elements.
+         * @param[position] The position of the item in the Recyclerview.
+         * @return The day the exam takes place.
+         * @author Alexander Lange
+         * @since 1.6
+         */
+        private fun splitInDays(entry: TestPlanEntry): Array<String> {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val date1 = sdf.parse(entry.date)
+
+            val ret = arrayOf(
+                SimpleDateFormat("dd.MM.yyyy").format(date1),
+                SimpleDateFormat("HH:mm").format(date1)
+            )
+
+            dateTextView.visibility = View.VISIBLE
+
+            if (layoutPosition > 0) {
+                val entry2 = entryList[layoutPosition - 1]
+                val date2 = sdf.parse(entry2.date)
+                if (date1.atDay(date2)) {
+                    dateTextView.visibility = View.GONE
+                }
+            }
+            return ret
+        }
+
+
+        /**
+         * Sets the icons for the items. Determines, the status of the exam an whether it is a favorit
+         * or not and sets the corresponding colors.
+         *
+         * @param[holder] The [ViewHolder] that holds the UI-Elements.
+         * @param[position] The position of the item in the Recyclerview.
+         *
+         * @author Alexander Lange
+         * @since 1.6
+         */
+        private fun setIcons(
+            entry: TestPlanEntry
+        ) {
+            statusIcon.setColorFilter(
+                Utils.getColorFromAttr(
+                    Utils.statusColors[entry.status]
+                        ?: R.attr.defaultStatusColor, context.theme
+                )
+            )
+            ivicon.setImageDrawable(
+                Utils.favoritIcons[entry.favorit]?.let {
+                    context.resources.getDrawable(
+                        it,
+                        context.theme
+                    )
+                }
+            )
+            statusIcon.setOnClickListener { v: View ->
+                Toast.makeText(
+                    v.context,
+                    entry.status,
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            ivicon.setOnClickListener {
+                viewModel.updateEntryFavorit(context, !entry.favorit, entry)
+                notifyItemChanged(layoutPosition)
+            }
+        }
+
+
+        /**
+         * Initializes the UI-Elements, that hold deeper information about the exam.
+         *
+         * @param[splitDay] The day, the exam takes place.
+         * @param[holder] The [ViewHolder] that holds the UI-Elements.
+         * @param[position] The position of the item in the Recyclerview.
+         *
+         * @author Alexander Lange
+         * @since 1.6
+         */
+        private fun initFooter(
+            splitDay: Array<String>
+        ) {
+            dateTextView.text = splitDay[0]
         }
     }
 }

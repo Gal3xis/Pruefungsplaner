@@ -159,4 +159,7 @@
     <string name="choose_course_change_main_label_text">Hauptkurs wechseln:</string>
     <string name="calendarInsertionTypeLabel">Automatisch oder Manuell</string>
     <string name="calendarIdSpinnerLabel">Kalender für Synchronisation</string>
+    <string name="favorite_contextmenu_add_to_calendar">Zum Kalender hinzufügen</string>
+    <string name="favorite_contextmenu_remove_from_calendar">Aus Kalender entfernen</string>
+    <string name="favorite_contextmenu_remove_from_favorits">Aus Favoriten entfernen</string>
 </resources>

@@ -624,7 +624,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun getMainCourse(): String? {
+    open fun getMainCourseId(): String? {
         return spRepository.getMainCourse()
     }
 
@@ -892,7 +892,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
     private fun checkSustainability() {
         viewModelScope.launch {
-            val mainCourse = getMainCourse()?.let { getCourseById(it) }
+            val mainCourse = getMainCourseId()?.let { getCourseById(it) }
             if (mainCourse?.choosen == false) {
                 deleteMainCourse()
             }

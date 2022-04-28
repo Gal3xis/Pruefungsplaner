@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimaryDark"
+    android:padding="20dp"
+    >
+    <Button
+        android:id="@+id/AddToCalendar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_color_border"
+        android:backgroundTint="?attr/colorPrimary"
+        android:text="@string/favorite_contextmenu_add_to_calendar"
+        />
+
+    <Button
+        android:id="@+id/removeFromFavorits"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_color_border"
+        android:backgroundTint="?attr/colorPrimary"
+        android:text="@string/favorite_contextmenu_remove_from_favorits"
+        />
+
+
+</LinearLayout>

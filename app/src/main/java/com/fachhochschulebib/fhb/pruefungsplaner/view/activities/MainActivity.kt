@@ -68,12 +68,12 @@ class MainActivity : AppCompatActivity() {
         //initBottomNavigationView()
         initFilterDialog()
 
-        userFilter()
 
         viewModel.updatePruefperiode()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
         changeFragment(ExamOverviewFragment())
+        userFilter()
 
     }
 
@@ -371,10 +371,12 @@ class MainActivity : AppCompatActivity() {
             frame_placeholder.visibility = View.INVISIBLE
             viewPager.visibility = View.VISIBLE
             viewPager.setCurrentItem(0,true)
+            viewPager.invalidate()
         }else if(fragment::class==FavoriteOverviewFragment::class){
             frame_placeholder.visibility = View.INVISIBLE
             viewPager.visibility = View.VISIBLE
             viewPager.setCurrentItem(1,true)
+            viewPager.invalidate()
         }else{
             val ft = supportFragmentManager.beginTransaction()
             viewPager.visibility = View.INVISIBLE
@@ -428,13 +430,13 @@ class MainActivity : AppCompatActivity() {
      * @see Filter
      */
     fun userFilter() {
-        val id = viewModel.getMainCourse() ?: return
-        val name = viewModel.liveChoosenCourses.value?.find { c ->
-            c.sgid == id
-        }?.courseName
-        Filter.reset()
-        Filter.courseName = name
-        initFilterDialog()
+        viewModel.liveMainCourse.observe(this){
+            Filter.reset()
+            Filter.courseName = it.courseName
+            initFilterDialog()
+
+        }
+        viewModel.getMainCourse()
     }
 
     /**

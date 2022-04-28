@@ -123,7 +123,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      * @since 1.6
      */
     private fun toggleFavorite(position: Int): Boolean {
-        if (courseList[position].sgid != viewModel.getMainCourse()) {
+        if (courseList[position].sgid != viewModel.getMainCourseId()) {
             courseList[position].choosen = !courseList[position].choosen
             viewModel.updateCourse(courseList[position])
         } else {

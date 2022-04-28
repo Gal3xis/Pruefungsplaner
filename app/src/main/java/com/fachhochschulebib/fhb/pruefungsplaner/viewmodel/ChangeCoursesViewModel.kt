@@ -67,7 +67,7 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
     fun changeMainCourse(course:String){
         viewModelScope.launch {
             val id = getCourseId(course)?:return@launch
-            if(id == getMainCourse()) return@launch
+            if(id == getMainCourseId()) return@launch
             setMainCourse(id)
             repository.updateCourse(course,true)
             getCourses()
@@ -97,7 +97,7 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
      */
     fun getMainCourseName(){
         viewModelScope.launch(coroutineExceptionHandler) {
-            val id = getMainCourse()?:return@launch
+            val id = getMainCourseId()?:return@launch
             val name = repository.getCourseName(id)
             liveSelectedCourseName.postValue(name)
         }

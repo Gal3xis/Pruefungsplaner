@@ -79,7 +79,7 @@ class ChangeCoursesFragment : MainActivityFragment() {
             var selectedMainCourseName:String? = null
             it?.forEach { course ->
                 courseNames.add(course.courseName)
-                if(course.sgid==viewModel.getMainCourse()){
+                if(course.sgid==viewModel.getMainCourseId()){
                     selectedMainCourseName = course.courseName
                 }
             }

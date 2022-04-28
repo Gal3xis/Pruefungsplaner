@@ -1,158 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    android:paddingBottom="2dp"
-    android:screenOrientation="portrait"
-    tools:onClick="onClickdd"
-    android:layout_marginTop="4dp"
-    android:orientation="vertical"
+    android:layout_marginBottom="10dp"
     >
 
-    <LinearLayout
-        android:id="@+id/linearLayout6"
+    <TextView
+        android:id="@+id/date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginRight="1dp"
-        android:orientation="horizontal"
-        >
+        android:background="@drawable/rounded_color_border"
+        android:backgroundTint="?attr/colorPrimaryDark"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:textColor="?attr/colorOnPrimaryDark"
+        android:textSize="20sp"
+        tools:text="04.07.2022" />
+
+    <LinearLayout
+        android:id="@+id/examInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/date"
+        android:background="@drawable/rounded_color_border"
+        android:backgroundTint="?attr/colorPrimaryLight"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/statusIcon"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/radiobutton_off_background" />
 
         <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="visible"
-            >
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/button7"
+            <TextView
+                android:id="@+id/moduleTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/button_rounded_corners"
-                android:minHeight="0dp"
-                android:text="@string/date_ui"
-                android:textColor="#fffeee"
-                android:textSize="18sp"
-                android:backgroundTint="?attr/colorPrimaryDark"
-                android:backgroundTintMode="src_over"
-                />
+                android:textColor="?attr/colorOnPrimaryLight"
+                android:textSize="20sp"
+                tools:text="Mathematik A" />
 
-            <LinearLayout
-                android:id="@+id/linearLayout2"
+            <TextView
+                android:id="@+id/timeTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:orientation="horizontal"
-                android:paddingBottom="0dp"
-                android:background="?attr/colorPrimaryLight"
-                >
-                <ImageView
-                    android:id="@+id/icon2"
-                    android:layout_width="44dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="false"
-                    app:tint="#228B22"
-                    android:src="@android:drawable/radiobutton_off_background"/>
-
-                <LinearLayout
-                    android:id="@+id/LinearLayout5"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.7"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/firstLine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignWithParentIfMissing="true"
-                        android:layout_above="@id/secondLine"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_toRightOf="@id/icon"
-                        android:gravity="center_vertical"
-                        android:paddingBottom="0dp"
-                        android:scrollbars="horizontal|vertical"
-                        android:textColor="?attr/colorOnPrimaryLight"
-                        android:textSize="19sp"
-                        />
-
-                    <TextView
-                        android:id="@+id/secondLine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignWithParentIfMissing="true"
-                        android:layout_above="@id/secondLine"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginRight="0dp"
-                        android:layout_marginBottom="0dp"
-                        android:layout_toRightOf="@id/icon"
-                        android:textColor="?attr/colorOnPrimaryLight"
-                        android:gravity="center_vertical"
-                        android:paddingTop="0dp"
-                        android:textSize="16sp"
-                        android:visibility="gone"
-                        />
-
-                    <TextView
-                        android:id="@+id/thirdLine"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignWithParentIfMissing="true"
-                        android:layout_above="@id/secondLine"
-                        android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
-                        android:textColor="?attr/colorOnPrimaryLight"
-                        android:layout_marginTop="0dp"
-                        android:layout_marginEnd="6dp"
-                        android:layout_marginRight="0dp"
-                        android:layout_marginBottom="0dp"
-                        android:layout_toRightOf="@id/icon"
-                        android:gravity="center_vertical"
-                        android:paddingTop="0dp"
-                        android:textSize="16sp"
-
-                        />
-
-                </LinearLayout>
-
-                <ImageView
-                    android:id="@+id/icon"
-                    android:layout_width="44dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentTop="false"
-                    android:src="@android:drawable/ic_input_add"
-                    tools:onClick="@android:drawable/btn_star" />
-
-
-            </LinearLayout>
-
+                android:textColor="?attr/colorOnPrimaryLight"
+                android:textSize="14sp"
+                tools:text=" Uhrzeit:08:00" />
 
 
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/favoriteIcon"
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:src="@android:drawable/ic_input_add"
+            />
+
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondScreen"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/examInfoLayout"
+        android:visibility="gone"
+        android:background="@drawable/button_rounded_corners"
+        android:backgroundTint="?attr/colorPrimaryDark"
+        tools:visibility="visible"
+        >
+
     <TextView
         android:id="@+id/txtSecondscreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_rounded_corners"
-        android:backgroundTint="?attr/colorPrimaryDark"
-        android:baselineAligned="false"
-        android:padding="5dp"
-        android:textColor="?attr/colorOnPrimaryDark"
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
-</LinearLayout>
+        android:textColor="?attr/colorOnPrimaryDark"/>
+    </LinearLayout>
+</RelativeLayout>

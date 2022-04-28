@@ -75,7 +75,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
      * @since 1.6
      */
     fun checkLoginStatus():Boolean {
-        return getMainCourse()!=null
+        return getMainCourseId()!=null
     }
 
     /**

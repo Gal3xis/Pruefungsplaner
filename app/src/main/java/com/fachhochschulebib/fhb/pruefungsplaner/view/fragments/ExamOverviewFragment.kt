@@ -1,24 +1,20 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnChildAttachStateChangeListener
 import com.fachhochschulebib.fhb.pruefungsplaner.*
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Filter
+import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
-import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ExamOverviewViewModel
-import kotlinx.android.synthetic.main.termine.*
 import kotlinx.android.synthetic.main.fragment_exam_overview.*
 
 /**
@@ -64,8 +60,7 @@ class ExamOverviewFragment() : MainActivityFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_exam_overview, container, false)
-        return v
+        return inflater.inflate(R.layout.fragment_exam_overview, container, false)
     }
 
     /**
@@ -114,15 +109,6 @@ class ExamOverviewFragment() : MainActivityFragment() {
             termineFragment_swiperefres.isRefreshing = false
         }
         recyclerView4?.layoutManager = LinearLayoutManager(view?.context)
-        recyclerView4?.addOnChildAttachStateChangeListener(object :
-            OnChildAttachStateChangeListener {
-            override fun onChildViewAttachedToWindow(view: View) {}
-            override fun onChildViewDetachedFromWindow(view: View) {
-                if (txtSecondscreen?.visibility == View.VISIBLE) {
-                    txtSecondscreen?.visibility = View.GONE
-                }
-            }
-        })
     }
 
     /**
@@ -135,46 +121,46 @@ class ExamOverviewFragment() : MainActivityFragment() {
     fun setPruefungszeitraum() {
         viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
     }
-
-    /**
-     * Enables the functionality to swipe an entity from the recyclerview to favor or delete it
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     */
-    private fun enableSwipeToDelete() {
-        // try and catch, da es bei einer
-        // Orientierungsänderung sonst zu
-        // einer NullPointerException kommt
-        try {
-            // Definiert den Listener
-            val swipeToDeleteCallback: swipeListener =
-                object : swipeListener(requireContext(), false) {
-                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-                        val position = viewHolder.adapterPosition
-                        var isFavorite: Boolean? = null
-                        isFavorite = recyclerViewExamAdapter.checkFavorite(viewHolder.adapterPosition)
-                        if (isFavorite == true) {
-                            recyclerViewExamAdapter.deleteFromFavorites(
-                                    position,
-                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-                            )
-                        } else {
-                            recyclerViewExamAdapter.addToFavorites(
-                                    position,
-                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-                            )
-                        }
-                        recyclerViewExamAdapter.notifyDataSetChanged()
-                    }
-                }
-
-            // Setzt den Listener
-            val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
-            itemTouchhelper.attachToRecyclerView(recyclerView4)
-        } catch (e: Exception) {
-            Log.d("Error", "Orientation error${e.stackTraceToString()}")
-        }
-    }
+//
+//    /**
+//     * Enables the functionality to swipe an entity from the recyclerview to favor or delete it
+//     *
+//     * @author Alexander Lange
+//     * @since 1.6
+//     *
+//     */
+//    private fun enableSwipeToDelete() {
+//        // try and catch, da es bei einer
+//        // Orientierungsänderung sonst zu
+//        // einer NullPointerException kommt
+//        try {
+//            // Definiert den Listener
+//            val swipeToDeleteCallback: swipeListener =
+//                object : swipeListener(requireContext(), false) {
+//                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
+//                        val position = viewHolder.adapterPosition
+//                        var isFavorite: Boolean? = null
+//                        isFavorite = recyclerViewExamAdapter.checkFavorite(viewHolder.adapterPosition)
+//                        if (isFavorite == true) {
+//                            recyclerViewExamAdapter.deleteFromFavorites(
+//                                    position,
+//                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
+//                            )
+//                        } else {
+//                            recyclerViewExamAdapter.addToFavorites(
+//                                    position,
+//                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
+//                            )
+//                        }
+//                        recyclerViewExamAdapter.notifyDataSetChanged()
+//                    }
+//                }
+//
+//            // Setzt den Listener
+//            val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
+//            itemTouchhelper.attachToRecyclerView(recyclerView4)
+//        } catch (e: Exception) {
+//            Log.d("Error", "Orientation error${e.stackTraceToString()}")
+//        }
+//    }
 }
