@@ -25,7 +25,7 @@ const val calendarEventId = "com.fachhochschulebib.fhb.pruefungsplaner.calendarE
  */
 object CalendarIO {
 
-    enum class InsertionTye {
+    enum class InsertionType {
         Manuel, Automatic, Ask
     }
 
@@ -247,17 +247,17 @@ object CalendarIO {
         context: Context,
         CAL_ID: Long,
         e: TestPlanEntry,
-        insertionTye: InsertionTye = InsertionTye.Ask
+        insertionType: InsertionType = InsertionType.Ask
     ) :Long?{
-        when (insertionTye) {
-            InsertionTye.Automatic -> {
+        when (insertionType) {
+            InsertionType.Automatic -> {
                 return forceInsert(context,CAL_ID, e)
             }
-            InsertionTye.Manuel -> {
+            InsertionType.Manuel -> {
                 indirectInsert(context, createIntent(context, e))
                 return null
             }
-            InsertionTye.Ask -> {
+            InsertionType.Ask -> {
                 var ret:Long? = null
                 AlertDialog.Builder(context)
                     .setTitle("Termin Eintragen")
@@ -288,11 +288,11 @@ object CalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun insertEntries(context: Context,CAL_ID: Long, list: List<TestPlanEntry?>, insertionTye: InsertionTye):MutableList<Long> {
+    fun insertEntries(context: Context, CAL_ID: Long, list: List<TestPlanEntry?>, insertionType: InsertionType):MutableList<Long> {
         val ids = mutableListOf<Long>()
         list.forEach {
             if (it != null) {
-                insertEntry(context, CAL_ID, it, insertionTye)?.let {
+                insertEntry(context, CAL_ID, it, insertionType)?.let {
                     ids.add(it)
                 }
             }

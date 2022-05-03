@@ -43,7 +43,15 @@ import java.util.*
  */
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * The dialog that presents the filter to the user.
+     */
     private var filterDialog: AlertDialog? = null
+
+    /**
+     * The ViewModel for the MainActivity. Is set in [onCreate].
+     * @see MainViewModel
+     */
     private lateinit var viewModel: MainViewModel
 
     /**
@@ -78,6 +86,17 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * Initializes the Tab Layout. The tablayout presents the user multiple fragments as tabs with a navigation bar.
+     * In this case, the tabs are [ExamOverviewFragment] and [FavoriteOverviewFragment].
+     * With help of the viewPager, the user can switch between the fragments with sliding the page to the left or right.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see TabLayout
+     * @see MainFragmentPagerAdapter
+     */
     private fun initTabLayout(){
         TabLayoutMediator(tabLayout,viewPager
         ) {
@@ -111,13 +130,17 @@ class MainActivity : AppCompatActivity() {
         }.attach()
     }
 
+    /**
+     * Initializes the ViewPager that is attatched to the TabLayout.
+     * Sets the adapter to the [MainFragmentPagerAdapter]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see MainFragmentPagerAdapter
+     */
     private fun initViewPager(){
         viewPager.adapter = MainFragmentPagerAdapter(this)
-        TabLayoutMediator(tabLayout,viewPager
-        ) { tab, position -> tab.text = "Test$position"
-        Log.d("TabLayout",position.toString())
-        }.attach()
-
     }
 
     /**
@@ -294,7 +317,7 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_feedback -> changeFragment(FeedbackFragment())
             R.id.navigation_changeFaculty -> {
                 val intent = Intent(recyclerView4.context, StartActivity::class.java)
-                intent.putExtra(StartActivity.CHANGE_FLAG,true)
+                intent.putExtra(CHANGE_FLAG,true)
                 recyclerView4.context.startActivity(intent)
                 true
             }
@@ -302,37 +325,6 @@ class MainActivity : AppCompatActivity() {
             else -> true
         }
     }
-
-    /**
-     * Initializes the BottomNavigationView. In the bottomnavigationview, the user can switch between the [ExamOverviewFragment] and the [FavoriteOverviewFragment].
-     *
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-//    private fun initBottomNavigationView() {
-//        //Set listener for BottomNavigationView
-//
-//        bottom_navigation.setOnNavigationItemSelectedListener { item ->
-//            closeKeyboard()
-//            when (item.itemId) {
-//                R.id.navigation_calender -> {
-//                    if(supportFragmentManager.fragments.last()::class == ExamOverviewFragment::class){
-//                        userFilter(applicationContext)
-//                        true
-//                    }else{
-//                        changeFragment(ExamOverviewFragment())
-//                    }
-//                }
-//                R.id.navigation_diary -> {
-//                    changeFragment(
-//                        FavoriteOverviewFragment()
-//                    )
-//                }
-//                else -> true
-//            }
-//        }
-//    }
 
     /**
      * Closes the Keyboard of the smartphone.
@@ -368,6 +360,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView4?.visibility = View.INVISIBLE
         headerModule?.title = fragment.name
         drawer_layout.closeDrawer(GravityCompat.START)
+        currentPeriode.visibility = View.VISIBLE
         if(fragment::class==ExamOverviewFragment::class){
             frame_placeholder.visibility = View.INVISIBLE
             viewPager.visibility = View.VISIBLE
@@ -381,6 +374,7 @@ class MainActivity : AppCompatActivity() {
         }else{
             val ft = supportFragmentManager.beginTransaction()
             viewPager.visibility = View.INVISIBLE
+            currentPeriode.visibility = View.GONE
             frame_placeholder.visibility = View.VISIBLE
             ft.replace(R.id.frame_placeholder, fragment)
 

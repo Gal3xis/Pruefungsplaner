@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,12 +26,16 @@ import kotlinx.android.synthetic.main.choose_courses.*
  * @since 1.6
  */
 class ChangeCoursesFragment : MainActivityFragment() {
-    override var name: String="Studiengänge verwalten"
-
+    /**
+     * ViewModel for the ChangeCoursesFragment. Is set in [onViewCreated].
+     * @see ChangeCoursesViewModel
+     */
     private lateinit var viewModel: ChangeCoursesViewModel
-    var mCourses: CoursesCheckList? = null
-    var courseChosen: MutableList<Boolean> = ArrayList()
-    var courseName: MutableList<String> = ArrayList()
+
+    /**
+     * Sets the name of that fragment to "Studiengänge verwalten"
+     */
+    override var name: String="Studiengänge verwalten"
 
     /**
      * Overrides the onCreateView()-Method.
@@ -63,7 +66,6 @@ class ChangeCoursesFragment : MainActivityFragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity(), ViewModelFactory(requireActivity().application))[ChangeCoursesViewModel::class.java]
         initRecyclerview()
-        initOkButton()
         initSpinner()
     }
 
@@ -107,36 +109,6 @@ class ChangeCoursesFragment : MainActivityFragment() {
     }
 
     /**
-     * Initializes the OK, Button. Implements what happens when the user clicks Ok.
-     *
-     * @since 1.6
-     * @author Alexander Lange
-     */
-    private fun initOkButton() {
-        buttonOk.setOnClickListener { view ->
-            for (i in courseChosen.indices) {
-                viewModel.updateCourse(
-                    courseName[i],
-                    courseChosen[i]
-                )
-            }
-            viewModel.updateDbEntries()
-            Toast.makeText(view.context,view.context.getString(R.string.courseActualisation),Toast.LENGTH_SHORT).show()
-            returnToMainscreen(view)
-        }
-    }
-
-    /**
-     * Lets the user return to the [MainActivityFragment]
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun returnToMainscreen(view: View) {
-        activity?.recreate()
-    }
-
-    /**
      * Initializes the recyclerview that shows the list of courses an if they are selected or not. Obtains data from the Room-Database, creates an adapter and passes
      * it to the recyclerview.
      *
@@ -145,7 +117,6 @@ class ChangeCoursesFragment : MainActivityFragment() {
      */
     private fun initRecyclerview() {
         recyclerViewChecklist.setHasFixedSize(true)
-        //linear layout manager
         val layoutManager = LinearLayoutManager(context)
         recyclerViewChecklist.layoutManager = layoutManager
         viewModel.liveCoursesForFaculty.observe(viewLifecycleOwner){

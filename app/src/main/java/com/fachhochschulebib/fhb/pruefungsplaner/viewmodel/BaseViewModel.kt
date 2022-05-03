@@ -715,8 +715,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
      * Ask->The user will be asked each time, if an entry should be manuel ro automatic
      */
-    open fun setCalendarInserionType(insertionTye: CalendarIO.InsertionTye) {
-        spRepository.setCalendarInsertionType(insertionTye)
+    open fun setCalendarInserionType(insertionType: CalendarIO.InsertionType) {
+        spRepository.setCalendarInsertionType(insertionType)
     }
 
     /**
@@ -925,8 +925,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
      * Ask->The user will be asked each time, if an entry should be manuel ro automatic. Returns automatic by default.
      */
-    open fun getCalendarInsertionType(): CalendarIO.InsertionTye {
-        return spRepository.getCalendarInsertionType() ?: CalendarIO.InsertionTye.Ask
+    open fun getCalendarInsertionType(): CalendarIO.InsertionType {
+        return spRepository.getCalendarInsertionType() ?: CalendarIO.InsertionType.Ask
     }
 
     /**

@@ -81,9 +81,8 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
         // Inflate view to add to the Recyclerview
         val v = inflater.inflate(R.layout.checkliste, parent, false)
         //Create ViewHolder
-        val vh = ViewHolder(v)
         //Return ViewHolder
-        return vh
+        return ViewHolder(v)
     }
 
 

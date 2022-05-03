@@ -10,5 +10,8 @@ import androidx.fragment.app.Fragment
  * @since 1.6
  */
 abstract class MainActivityFragment: Fragment() {
+    /**
+     * A parameter that stores the name of the fragment,which is displayed in the toolbar. Needs to be overridden by ever fragment in the main activity.
+     */
     abstract var name:String
 }

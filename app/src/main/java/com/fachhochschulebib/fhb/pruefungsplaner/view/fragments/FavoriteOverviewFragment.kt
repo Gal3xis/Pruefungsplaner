@@ -1,23 +1,18 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
-import androidx.recyclerview.widget.RecyclerView
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
 import com.fachhochschulebib.fhb.pruefungsplaner.*
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
-import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoritAdapter
-import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.swipeListener
+import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoriteAdapter
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoriteOverviewViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import java.lang.Exception
 
 import kotlinx.android.synthetic.main.fragment_exam_overview.*
 
@@ -29,9 +24,24 @@ import kotlinx.android.synthetic.main.fragment_exam_overview.*
  *
  */
 class FavoriteOverviewFragment : MainActivityFragment() {
-    override var name: String="Favoriten"
-    private lateinit var recyclerViewFavoritAdapter: RecyclerViewFavoritAdapter
+
+    /**
+     * ViewModel for the FavoriteOverviewFragment. Is set in [onViewCreated].
+     * @see FavoriteOverviewViewModel
+     */
     private lateinit var viewModel: FavoriteOverviewViewModel
+
+    /**
+     * Sets the name of that fragment to "Favoriten"
+     */
+    override var name: String="Favoriten"
+
+    /**
+     * The adapter of the recyclerview that displays all favorite exams to the user.
+     * Contains a list of all exams for the selected courses with the current Filter applied.
+     * @see RecyclerViewFavoriteAdapter
+     */
+    private lateinit var recyclerViewFavoriteAdapter: RecyclerViewFavoriteAdapter
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -82,13 +92,16 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         initRecyclerview()
 
         Filter.onFilterChangedListener.add {
-            viewModel.liveFavorites.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
+            viewModel.liveFavorites.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoriteAdapter.updateContent(it) }
         }
     }
 
+    /**
+     * Called when this fragment is resumed after being paused. Invalidates the adapter, so external changes will be made visible like calendar entry.
+     */
     override fun onResume() {
         super.onResume()
-        recyclerViewFavoritAdapter.notifyDataSetChanged()
+        recyclerViewFavoriteAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -98,12 +111,12 @@ class FavoriteOverviewFragment : MainActivityFragment() {
      * @since 1.6
      */
     private fun initRecyclerview() {
-        recyclerViewFavoritAdapter = RecyclerViewFavoritAdapter(mutableListOf(),viewModel)
-        recyclerView4.adapter = recyclerViewFavoritAdapter
+        recyclerViewFavoriteAdapter = RecyclerViewFavoriteAdapter(requireContext(),mutableListOf(),viewModel)
+        recyclerView4.adapter = recyclerViewFavoriteAdapter
         recyclerView4?.layoutManager =  LinearLayoutManager(view?.context)
         viewModel.liveFavorites.observe(viewLifecycleOwner) { entryList ->
             if (entryList != null) {
-                recyclerViewFavoritAdapter.updateContent(Filter.validateList(entryList))
+                recyclerViewFavoriteAdapter.updateContent(Filter.validateList(entryList))
             }
         }
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
@@ -111,28 +124,6 @@ class FavoriteOverviewFragment : MainActivityFragment() {
             viewModel.updatePeriod()
             viewModel.updateDatabase()
             termineFragment_swiperefres.isRefreshing = false
-        }
-    }
-
-    /**
-     * Creates the swipe-gesture on the recyclerview,
-     * so the user can swipe to delete an entry from the list.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun enableSwipeToDelete() {
-        try {
-            val swipeToDeleteCallback: swipeListener = object : swipeListener(requireContext(), true) {
-                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-                    val position = viewHolder.adapterPosition
-                    recyclerViewFavoritAdapter?.remove(position)
-                }
-            }
-            val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
-            itemTouchhelper.attachToRecyclerView(recyclerView4)
-        } catch (e: Exception) {
-            Log.d("Error", "Orientation error$e")
         }
     }
 }

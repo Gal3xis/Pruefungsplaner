@@ -12,6 +12,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
+import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoriteOverviewViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.FeedbackViewModel
 import kotlinx.android.synthetic.main.feedback.*
 /**
@@ -21,8 +22,17 @@ import kotlinx.android.synthetic.main.feedback.*
  * @since 1.6
  */
 class FeedbackFragment : MainActivityFragment() {
-    override var name: String="Feedback"
+
+    /**
+     * ViewModel for the FeedbackFragment. Is set in [onViewCreated].
+     * @see FeedbackViewModel
+     */
     private lateinit var viewModel: FeedbackViewModel
+
+    /**
+     * Sets the name of that fragment to "Feedback"
+     */
+    override var name: String="Feedback"
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -51,9 +61,6 @@ class FeedbackFragment : MainActivityFragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //From onCreate
-
-        //From onCreateView
         buttonSend.setOnClickListener { view ->
             viewModel.sendFeedBack(ratingBarUsability.rating,ratingBarFuntions.rating,ratingBarStability.rating,feedBackInput.text.toString())
             Toast.makeText(

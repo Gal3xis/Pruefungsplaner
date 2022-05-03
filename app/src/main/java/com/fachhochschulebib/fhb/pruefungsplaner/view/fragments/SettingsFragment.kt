@@ -25,8 +25,16 @@ import kotlinx.android.synthetic.main.fragment_settings.*
  * @since 1.6
  */
 class SettingsFragment() : MainActivityFragment() {
-    override var name: String = "Einstellungen"
+    /**
+     * ViewModel for the SettingsFragment. Is set in [onViewCreated].
+     * @see SettingsViewModel
+     */
     private lateinit var viewModel: SettingsViewModel
+
+    /**
+     * Sets the name of that fragment to "Datenschutzerklärung"
+     */
+    override var name: String = "Einstellungen"
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -115,12 +123,17 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
-
+    /**
+     * Initialized the UI.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initView() {
         initThemeSpinner()
         initDarkModeSwitch()
         initUpdateDatabaseButton()
-        initCalendarSynchronizationSpinner()
+        initCalendarSynchronizationSwitch()
         initCalendarInsertionTypeSpinner()
         initCalendarIdSpinner()
         initPrivacyDeclarationButton()
@@ -128,49 +141,63 @@ class SettingsFragment() : MainActivityFragment() {
         initDeleteDatabaseButton()
         initDeleteCalendarEntriesButton()
         initUpdateCalendarButton()
-        initDeleteFavoritsButton()
+        initDeleteFavoritesButton()
         initSaveButton()
         initBackgroundUpdateSwitch()
-        initBackgroundUpdateIntervallButton()
+        initBackgroundUpdateIntervalButton()
     }
 
+    /**
+     * Initializes the CalendarId Spinner. The Spinner lets the user pick, in which calendar the exams shall bes synced.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initCalendarIdSpinner() {
         val calendar = CalendarIO.getCalendars(requireContext()).toMutableList()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             calendar.removeIf {
-                it.accessLevel<700
+                it.accessLevel < 700
             }
-        }else{
+        } else {
             calendar.forEach {
-                if(it.accessLevel<700){
+                if (it.accessLevel < 700) {
                     calendar.remove(it)
                 }
             }
         }
         val names = mutableListOf<String>()
-        var selectedName:String? = null
+        var selectedName: String? = null
         calendar.forEach {
             names.add(it.name)
-            if(it.id == viewModel.getSelectedCalendar()){
+            if (it.id == viewModel.getSelectedCalendar()) {
                 selectedName = it.name
             }
         }
-        calendarIdSpinner.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,names)
-        calendarIdSpinner.setSelection(selectedName?:CalendarIO.getPrimaryCalendar(requireContext())?.name)
-        calendarIdSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        calendarIdSpinner.adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, names)
+        calendarIdSpinner.setSelection(
+            selectedName ?: CalendarIO.getPrimaryCalendar(requireContext())?.name
+        )
+        calendarIdSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
                 position: Int,
                 id: Long
             ) {
-                if(view == null) return
+                if (view == null) return
                 val textView = (view as TextView)
-                textView.setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,requireContext().theme))
+                textView.setTextColor(
+                    Utils.getColorFromAttr(
+                        R.attr.colorOnPrimaryDark,
+                        requireContext().theme
+                    )
+                )
                 textView.textSize = 15f
                 val id = calendar.find {
-                    it.name==calendarIdSpinner.selectedItem.toString()
-                }?.id?:0
+                    it.name == calendarIdSpinner.selectedItem.toString()
+                }?.id ?: 0
                 viewModel.setSelectedCalendar(id)
             }
 
@@ -180,21 +207,48 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
+    /**
+     * Initializes the save button. Saves all remaining changes to the shared preferences, and if necessary, asks the user to restart the app.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initSaveButton() {
         optionenfragment_save_btn.setOnClickListener { save() }
     }
 
-    private fun initDeleteFavoritsButton() {
+    /**
+     * Initializes the button to delete all favorites.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initDeleteFavoritesButton() {
         btnFav.setOnClickListener {
-            viewModel.deleteAllFavorites(requireContext())
-            Toast.makeText(
-                view?.context,
-                view?.context?.getString(R.string.delete_favorite),
-                Toast.LENGTH_SHORT
-            ).show()
+            val count = viewModel.liveFavorites.value?.size ?: return@setOnClickListener
+            AlertDialog.Builder(requireContext())
+                .setTitle("Favoriten löschen")
+                .setMessage("Sollen alle $count Favoriten gelöscht werden?")
+                .setPositiveButton("Löschen") { _, _ ->
+                    viewModel.deleteAllFavorites(requireContext())
+                    Toast.makeText(
+                        requireContext(),
+                        requireActivity().getString(R.string.delete_favorite),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show()
         }
     }
 
+    /**
+     * Initializes the button to update the calendar. Inserts every favorite into the calendar, despite a deactivated synchronization.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initUpdateCalendarButton() {
         btnGoogleUpdate.setOnClickListener {
             AlertDialog.Builder(requireContext())
@@ -210,6 +264,12 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
+    /**
+     * Initializes the button to delete all calendar entries. Deletes every entry in the calendar that is saved in the shared preferences.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initDeleteCalendarEntriesButton() {
         btnCalClear.setOnClickListener {
             val eventIds = viewModel.getCalendarIds()
@@ -217,71 +277,133 @@ class SettingsFragment() : MainActivityFragment() {
             AlertDialog.Builder(requireContext())
                 .setTitle("Kalendereinträge löschen")
                 .setMessage("Sollen ${eventIds.count()} Einträge gelöscht werden?")
-                .setPositiveButton("Ja") { _, _ -> viewModel.deleteFromCalendar(requireContext(),eventIds) }
+                .setPositiveButton("Ja") { _, _ ->
+                    viewModel.deleteFromCalendar(
+                        requireContext(),
+                        eventIds
+                    )
+                }
                 .setNegativeButton("Nein", null)
                 .create()
                 .show()
         }
     }
 
-
+    /**
+     * Initializes the button to delete all [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]-Objects from the local room database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initDeleteDatabaseButton() {
         btnDB.setOnClickListener {
-            viewModel.deleteAllEntries()
-            Toast.makeText(
-                view?.context,
-                view?.context?.getString(R.string.delete_db),
-                Toast.LENGTH_SHORT
-            ).show()
+            val count = viewModel.liveEntries.value?.size?:return@setOnClickListener
+            AlertDialog.Builder(requireContext())
+                .setTitle("Datenbank löschen")
+                .setMessage("Sollen alle $count Einträge gelöscht werden?")
+                .setPositiveButton("Löschen") { _, _ ->
+                    viewModel.deleteAllEntries()
+                    Toast.makeText(
+                        requireContext(),
+                        requireActivity().getString(R.string.delete_db),
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .setNegativeButton("Cancel", null)
+                .create()
+                .show()
         }
     }
 
+    /**
+     * Initializes the button to show the impressum.
+     * Redirects the user to the [ImpressumFragment].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initImpressumButton() {
         optionenfragment_impressum?.setOnClickListener {
             (activity as MainActivity).changeFragment(ImpressumFragment())
         }
     }
 
+    /**
+     * Initializes the button to show the privacy declaration.
+     * Redirects the user to the [PrivacyDeclarationFragment].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initPrivacyDeclarationButton() {
         privacyDeclaration.setOnClickListener {
             (activity as MainActivity).changeFragment(PrivacyDeclarationFragment())
         }
     }
 
-    private fun initCalendarSynchronizationSpinner() {
+    /**
+     * Initializes the switch to activate/deactivate the calendar synchronization.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initCalendarSynchronizationSwitch() {
         switch2.isChecked = viewModel.getCalendarSync()
         switch2.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setCalendarSync(requireContext(), isChecked)
         }
     }
 
-    private fun initCalendarInsertionTypeSpinner(){
+    /**
+     * Initializes the spinner that lets the user pick an [CalendarIO.InsertionType].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initCalendarInsertionTypeSpinner() {
         val names = mutableListOf<String>()
-        CalendarIO.InsertionTye.values().forEach {
+        CalendarIO.InsertionType.values().forEach {
             names.add(it.name)
         }
-        calendarInsertionTypeSpinner.adapter =  ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,names)
-        calendarInsertionTypeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onItemSelected(
-                parent: AdapterView<*>?,
-                view: View?,
-                position: Int,
-                id: Long
-            ) {
-                if(view == null) return
-                val textView = (view as TextView)
-                textView.setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,requireContext().theme))
-                textView.textSize = 15f
-                viewModel.setCalendarInserionType(CalendarIO.InsertionTye.valueOf(calendarInsertionTypeSpinner.selectedItem.toString()))
-            }
+        calendarInsertionTypeSpinner.adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, names)
+        calendarInsertionTypeSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    if (view == null) return
+                    val textView = (view as TextView)
+                    textView.setTextColor(
+                        Utils.getColorFromAttr(
+                            R.attr.colorOnPrimaryDark,
+                            requireContext().theme
+                        )
+                    )
+                    textView.textSize = 15f
+                    viewModel.setCalendarInserionType(
+                        CalendarIO.InsertionType.valueOf(
+                            calendarInsertionTypeSpinner.selectedItem.toString()
+                        )
+                    )
+                }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
+                override fun onNothingSelected(parent: AdapterView<*>?) {
 
+                }
             }
-        }
         calendarInsertionTypeSpinner.setSelection(viewModel.getCalendarInsertionType().name)
     }
 
+    /**
+     * Initializes the button to update the database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initUpdateDatabaseButton() {
         btnupdate?.setOnClickListener {
             viewModel.updateDatabase()
@@ -331,6 +453,12 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
+    /**
+     * Initializes the switch to activate/deactivate the search for new database updates in the background.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun initBackgroundUpdateSwitch() {
         optionenfragment_auto_updates.isChecked = viewModel.getBackgroundUpdates()
         optionenfragment_auto_updates.setOnCheckedChangeListener { _, isChecked ->
@@ -346,7 +474,13 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
-    private fun initBackgroundUpdateIntervallButton() {
+    /**
+     * Initializes the button to change the interval time of the background worker.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initBackgroundUpdateIntervalButton() {
         optionenfragment_auto_updates_intervall_button.setOnClickListener {
             TimePickerDialog(context, 3, { _, hour, minute ->
                 var _minute = minute
@@ -361,6 +495,14 @@ class SettingsFragment() : MainActivityFragment() {
         }
     }
 
+    /**
+     * Helperfunction for the TimePicker to change the background interval time.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see initBackgroundUpdateIntervalButton
+     */
     private fun setIntervallTime(
         hour: Int = viewModel.getUpdateIntervalTimeHour(),
         minute: Int = viewModel.getUpdateIntervalTimeHour()
@@ -383,26 +525,27 @@ class SettingsFragment() : MainActivityFragment() {
      */
     private fun save() {
         val position = themeSpinner.selectedItemPosition
-        val chosenThemeId:Int
+        val chosenThemeId: Int
         when (position) {
             1 -> chosenThemeId = R.style.Theme_AppTheme_2
             else -> chosenThemeId = R.style.Theme_AppTheme_1
         }
 
-        if(chosenThemeId!=viewModel.getChosenThemeId()||darkMode.isChecked!=viewModel.getChosenDarkMode()){
+        if (chosenThemeId != viewModel.getChosenThemeId() || darkMode.isChecked != viewModel.getChosenDarkMode()) {
             viewModel.setChosenThemeId(chosenThemeId)
             viewModel.setChosenDarkMode(darkMode.isChecked)
 
-            AlertDialog.Builder(requireContext()).setTitle("Neustart benötigt").setMessage("Jetzt Neustarten?").setPositiveButton("Neustarten"
-                ) {  _,_->
+            AlertDialog.Builder(requireContext()).setTitle("Neustart benötigt")
+                .setMessage("Jetzt Neustarten?").setPositiveButton(
+                "Neustarten"
+            ) { _, _ ->
                 val pid = Process.myPid()
                 Process.killProcess(pid)
-                }.setNegativeButton("Nicht Neustarten"){
-                        _,_->
+            }.setNegativeButton("Nicht Neustarten") { _, _ ->
                 (activity as MainActivity).changeFragment(ExamOverviewFragment())
 
-                }.create().show()
-        }else{
+            }.create().show()
+        } else {
             viewModel.setChosenThemeId(chosenThemeId)
             viewModel.setChosenDarkMode(darkMode.isChecked)
             (activity as MainActivity).changeFragment(ExamOverviewFragment())

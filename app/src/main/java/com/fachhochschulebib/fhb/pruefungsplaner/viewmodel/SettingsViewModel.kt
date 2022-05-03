@@ -12,6 +12,17 @@ import kotlinx.coroutines.launch
  * @since 1.6
  */
 class SettingsViewModel(application: Application) : BaseViewModel(application) {
+
+    /**
+     * Live Data containing all favorites.
+     */
+    val liveFavorites = repository.getAllFavoritesLiveData()
+
+    /**
+     * Live Data containing all [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]-Objects in the local database.
+     */
+    val liveEntries = repository.getAllEntriesLiveDataByDate()
+
     /**
      * Sets in the sharedPreferences, if the calendar should be synced or not.
      *

@@ -25,15 +25,7 @@ import java.text.SimpleDateFormat
  * @see RecyclerView.Adapter
  * @see RecyclerView
  */
-class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on the kind of dataset)
-    (
-    var entryList: MutableList<TestPlanEntry>,
-    private val viewModel: BaseViewModel
-) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
-    private var save = false
-    private lateinit var context: Context
-
-    private var openItem: ViewHolder? = null
+class RecyclerViewExamAdapter(private val context: Context,var entryList: MutableList<TestPlanEntry>,private val viewModel: BaseViewModel) : RecyclerView.Adapter<RecyclerViewExamAdapter.ViewHolder>() {
 
     /**
      * Inflates the view that shows the information for the passed viewType. In this case the information
@@ -52,12 +44,10 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        // create a new view
         val inflater = LayoutInflater.from(
             parent.context
         )
         val view = inflater.inflate(R.layout.termine, parent, false)
-        context = view.context
         return ViewHolder(view)
     }
 
@@ -90,66 +80,6 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.set(entryList[position])
     }
-//
-//
-//    /**
-//     * Deletes the exam from favorits. Executed after clicking the add/remove-icon.
-//     *
-//     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-//     * @param[position] The position of the item in the Recyclerview.
-//     *
-//     * @author Alexander Lange
-//     * @since 1.6
-//     */
-//    fun deleteFromFavorites(position: Int, holder: ViewHolder) {
-//        val entry = entryList[position]
-//        //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-//        viewModel.updateEntryFavorit(context, false, entry)
-//        Toast.makeText(context, context!!.getString(R.string.delete), Toast.LENGTH_SHORT)
-//            .show()
-//        this.notifyItemChanged(position)
-//    }
-//
-//    /**
-//     * Adds the exam to the favorits. Executed after clicking the add/remove-icon.
-//     *
-//     * @param[holder] The [ViewHolder] that holds the UI-Elements.
-//     * @param[position] The position of the item in the Recyclerview.
-//     *
-//     * @author Alexander Lange
-//     * @since 1.6
-//     */
-//    fun addToFavorites(position: Int, holder: ViewHolder) {
-//        var entry = entryList[position]
-//        //Speichern des Prüfitem als Favorit
-//        viewModel.updateEntryFavorit(context, true, entry)
-//        Toast.makeText(context, context!!.getString(R.string.add), Toast.LENGTH_SHORT)
-//            .show()
-//        this.notifyItemChanged(position)
-//    }
-//
-//    /**
-//     * Checks if an exam is a favorit.
-//     * Needs to be called in a Coroutine-Scope.
-//     *
-//     * @param[position] The position of the item in the Recyclerview.
-//     *
-//     * @return true->The exam is a favorit;false->The exam is not a favorit.
-//     *
-//     * @author Alexander Lange
-//     * @since 1.6
-//     */
-//    fun checkFavorite(position: Int): Boolean {
-//        return try {
-//            val entry = entryList[position]
-//            //Überprüfung ob Prüfitem Favorisiert wurde und angeklickt
-//
-//            entry.favorit ?: false
-//        } catch (ex: Exception) {
-//            Log.e("MyAdapter.kt-checkFavorite:", ex.stackTraceToString())
-//            false
-//        }
-//    }
 
     /**
      * Returns the amount of items in the recyclerview, based on the size of the moduleslist.
@@ -194,33 +124,59 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
      * @see RecyclerView.ViewHolder
      */
     inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
-        // each data item is just a string in this case
+
+        /**
+         * TextView that shows the name of the module
+         */
         val txtModule: TextView = v.findViewById(R.id.moduleTextView)
+
+        /**
+         * Layout that can be clicked on to show/hide the detailed information.
+         */
         val layout: LinearLayout = v.findViewById(R.id.examInfoLayout)
+
+        /**
+         * Icon that shows if the [TestPlanEntry] is a favorite or not
+         */
         val ivicon: ImageView = v.findViewById(R.id.favoriteIcon)
+
+        /**
+         * Icon that shows the status of the [TestPlanEntry]
+         */
         val statusIcon: ImageView = v.findViewById(R.id.statusIcon)
+
+        /**
+         * TextView that shows the date of the exam
+         */
         val dateTextView: TextView = v.findViewById(R.id.date)
+
+        /**
+         * Layout of the second screen, that shows the detailed information. Can be made visible or gone to show/hide the deatils.
+         */
         val secondScreen:LinearLayout = v.findViewById(R.id.secondScreen)
+
+        /**
+         * TextView ont the second screen that shows the datiled information.
+         */
         val txtSecondScreen: TextView = v.findViewById(R.id.txtSecondscreen)
 
+        /**
+         * Function to initialize the UI-Elements for a specific [TestPlanEntry].
+         *
+         * @param entry The [TestPlanEntry] that contains the data to be displayed in this viewholder.
+         *
+         * @author Alexander Lange
+         * @since 1.6
+         */
         fun set(entry: TestPlanEntry) {
             val name = entry.module
             txtModule.text = name
             txtSecondScreen.text =  entry.getString(context)
-
             layout.setOnClickListener {
                 secondScreen.visibility = if(secondScreen.isVisible)View.GONE else View.VISIBLE
             }
-
-            // Start Merlin Gürtler
-            // erhalte den ausgewählten Studiengang
-            val course = name?.split(" ")?.toTypedArray()
-
             setIcons(entry)
-            //Aufteilung nach verschiedenen Tagen
             val splitDay = splitInDays(entry)
-
-            //Darstellen der Werte in der Prüfitem Komponente
             splitDay?.let { initFooter(it) }
         }
 

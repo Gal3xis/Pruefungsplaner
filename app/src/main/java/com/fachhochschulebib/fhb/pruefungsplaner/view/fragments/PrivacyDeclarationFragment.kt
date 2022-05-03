@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Utils
+import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import kotlinx.android.synthetic.main.privacy_declaration.*
 /**
@@ -16,6 +17,9 @@ import kotlinx.android.synthetic.main.privacy_declaration.*
  */
 class PrivacyDeclarationFragment : MainActivityFragment() {
 
+    /**
+     * Sets the name of that fragment to "Datenschutzerklärung"
+     */
     override var name: String="Datenschutzerklärung"
 
     /**
@@ -31,9 +35,7 @@ class PrivacyDeclarationFragment : MainActivityFragment() {
         super.onViewCreated(view, savedInstanceState)
         privacyDeclarationText.text = context?.let { Utils.readTextFile(it,R.raw.privacy_declarement) }
         privacyDeclarationButton.setOnClickListener {
-            val ft = activity?.supportFragmentManager?.beginTransaction()
-            ft?.replace(R.id.frame_placeholder, SettingsFragment())
-            ft?.commit()
+            (activity as MainActivity).changeFragment(SettingsFragment())
         }
     }
 

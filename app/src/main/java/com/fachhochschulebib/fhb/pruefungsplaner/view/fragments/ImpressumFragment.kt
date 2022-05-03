@@ -17,6 +17,9 @@ import kotlinx.android.synthetic.main.fragment_impressum.*
  * @since 1.6
  */
 class ImpressumFragment : MainActivityFragment() {
+    /**
+     * Sets the name of that fragment to "Impressum"
+     */
     override var name: String="Impressum"
 
     /**

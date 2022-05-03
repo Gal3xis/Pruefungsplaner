@@ -25,7 +25,17 @@ import java.util.*
 import kotlinx.android.synthetic.main.start.*
 import kotlinx.coroutines.*
 
+/**
+ * Unique code for the update requests.
+ * @see StartActivity.initUpdateManager
+ */
 const val UPDATE_REQUEST_CODE = 100
+
+/**
+ * String contant that is used as extra in the intent to notify that the Start Activity shall not skip if a selected main course is recognized.
+ * Used for changing the faculty.
+ */
+const val CHANGE_FLAG = "changeFlag"
 
 /**
  * Activity, that allows the user to pick a faculty and select courses.
@@ -37,27 +47,39 @@ const val UPDATE_REQUEST_CODE = 100
  */
 class StartActivity : AppCompatActivity() {
 
+    /**
+     * ViewModel for the StartActivity. Is set in [onCreate].
+     * @see StartViewModel
+     */
     private lateinit var viewModel: StartViewModel
+
+    /**
+     * Updatemanager that checks the Playstore for new App updates.
+     */
     private var updateManager: AppUpdateManager? = null
+
+    /**
+     * Listener that checks the state of the update download if an update is initiated.
+     * Displays a [Snackbar] to let the user know that the update is ready to install.
+     */
+    private val installStateUpdateListener: InstallStateUpdatedListener =
+        InstallStateUpdatedListener {
+            if (it.installStatus() == InstallStatus.DOWNLOADED) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Update is ready",
+                    Snackbar.LENGTH_INDEFINITE
+                ).setAction("Install") {
+                    updateManager?.completeUpdate()
+                }.show()
+            }
+        }
+
+    /**
+     * The recyclerview to display all courses for a selected faculty, from where the user can pick his courses.
+     */
     private lateinit var recyclerViewCourses: CoursesCheckList
 
-
-    private val installStateUpdateListener: InstallStateUpdatedListener =
-            InstallStateUpdatedListener {
-                if (it.installStatus() == InstallStatus.DOWNLOADED) {
-                    Snackbar.make(
-                            findViewById(android.R.id.content),
-                            "Update is ready",
-                            Snackbar.LENGTH_INDEFINITE
-                    ).setAction("Install") {
-                        updateManager?.completeUpdate()
-                    }.show()
-                }
-            }
-
-    companion object{
-        var CHANGE_FLAG = "changeFlag"
-    }
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -80,9 +102,8 @@ class StartActivity : AppCompatActivity() {
         initRecyclerviewCourses()
         initButtons()
         viewModel.fetchFaculties()
-        val changeFlag = intent.getBooleanExtra(CHANGE_FLAG,false)
-        if(changeFlag)
-        {
+        val changeFlag = intent.getBooleanExtra(CHANGE_FLAG, false)
+        if (changeFlag) {
             return
         }
         if (viewModel.checkLoginStatus()) {
@@ -102,14 +123,14 @@ class StartActivity : AppCompatActivity() {
         updateManager = AppUpdateManagerFactory.create(this)
         updateManager?.appUpdateInfo?.addOnSuccessListener {
             if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
-                            AppUpdateType.FLEXIBLE
-                    )
+                    AppUpdateType.FLEXIBLE
+                )
             ) {
                 updateManager?.startUpdateFlowForResult(
-                        it,
-                        AppUpdateType.FLEXIBLE,
-                        this,
-                        UPDATE_REQUEST_CODE
+                    it,
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    UPDATE_REQUEST_CODE
                 )
             }
         }
@@ -125,7 +146,7 @@ class StartActivity : AppCompatActivity() {
     private fun initRecyclerviewCourses() {
         recyclerViewChecklist.setHasFixedSize(true)
         recyclerViewChecklist.layoutManager = LinearLayoutManager(applicationContext)
-        recyclerViewCourses = CoursesCheckList(listOf(),viewModel, applicationContext)
+        recyclerViewCourses = CoursesCheckList(listOf(), viewModel, applicationContext)
         recyclerViewChecklist.adapter = recyclerViewCourses
         viewModel.liveCoursesForFaculty.observe(this) { items ->
             if (items != null) {
@@ -163,11 +184,11 @@ class StartActivity : AppCompatActivity() {
                 stringFaculties.add(it.facultyName)
             }
             val chooseFaculty = AlertDialog.Builder(
-                    this@StartActivity,
-                    R.style.customAlertDialog
+                this@StartActivity,
+                R.style.customAlertDialog
             )
             chooseFaculty.setItems(
-                    stringFaculties.toTypedArray()
+                stringFaculties.toTypedArray()
             ) { dialog, which ->
                 faculties?.let { facultyChosen(it[which]) }
                 dialog.dismiss()
@@ -197,12 +218,12 @@ class StartActivity : AppCompatActivity() {
                     it.courseName.let { it1 -> stringCourses.add(it1) }
                 }
                 val chooseCourse = AlertDialog.Builder(
-                        this@StartActivity,
-                        R.style.customAlertDialog
+                    this@StartActivity,
+                    R.style.customAlertDialog
                 )
                 chooseCourse.setTitle(R.string.choose_main)
                 chooseCourse.setItems(
-                        stringCourses.toTypedArray()
+                    stringCourses.toTypedArray()
                 ) { _, which ->
                     viewModel.addMainCourse(stringCourses[which])
                     startApplication()

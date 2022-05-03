@@ -12,6 +12,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.*
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
+import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ExamOverviewViewModel
 import kotlinx.android.synthetic.main.fragment_exam_overview.*
@@ -27,8 +28,23 @@ import kotlinx.android.synthetic.main.fragment_exam_overview.*
  *
  */
 class ExamOverviewFragment() : MainActivityFragment() {
-    override var name: String="Prüfungen"
+
+    /**
+     * ViewModel for the ExamOverviewFragment. Is set in [onViewCreated].
+     * @see ExamOverviewViewModel
+     */
     private lateinit var viewModel: ExamOverviewViewModel
+
+    /**
+     * Sets the name of that fragment to "Prüfungen"
+     */
+    override var name: String="Prüfungen"
+
+    /**
+     * The adapter of the recyclerview that displays all exams to the user.
+     * Contains a list of all exams for the selected courses with the current Filter applied.
+     * @see RecyclerViewExamAdapter
+     */
     private lateinit var recyclerViewExamAdapter: RecyclerViewExamAdapter
 
     /**
@@ -91,7 +107,7 @@ class ExamOverviewFragment() : MainActivityFragment() {
      *
      */
     private fun initRecyclerview() {
-        recyclerViewExamAdapter = RecyclerViewExamAdapter(mutableListOf(),viewModel)
+        recyclerViewExamAdapter = RecyclerViewExamAdapter(requireContext(),mutableListOf(),viewModel)
         recyclerView4.adapter = recyclerViewExamAdapter
         recyclerView4.visibility = RecyclerView.VISIBLE
         viewModel.liveEntryList.observe(viewLifecycleOwner){ entryList ->
@@ -108,47 +124,4 @@ class ExamOverviewFragment() : MainActivityFragment() {
         }
         recyclerView4?.layoutManager = LinearLayoutManager(view?.context)
     }
-
-//
-//    /**
-//     * Enables the functionality to swipe an entity from the recyclerview to favor or delete it
-//     *
-//     * @author Alexander Lange
-//     * @since 1.6
-//     *
-//     */
-//    private fun enableSwipeToDelete() {
-//        // try and catch, da es bei einer
-//        // Orientierungsänderung sonst zu
-//        // einer NullPointerException kommt
-//        try {
-//            // Definiert den Listener
-//            val swipeToDeleteCallback: swipeListener =
-//                object : swipeListener(requireContext(), false) {
-//                    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
-//                        val position = viewHolder.adapterPosition
-//                        var isFavorite: Boolean? = null
-//                        isFavorite = recyclerViewExamAdapter.checkFavorite(viewHolder.adapterPosition)
-//                        if (isFavorite == true) {
-//                            recyclerViewExamAdapter.deleteFromFavorites(
-//                                    position,
-//                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-//                            )
-//                        } else {
-//                            recyclerViewExamAdapter.addToFavorites(
-//                                    position,
-//                                    (viewHolder as RecyclerViewExamAdapter.ViewHolder)
-//                            )
-//                        }
-//                        recyclerViewExamAdapter.notifyDataSetChanged()
-//                    }
-//                }
-//
-//            // Setzt den Listener
-//            val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
-//            itemTouchhelper.attachToRecyclerView(recyclerView4)
-//        } catch (e: Exception) {
-//            Log.d("Error", "Orientation error${e.stackTraceToString()}")
-//        }
-//    }
 }

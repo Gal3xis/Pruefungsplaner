@@ -439,9 +439,9 @@ class SharedPreferencesRepository(context: Context) {
      * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
      * Ask->The user will be asked each time, if an entry should be manuel ro automatic. Returns automatic by default.
      */
-    fun getCalendarInsertionType() :CalendarIO.InsertionTye?{
-        return settings.getString("InsertionType",CalendarIO.InsertionTye.Automatic.name)
-            ?.let { CalendarIO.InsertionTye.valueOf(it) }
+    fun getCalendarInsertionType() :CalendarIO.InsertionType?{
+        return settings.getString("InsertionType",CalendarIO.InsertionType.Automatic.name)
+            ?.let { CalendarIO.InsertionType.valueOf(it) }
     }
 
     /**
@@ -452,7 +452,7 @@ class SharedPreferencesRepository(context: Context) {
      * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
      * Ask->The user will be asked each time, if an entry should be manuel ro automatic
      */
-    fun setCalendarInsertionType(insertionType: CalendarIO.InsertionTye) {
+    fun setCalendarInsertionType(insertionType: CalendarIO.InsertionType) {
         val editor = settings.edit()
         editor.putString("InsertionType",insertionType.name)
         editor.apply()

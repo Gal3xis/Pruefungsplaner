@@ -29,16 +29,11 @@ import java.util.*
  * @see RecyclerView.Adapter
  * @see RecyclerView
  */
-class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends on the kind of dataset)
-    (
+class RecyclerViewFavoriteAdapter(
+    private val context: Context,
     var entryList: MutableList<TestPlanEntry>,
     private val viewModel: BaseViewModel
-) : RecyclerView.Adapter<RecyclerViewFavoritAdapter.ViewHolder>() {
-    private var modulName: String? = null
-    private var name: String? = null
-    private lateinit var context: Context
-    private var openItem: ViewHolder? = null
-
+) : RecyclerView.Adapter<RecyclerViewFavoriteAdapter.ViewHolder>() {
     /**
      * Adds an item to the recyclerview.
      *
@@ -52,28 +47,6 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         notifyItemInserted(
             entryList.add(position, entry)
         )
-    }
-
-    /**
-     * Removes an item of the recyclerview.
-     *
-     * @param[position] The position of the item that is to remove.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun remove(position: Int) {
-        try {
-            val entry = entryList[position]
-            viewModel.updateEntryFavorite(context, false, entry)
-            notifyItemChanged(position)
-            Toast.makeText(
-                context,
-                context!!.getString(R.string.delete), Toast.LENGTH_SHORT
-            ).show()
-        } catch (ex: Exception) {
-            Log.e("MyAdapterfavorits.kt-remove", ex.stackTraceToString())
-        }
     }
 
     /**
@@ -93,16 +66,9 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         parent: ViewGroup,
         viewType: Int
     ): ViewHolder {
-        // create a new view
-        val inflater = LayoutInflater.from(
-            parent.context
-        )
+        val inflater = LayoutInflater.from(context)
         val v = inflater.inflate(R.layout.favoriten, parent, false)
-        // set the view's size, margins, paddings and layout parameters
-        val vh: ViewHolder = ViewHolder(v)
-        // Merlin Gürtler für den globalen Context
-        context = parent.context
-        return vh
+        return ViewHolder(v)
     }
 
     /**
@@ -122,18 +88,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         position: Int
     ) {
         val entry = entryList[position]
-        // - get element from your dataset at this position
-        // - replace the contents of the view with that element
-        holder.Set(entry)
-        val course = name?.split(" ")?.toTypedArray()
-        modulName = ""
-        var b: Int
-        b = 0
-        while (b < (course?.size ?: 0) - 1) {
-            modulName = modulName + " " + (course?.get(b) ?: "")
-            b++
-        }
-        displayExamInformation(position, holder)
+        holder.set(entry)
     }
 
     /**
@@ -149,28 +104,6 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
         this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
     }
-
-    /**
-     * Displays the examinformation. Passes the information to the corresponding UI-Elements.
-     *
-     * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
-     * @param[position] The position of the item within the adapter's data set.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     */
-    private fun displayExamInformation(
-        position: Int,
-        holder: ViewHolder
-    ) {
-        val entry = entryList[position]
-        //darstellen der Informationen für das Prüfitem
-        val splitDateAndTime = entry.date?.split(" ")?.toTypedArray()
-        val splitDayMonthYear = splitDateAndTime?.get(0)?.split("-")?.toTypedArray()
-
-    }
-
 
     /**
      * Returns the amount of items in the recyclerview, based on the size of the [moduleAndCourseList].
@@ -197,20 +130,45 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     inner class ViewHolder(var layout: View) : RecyclerView.ViewHolder(
         layout
     ) {
+        /**
+         * Card that shows all information. Can be clicked on to show/hide detailed information.
+         */
         private var card = layout.findViewById<MaterialCardView>(R.id.card)
+
+        /**
+         * TextView that shows the name of the module.
+         */
         private var headerModule = layout.findViewById<TextView>(R.id.headerModule)
+
+        /**
+         * TextView that shows the name of the course.
+         */
         private var headerCourse = layout.findViewById<TextView>(R.id.headerCourse)
+
+        /**
+         * TextView that shows the date of the exam.
+         */
         private var headerDate = layout.findViewById<TextView>(R.id.headerDate)
+
+        /**
+         * TextView that shows the timespan of the exam (eg. 08:00-09:30)
+         */
         private var headerTime = layout.findViewById<TextView>(R.id.headerTime)
+
+        /**
+         * TextView that shows the detailed information
+         */
         private var expandedTextView = layout.findViewById<TextView>(R.id.expandedCardTextView)
+
+        /**
+         * Layout that can be expanded to show the detailed information
+         */
         private var expansion = layout.findViewById<RelativeLayout>(R.id.expansion)
+
+        /**
+         * Icon that shows, if the [TestPlanEntry] is currently playced in the calendar
+         */
         private var iconInCalendar = layout.findViewById<ImageView>(R.id.icon_in_calendar)
-//        private var txtHeader: TextView
-//        private var txtFooter: TextView
-//        private var txtthirdline: TextView
-//        private var ivicon: ImageView
-//        private var layout2: LinearLayout
-//        private val txtSecondScreen: TextView
 
         init {
             //            ivicon = layout.findViewById<View>(R.id.icon) as ImageView
@@ -221,7 +179,15 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
 //            layout2 = layout.findViewById<View>(R.id.linearLayout) as LinearLayout
         }
 
-        fun Set(entry: TestPlanEntry) {
+        /**
+         * Function to initialize the UI-Elements for a specific [TestPlanEntry].
+         *
+         * @param entry The [TestPlanEntry] that contains the data to be displayed in this viewholder.
+         *
+         * @author Alexander Lange
+         * @since 1.6
+         */
+        fun set(entry: TestPlanEntry) {
             val dateParser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
             val dateFormatterDay = SimpleDateFormat("dd.MM.yyyy")
             val dateFormatterTime = SimpleDateFormat("HH:mm")
@@ -285,6 +251,12 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
 //                    + context!!.getString(R.string.semester) + entry.semester)
         }
 
+        /**
+         * Displays a menu, that lets the user remove this [TestPlanEntry] from his favorites or delete this [TestPlanEntry] from the calendar.
+         *
+         * @author Alexander Lange
+         * @since 1.6
+         */
         private fun showContextMenu(entry: TestPlanEntry) {
             val dialog: AlertDialog = AlertDialog.Builder(context).create()
 
