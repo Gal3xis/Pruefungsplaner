@@ -5,9 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.content.Context
-import android.opengl.Visibility
 import android.util.Log
-import android.view.ContextMenu
 import android.view.View
 import android.widget.*
 import com.fachhochschulebib.fhb.pruefungsplaner.R
@@ -67,7 +65,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
     fun remove(position: Int) {
         try {
             val entry = entryList[position]
-            viewModel.updateEntryFavorit(context, false, entry)
+            viewModel.updateEntryFavorite(context, false, entry)
             notifyItemChanged(position)
             Toast.makeText(
                 context,
@@ -302,7 +300,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                 )
             contextMenuView.findViewById<Button>(R.id.AddToCalendar).setOnClickListener {
                 viewModel.getCalendarId(entry)
-                    ?.let { viewModel.deleteFromGoogleCalendar(context, it) }
+                    ?.let { viewModel.deleteFromCalendar(context, it) }
                     ?: viewModel.insertIntoCalendar(context, entry)
                 if (viewModel.getCalendarId(entry) == null) iconInCalendar.setImageResource(R.drawable.ic_not_in_calendar) else iconInCalendar.setImageResource(
                     R.drawable.ic_in_calendar
@@ -310,7 +308,7 @@ class RecyclerViewFavoritAdapter     // Provide a suitable constructor (depends 
                 dialog.hide()
             }
             contextMenuView.findViewById<Button>(R.id.removeFromFavorits).setOnClickListener {
-                viewModel.updateEntryFavorit(context, false, entry)
+                viewModel.updateEntryFavorite(context, false, entry)
                 dialog.hide()
             }
             dialog.setView(contextMenuView)

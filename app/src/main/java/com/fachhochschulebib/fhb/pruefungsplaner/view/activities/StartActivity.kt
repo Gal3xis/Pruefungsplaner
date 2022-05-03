@@ -187,11 +187,7 @@ class StartActivity : AppCompatActivity() {
      */
     private fun clickedOk() {
         val chosen = recyclerViewCourses.getChosen()
-        val courses = recyclerViewCourses.courseList
         if (chosen.isNotEmpty()) {
-            courses.forEach {
-                viewModel.updateCourse(it)
-            }
             if (chosen.size == 1) {
                 viewModel.addMainCourse(chosen[0])
                 startApplication()

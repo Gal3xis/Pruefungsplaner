@@ -51,16 +51,6 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         )[FavoriteOverviewViewModel::class.java]
     }
 
-    /**
-     * Sets the text for the current period with content from shared preferences
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     */
-    fun setPruefungszeitraum() {
-        viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
-    }
 
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
@@ -92,9 +82,8 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         initRecyclerview()
 
         Filter.onFilterChangedListener.add {
-            viewModel.liveFavorits.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
+            viewModel.liveFavorites.value?.let { Filter.validateList(it) }?.let { recyclerViewFavoritAdapter.updateContent(it) }
         }
-        setPruefungszeitraum()
     }
 
     override fun onResume() {
@@ -112,14 +101,14 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         recyclerViewFavoritAdapter = RecyclerViewFavoritAdapter(mutableListOf(),viewModel)
         recyclerView4.adapter = recyclerViewFavoritAdapter
         recyclerView4?.layoutManager =  LinearLayoutManager(view?.context)
-        viewModel.liveFavorits.observe(viewLifecycleOwner) { entryList ->
+        viewModel.liveFavorites.observe(viewLifecycleOwner) { entryList ->
             if (entryList != null) {
                 recyclerViewFavoritAdapter.updateContent(Filter.validateList(entryList))
             }
         }
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
         termineFragment_swiperefres.setOnRefreshListener {
-            viewModel.updatePruefperiode()
+            viewModel.updatePeriod()
             viewModel.updateDatabase()
             termineFragment_swiperefres.isRefreshing = false
         }

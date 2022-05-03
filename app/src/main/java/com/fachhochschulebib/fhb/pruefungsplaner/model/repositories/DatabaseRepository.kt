@@ -364,7 +364,7 @@ class DatabaseRepository(
     }
 
     fun getAllFavoritesLiveData(): LiveData<List<TestPlanEntry>?> =
-        localDataSource.getAllFavoritsLiveData()
+        localDataSource.getAllFavoritesLiveData()
 
 //    fun getAllCoursesLiveData(): LiveData<List<Course>?> = localDataSource.getAllCoursesLiveData()
 
@@ -379,8 +379,8 @@ class DatabaseRepository(
 
     fun getFirstExaminerNames() = localDataSource.getFirstExaminerNames()
 
-    fun getAllEntriesForChoosenCoursesLiveData() =
-        localDataSource.getAllEntriesForSelectedCoursesLiveDataByDate()
+    fun getAllEntriesForChosenCoursesLiveData() =
+        localDataSource.getAllEntriesForChosenCoursesLiveDataByDate()
 
     suspend fun getAllCourses(): List<Course>? {
         return withContext(Dispatchers.IO) {
@@ -467,9 +467,9 @@ class DatabaseRepository(
 //    }
 
 
-    suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
+    suspend fun checkCourseForFavorites(courseName: String): Boolean {
         return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getOneEntryByName(courseName, favorit)
+            return@withContext localDataSource.getFavoritesForCourse(courseName).isNullOrEmpty()
         }
     }
 

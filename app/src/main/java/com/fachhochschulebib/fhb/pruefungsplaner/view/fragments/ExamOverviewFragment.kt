@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.fachhochschulebib.fhb.pruefungsplaner.*
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Filter
-import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
@@ -81,7 +80,6 @@ class ExamOverviewFragment() : MainActivityFragment() {
         Filter.onFilterChangedListener.add {
             viewModel.liveEntryList.value?.let { Filter.validateList(it) }?.let { recyclerViewExamAdapter.updateContent(it) }
         }
-        setPruefungszeitraum()
         initRecyclerview()
     }
 
@@ -104,23 +102,13 @@ class ExamOverviewFragment() : MainActivityFragment() {
         }
         termineFragment_swiperefres.setDistanceToTriggerSync(800)
         termineFragment_swiperefres.setOnRefreshListener {
-            viewModel.updatePruefperiode()
+            viewModel.updatePeriod()
             viewModel.updateDataFromServer()
             termineFragment_swiperefres.isRefreshing = false
         }
         recyclerView4?.layoutManager = LinearLayoutManager(view?.context)
     }
 
-    /**
-     * Sets the text for the current period with content from shared preferences
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     */
-    fun setPruefungszeitraum() {
-        viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
-    }
 //
 //    /**
 //     * Enables the functionality to swipe an entity from the recyclerview to favor or delete it

@@ -15,11 +15,14 @@ import androidx.core.content.ContextCompat
  */
 class ExamOverviewViewModel(application: Application) : BaseViewModel(application) {
 
-    val liveEntryList = repository.getAllEntriesForChoosenCoursesLiveData()
+    /**
+     * Live Data containing all entries for the chosen courses.
+     */
+    val liveEntryList = repository.getAllEntriesForChosenCoursesLiveData()
 
 
     init {
-        updatePruefperiode()
+        updatePeriod()
         updateDataFromServer()
     }
 
@@ -79,23 +82,5 @@ class ExamOverviewViewModel(application: Application) : BaseViewModel(applicatio
                 callbackId
         )
     }
-
-    /**
-     * Gets the timespan for the next period.
-     *
-     * @return The timespan as a string to display in the ui.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun getPeriodeTimeSpan(): String? {
-        val start = getStartDate()
-        val end = getEndDate()
-
-        if(start==null||end==null)return null
-
-        return sdfDisplay.format(start) + "-" + sdfDisplay.format(end)
-    }
-
 
 }

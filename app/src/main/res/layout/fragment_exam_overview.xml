@@ -11,25 +11,6 @@
     >
 
 
-    <TextView
-        android:id="@+id/currentPeriode"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/background_timespan"
-        android:backgroundTint="?attr/colorPrimary"
-        android:maxLines="1"
-        android:text="@string/currentPeriod"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:autoSizeTextType="uniform"
-        android:textColor="?attr/colorOnPrimary"
-        android:outlineProvider="bounds"
-        android:elevation="30dp"
-        android:textSize="20sp" />
-
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/termineFragment_swiperefres"
@@ -41,7 +22,6 @@
             android:id="@+id/recyclerView4"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="20dp"
             android:scrollbars="vertical"
             tools:listitem="@layout/termine">
 

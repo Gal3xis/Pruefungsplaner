@@ -10,23 +10,8 @@ import android.app.Application
  */
 class FavoriteOverviewViewModel(application: Application) : BaseViewModel(application) {
 
-    val liveFavorits = repository.getAllFavoritesLiveData()
-
-
     /**
-     * Gets the timespan for the next period.
-     *
-     * @return The timespan as a string to display in the ui.
-     *
-     * @author Alexander Lange
-     * @since 1.6
+     * Live Data containing all favorite entries.
      */
-    fun getPeriodeTimeSpan(): String? {
-        val start = getStartDate()
-        val end = getEndDate()
-
-        if(start==null||end==null)return null
-
-        return sdfDisplay.format(start) + "-" + sdfDisplay.format(end)
-    }
+    val liveFavorites = repository.getAllFavoritesLiveData()
 }

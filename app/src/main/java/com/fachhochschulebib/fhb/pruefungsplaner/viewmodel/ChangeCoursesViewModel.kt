@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.fachhochschulebib.fhb.pruefungsplaner.model.room.Course
 import kotlinx.coroutines.launch
 import org.json.JSONArray
-import org.json.JSONException
 import org.json.JSONObject
 
 /**
@@ -17,9 +16,12 @@ import org.json.JSONObject
  */
 class ChangeCoursesViewModel(application: Application) : BaseViewModel(application) {
 
+    /**
+     * Live Data for storing all courses for a selected Faculty.
+     * Is set in [getCourses]
+     */
     val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
 
-    val liveSelectedCourseName = MutableLiveData<String?>()
 
     /**
      * Updates the Room-Database with data from the Server.
@@ -28,30 +30,21 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
      * @author Alexander Lange
      */
     fun updateDbEntries() {
-        viewModelScope.launch {
-            val courses = getAllCourses()
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val courses = getAllCourses() ?: return@launch
             val courseIds = JSONArray()
             var courseName: String
-            if (courses != null) {
-                for (course in courses) {
-                    try {
-                        courseName = course.courseName ?: ""
-                        if (!course.choosen) {
-                            val toDelete = getEntriesByCourseName(courseName, false)
-                            toDelete?.let { deleteEntries(it) }
-                        }
-                        if (getOneEntryByName(
-                                        courseName,
-                                        false
-                                ) == null && course.choosen
-                        ) {
-                            val idJson = JSONObject()
-                            idJson.put("ID", course.sgid)
-                            courseIds.put(idJson)
-                        }
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
+            for (course in courses) {
+                courseName = course.courseName
+                if (!course.choosen) {
+                    val toDelete = getFavoritesByCourseName(courseName, false)
+                    toDelete?.let { deleteEntries(it) }
+                }
+                if (checkCourseForFavorites(courseName) && course.choosen
+                ) {
+                    val idJson = JSONObject()
+                    idJson.put("ID", course.sgid)
+                    courseIds.put(idJson)
                 }
             }
         }
@@ -64,12 +57,12 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
      * @author Alexander Lange
      * @since 1.6
      */
-    fun changeMainCourse(course:String){
+    fun changeMainCourse(course: String) {
         viewModelScope.launch {
-            val id = getCourseId(course)?:return@launch
-            if(id == getMainCourseId()) return@launch
+            val id = getCourseId(course) ?: return@launch
+            if (id == getMainCourseId()) return@launch
             setMainCourse(id)
-            repository.updateCourse(course,true)
+            repository.updateCourse(course, true)
             getCourses()
         }
     }
@@ -80,26 +73,10 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getCourses(){
+    fun getCourses() {
         viewModelScope.launch {
-            val courses = getSelectedFaculty()?.let { getCoursesByFacultyid(it) }
+            val courses = getSelectedFacultyId()?.let { getCoursesByFacultyId(it) }
             liveCoursesForFaculty.postValue(courses)
-        }
-    }
-
-    /**
-     * Returns the name of the selected main courses
-     *
-     * @return The name of the selected main course
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun getMainCourseName(){
-        viewModelScope.launch(coroutineExceptionHandler) {
-            val id = getMainCourseId()?:return@launch
-            val name = repository.getCourseName(id)
-            liveSelectedCourseName.postValue(name)
         }
     }
 }

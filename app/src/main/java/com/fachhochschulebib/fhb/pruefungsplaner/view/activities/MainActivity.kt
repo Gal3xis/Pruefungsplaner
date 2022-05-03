@@ -65,11 +65,12 @@ class MainActivity : AppCompatActivity() {
         initTabLayout()
         initActionBar()
         initNavigationDrawer()
+        setPruefungszeitraum()
         //initBottomNavigationView()
         initFilterDialog()
 
 
-        viewModel.updatePruefperiode()
+        viewModel.updatePeriod()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
         changeFragment(ExamOverviewFragment())
@@ -439,6 +440,18 @@ class MainActivity : AppCompatActivity() {
         viewModel.getMainCourse()
     }
 
+
+    /**
+     * Sets the text for the current period with content from shared preferences
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     */
+    fun setPruefungszeitraum() {
+        viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
+    }
+
     /**
      * Creates and opens the Filter-Dialog.
      *
@@ -465,7 +478,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.liveSelectedFaculty.observe(this) {
             tvFaculty.text = it?.facultyName ?: "No Faculty selected"
         }
-        viewModel.getSelectedFacultyName()
+        viewModel.getSelectedFaculty()
     }
 
     /**

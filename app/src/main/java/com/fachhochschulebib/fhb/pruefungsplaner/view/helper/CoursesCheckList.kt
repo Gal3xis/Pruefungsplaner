@@ -125,7 +125,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
     private fun toggleFavorite(position: Int): Boolean {
         if (courseList[position].sgid != viewModel.getMainCourseId()) {
             courseList[position].choosen = !courseList[position].choosen
-            viewModel.updateCourse(courseList[position])
+            viewModel.updateCourse(courseList[position].courseName,courseList[position].choosen)
         } else {
             Toast.makeText(
                 context, context.getString(R.string.favorite_main_course),

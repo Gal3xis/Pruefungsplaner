@@ -1,7 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.helper
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -295,7 +294,7 @@ class RecyclerViewExamAdapter    // Provide a suitable constructor (depends on t
             }
 
             ivicon.setOnClickListener {
-                viewModel.updateEntryFavorit(context, !entry.favorit, entry)
+                viewModel.updateEntryFavorite(context, !entry.favorit, entry)
                 notifyItemChanged(layoutPosition)
             }
         }

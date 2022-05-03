@@ -70,7 +70,7 @@ interface UserDao {
     fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
 
     @Query("SELECT * FROM TestPlanEntry as t INNER JOIN Course as c ON c.courseName LIKE t.course WHERE c.choosen = 1 ORDER BY date, termin, module")
-    fun getAllEntriesForSelectedCoursesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
+    fun getAllEntriesForChosenCoursesLiveDataByDate(): LiveData<List<TestPlanEntry>?>
 
 
     @Query("SELECT * FROM TestPlanEntry WHERE course = :name ORDER BY module")
@@ -83,7 +83,7 @@ interface UserDao {
     fun getAllChoosenCoursesLiveData():LiveData<List<Course>?>
 
     @Query("SELECT * FROM TestPlanEntry WHERE favorit = 1 ORDER BY date, termin, module")
-    fun getAllFavoritsLiveData():LiveData<List<TestPlanEntry>?>
+    fun getAllFavoritesLiveData():LiveData<List<TestPlanEntry>?>
 
     @Query("SELECT * FROM Faculty ORDER BY facName LIMIT 100 OFFSET 1")
     fun getAllFacultiesLiveData():LiveData<List<Faculty>?>
@@ -136,8 +136,8 @@ interface UserDao {
     @Query("SELECT DISTINCT termin FROM TestPlanEntry LIMIT 1")
     suspend fun  getTermin(): String?
 
-    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName AND favorit = :favorit LIMIT 1")
-    suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry?
+    @Query("SELECT * FROM TestPlanEntry WHERE course = :courseName AND Favorit = 1")
+    suspend fun getFavoritesForCourse(courseName: String):List<TestPlanEntry>
 
     @Update
     suspend fun updateExams(testPlanEntries:List<TestPlanEntry>)

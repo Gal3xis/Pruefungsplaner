@@ -23,7 +23,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.lang.Exception
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -37,24 +36,49 @@ import java.util.*
  */
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
-    protected val context = application.applicationContext
+    /**
+     * The Database Repository
+     */
     protected val repository = DatabaseRepository(application)
+
+    /**
+     * The Shared Preferences Repository
+     */
     protected val spRepository = SharedPreferencesRepository(application)
+
+    /**
+     * The [SimpleDateFormat] to convert dates from the retrofit interface
+     */
     protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
+
+    /**
+     * The [SimpleDateFormat] to Display dates in the UI
+     */
     protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy")
 
+    /**
+     * The Exceptionhandler that is used in the ViewModel-Coroutines. Just prints the stacktrace to the logcat.
+     */
     protected val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.d("CoroutineException", exception.stackTraceToString())
     }
 
     init {
-        initServer()
+        fetchFaculties()
+        fetchCourses()
         checkSustainability()
-        updatePruefperiode()
+        updatePeriod()
     }
 
 
     //Remote-Access
+    /**
+     * Retrieves all courses from the remote database via the [com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitInterface] and inserts them
+     * into the local room database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun fetchCourses() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val courses = repository.fetchCourses()
@@ -62,6 +86,14 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    /**
+     * Retrieves all entries for the current period from the remote database via the [com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitInterface] and inserts them
+     * into the local room database. Gets the needed information for the current period via the from the shared preferences.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * */
     fun fetchEntries() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val periode = getPeriodTerm()
@@ -73,28 +105,40 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             }
             val entries = repository.fetchEntries(periode, termin, examinYear, ids)
             entries?.forEach {
-                insertEntryJSON(it)
+                insertEntry(it)
             }
         }
     }
 
+    /**
+     * Retrieves all faculties from the remote database via the [com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitInterface] and inserts them
+     * into the local room database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun fetchFaculties() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            try {
-                val faculties = repository.fetchFaculties()
-                if (faculties != null) {
-                    for (i in 0 until faculties.length()) {
-                        val faculty = createFaculty(faculties.getJSONObject(i))
-                        insertFaculty(faculty)
-                    }
+            val faculties = repository.fetchFaculties()
+            if (faculties != null) {
+                for (i in 0 until faculties.length()) {
+                    val faculty = createFaculty(faculties.getJSONObject(i))
+                    insertFaculty(faculty)
                 }
-            } catch (e: Exception) {
-                Log.d("BaseViewModel:fetchFaculties()", e.stackTraceToString())
             }
-
         }
     }
 
+    /**
+     * Updates all data in the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see fetchFaculties
+     * @see fetchCourses
+     * @see fetchEntries
+     */
     fun updateDatabase() {
         fetchFaculties()
         fetchCourses()
@@ -134,7 +178,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
-    fun updatePruefperiode() {
+    fun updatePeriod() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val pruefperiodenObjects = repository.fetchExamPeriods() ?: return@launch
             val currentPeriod= getCurrentPeriod(pruefperiodenObjects) ?:return@launch
@@ -165,16 +209,27 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
-    private fun getCurrentPeriod(pruefperiodenObjects: JSONArray): JSONObject? {
+    /**
+     * Checks a list of possible periods for the latest one and returns it.
+     *
+     * @param periodObjects A list of possible periods.
+     *
+     * @return The latest period from the fiven list.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     */
+    private fun getCurrentPeriod(periodObjects: JSONArray): JSONObject? {
         val formatter = SimpleDateFormat("yyyy-MM-dd")
 
         var latestDate:Date? =null
         var latestPeriode:JSONObject? = null
-        val facultyId = getSelectedFaculty()
+        val facultyId = getSelectedFacultyId()
 
-        for (i in 0 until pruefperiodenObjects.length()) {
+        for (i in 0 until periodObjects.length()) {
             //Get single object
-            val obj = pruefperiodenObjects.getJSONObject(i)
+            val obj = periodObjects.getJSONObject(i)
 
             //Conitune if the faculitids does not match
             val facultyIdDB = obj.getJSONObject("fbFbid")["fbid"].toString()
@@ -202,32 +257,58 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return latestPeriode
     }
 
+
     //Room Database
 
     //INSERT
+    /**
+     * Inserts a new [TestPlanEntry] into the local database.
+     *
+     * @param testPlanEntry The entry to be inserted into the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun insertEntry(testPlanEntry: TestPlanEntry) {
         viewModelScope.launch {
             repository.insertEntry(testPlanEntry)
         }
     }
-//
-//    open fun insertEntries(entries: List<TestPlanEntry>) {
-//        viewModelScope.launch {
-//            repository.insertEntries(entries)
-//        }
-//    }
 
-    open fun insertEntryJSON(jsonResponse: GSONEntry) {
-
+    /**
+     * Inserts a new [TestPlanEntry] into the local database.
+     *
+     * @param jsonResponse The jsonobject of the new entry, normally taken from the remote database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun insertEntry(jsonResponse: GSONEntry) {
         insertEntry(createTestPlanEntry(jsonResponse))
     }
 
-    open fun insertCourses(cours: List<Course>) {
+    /**
+     * Inserts a list of [Course]-Objects into the local database.
+     *
+     * @param courses The list of courses to be inserted into the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun insertCourses(courses: List<Course>) {
         viewModelScope.launch {
-            repository.insertCourses(cours)
+            repository.insertCourses(courses)
         }
     }
 
+    /**
+     * Inserts a list of [Course]-Objects into the local database.
+     *
+     * @param jsonCourses The list of courses to be inserted into the local database, in form of [GSONCourse]-Objects
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun insertCoursesJSON(jsonCourses: List<GSONCourse>) {
         val courseList: MutableList<Course> = mutableListOf()
         jsonCourses.forEach { item ->
@@ -235,138 +316,212 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
         insertCourses(courseList)
     }
-//
-//    open fun insertUuid(uuid: String) {
-//        viewModelScope.launch {
-//            repository.insertUuid(uuid)
-//        }
-//    }
 
+    /**
+     * Inserts a [Faculty] into the local database.
+     *
+     * @param faculty The [Faculty] to be inserted into the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     */
     open fun insertFaculty(faculty: Faculty) {
         viewModelScope.launch {
             repository.insertFaculty(faculty)
         }
     }
 
-    //UPDATE
-//    open fun updateEntry(testPlanEntry: TestPlanEntry) {
-//        viewModelScope.launch {
-//            repository.updateEntry(testPlanEntry)
-//        }
-//    }
 
-    open fun updateEntryFavorit(context: Context, favorit: Boolean, entry:TestPlanEntry) {
+    //UPDATE
+    /**
+     * Updates if a [TestPlanEntry] is a favorite or not. Also syncs the calendar if necessary.
+     *
+     * @param context The Applicationcontext
+     * @param favorite Whether the [TestPlanEntry] is favorite or not
+     * @param entry The [TestPlanEntry] that needs to be updated
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun updateEntryFavorite(context: Context, favorite: Boolean, entry:TestPlanEntry) {
         viewModelScope.launch {
-            repository.updateEntryFavorit(favorit, entry.id)
+            repository.updateEntryFavorit(favorite, entry.id)
             if (!getCalendarSync()) return@launch
-            if (!favorit) {
+            if (!favorite) {
                 val calendarId = getCalendarId(entry)?:return@launch
-                deleteFromGoogleCalendar(context,calendarId)
+                deleteFromCalendar(context,calendarId)
             }
             else
                 insertIntoCalendar(context,entry)
         }
     }
 
-    open fun updateCourse(courseName: String, choosen: Boolean) {
+    /**
+     * Updates if a course is chosen or not.
+     *
+     * @param courseName The name of the course that needs to be updated
+     * @param chosen Whether the course has been chosen or not
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun updateCourse(courseName: String, chosen: Boolean) {
         viewModelScope.launch {
-            repository.updateCourse(courseName, choosen)
+            repository.updateCourse(courseName, chosen)
         }
     }
 
-    open fun updateCourse(course: Course) {
-        course.choosen?.let { course.courseName?.let { it1 -> updateCourse(it1, it) } }
-    }
-//
-//    open fun updateFaculty(faculty: Faculty) {
-//        viewModelScope.launch {
-//            repository.updateFaculty(faculty)
-//        }
-//    }
-//
-//    open fun unselectAllFavorits() {
-//        viewModelScope.launch {
-//            repository.unselectAllFavorits()
-//        }
-//    }
-
     //DELETE
+    /**
+     * Deletes a list of [TestPlanEntry]-Objects from the local database.
+     *
+     * @param entries A list of [TestPlanEntry]-Objects that need to be deleted from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun deleteEntries(entries: List<TestPlanEntry>) {
         viewModelScope.launch {
             repository.deleteEntries(entries)
         }
     }
 
+    /**
+     * Deletes all [TestPlanEntry]-Objects from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open fun deleteAllEntries() {
         viewModelScope.launch {
             repository.deleteAllEntries()
         }
     }
-//
-//    open fun deleteCourses(cours: List<Course>) {
-//        viewModelScope.launch {
-//            repository.deleteCourses(cours)
-//        }
-//    }
-//
-//    open fun deleteAllCourses() {
-//        viewModelScope.launch {
-//            repository.deleteAllCourses()
-//        }
-//    }
-//
-//    open fun deleteFaculties(faculties: List<Faculty>) {
-//        viewModelScope.launch {
-//            repository.deleteFaculties(faculties)
-//        }
-//    }
-//
-//    open fun deleteAllFaculties() {
-//        viewModelScope.launch {
-//            repository.deleteAllFaculties()
-//        }
-//    }
 
     //GET
-    open suspend fun getFavorites(favorit: Boolean = true): List<TestPlanEntry>? {
-        return repository.getFavorites(favorit)
+    /**
+     * Returns a list of [TestPlanEntry]-Objects with a given favorite-state.
+     *
+     * @param favorite whether the entries shall be favorites or not
+     *
+     * @return A list of [TestPlanEntry]-Objects with the given favorite-state
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open suspend fun getFavorites(favorite: Boolean = true): List<TestPlanEntry>? {
+        return repository.getFavorites(favorite)
     }
 
-    open suspend fun getModulesOrdered(): List<String>? {
-        return repository.getModulesOrdered()
-    }
-
-    open suspend fun getEntriesByCourseName(
+    /**
+     * Returns all [TestPlanEntry]-Objects for a given course name with the given favorite state.
+     *
+     * @param course The name of the course from where to return the entries
+     * @param favorite Whether the courses shall be favorites or not
+     *
+     * @return A list with all favorites/not favorites for the given course
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open suspend fun getFavoritesByCourseName(
         course: String,
-        favorit: Boolean
+        favorite: Boolean
     ): List<TestPlanEntry>? {
-        return repository.getEntriesByCourseName(course, favorit)
+        return repository.getEntriesByCourseName(course, favorite)
     }
 
+    /**
+     * Returns all courses from the local database.
+     *
+     * @return A list with all courses from the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open suspend fun getAllCourses(): List<Course>? {
         return repository.getAllCourses()
     }
 
+    /**
+     * Returns one course for a given Id
+     *
+     * @param id The id of the course
+     *
+     * @return The course for the given id
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open suspend fun getCourseById(id: String): Course {
         return repository.getCourseById(id)
     }
 
-    open suspend fun getCoursesByFacultyid(facultyId: String): List<Course>? {
+    /**
+     * Get all courses for one [Faculty].
+     *
+     * @param facultyId The id of the faculty to take the courses from
+     *
+     * @return A list with all courses for the given faculty
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open suspend fun getCoursesByFacultyId(facultyId: String): List<Course>? {
         return repository.getAllCoursesByFacultyid(facultyId)
     }
 
+    /**
+     * Returns the [Uuid] from the local database.
+     *
+     * @return The [Uuid] from the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open suspend fun getUuid(): Uuid? {
         return repository.getUuid()
     }
 
+    /**
+     * Returns the course id for a given course name.
+     *
+     * @param courseName The course name for the course id
+     *
+     * @return The Id for the given course name
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open suspend fun getCourseId(courseName: String): String? {
         return repository.getCourseByName(courseName)?.sgid
     }
 
-    open suspend fun getOneEntryByName(courseName: String, favorit: Boolean): TestPlanEntry? {
-        return repository.getOneEntryByName(courseName, favorit)
+    /**
+     * Checks if there is a [TestPlanEntry] favorite for a given course.
+     *
+     * @param courseName The name of the course to look for favorites
+     *
+     * @return true->There is at least one favorite for this course;false->There is no favorite for this course
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open suspend fun checkCourseForFavorites(courseName: String): Boolean {
+        return repository.checkCourseForFavorites(courseName)
     }
 
+    /**
+     * Returns the [Faculty] for a given Id.
+     *
+     * @param id The id of the Faculty
+     *
+     * @return The [Faculty] for the given id
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     open suspend fun getFacultyById(id: String): Faculty? {
         return withContext(Dispatchers.IO) {
             return@withContext repository.getFacultyById(id)
@@ -375,24 +530,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     //Shared Preferences
-
-    fun addCalendarEntry(id:Long,entry: TestPlanEntry){
-        spRepository.addId(id, entry.id )
-    }
-    fun addCalendarEntries(ids:Map<Long,String>){
-        spRepository.addIds(ids)
-    }
-
-    fun deleteCalendarEntry(id:Long){
-        spRepository.deleteId(id)
-    }
-    fun deleteCalendarEntries(ids:List<Long>){
-        spRepository.deleteIds(ids)
-    }
-
-    fun getCalendarIds():MutableList<Long>{
-        return spRepository.getIds().keys.toMutableList()
-    }
 
     /**
      * Sets the course, selected as the maincourse
@@ -465,18 +602,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     /**
      * Sets the start date of the period
      *
-     * @param date The start date of the period as a string
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    open fun setStartDate(date: String) {
-        spRepository.setStartDate(date)
-    }
-
-    /**
-     * Sets the start date of the period
-     *
      * @param date The start date of the period
      *
      * @author Alexander Lange
@@ -484,18 +609,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     open fun setStartDate(date: Date) {
         spRepository.setStartDate(sdfRetrofit.format(date))
-    }
-
-    /**
-     * Sets the end date of the period
-     *
-     * @param date The end date of the period as a string
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    open fun setEndDate(date: String) {
-        spRepository.setEndDate(date)
     }
 
     /**
@@ -509,7 +622,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     open fun setEndDate(date: Date) {
         spRepository.setEndDate(sdfRetrofit.format(date))
     }
-
 
     /**
      * Sets the setting for the darkmode
@@ -607,12 +719,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         spRepository.setCalendarInsertionType(insertionTye)
     }
 
+    /**
+     * Saves the id of the selected Calendar into the shared preferences.
+     *
+     * @param id The id of the selected calendar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setSelectedCalendar(id:Long){
         spRepository.setSelectedCalendar(id)
-    }
-
-    fun getSelectedCalendar():Long?{
-        return if(spRepository.getSelectedCalendar()==0L)null else spRepository.getSelectedCalendar()
     }
 
     //GET
@@ -636,7 +752,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun getSelectedFaculty(): String? {
+    open fun getSelectedFacultyId(): String? {
         return spRepository.getSelectedFaculty()
     }
 
@@ -664,6 +780,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return spRepository.getPeriodTerm()
     }
 
+    //TODO RENAME
     open fun getPeriodTermin(): String? {
         return spRepository.getPeriodTermin()
     }
@@ -812,14 +929,57 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return spRepository.getCalendarInsertionType() ?: CalendarIO.InsertionTye.Ask
     }
 
+    /**
+     * Returns the id of the selected Calendar from the shared preferences
+     *
+     * @return The id of the selected Calendar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getSelectedCalendar():Long?{
+        return if(spRepository.getSelectedCalendar()==0L)null else spRepository.getSelectedCalendar()
+    }
+
     //Calendar
+    /**
+     * Returns a list of all ids for Events currently stored in the Calendar that are saved in the shared preferences.
+     *
+     * @return A list of all ids for Events currently stored in the Calendar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getCalendarIds():MutableList<Long>{
+        return spRepository.getIds().keys.toMutableList()
+    }
+
+    /**
+     * Inserts a [TestPlanEntry] into the Calendar. On success it saves the id for this entry in the shared preferences.
+     *
+     * @param context The Applicationcontext
+     * @param entry The entry to be inserted into the Calendar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun insertIntoCalendar(context: Context, entry: TestPlanEntry){
         val CAL_ID = getSelectedCalendar()?:return
         val id = CalendarIO.insertEntry(context,CAL_ID, entry, getCalendarInsertionType())
         id?.let {
-            addCalendarEntry(it,entry)
+            spRepository.addId(it, entry.id )
         }
     }
+
+    /**
+     * Inserts a list of [TestPlanEntry]-Objects into the Calendar. On success it saves the id for each entry in the shared preferences.
+     *
+     * @param context The Applicationcontext
+     * @param entries The entries to be inserted into the Calendar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun insertIntoCalendar(context: Context, entries: List<TestPlanEntry>){
         val CAL_ID = getSelectedCalendar()?:return
         val entryIds = mutableMapOf<Long,String>()
@@ -835,9 +995,20 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                 }
             }
         }
-        addCalendarEntries(entryIds)
+        spRepository.addIds(entryIds)
+
     }
 
+    /**
+     * Returns the Calendar id for a given [TestPlanEntry] from the shared preferences
+     *
+     * @param entry The [TestPlanEntry] which id is looked for
+     *
+     * @return The id for the given [TestPlanEntry]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getCalendarId(entry: TestPlanEntry):Long?{
         var ret:Long? = null
         spRepository.getIds().forEach {
@@ -848,22 +1019,51 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return ret
     }
 
-    fun deleteFromGoogleCalendar(context: Context,id:Long){
+    /**
+     * Deletes an event from the Calendar.
+     *
+     * @param context The Applicationcontext
+     * @param id The id of the event that shall be deleted
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see getCalendarId
+     */
+    fun deleteFromCalendar(context: Context, id:Long){
         CalendarIO.deleteEvent(context,id)
-        deleteCalendarEntry(id)
+        spRepository.deleteId(id)
     }
 
-    fun deleteFromGoogleCalendar(context: Context,ids:List<Long>){
+    /**
+     * Deletes a list of events from the Calendar.
+     *
+     * @param context The Applicationcontext
+     * @param ids The ids of the events that shall be deleted
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see getCalendarId
+     */
+    fun deleteFromCalendar(context: Context, ids:List<Long>){
         CalendarIO.deleteEvents(context,ids)
-        deleteCalendarEntries(ids)
+        spRepository.deleteIds(ids)
     }
 
+    /**
+     * Deletes all events currently stored in the Calendar.
+     *
+     * @param context The Applicationcontext
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun deleteAllFromGoogleCalendar(context: Context){
         getCalendarIds().forEach {
-            deleteFromGoogleCalendar(context,it)
+            deleteFromCalendar(context,it)
         }
     }
-
 
     /**
      * Updates the google calendar with the new favorites.
@@ -876,7 +1076,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     fun updateCalendar(context: Context){
         viewModelScope.launch (coroutineExceptionHandler){
             val ids = getCalendarIds()
-            deleteFromGoogleCalendar(context,ids)
+            deleteFromCalendar(context,ids)
             val favorites = getFavorites()?:return@launch
             insertIntoCalendar(context,favorites)
         }
@@ -884,12 +1084,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     //UTILS
-
-    private fun initServer() {
-        fetchFaculties()
-        fetchCourses()
-    }
-
+    /**
+     * Checks if the current main course is also a chosen one. If not id deletes the current main course.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun checkSustainability() {
         viewModelScope.launch {
             val mainCourse = getMainCourseId()?.let { getCourseById(it) }
@@ -901,11 +1101,11 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
 
     /**
-     * Creates a new [TestPlanEntry] from a [JsonResponse].
+     * Creates a new [TestPlanEntry] from a [GSONEntry].
      *
-     * @param[entry] The [JsonResponse], that contains the data for the [TestPlanEntry].
+     * @param[entry] The [GSONEntry], that contains the data for the [TestPlanEntry].
      *
-     * @return A [TestPlanEntry] containing the data of the [JsonResponse]
+     * @return A [TestPlanEntry] containing the data of the [GSONEntry]
      *
      * @author Alexander Lange
      * @since 1.6
@@ -962,6 +1162,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return dateLastExamFormatted.toString()
     }
 
+    /**
+     * Creates a new [Course] from a [GSONCourse].
+     *
+     * @param jsonCourse The [GSONCourse], that contains the data for the [Course].
+     *
+     * @return A [Course] containing the data of the [GSONCourse]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun createCourse(jsonCourse: GSONCourse): Course {
         val course = Course()
         course.choosen = false
@@ -971,6 +1181,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         return course
     }
 
+    /**
+     * Creates a new [Faculty] from a [JSONObject].
+     *
+     * @param[json] The [JSONObject], that contains the data for the [Faculty].
+     *
+     * @return A [Faculty] containing the data of the [JSONObject]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun createFaculty(json: JSONObject): Faculty {
         val ret = Faculty()
         ret.fbid = json.getString("fbid")
@@ -978,5 +1198,4 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         ret.facultyShortname = json.getString("facShortName")
         return ret
     }
-
 }

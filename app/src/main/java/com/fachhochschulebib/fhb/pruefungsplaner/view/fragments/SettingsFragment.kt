@@ -15,7 +15,6 @@ import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -218,7 +217,7 @@ class SettingsFragment() : MainActivityFragment() {
             AlertDialog.Builder(requireContext())
                 .setTitle("Kalendereinträge löschen")
                 .setMessage("Sollen ${eventIds.count()} Einträge gelöscht werden?")
-                .setPositiveButton("Ja") { _, _ -> viewModel.deleteFromGoogleCalendar(requireContext(),eventIds) }
+                .setPositiveButton("Ja") { _, _ -> viewModel.deleteFromCalendar(requireContext(),eventIds) }
                 .setNegativeButton("Nein", null)
                 .create()
                 .show()

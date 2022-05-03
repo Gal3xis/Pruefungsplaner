@@ -15,7 +15,14 @@ import kotlinx.coroutines.launch
  */
 class StartViewModel(application: Application) : BaseViewModel(application) {
 
+    /**
+     * Live Data containing all faculties.
+     */
     val liveFaculties = repository.getAllFacultiesLiveData()
+
+    /**
+     * Live Data for storing all courses for a specific faculty. Is set in [setSelectedFaculty]
+     */
     val liveCoursesForFaculty = MutableLiveData<List<Course>?>()
 
     /**
@@ -61,7 +68,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
     override fun setSelectedFaculty(faculty: Faculty){
         super.setSelectedFaculty(faculty)
         viewModelScope.launch {
-            val courses = getCoursesByFacultyid(faculty.fbid)
+            val courses = getCoursesByFacultyId(faculty.fbid)
             liveCoursesForFaculty.postValue(courses)
         }
     }

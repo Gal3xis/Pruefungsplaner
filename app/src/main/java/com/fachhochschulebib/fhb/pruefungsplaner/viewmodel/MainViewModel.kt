@@ -17,11 +17,34 @@ import kotlinx.coroutines.launch
  */
 class MainViewModel(application: Application) : BaseViewModel(application) {
 
+    /**
+     * Live Data containing all entries, ordered by the exam date.
+     */
     val liveEntriesOrdered = repository.getAllEntriesLiveDataByDate()
+
+    /**
+     * Live Data for storing the selected faculty. Is set in [getSelectedFaculty].
+     */
     val liveSelectedFaculty = MutableLiveData<Faculty?>()
+
+    /**
+     * Live Data for storing all entries either for a specific course or if not course was selected, for all chosen courses.
+     */
     val liveEntriesForCourse = MutableLiveData<List<TestPlanEntry>?>()
+
+    /**
+     * Live Data containg all chosen courses.
+     */
     val liveChoosenCourses = repository.getAllChoosenCoursesLiveData()
+
+    /**
+     * Live Data containing the names of all first examiners.
+     */
     var liveProfList = repository.getFirstExaminerNames()
+
+    /**
+     * Live Data for storing the maincourse.
+     */
     val liveMainCourse = MutableLiveData<Course>()
 
     /**
@@ -31,9 +54,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getSelectedFacultyName() {
+    fun getSelectedFaculty() {
         viewModelScope.launch {
-            val id = getSelectedFaculty() ?: return@launch
+            val id = getSelectedFacultyId() ?: return@launch
             val faculty = getFacultyById(id)
             liveSelectedFaculty.postValue(faculty)
         }
@@ -55,6 +78,30 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
+
+    /**
+     * Gets the timespan for the next period.
+     *
+     * @return The timespan as a string to display in the ui.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getPeriodeTimeSpan(): String? {
+        val start = getStartDate()
+        val end = getEndDate()
+
+        if(start==null||end==null)return null
+
+        return sdfDisplay.format(start) + "-" + sdfDisplay.format(end)
+    }
+
+    /**
+     * Gets the main course from the shared preferences and stores it in the [liveMainCourse].LiveData-Object.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getMainCourse() {
         viewModelScope.launch {
           val id = getMainCourseId() ?: return@launch

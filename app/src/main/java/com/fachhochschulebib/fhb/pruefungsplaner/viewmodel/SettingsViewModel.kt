@@ -12,9 +12,6 @@ import kotlinx.coroutines.launch
  * @since 1.6
  */
 class SettingsViewModel(application: Application) : BaseViewModel(application) {
-
-    val liveFavorites = repository.getAllFavoritesLiveData()
-
     /**
      * Sets in the sharedPreferences, if the calendar should be synced or not.
      *
