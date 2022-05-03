@@ -257,7 +257,7 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onBackPressed() {
         if (supportFragmentManager.fragments.last()::class == ExamOverviewFragment::class) {
-            CloseApp()
+            closeApp()
             return
         }
         changeFragment(ExamOverviewFragment())
@@ -511,7 +511,7 @@ class MainActivity : AppCompatActivity() {
     private fun initFilterCheckbox(c: CheckBox, semester: Int) {
         c.isChecked = Filter.semester[semester - 1]
         c.setOnCheckedChangeListener { buttonView, isChecked ->
-            Filter.SetSemester(semester - 1, isChecked)
+            Filter.setSemester(semester - 1, isChecked)
         }
     }
 

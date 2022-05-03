@@ -12,8 +12,16 @@ import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.StartActivity
 import java.util.*
 
+/**
+ * Class with Functionalities to send notifications to the users smartphone.
+ *
+ * @author Alexander Lange
+ * @since 1.6
+ */
 object PushService {
-
+    /**
+     * Unique ID to identify a notification from this application
+     */
     private const val CHANNEL_ID = "FH_Pruefungsplaner_NotificationChannel"
 
     /**
@@ -22,6 +30,7 @@ object PushService {
      * **See Also:**[Documentation](https://developer.android.com/training/notify-user/build-notification#kotlin)
      */
     fun sendNotification(context: Context, message:String?=null,title:String? = null,pIntent: PendingIntent? = null){
+        createNotificationChannel(context)
 
         //Create intent to navigate the user after he tapped the notification. That starts the StartActivity.
         val intent = Intent(context, StartActivity::class.java).apply {

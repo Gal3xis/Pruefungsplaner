@@ -18,14 +18,22 @@ import org.json.JSONObject
  * @author Alexander Lange
  * @since 1.6
  */
-class CheckForDatabaseUpdateWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
+class CheckForDatabaseUpdateWorker(private val context: Context, private val workerParams: WorkerParameters) : Worker(context, workerParams) {
 
-    private val context= context
+    /**
+     * The Coroutinescope, in which the worker will look for new updates
+     */
     private val iOScope:CoroutineScope = CoroutineScope(CoroutineName("IO-Scope")+Dispatchers.IO)
-    private val workerParams:WorkerParameters = workerParams
-    private val repository:DatabaseRepository = DatabaseRepository(context)
-    private val spRepository:SharedPreferencesRepository = SharedPreferencesRepository(context)
 
+    /**
+     * The database repository
+     */
+    private val repository:DatabaseRepository = DatabaseRepository(context)
+
+    /**
+     * The shared preferences repository
+     */
+    private val spRepository:SharedPreferencesRepository = SharedPreferencesRepository(context)
 
     /**
      * Override this method to do your actual background processing.  This method is called on a
@@ -56,6 +64,11 @@ class CheckForDatabaseUpdateWorker(context: Context, workerParams: WorkerParamet
         return Result.success()
     }
 
+    /**
+     * Checks for updates in the remote database.
+     *
+     * @return true->There is a new plan available;false->There is no new plan available
+     */
     private suspend fun checkDatabase():Boolean{
         return withContext(Dispatchers.IO){
             val periode = spRepository.getPeriodTerm()

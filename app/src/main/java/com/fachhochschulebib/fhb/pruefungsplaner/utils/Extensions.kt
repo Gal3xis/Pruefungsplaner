@@ -12,9 +12,6 @@ import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
-
-//TODO Alexander Lange Start
-
 /**
  * Extension-Function for the [Spinner]. Lets the user set the selection with the text-content of the spinner
  * instead of the position.
@@ -115,22 +112,23 @@ fun Date.atDay(date: Date): Boolean {
  * @see Optionen
  */
 fun AppCompatActivity.applySettings(viewModel:BaseViewModel) {
-    //Set Theme
     val themeToApply = if(viewModel.getChosenThemeId()==-1)Utils.themeList[0] else viewModel.getChosenThemeId()
-
-
     if (Utils.themeList.contains(themeToApply)) {
         theme.applyStyle(themeToApply, true)
     } else {
         theme.applyStyle(Utils.themeList[0], true)
     }
-
-    //Set Darkmode
     val darkMode = viewModel.getChosenDarkMode()
     AppCompatDelegate.setDefaultNightMode(if (darkMode) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
 }
 
-fun AppCompatActivity.CloseApp() {
+/**
+ * Closes the Application. First start a dialog to ask the user if the app shall be closed.
+ *
+ * @author Alexander Lange
+ * @since 1.6
+ */
+fun AppCompatActivity.closeApp() {
     AlertDialog.Builder(this)
         .setMessage(R.string.close_app)
         .setTitle(R.string.title_close_app)
@@ -162,5 +160,3 @@ fun <E> MutableList<E>.add(position: Int?, item: E): Int {
     add(position, item)
     return position
 }
-
-//TODO Alexander Lange End

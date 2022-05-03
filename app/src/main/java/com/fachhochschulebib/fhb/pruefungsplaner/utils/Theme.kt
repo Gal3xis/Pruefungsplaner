@@ -8,12 +8,23 @@ import com.fachhochschulebib.fhb.pruefungsplaner.R
 /**
  * Class to store data for a Theme
  *
+ * @param resId The ThemeId
+ * @param context The Applicationcontext
+ *
  * @author Alexander Lange
  * @since 1.6
  */
 class Theme (resId:Int?,context: Context){
+    /**
+     * The name of the theme
+     */
     var name:String? = null
+
+    /**
+     * The theme
+     */
     var theme: Resources.Theme? = null
+
 
     init {
         if(resId!=null)

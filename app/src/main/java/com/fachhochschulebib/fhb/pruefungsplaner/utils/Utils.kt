@@ -37,10 +37,20 @@ object Utils {
         return typedValue.data
     }
 
+    /**
+     * A map, where an Entry-Status is mapped to a specific color
+     */
     val statusColors:Map<String,Int> = mapOf("Früher Vorschlag" to R.attr.frueherVorschlag,"In Diskussion" to R.attr.inDiskussion, "Veröffentlicht" to R.attr.veroeffentlicht, "Veraltet" to R.attr.veraltet, "Zukünftige Planung" to R.attr.zukuenftigePlanung)
-    val favoritIcons:Map<Boolean,Int> = mapOf(true to R.drawable.ic_favorit,false to R.drawable.ic_not_favorit )//TODO Customize
-    val themeList:List<Int> = listOf(R.style.Theme_AppTheme_1, R.style.Theme_AppTheme_2)
 
+    /**
+     * A map, where the icons for favorite/not favorite entry are defined
+     */
+    val favoriteIcons:Map<Boolean,Int> = mapOf(true to R.drawable.ic_favorit,false to R.drawable.ic_not_favorit )//TODO Customize
+
+    /**
+     * A list of all available themes
+     */
+    val themeList:List<Int> = listOf(R.style.Theme_AppTheme_1, R.style.Theme_AppTheme_2)
 
     /**
      * Reads a textfile in the Raw-Folder and returns the content as a string.
@@ -72,9 +82,8 @@ object Utils {
     }
 
     /**
-     * Returns the duration for a given exam. Only necassary if the duration information
+     * Returns the duration for a given exam. Necessary because the duration information
      * is transferred via the examForm.
-     * TODO WIP
      *
      * @param[examForm] The exam form that holds information about the duration.
      *
@@ -89,6 +98,16 @@ object Utils {
         return duration?:0
     }
 
+    /**
+     * Returns the form of the exam, seperated from the duration.
+     *
+     * @param examForm The examform from the [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     *
+     * @return The examform, separated from the duration
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getExamForm(examForm: String?):String{
         val pattern = Regex("[^0-9()]+")
         val result: MatchResult? = examForm?.let { pattern.find(it) }

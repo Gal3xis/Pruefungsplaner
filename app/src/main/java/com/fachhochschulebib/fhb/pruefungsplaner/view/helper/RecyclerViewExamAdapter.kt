@@ -234,7 +234,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
                 )
             )
             ivicon.setImageDrawable(
-                Utils.favoritIcons[entry.favorit]?.let {
+                Utils.favoriteIcons[entry.favorit]?.let {
                     context.resources.getDrawable(
                         it,
                         context.theme

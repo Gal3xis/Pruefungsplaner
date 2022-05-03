@@ -10,12 +10,20 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 
+/**
+ * A custom implementation of a spinner to apply the colors of the App Theme.
+ *
+ * @param context The Applicationcontext
+ * @param resource The ResourceId
+ * @param objects A list of Strings, that will be shown in the spinner
+ *
+ * @author Alexander Lange
+ * @since 1.6
+ *
+ * @see ArrayAdapter
+ */
 class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList<String>) :
     ArrayAdapter<String>(context, resource, objects) {
-
-
-
-
     /**
      * Get a View that displays the data at the specified position in the data set. You can either
      * create a View manually or inflate it from an XML layout file. When the View is inflated, the

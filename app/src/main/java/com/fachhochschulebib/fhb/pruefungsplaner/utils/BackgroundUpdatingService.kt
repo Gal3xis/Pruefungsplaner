@@ -5,12 +5,18 @@ import androidx.work.*
 import com.fachhochschulebib.fhb.pruefungsplaner.model.repositories.SharedPreferencesRepository
 import java.util.concurrent.TimeUnit
 
-private const val updateWorkerName = "updateWorker"
+/**
+ * Unique name for the worker
+ */
+const val updateWorkerName = "updateWorker"
 
-
+/**
+ * Class with functionalities to start and remove periodic Requests, that run in the background even when the app is closed, to look for updates in the remote database.
+ *
+ * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
+ * @since 1.6
+ */
 object BackgroundUpdatingService {
-
-
     /**
      * Sets a backgroundservice, that enables the application to check for changes in the Examplan-database in a specified interval.
      * Gets the intervalltime from shared preferences.
@@ -51,7 +57,6 @@ object BackgroundUpdatingService {
         removePeriodicRequest(context)
         initPeriodicRequests(context)
     }
-
 
     /**
      * Removes the check for Database-updates from the WorkManager. The App is no longer doing background work.

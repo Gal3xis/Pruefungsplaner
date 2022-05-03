@@ -9,9 +9,6 @@ import com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
-
-const val calendarEventId = "com.fachhochschulebib.fhb.pruefungsplaner.calendarEvent"
-
 /**
  * IO-Interface to access the GoogleCalendar. Provides Methods to insert and delete
  * entries and also works with [TestPlanEntry]-Objects.
@@ -25,14 +22,48 @@ const val calendarEventId = "com.fachhochschulebib.fhb.pruefungsplaner.calendarE
  */
 object CalendarIO {
 
+    /**
+     * Enum to differ between mutliple kind of insertion.<br/>
+     * ```
+     * Manuel->Always start the insertion process of the calendar, where the user can edit the entry.
+     *
+     * Automatic->Inserts the entry without any notification or redirection
+     *
+     * Ask->Always asks the user, if he wants to insert the entry Manuel or Automatic
+     * ```
+     * @author Alexander Lange
+     * @since 1.6
+     */
     enum class InsertionType {
         Manuel, Automatic, Ask
     }
 
+    /**
+     * URI that is used to access the android calendar. Is passed to the content resolver with extra information to specify the request.
+     */
     private val EVENTS_URI = Uri.parse("content://com.android.calendar/events")
 
+    /**
+     * Class that holds information about a single calendar.
+     * @param id The Id of the calendar
+     * @param name The name of the calendar
+     * @param visible If the calendar is selected to be visible by the user
+     * @param accessLevel The level of access (700) needed to write to the calendar
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     class SmartphoneCalendar(val id:Long,val name:String,val visible:Boolean,val accessLevel:Int)
 
+    /**
+     * Gets a list of all calendars,existing on the users smartphone.
+     *
+     * @param context The Applicationcontext
+     * @return A list of [SmartphoneCalendar] that contain information about each calendar on the smartphone.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getCalendars(context: Context):List<SmartphoneCalendar>{
         val ret = mutableListOf<SmartphoneCalendar>()
 
@@ -65,6 +96,16 @@ object CalendarIO {
         return ret
     }
 
+    /**
+     * Gets the primary calendar of the users smartphone.
+     *
+     * @param context The Applicationcontext
+     *
+     * @return The [SmartphoneCalendar] for the primary calendar.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getPrimaryCalendar(context: Context):SmartphoneCalendar?{
         val projection = arrayOf("_id", "calendar_displayName","visible","calendar_access_level","isPrimary")
         val calendars: Uri = Uri.parse("content://com.android.calendar/calendars")
@@ -231,7 +272,7 @@ object CalendarIO {
     }
 
     /**
-     * Inserts an entry into the googlecalender. If the synchronization in the settings
+     * Inserts an entry into the selected calender. If the synchronization in the settings
      * is turned of, this method has no effect,
      *
      * @param[context] The application context
@@ -273,35 +314,9 @@ object CalendarIO {
         }
     }
 
-    /**
-     * Inserts a list of entries into the google calender. If the synchronization in the settings
-     * is turned of, this method has no effect,
-     *
-     * @param[context] The application context
-     * @param[list] The list of [TestPlanEntry] to be inserted.
-     * @param[force] If false, the User gets an dialog, in which he can view the entry,
-     * before it is saved into the calendar. If true, it is passed directly, without
-     * any user confirmation. The defaulvalue is false.
-     *
-     * @return A list of all ids inserted into the google calendar
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun insertEntries(context: Context, CAL_ID: Long, list: List<TestPlanEntry?>, insertionType: InsertionType):MutableList<Long> {
-        val ids = mutableListOf<Long>()
-        list.forEach {
-            if (it != null) {
-                insertEntry(context, CAL_ID, it, insertionType)?.let {
-                    ids.add(it)
-                }
-            }
-        }
-        return ids
-    }
 
     /**
-     * Inserts an event into the google calendar without showing a dialog to the user.
+     * Inserts an event into the selected calendar without showing a dialog to the user.
      *
      * @param[context] The application context.
      * @param[event] The event to be inserted to the calendar.
@@ -320,14 +335,41 @@ object CalendarIO {
         return if(eventExists(context,id)) id else null
     }
 
+    /**
+     * Returns a random ID
+     *
+     * @return A Random Long number, based on the uuid algorithm
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun getRandomId(): Long {
         return abs(UUID.randomUUID().mostSignificantBits)
     }
 
+    /**
+     * Inserts an event into the selected calendar, using the contentresolver.
+     *
+     * @param context The Applicationontext
+     * @param event The event to be inserted
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     private fun insertEvent(context: Context,event: ContentValues){
         context.contentResolver?.insert(EVENTS_URI, event)
     }
 
+    /**
+     * Updates an event in the selected calendar
+     *
+     * @param context The Applicationcontext
+     * @param id The id of the event that shall be updated
+     * @param event The event that shall replace the current one
+     *
+     * @param Alexander Lange
+     * @since 1.6
+     */
     private fun updateEvent(context: Context,id:Long,event:ContentValues){
         val deletedRows = deleteEvent(context,id)
         if(deletedRows==0) return
@@ -335,7 +377,7 @@ object CalendarIO {
     }
 
     /**
-     * Checks if a single event is currently existing in the google calendar
+     * Checks if a single event is currently existing in the selected calendar
      *
      * @param context The ApplicationContext
      * @param id The id of the event that is to look for
@@ -369,7 +411,7 @@ object CalendarIO {
     }
 
     /**
-     * Deletes all events from the google calendar with a specific id
+     * Deletes all events from the selected calendar with a specific id
      *
      * @param context The Applicationcontext
      * @param id The id of the event/s to be deleted
@@ -388,7 +430,17 @@ object CalendarIO {
         )?:0
     }
 
-
+    /**
+     * Deletes a list of events from the selected calendar
+     *
+     * @param context The Applicationcontext
+     * @param ids A list of ids that shall be deleted
+     *
+     * @return The number of events deleted
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun deleteEvents(context: Context,ids:List<Long>):Int{
         var deleted = 0
         ids.forEach {

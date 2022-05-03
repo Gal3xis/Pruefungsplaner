@@ -1,10 +1,7 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.utils
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,26 +46,26 @@ object Filter {
 
     /**
      * Parameter to Filter with a specific date.
-     * Calls the [onDateChangedListener] and the [onFilterChangedListener].
+     * Calls the  [onFilterChangedListener].
      *
      * @author Alexander Lange
      * @since 1.6
-     * @see onDateChangedListener
+     *
      * @see onFilterChangedListener
      */
     var datum: Date? = null
         set(value) {
             field = value
-            dateChanged(value)
             filterChanged()
         }
 
     /**
      * Parameter to filter with a specific examiner.
      * Calls the [onExaminerChangedListener] and [onFilterChangedListener].
+     *
      * @author Alexander Lange
      * @since 1.6
-     * @see onExaminerChangedListener
+     *
      * @see onFilterChangedListener
      */
     var examiner: String? = null
@@ -99,7 +96,7 @@ object Filter {
      * @see onFilterChangedListener
 
      */
-    fun SetSemester(pSemester: Int, active: Boolean) {
+    fun setSemester(pSemester: Int, active: Boolean) {
         semester[pSemester] = active
         filterChanged()
     }
@@ -116,12 +113,6 @@ object Filter {
             i.invoke()
         }
         Log.d("Filter Changed\n",this.toString())
-    }
-
-    private fun dateChanged(date: Date?){
-        for(i in onDateChangedListener){
-            i.invoke(date)
-        }
     }
 
     /**
@@ -169,6 +160,16 @@ object Filter {
         return true
     }
 
+    /**
+     * Validates a list of [TestPlanEntry]-Objects. Checks if all Filter-values agree with the given entry.
+     *
+     * @param list The list, that needs to be checked
+     *
+     * @return A Filtered list with only [TestPlanEntry]-Objects, that fit to the current filter
+     *
+     *  @author Alexander Lange
+     * @since 1.6
+     */
     fun validateList(list: List<TestPlanEntry>): List<TestPlanEntry> {
         val ret = mutableListOf<TestPlanEntry>()
         list.forEach {
@@ -176,14 +177,6 @@ object Filter {
                 ret.add(it)
             }
         }
-        return ret
-    }
-
-    fun validateList(liveData: LiveData<List<TestPlanEntry>?>): LiveData<List<TestPlanEntry>?> {
-        val list = liveData.value
-        val filtered = list?.let { validateList(it) }
-        val ret = MutableLiveData<List<TestPlanEntry>>()
-        ret.postValue(filtered)
         return ret
     }
 
@@ -201,25 +194,9 @@ object Filter {
         semester.fill(true)
         examiner = null
     }
+
+    /**
+     * List of functions, that shall be invoked, when the filter changes.
+     */
     var onFilterChangedListener: MutableList<() -> Unit> = mutableListOf()
-    var onDateChangedListener: MutableList<(date:Date?) -> Unit> = mutableListOf()
-
-    fun removeAllListener(){
-        onFilterChangedListener = mutableListOf()
-        onDateChangedListener = mutableListOf()
-    }
-
-    override fun toString(): String {
-        val sb:StringBuilder = StringBuilder()
-        sb.appendLine("Modul:" + modulName?:"Alle")
-        sb.appendLine("Course:" + courseName?:"Alle")
-        sb.appendLine("Examiner:" + examiner?:"Alle")
-        sb.append("Semester: ")
-        for(s in semester){
-            sb.append(s.toString()+";")
-        }
-        sb.appendLine()
-        sb.append("Datum:" + datum?.let {  SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(it)}?:"Alle")
-        return sb.toString()
-    }
 }

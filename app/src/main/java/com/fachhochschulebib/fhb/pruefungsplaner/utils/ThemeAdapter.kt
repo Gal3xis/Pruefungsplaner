@@ -13,6 +13,10 @@ import com.fachhochschulebib.fhb.pruefungsplaner.R
  * Adapterclass for the Theme-Spinner in the options-fragment.
  * Displays the different themes with an icon, that shows the primary-and the accent color.
  *
+ * @param context The Applicationcontext
+ * @param resource The ResourceId
+ * @param objects A list of [Theme]-Objects, that shall be displayed in the spinner
+ *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  *
