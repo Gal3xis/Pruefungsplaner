@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="?attr/colorPrimaryDark"
+    app:contentPadding="10dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <RelativeLayout
+            android:id="@+id/baseCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:id="@+id/icons"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="10dp"
+                >
+
+                <ImageView
+                    android:id="@+id/icon_in_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/ic_in_calendar" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/headerDate"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp"
+                tools:text="22.02.2022" />
+
+            <View
+                android:id="@+id/divider"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@id/courseModuleInfo"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/headerDate"
+                android:background="?attr/colorPrimary"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                />
+
+
+
+            <LinearLayout
+                android:id="@+id/courseModuleInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/icons"
+                android:orientation="vertical"
+                android:layout_toEndOf="@id/divider"
+                >
+
+                <TextView
+                    android:id="@+id/headerModule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="19sp"
+                    tools:text="Mathematik" />
+
+                <TextView
+                    android:id="@+id/headerCourse"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp"
+                    tools:text="Ingenieurinformatik" />
+
+                <TextView
+                    android:id="@+id/headerTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp"
+
+                    tools:text="08:00-10:00" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/expansion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/baseCard"
+            android:visibility="gone"
+            >
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentTop="true"
+                android:background="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/expandedCardTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/divider2"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="14sp"
+                tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+                 />
+        </RelativeLayout>
+    </RelativeLayout>
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/linearLayout"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        android:visibility="visible">-->
+
+    <!--        <LinearLayout-->
+    <!--            android:id="@+id/linearLayout2"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_marginBottom="0dp"-->
+    <!--            android:orientation="horizontal"-->
+    <!--            android:paddingBottom="0dp"-->
+    <!--            android:background="?attr/colorPrimaryLight">-->
+
+
+    <!--            <LinearLayout-->
+    <!--                android:id="@+id/LinearLayout5"-->
+    <!--                android:layout_width="0dp"-->
+    <!--                android:layout_weight="0.7"-->
+    <!--                android:layout_height="wrap_content"-->
+    <!--                android:orientation="vertical">-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/firstLine"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_alignWithParentIfMissing="true"-->
+    <!--                    android:layout_above="@id/secondLine"-->
+    <!--                    android:layout_alignParentTop="true"-->
+    <!--                    android:layout_alignParentRight="true"-->
+    <!--                    android:layout_toRightOf="@id/icon"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:paddingBottom="0dp"-->
+    <!--                    android:scrollbars="horizontal|vertical"-->
+    <!--                    android:textColor="?attr/colorOnPrimaryLight"-->
+    <!--                    android:textSize="19sp"/>-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/secondLine"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_alignWithParentIfMissing="true"-->
+    <!--                    android:layout_above="@id/secondLine"-->
+    <!--                    android:layout_alignParentTop="true"-->
+    <!--                    android:layout_alignParentRight="true"-->
+    <!--                    android:layout_marginTop="0dp"-->
+    <!--                    android:layout_marginEnd="6dp"-->
+    <!--                    android:layout_marginRight="0dp"-->
+    <!--                    android:layout_marginBottom="0dp"-->
+    <!--                    android:layout_toRightOf="@id/icon"-->
+    <!--                    android:textColor="?attr/colorOnPrimaryLight"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:paddingTop="0dp"-->
+    <!--                    android:textSize="16sp"-->
+    <!--                    android:visibility="gone"/>-->
+
+    <!--                <TextView-->
+    <!--                    android:id="@+id/thirdLine"-->
+    <!--                    android:layout_width="match_parent"-->
+    <!--                    android:layout_height="wrap_content"-->
+    <!--                    android:layout_alignWithParentIfMissing="true"-->
+    <!--                    android:layout_above="@id/secondLine"-->
+    <!--                    android:layout_alignParentTop="true"-->
+    <!--                    android:layout_alignParentRight="true"-->
+    <!--                    android:textColor="?attr/colorOnPrimaryLight"-->
+    <!--                    android:layout_marginTop="0dp"-->
+    <!--                    android:layout_marginEnd="6dp"-->
+    <!--                    android:layout_marginRight="0dp"-->
+    <!--                    android:layout_marginBottom="0dp"-->
+    <!--                    android:layout_toRightOf="@id/icon"-->
+    <!--                    android:gravity="center_vertical"-->
+    <!--                    android:paddingTop="0dp"-->
+    <!--                    android:textSize="16sp"/>-->
+
+    <!--            </LinearLayout>-->
+
+    <!--            <ImageView-->
+    <!--                android:id="@+id/icon"-->
+    <!--                android:layout_width="44dp"-->
+    <!--                android:layout_height="70dp"-->
+    <!--                android:layout_alignParentTop="false"-->
+    <!--                android:src="@android:drawable/ic_delete"-->
+    <!--                tools:layout_editor_absoluteY="50dp"-->
+    <!--                android:background="@android:color/transparent"-->
+    <!--                />-->
+    <!--        </LinearLayout>-->
+
+    <!--        <TextView-->
+    <!--            android:id="@+id/txtSecondscreen"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@drawable/button_rounded_corners"-->
+    <!--            android:backgroundTint="?attr/colorPrimaryDark"-->
+    <!--            android:baselineAligned="false"-->
+    <!--            android:padding="5dp"-->
+    <!--            android:textColor="?attr/colorOnPrimaryDark"-->
+    <!--            android:visibility="gone" />-->
+    <!--    </LinearLayout>-->
+</com.google.android.material.card.MaterialCardView>
+
+

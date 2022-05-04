@@ -1,0 +1,566 @@
+[
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-mdpi_optionen_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-mdpi\\optionen_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_ic_change_course.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\ic_change_course.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_favoriten.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\favoriten.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-hdpi_ic_elective.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-hdpi\\ic_elective.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxhdpi_ic_action_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxhdpi\\ic_action_suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-mdpi_ic_action_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-mdpi\\ic_action_suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxxhdpi_favoriten_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxxhdpi\\favoriten_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_optionen.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\optionen.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-anydpi-v24_ic_launcher_foreground.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\generated\\res\\pngs\\debug\\drawable-anydpi-v24\\ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_favoriten_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\favoriten_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_launcher_background.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_launcher_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_optionen_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\optionen_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_layout_dialog_filter.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\layout_dialog_filter.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_optionen_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\optionen_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_favoriten.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\favoriten.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_optionen_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\optionen_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_ic_action_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\ic_action_suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_termine.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\termine.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxhdpi_suche_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxhdpi\\suche_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\raw_impressum.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\raw\\impressum"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_checkliste.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\checkliste.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-hdpi_ic_change_course.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-hdpi\\ic_change_course.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-anydpi_ic_change_course.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-anydpi\\ic_change_course.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_rounded_color_border.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\rounded_color_border.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_suche_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\suche_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_optionen_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\optionen_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\menu_navigation.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\menu\\navigation.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_favoriten_round.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\favoriten_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_background2.jpg.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\background2.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_favoriten_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\favoriten_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-hdpi_ic_action_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-hdpi\\ic_action_suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_favoriten.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\favoriten.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_optionen.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\optionen.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxhdpi_favoriten_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxhdpi\\favoriten_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_start.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\start.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_circle.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_circle.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_background_timespan.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\background_timespan.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_suche_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\suche_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_favoriten.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\favoriten.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_ic_elective.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\ic_elective.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxxhdpi_suche_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxxhdpi\\suche_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-mdpi_favoriten_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-mdpi\\favoriten_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_baseline_menu.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_baseline_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_layout_favorite_contextmenu.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\layout_favorite_contextmenu.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxhdpi_optionen_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxhdpi\\optionen_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_fragment_exam_overview.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\fragment_exam_overview.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-mdpi_ic_change_course.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-mdpi\\ic_change_course.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\xml_searchable.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\xml\\searchable.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_baseline_close_24.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_baseline_close_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-hdpi_suche_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-hdpi\\suche_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_nav_background.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\nav_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_zoom_in_black_24dp.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_zoom_in_black_24dp.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-hdpi_optionen_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-hdpi\\optionen_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\raw_privacy_declarement.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\raw\\privacy_declarement"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_baseline_check_24.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_baseline_check_24.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_button_rounded_corners.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\button_rounded_corners.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_optionen_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\optionen_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_favoriten_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\favoriten_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-hdpi_favoriten_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-hdpi\\favoriten_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_button_rounded_corners2.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\button_rounded_corners2.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_favoriten.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\favoriten.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_search.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_search.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_in_calendar.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_in_calendar.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_optionen_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\optionen_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_favoriten.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\favoriten.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_favoriten_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\favoriten_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_dotted_line.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\dotted_line.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_fragment_settings.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\fragment_settings.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_favorit.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_favorit.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_simple_spinner_item.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\simple_spinner_item.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_fragment_impressum.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\fragment_impressum.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\menu_activity_main_drawer.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\menu\\activity_main_drawer.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-anydpi_ic_elective.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-anydpi\\ic_elective.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_optionen.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\optionen.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\menu_navigation_bottom.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\menu\\navigation_bottom.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_feedback.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\feedback.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_filter.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_filter.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_suche_round.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\suche_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-mdpi_suche_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-mdpi\\suche_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_not_in_calendar.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_not_in_calendar.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_layout_theme_spinner_row.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\layout_theme_spinner_row.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_suche.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\suche.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_fragment_about.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\fragment_about.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxhdpi_ic_elective.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxhdpi\\ic_elective.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_themecolor.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_themecolor.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_spinnerbackground.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\spinnerbackground.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_baseline_library_add.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\baseline_library_add.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_choose_courses.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\choose_courses.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_layout_status_legend.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\layout_status_legend.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_optionen_round.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\optionen_round.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_fhb.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\fhb.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_foreground.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_activity_start.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\activity_start.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_nav_header_main.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\nav_header_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_favoriten_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\favoriten_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_optionen.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\optionen.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_bielefeld.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\bielefeld.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_update.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_update.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\menu_action_menu.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\menu\\action_menu.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_favoriten_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\favoriten_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_suche_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\suche_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_suche_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\suche_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_baseline_feedback.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_baseline_feedback.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxxhdpi_optionen_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxxhdpi\\optionen_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxxhdpi_ic_action_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxxhdpi\\ic_action_suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_layout_theme_spinner_background.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\layout_theme_spinner_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_privacy_declaration.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\privacy_declaration.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_simple_spinner_background.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\simple_spinner_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_not_favorit.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_not_favorit.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-mdpi_favoriten.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-mdpi\\favoriten.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xxhdpi_ic_change_course.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xxhdpi\\ic_change_course.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_optionen.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\optionen.xml"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_background3.jpg.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\background3.jpg"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_optionen.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\optionen.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_suche_nav.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\suche_nav.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxhdpi_optionen.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxhdpi\\optionen.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_suche.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\suche.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-hdpi\\ic_launcher_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_suche_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\suche_round.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xxxhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-mdpi_ic_elective.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-mdpi\\ic_elective.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable_ic_calendar.xml.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable\\ic_calendar.xml"
+    }
+]
