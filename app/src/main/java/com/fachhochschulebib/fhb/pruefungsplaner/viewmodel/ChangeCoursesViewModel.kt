@@ -36,11 +36,11 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
             var courseName: String
             for (course in courses) {
                 courseName = course.courseName
-                if (!course.choosen) {
+                if (!course.chosen) {
                     val toDelete = getFavoritesByCourseName(courseName, false)
                     toDelete?.let { deleteEntries(it) }
                 }
-                if (checkCourseForFavorites(courseName) && course.choosen
+                if (checkCourseForFavorites(courseName) && course.chosen
                 ) {
                     val idJson = JSONObject()
                     idJson.put("ID", course.sgid)

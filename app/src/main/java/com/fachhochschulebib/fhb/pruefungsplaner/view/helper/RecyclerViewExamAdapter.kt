@@ -234,7 +234,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
                 )
             )
             ivicon.setImageDrawable(
-                Utils.favoriteIcons[entry.favorit]?.let {
+                Utils.favoriteIcons[entry.favorite]?.let {
                     context.resources.getDrawable(
                         it,
                         context.theme
@@ -250,7 +250,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
             }
 
             ivicon.setOnClickListener {
-                viewModel.updateEntryFavorite(context, !entry.favorit, entry)
+                viewModel.updateEntryFavorite(context, !entry.favorite, entry)
                 notifyItemChanged(layoutPosition)
             }
         }

@@ -48,7 +48,7 @@ class SettingsViewModel(application: Application) : BaseViewModel(application) {
      */
     fun deleteAllFavorites(context: Context){
         viewModelScope.launch {
-            repository.unselectAllFavorits()
+            repository.unselectAllFavorites()
             updateCalendar(context)
         }
     }

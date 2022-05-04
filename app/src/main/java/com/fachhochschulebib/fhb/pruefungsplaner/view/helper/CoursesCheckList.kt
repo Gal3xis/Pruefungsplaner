@@ -34,7 +34,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
     fun getChosen():List<Course>{
         val ret = mutableListOf<Course>()
         courseList.forEach {
-            if(it.choosen==true) ret.add(it)
+            if(it.chosen==true) ret.add(it)
         }
         return ret
     }
@@ -103,7 +103,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // Initialisierung der Komponenten
         holder.nameCourse.text = courseList[position].courseName
-        holder.checkBoxCourse.isChecked = courseList[position].choosen == true
+        holder.checkBoxCourse.isChecked = courseList[position].chosen == true
         holder.checkBoxCourse.setOnClickListener { // Speichere die auswahl in der Liste
             holder.checkBoxCourse.isChecked = toggleFavorite(position)
         }
@@ -123,15 +123,15 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      */
     private fun toggleFavorite(position: Int): Boolean {
         if (courseList[position].sgid != viewModel.getMainCourseId()) {
-            courseList[position].choosen = !courseList[position].choosen
-            viewModel.updateCourse(courseList[position].courseName,courseList[position].choosen)
+            courseList[position].chosen = !courseList[position].chosen
+            viewModel.updateCourse(courseList[position].courseName,courseList[position].chosen)
         } else {
             Toast.makeText(
                 context, context.getString(R.string.favorite_main_course),
                 Toast.LENGTH_SHORT
             ).show()
         }
-        return courseList[position].choosen
+        return courseList[position].chosen
     }
 
     /**

@@ -1,5 +1,11 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit
 
+/**
+ * Dataclass holding a simple replication of the TestPlanEntry in the remote database.
+ *
+ * @author Alexander Lange
+ * @since 1.6
+ */
 data class GSONEntry(
     val FirstExaminer:String?,
     val SecondExaminer:String?,

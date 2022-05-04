@@ -156,7 +156,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.5
      */
     suspend fun getIDs(): String {
-        val Ids = repository.getChoosenCourseIds(true)
+        val Ids = repository.getChosenCourseIds()
         val courseIds = JSONArray()
         if (Ids != null) {
             for (id in Ids) {
@@ -469,7 +469,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open suspend fun getCoursesByFacultyId(facultyId: String): List<Course>? {
-        return repository.getAllCoursesByFacultyid(facultyId)
+        return repository.getAllCoursesByFacultyId(facultyId)
     }
 
     /**
@@ -967,7 +967,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         val CAL_ID = getSelectedCalendar()?:return
         val id = CalendarIO.insertEntry(context,CAL_ID, entry, getCalendarInsertionType())
         id?.let {
-            spRepository.addId(it, entry.id )
+            spRepository.addCalendarId(it, entry.id )
         }
     }
 
@@ -1093,7 +1093,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     private fun checkSustainability() {
         viewModelScope.launch {
             val mainCourse = getMainCourseId()?.let { getCourseById(it) }
-            if (mainCourse?.choosen == false) {
+            if (mainCourse?.chosen == false) {
                 deleteMainCourse()
             }
         }
@@ -1125,7 +1125,6 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         testPlanEntry.examForm = entry.Form
         testPlanEntry.status = entry.Status
         testPlanEntry.hint = entry.Hint
-        testPlanEntry.color = entry.Color
         testPlanEntry.timeStamp = entry.Timestamp
         return testPlanEntry
     }
@@ -1174,7 +1173,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     private fun createCourse(jsonCourse: GSONCourse): Course {
         val course = Course()
-        course.choosen = false
+        course.chosen = false
         course.courseName = jsonCourse.CourseName
         course.facultyId = jsonCourse.FKFBID
         course.sgid = jsonCourse.SGID

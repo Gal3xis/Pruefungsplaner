@@ -40,10 +40,14 @@ import java.net.URL
 class DatabaseRepository(
     context: Context
 ) {
-    //Access to the Room Database
+    /**
+     * Access to the local database
+     */
     private var localDataSource: UserDao = AppDatabase.getAppDatabase(context).userDao()
 
-    //Access to the Rest-Api via the Retrofit Interface
+    /**
+     * Access to the remote database via the [RetrofitInterface] and [RetrofitHelper]
+     */
     private var remoteDataSource =
         RetrofitHelper.getInstance().create(RetrofitInterface::class.java)
 
@@ -219,7 +223,17 @@ class DatabaseRepository(
         }
     }
 
-
+    /**
+     * Send feedback to the server.
+     *
+     * @param ratingUsability How good is the usability of the application
+     * @param ratingFunctions Are there enough functions in the application
+     * @param ratingStability How stable was the application, did it crashes?
+     * @param text A comment from the user.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun sendFeedBack(
         uuid: String,
         ratingUsability: Float,
@@ -238,24 +252,112 @@ class DatabaseRepository(
         }
     }
 
-
+    /**
+     * Gets the UUID linked to a faculty.
+     *
+     * @param faculty The Faculty, linked to the UUID
+     *
+     * @return The UUID linked to the faculty
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun fetchUUID(faculty: String): JsonUuid? {
         return withContext(Dispatchers.IO) {
             return@withContext remoteDataSource.getUUID(faculty)
         }
     }
 
-//    suspend fun fetchUUID(faculty: Faculty): JsonUuid? {
-//        return fetchUUID(faculty.fbid)
-//    }
 
     //Room Database
+    /**
+     * Gets the Live Data with all [TestPlanEntry]-Objects, ordered by their exam date
+     *
+     * @return The LiveData-List with all [TestPlanEntry]-Objects, ordered by their exam date
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?> =
+        localDataSource.getAllEntriesByDateLiveData()
+
+    /**
+     * Gets the Live Data with all favorite [TestPlanEntry]-Objects.
+     *
+     * @return The LiveData-List with all favorite [TestPlanEntry]-Objects.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getAllFavoritesLiveData(): LiveData<List<TestPlanEntry>?> =
+        localDataSource.getAllFavoritesLiveData()
+
+    /**
+     * Gets the Live Data with all chosen [Course]-Objects
+     *
+     * @return The LiveData-List with all chosen [Course]-Objects
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getAllChosenCoursesLiveData(): LiveData<List<Course>?> =
+        localDataSource.getAllChosenCoursesLiveData()
+
+    /**
+     * Gets the Live Data with all [Faculty]-Objects
+     *
+     * @return The LiveData-List with all [Faculty]-Objects
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getAllFacultiesLiveData(): LiveData<List<Faculty>?> =
+        localDataSource.getAllFacultiesLiveData()
+
+    /**
+     * Gets the Live Data with all [TestPlanEntry]-Objects for each chosen [Course]-Object
+     *
+     * @return The LiveData-List with all [TestPlanEntry]-Objects for each chosen [Course]-Object
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getAllEntriesForChosenCoursesLiveData() =
+        localDataSource.getAllEntriesForChosenCoursesByDateLiveData()
+
+
+    /**
+     * Gets the Live Data with the names of all first examiner.
+     *
+     * @return The LiveData-List with the names of all first examiner.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun getFirstExaminerNamesLiveData() = localDataSource.getFirstExaminerNamesLiveData()
+
+    /**
+     * Inserts a new [TestPlanEntry] into the local database.
+     *
+     * @param testPlanEntry The entry to be inserted into the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun insertEntry(testPlanEntry: TestPlanEntry) {
         withContext(Dispatchers.IO) {
             localDataSource.insertEntry(testPlanEntry)
         }
     }
 
+    /**
+     * Inserts a list of [Course]-Objects into the local database.
+     *
+     * @param courses The list of courses to be inserted into the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun insertCourses(cours: List<Course>) {
         withContext(Dispatchers.IO) {
             localDataSource.insertCourses(cours)
@@ -263,232 +365,304 @@ class DatabaseRepository(
         }
     }
 
+    /**
+     * Inserts a UUID into the local database
+     *
+     * @param uuid The UUID to be inserted into the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun insertUuid(uuid: String) {
         withContext(Dispatchers.IO) {
             localDataSource.insertUuid(uuid)
         }
     }
 
+    /**
+     * Inserts a [Faculty] into the local database.
+     *
+     * @param faculty The [Faculty] to be inserted into the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     */
     suspend fun insertFaculty(faculty: Faculty) {
         withContext(Dispatchers.IO) {
             localDataSource.insertFaculty(faculty)
         }
     }
-//
-//    suspend fun updateEntry(testPlanEntry: TestPlanEntry) {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.updateExam(testPlanEntry)
-//        }
-//    }
 
+    /**
+     * Updates if a [TestPlanEntry] is a favorite or not.
+     *
+     * @param context The Applicationcontext
+     * @param favorite Whether the [TestPlanEntry] is favorite or not
+     * @param entry The [TestPlanEntry] that needs to be updated
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun updateEntryFavorit(favorit: Boolean, id: String) {
         withContext(Dispatchers.IO) {
             localDataSource.update(favorit, id)
         }
     }
 
+    /**
+     * Updates if a course is chosen or not.
+     *
+     * @param courseName The name of the course that needs to be updated
+     * @param chosen Whether the course has been chosen or not
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun updateCourse(courseName: String, choosen: Boolean) {
         withContext(Dispatchers.IO) {
             localDataSource.updateCourse(courseName, choosen)
         }
     }
 
-//    suspend fun updateFaculty(faculty: Faculty) {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.updateFaculty(faculty)
-//        }
-//    }
-
-    suspend fun unselectAllFavorits() {
+    /**
+     * Deletes all favorites.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    suspend fun unselectAllFavorites() {
         withContext(Dispatchers.IO) {
-            localDataSource.unselectAllFavorits()
+            localDataSource.unselectAllFavorites()
         }
     }
 
+    /**
+     * Deletes a list of [TestPlanEntry]-Objects from the local database.
+     *
+     * @param entries A list of [TestPlanEntry]-Objects that need to be deleted from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun deleteEntries(entries: List<TestPlanEntry>) {
         withContext(Dispatchers.IO) {
             localDataSource.deleteEntries(entries)
         }
     }
 
+    /**
+     * Deletes all [TestPlanEntry]-Objects from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun deleteAllEntries() {
         withContext(Dispatchers.IO) {
             localDataSource.deleteAllEntries()
         }
     }
 
-//    suspend fun deleteCourses(cours: List<Course>) {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.deleteCourses(cours)
-//        }
-//    }
-//
-//    suspend fun deleteAllCourses() {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.deleteAllCourses()
-//        }
-//    }
-//
-//    suspend fun deleteFaculties(faculties: List<Faculty>) {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.deleteFaculties(faculties)
-//        }
-//    }
-//
-//    suspend fun deleteAllFaculties() {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.deleteAllFaculties()
-//        }
-//    }
 
+    /**
+     * Gets all [TestPlanEntry]-Objects from the local database
+     *
+     * @return A list with all [TestPlanEntry]-Objects in the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getAllEntries(): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getAllEntries()
         }
     }
 
-//    suspend fun getEntriesByModule(): List<TestPlanEntry>? {
-//        return withContext(Dispatchers.IO) {
-//            return@withContext localDataSource.getEntriesByModule()
-//        }
-//    }
-
-    fun getAllEntriesLiveDataByDate(): LiveData<List<TestPlanEntry>?> =
-        localDataSource.getAllEntriesLiveDataByDate()
-
-    suspend fun getEntriesForCourseLiveData(name: String?): List<TestPlanEntry>? {
+    /**
+     * Gets all [TestPlanEntry]-Objects for a specific [Course].
+     *
+     * @param The [Course.courseName] for the [Course].
+     *
+     * @return A list with all [TestPlanEntry]-Objects for a specific [Course].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    suspend fun getEntriesForCourse(name: String?): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
             return@withContext name?.let { localDataSource.getEntriesByCourseName(it) }
         }
 
     }
 
-    fun getAllFavoritesLiveData(): LiveData<List<TestPlanEntry>?> =
-        localDataSource.getAllFavoritesLiveData()
-
-//    fun getAllCoursesLiveData(): LiveData<List<Course>?> = localDataSource.getAllCoursesLiveData()
-
-    fun getAllChoosenCoursesLiveData(): LiveData<List<Course>?> =
-        localDataSource.getAllChoosenCoursesLiveData()
-
-    fun getAllFacultiesLiveData(): LiveData<List<Faculty>?> =
-        localDataSource.getAllFacultiesLiveData()
-
-//    fun getCoursesForFacultyIdLiveData(id: String) =
-//        localDataSource.getCoursesForFacultyIdLiveData(id)
-
-    fun getFirstExaminerNames() = localDataSource.getFirstExaminerNames()
-
-    fun getAllEntriesForChosenCoursesLiveData() =
-        localDataSource.getAllEntriesForChosenCoursesLiveDataByDate()
-
+    /**
+     * Returns all courses from the local database.
+     *
+     * @return A list with all courses from the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getAllCourses(): List<Course>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getAllCourses()
         }
     }
 
+    /**
+     * Returns one course for a given Id
+     *
+     * @param id The id of the course
+     *
+     * @return The course for the given id
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getCourseById(id: String): Course {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getCourseById(id)
         }
     }
 
+    /**
+     * Returns a list of [TestPlanEntry]-Objects with a given favorite-state.
+     *
+     * @param favorite whether the entries shall be favorites or not
+     *
+     * @return A list of [TestPlanEntry]-Objects with the given favorite-state
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getFavorites(favorit)
         }
     }
 
-//    suspend fun getFirstExaminerSortedByName(selectedCourse: String): List<String>? {
-//        return withContext(Dispatchers.IO) {
-//            return@withContext localDataSource.getFirstExaminerSortedByName(selectedCourse)
-//        }
-//    }
-
-    suspend fun getModulesOrdered(): List<String>? {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getModulesOrdered()
-        }
-    }
-
+    /**
+     * Returns all [TestPlanEntry]-Objects for a given course name with the given favorite state.
+     *
+     * @param course The name of the course from where to return the entries
+     * @param favorite Whether the courses shall be favorites or not
+     *
+     * @return A list with all favorites/not favorites for the given course
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getEntriesByCourseName(course: String, favorit: Boolean): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getEntriesByCourseName(course, favorit)
         }
     }
 
-//    suspend fun getChoosenCourses(choosen: Boolean): List<String>? {
-//        return withContext(Dispatchers.IO) {
-//            return@withContext localDataSource.getChoosenCourses(choosen)
-//        }
-//    }
-
-    suspend fun getChoosenCourseIds(choosen: Boolean): List<String>? {
+    /**
+     * Gets the ids for all chosen [Course]-Objects.
+     *
+     * @return A list with the ids for all chosen [Course]-Objects.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    suspend fun getChosenCourseIds(): List<String>? {
         return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getChoosenCourseIds(choosen)
+            return@withContext localDataSource.getChosenCourseIds()
         }
     }
 
-    suspend fun getAllCoursesByFacultyid(facultyId: String): List<Course>? {
+    /**
+     * Gets all [Course]-Objects for a specific faculty id.
+     *
+     * @param facultyId of the [Faculty] from where to get all [Course]-Objects
+     *
+     * @return A list with all [Course]-Objects for the given [facultyId]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    suspend fun getAllCoursesByFacultyId(facultyId: String): List<Course>? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getAllCoursesByFacultyId(facultyId)
         }
     }
 
-//    suspend fun getEntriesByCourseName(course: String): List<TestPlanEntry>? {
-//        return withContext(Dispatchers.IO) {
-//            return@withContext localDataSource.getEntriesByCourseName(course)
-//        }
-//    }
-
+    /**
+     * Returns a [TestPlanEntry] for its [TestPlanEntry.id]
+     *
+     * @param id The Id of the [TestPlanEntry]
+     *
+     * @return The [TestPlanEntry] for the given Id
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getEntryById(id: String): TestPlanEntry? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getEntryById(id)
         }
     }
 
+    /**
+     * Gets the UUID from the local database
+     *
+     * @return The UUID from the local database
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getUuid(): Uuid? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getUuid()
         }
     }
 
+    /**
+     * Returns a [Course] for its [Course.courseName].
+     *
+     * @param name The [Course.courseName] of the [Course]
+     *
+     * @return The [Course] for the given [Course.courseName]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getCourseByName(name: String): Course? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getCourseByName(name)
         }
     }
 
-//    suspend fun getCourseId(courseName: String): String? {
-//        return withContext(Dispatchers.IO) {
-//            return@withContext localDataSource.getCourseId(courseName)
-//        }
-//    }
-
-
+    /**
+     * Checks if a [Course] is a favorite or not.
+     *
+     * @param courseName The [Course.courseName] of the [Course] to be checked.
+     *
+     * @return true->The [Course] is a favorite;false->The [Course] is not a favorite
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun checkCourseForFavorites(courseName: String): Boolean {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getFavoritesForCourse(courseName).isNullOrEmpty()
         }
     }
 
+    /**
+     * Gets a [Faculty] for its [Faculty.fbid].
+     *
+     * @param id The [Faculty.fbid] of the [Faculty] to look for.
+     *
+     * @return The [Faculty] for the given [Faculty.fbid]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     suspend fun getFacultyById(id: String): Faculty? {
         return withContext(Dispatchers.IO) {
             return@withContext localDataSource.getFacultyById(id)
-        }
-    }
-
-//
-//    suspend fun insertEntries(entries: List<TestPlanEntry>) {
-//        withContext(Dispatchers.IO) {
-//            localDataSource.insertEntries(entries)
-//        }
-//    }
-
-    suspend fun getCourseName(id: String): String {
-        return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getCourseById(id).courseName
         }
     }
 }

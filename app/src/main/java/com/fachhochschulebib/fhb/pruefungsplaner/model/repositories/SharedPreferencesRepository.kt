@@ -6,22 +6,64 @@ import com.fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
+/**
+ * Repository to access the shared preferences.
+ *
+ * @param context The Applicationcotext
+ *
+ * @author Alexander Lange
+ * @since 1.6
+ */
 class SharedPreferencesRepository(context: Context) {
 
+    /**
+     * File to store data about the current period
+     */
     private val periodInformation = context.getSharedPreferences("periodInformation", Context.MODE_PRIVATE)
+
+    /**
+     * File to store data about the user app settings
+     */
     private val settings = context.getSharedPreferences("settings", Context.MODE_PRIVATE)
+
+    /**
+     * File to store the maincourse and the faculty, selected by the user.
+     */
     private val userSelection = context.getSharedPreferences("userSelection",Context.MODE_PRIVATE)
+
+    /**
+     * File to store the ids for each event in the calendar, mapped with the associted [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     */
     private val calendarEntries = context.getSharedPreferences("calendarEntries",Context.MODE_PRIVATE)
 
     //Google Calendar
-    fun addId(id:Long, entryId: String){
+    /**
+     * Adds an calendar event id into the shared preferences.
+     *
+     * @param id The event id of the calendar event.
+     * @param entryId The [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry.id] of the [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    fun addCalendarId(id:Long, entryId: String){
         val existing = getIds()
+        //Shortened "put(id,entryId)"
         existing[id] = entryId
         val json = Gson().toJson(existing)
         val editor = calendarEntries.edit()
         editor.putString("ids",json)
         editor.apply()
     }
+
+    /**
+     * Adds multiple calendar event ids into the shared preferences.
+     *
+     * @param ids A prepared Map with calendar event ids and their [ccom.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun addIds(ids:Map<Long,String>){
         val existing = getIds()
         existing.putAll(ids)
@@ -31,11 +73,27 @@ class SharedPreferencesRepository(context: Context) {
         editor.apply()
     }
 
+    /**
+     * Returns all calendar event ids and their [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry] from the shared preferences.
+     *
+     * @return A Map with all calendar event ids and their [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry].
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getIds():MutableMap<Long,String>{
         val json = calendarEntries.getString("ids",null)
         return if(json==null) mutableMapOf() else Gson().fromJson(json, object :TypeToken<MutableMap<Long,String>>(){}.type)
     }
 
+    /**
+     * Deletes one calendar event id from the shared preferencse.
+     *
+     * @param id The Id of the event to be deleted
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun deleteId(id:Long){
         val existing = getIds()
         existing.remove(id)
@@ -45,6 +103,14 @@ class SharedPreferencesRepository(context: Context) {
         editor.apply()
     }
 
+    /**
+     * Deletes multiple calendar event ids from the shared preferences.
+     *
+     * @param ids A list of all event ids to be deleted.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun deleteIds(ids:List<Long>){
         val existing = getIds()
         ids.forEach {
@@ -56,12 +122,28 @@ class SharedPreferencesRepository(context: Context) {
         editor.apply()
     }
 
+    /**
+     * Inserts id of the calendar, the user selected for syncing into the shared preferences.
+     *
+     * @param id The Calendar id the user selected.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun setSelectedCalendar(id:Long){
         val editor = settings.edit()
         editor.putLong("selectedCalendar",id)
         editor.apply()
     }
 
+    /**
+     * Gets the id of the calendar, the user selected for syncing from the shared preferences.
+     *
+     * @return The Calendar id the user selected.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
     fun getSelectedCalendar():Long{
         return settings.getLong("selectedCalendar",0)
     }

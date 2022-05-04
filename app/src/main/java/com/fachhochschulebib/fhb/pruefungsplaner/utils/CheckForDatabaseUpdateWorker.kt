@@ -74,7 +74,7 @@ class CheckForDatabaseUpdateWorker(private val context: Context, private val wor
             val periode = spRepository.getPeriodTerm()
             val termin = spRepository.getPeriodTermin()
             val examinYear = spRepository.getPeriodYear()
-            val Ids = repository.getChoosenCourseIds(true)
+            val Ids = repository.getChosenCourseIds()
             val courseIds = JSONArray()
             if (Ids != null) {
                 for (id in Ids) {

@@ -35,12 +35,12 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     /**
      * Live Data containg all chosen courses.
      */
-    val liveChoosenCourses = repository.getAllChoosenCoursesLiveData()
+    val liveChoosenCourses = repository.getAllChosenCoursesLiveData()
 
     /**
      * Live Data containing the names of all first examiners.
      */
-    var liveProfList = repository.getFirstExaminerNames()
+    var liveProfList = repository.getFirstExaminerNamesLiveData()
 
     /**
      * Live Data for storing the maincourse.
@@ -72,7 +72,7 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     fun filterCoursename() {
         viewModelScope.launch {
             val entriesForCourse = Filter.courseName?.let {
-                repository.getEntriesForCourseLiveData(it)
+                repository.getEntriesForCourse(it)
             } ?: repository.getAllEntries()
             liveEntriesForCourse.postValue(entriesForCourse)
         }
