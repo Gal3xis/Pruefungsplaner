@@ -1,0 +1,1196 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>ChangeCoursesViewModel</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg"><script>var pathToRoot = "../../../";</script>    <script>const storage = localStorage.getItem("dokka-dark-mode")
+const savedDarkMode = storage ? JSON.parse(storage) : false
+if(savedDarkMode === true){
+    document.getElementsByTagName("html")[0].classList.add("theme-dark")
+}</script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script><link href="../../../styles/style.css" rel="Stylesheet"><link href="../../../styles/jetbrains-mono.css" rel="Stylesheet"><link href="../../../styles/main.css" rel="Stylesheet"><link href="../../../styles/prism.css" rel="Stylesheet"><link href="../../../styles/logo-styles.css" rel="Stylesheet"><script type="text/javascript" src="../../../scripts/clipboard.js" async="async"></script><script type="text/javascript" src="../../../scripts/navigation-loader.js" async="async"></script><script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script><script type="text/javascript" src="../../../scripts/main.js" async="async"></script><script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>  </head>
+  <body>
+    <div class="navigation-wrapper" id="navigation-wrapper">
+      <div id="leftToggler"><span class="icon-toggler"></span></div>
+      <div class="library-name"><a href="../../../index.html">app</a></div>
+      <div></div>
+      <div class="pull-right d-flex"><button id="theme-toggle-button"><span id="theme-toggle"></span></button>
+        <div id="searchBar"></div>
+      </div>
+    </div>
+    <div id="container">
+      <div id="leftColumn">
+        <div id="sideMenu"></div>
+      </div>
+      <div id="main"><script type="text/javascript" src="../../../scripts/main.js"></script>
+        <div class="main-content" id="content" pageIds="app::com.fachhochschulebib.fhb.pruefungsplaner.viewmodel/ChangeCoursesViewModel///PointingToDeclaration//492899073">
+          <div class="breadcrumbs"><a href="../../../index.html">app</a>/<a href="../index.html">com.fachhochschulebib.fhb.pruefungsplaner.viewmodel</a>/<a href="index.html">ChangeCoursesViewModel</a></div>
+          <div class="cover ">
+            <h1 class="cover"><span>Change</span><wbr></wbr><span>Courses</span><wbr></wbr><span>View</span><wbr></wbr><span><span>Model</span></span></h1>
+            <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">ChangeCoursesViewModel</a><span class="token punctuation">(</span>application<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Application.html">Application</a><span class="token punctuation">)</span> : <a href="../-base-view-model/index.html">BaseViewModel</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">ViewModel for the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.view.fragments/-change-courses-fragment/index.html">com.fachhochschulebib.fhb.pruefungsplaner.view.fragments.ChangeCoursesFragment</a>.</p><h4 class="">Author</h4><p class="paragraph">Alexander Lange (Email:alexander.lange@fh-bielefeld.de)</p><h4 class="">Since</h4><p class="paragraph">1.6</p></div></div>
+          </div>
+          <div class="tabbedcontent">
+            <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="Constructors">Constructors</button><button class="section-tab" data-togglable="Functions">Functions</button><button class="section-tab" data-togglable="Inherited functions">Inherited functions</button><button class="section-tab" data-togglable="Properties">Properties</button><button class="section-tab" data-togglable="Inherited properties">Inherited properties</button></div>
+            <div class="tabs-section-body">
+              <h2 class="tabbedcontent">Constructors</h2>
+              <div class="table" data-togglable="Constructors"><a data-name="-271487498%2FConstructors%2F492899073" anchor-label="ChangeCoursesViewModel" id="-271487498%2FConstructors%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue TabbedContent">
+                    <div class=""><span class="inline-flex"><a href="-change-courses-view-model.html">ChangeCoursesViewModel</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-271487498%2FConstructors%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="-change-courses-view-model.html"><span class="token function">ChangeCoursesViewModel</span></a><span class="token punctuation">(</span>application<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Application.html">Application</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Properties</h2>
+              <div class="table" data-togglable="Properties"><a data-name="-1315430065%2FProperties%2F492899073" anchor-label="liveCoursesForFaculty" id="-1315430065%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="live-courses-for-faculty.html">liveCoursesForFaculty</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1315430065%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="-1315430065%2FProperties%2F492899073" anchor-label="liveCoursesForFaculty" id="-1315430065%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">val </span><a href="live-courses-for-faculty.html">liveCoursesForFaculty</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/androidx/lifecycle/MutableLiveData.html">MutableLiveData</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="-1315430065%2FProperties%2F492899073" anchor-label="liveCoursesForFaculty" id="-1315430065%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><p class="paragraph">Live Data for storing all courses for a selected Faculty. Is set in <a href="get-courses.html">getCourses</a></p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Inherited properties</h2>
+              <div class="table" data-togglable="Inherited properties"><a data-name="851734752%2FProperties%2F492899073" anchor-label="coroutineExceptionHandler" id="851734752%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/coroutine-exception-handler.html">coroutineExceptionHandler</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="851734752%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="851734752%2FProperties%2F492899073" anchor-label="coroutineExceptionHandler" id="851734752%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-base-view-model/coroutine-exception-handler.html">coroutineExceptionHandler</a><span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineExceptionHandler///PointingToDeclaration/">CoroutineExceptionHandler</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="851734752%2FProperties%2F492899073" anchor-label="coroutineExceptionHandler" id="851734752%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><p class="paragraph">The Exceptionhandler that is used in the ViewModel-Coroutines. Just prints the stacktrace to the logcat.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2055572598%2FProperties%2F492899073" anchor-label="mApplication" id="-2055572598%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#-2055572598%2FProperties%2F492899073">mApplication</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2055572598%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="-2055572598%2FProperties%2F492899073" anchor-label="mApplication" id="-2055572598%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-start-view-model/index.html#-2055572598%2FProperties%2F492899073">mApplication</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/app/Application.html">Application</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2127905085%2FProperties%2F492899073" anchor-label="mBagOfTags" id="2127905085%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#2127905085%2FProperties%2F492899073">mBagOfTags</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2127905085%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="2127905085%2FProperties%2F492899073" anchor-label="mBagOfTags" id="2127905085%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/Nullable.html"><span class="token annotation">Nullable</span></a></div></div><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-start-view-model/index.html#2127905085%2FProperties%2F492899073">mBagOfTags</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="581728969%2FProperties%2F492899073" anchor-label="mCleared" id="581728969%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#581728969%2FProperties%2F492899073">mCleared</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="581728969%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="581728969%2FProperties%2F492899073" anchor-label="mCleared" id="581728969%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-start-view-model/index.html#581728969%2FProperties%2F492899073">mCleared</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="274507197%2FProperties%2F492899073" anchor-label="repository" id="274507197%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/repository.html">repository</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="274507197%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="274507197%2FProperties%2F492899073" anchor-label="repository" id="274507197%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-base-view-model/repository.html">repository</a><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.repositories/-database-repository/index.html">DatabaseRepository</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="274507197%2FProperties%2F492899073" anchor-label="repository" id="274507197%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><p class="paragraph">The Database Repository</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1595911066%2FProperties%2F492899073" anchor-label="sdfDisplay" id="1595911066%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/sdf-display.html">sdfDisplay</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1595911066%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="1595911066%2FProperties%2F492899073" anchor-label="sdfDisplay" id="1595911066%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-base-view-model/sdf-display.html">sdfDisplay</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat.html">SimpleDateFormat</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1595911066%2FProperties%2F492899073" anchor-label="sdfDisplay" id="1595911066%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><p class="paragraph">The <a href="https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat.html">SimpleDateFormat</a> to Display dates in the UI</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1447784427%2FProperties%2F492899073" anchor-label="sdfRetrofit" id="1447784427%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/sdf-retrofit.html">sdfRetrofit</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1447784427%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="1447784427%2FProperties%2F492899073" anchor-label="sdfRetrofit" id="1447784427%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-base-view-model/sdf-retrofit.html">sdfRetrofit</a><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat.html">SimpleDateFormat</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="1447784427%2FProperties%2F492899073" anchor-label="sdfRetrofit" id="1447784427%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><p class="paragraph">The <a href="https://developer.android.com/reference/kotlin/java/text/SimpleDateFormat.html">SimpleDateFormat</a> to convert dates from the retrofit interface</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="332136352%2FProperties%2F492899073" anchor-label="spRepository" id="332136352%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/sp-repository.html">spRepository</a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="332136352%2FProperties%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted" data-togglable="Inherited properties"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><a data-name="332136352%2FProperties%2F492899073" anchor-label="spRepository" id="332136352%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><div class="symbol monospace"><span class="token keyword">protected </span><span class="token keyword"></span><span class="token keyword">val </span><a href="../-base-view-model/sp-repository.html">spRepository</a><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.repositories/-shared-preferences-repository/index.html">SharedPreferencesRepository</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><a data-name="332136352%2FProperties%2F492899073" anchor-label="spRepository" id="332136352%2FProperties%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a><p class="paragraph">The Shared Preferences Repository</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Functions</h2>
+              <div class="table" data-togglable="Functions"><a data-name="-778250556%2FFunctions%2F492899073" anchor-label="changeMainCourse" id="-778250556%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="change-main-course.html"><span>change</span><wbr></wbr><span>Main</span><wbr></wbr><span><span>Course</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-778250556%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="change-main-course.html"><span class="token function">changeMainCourse</span></a><span class="token punctuation">(</span>course<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Changes the maincourse for the user. If the new course is not a favorite yet, it is also updated.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-814517054%2FFunctions%2F492899073" anchor-label="getCourses" id="-814517054%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="get-courses.html"><span>get</span><wbr></wbr><span><span>Courses</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-814517054%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="get-courses.html"><span class="token function">getCourses</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Loads new courses for a specific faulty in the livadata-object.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2031454579%2FFunctions%2F492899073" anchor-label="updateDbEntries" id="-2031454579%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="update-db-entries.html"><span>update</span><wbr></wbr><span>Db</span><wbr></wbr><span><span>Entries</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2031454579%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="update-db-entries.html"><span class="token function">updateDbEntries</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Updates the Room-Database with data from the Server.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h2 class="">Inherited functions</h2>
+              <div class="table" data-togglable="Inherited functions"><a data-name="-812512350%2FFunctions%2F492899073" anchor-label="checkCourseForFavorites" id="-812512350%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/check-course-for-favorites.html"><span>check</span><wbr></wbr><span>Course</span><wbr></wbr><span>For</span><wbr></wbr><span><span>Favorites</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-812512350%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/check-course-for-favorites.html"><span class="token function">checkCourseForFavorites</span></a><span class="token punctuation">(</span>courseName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Checks if there is a <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a> favorite for a given course.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="785585924%2FFunctions%2F492899073" anchor-label="checkSustainability" id="785585924%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/check-sustainability.html"><span>check</span><wbr></wbr><span><span>Sustainability</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="785585924%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/check-sustainability.html"><span class="token function">checkSustainability</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Checks if the current main course is also a chosen one. If not id deletes the current main course.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1936886459%2FFunctions%2F492899073" anchor-label="clear" id="-1936886459%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#-1936886459%2FFunctions%2F492899073"><span><span>clear</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1936886459%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/MainThread.html"><span class="token annotation">MainThread</span></a></div></div><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-start-view-model/index.html#-1936886459%2FFunctions%2F492899073"><span class="token function">clear</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1503263707%2FFunctions%2F492899073" anchor-label="createCourse" id="-1503263707%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/create-course.html"><span>create</span><wbr></wbr><span><span>Course</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1503263707%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/create-course.html"><span class="token function">createCourse</span></a><span class="token punctuation">(</span>jsonCourse<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-g-s-o-n-course/index.html">GSONCourse</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a new <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a> from a <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-g-s-o-n-course/index.html">GSONCourse</a>.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2027370028%2FFunctions%2F492899073" anchor-label="createFaculty" id="-2027370028%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/create-faculty.html"><span>create</span><wbr></wbr><span><span>Faculty</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2027370028%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/create-faculty.html"><span class="token function">createFaculty</span></a><span class="token punctuation">(</span>json<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/org/json/JSONObject.html">JSONObject</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a new <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a> from a <a href="https://developer.android.com/reference/kotlin/org/json/JSONObject.html">JSONObject</a>.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1628959592%2FFunctions%2F492899073" anchor-label="createTestPlanEntry" id="-1628959592%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/create-test-plan-entry.html"><span>create</span><wbr></wbr><span>Test</span><wbr></wbr><span>Plan</span><wbr></wbr><span><span>Entry</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1628959592%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/create-test-plan-entry.html"><span class="token function">createTestPlanEntry</span></a><span class="token punctuation">(</span>entry<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-g-s-o-n-entry/index.html">GSONEntry</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Creates a new <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a> from a <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-g-s-o-n-entry/index.html">GSONEntry</a>.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-612078643%2FFunctions%2F492899073" anchor-label="deleteAllEntries" id="-612078643%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/delete-all-entries.html"><span>delete</span><wbr></wbr><span>All</span><wbr></wbr><span><span>Entries</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-612078643%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/delete-all-entries.html"><span class="token function">deleteAllEntries</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Deletes all <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a>-Objects from the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-72478613%2FFunctions%2F492899073" anchor-label="deleteAllFromGoogleCalendar" id="-72478613%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/delete-all-from-google-calendar.html"><span>delete</span><wbr></wbr><span>All</span><wbr></wbr><span>From</span><wbr></wbr><span>Google</span><wbr></wbr><span><span>Calendar</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-72478613%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/delete-all-from-google-calendar.html"><span class="token function">deleteAllFromGoogleCalendar</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Deletes all events currently stored in the Calendar.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-263015834%2FFunctions%2F492899073" anchor-label="deleteEntries" id="-263015834%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/delete-entries.html"><span>delete</span><wbr></wbr><span><span>Entries</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-263015834%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/delete-entries.html"><span class="token function">deleteEntries</span></a><span class="token punctuation">(</span>entries<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Deletes a list of <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a>-Objects from the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1850238336%2FFunctions%2F492899073" anchor-label="deleteFromCalendar" id="1850238336%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/delete-from-calendar.html"><span>delete</span><wbr></wbr><span>From</span><wbr></wbr><span><span>Calendar</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1850238336%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/delete-from-calendar.html"><span class="token function">deleteFromCalendar</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Deletes an event from the Calendar.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/delete-from-calendar.html"><span class="token function">deleteFromCalendar</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span>ids<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Deletes a list of events from the Calendar.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-656452632%2FFunctions%2F492899073" anchor-label="deleteMainCourse" id="-656452632%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/delete-main-course.html"><span>delete</span><wbr></wbr><span>Main</span><wbr></wbr><span><span>Course</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-656452632%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/delete-main-course.html"><span class="token function">deleteMainCourse</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="502488425%2FFunctions%2F492899073" anchor-label="fetchCourses" id="502488425%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/fetch-courses.html"><span>fetch</span><wbr></wbr><span><span>Courses</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="502488425%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/fetch-courses.html"><span class="token function">fetchCourses</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Retrieves all courses from the remote database via the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-retrofit-interface/index.html">com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitInterface</a> and inserts them into the local room database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1332469871%2FFunctions%2F492899073" anchor-label="fetchEntries" id="-1332469871%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/fetch-entries.html"><span>fetch</span><wbr></wbr><span><span>Entries</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1332469871%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/fetch-entries.html"><span class="token function">fetchEntries</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Retrieves all entries for the current period from the remote database via the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-retrofit-interface/index.html">com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitInterface</a> and inserts them into the local room database. Gets the needed information for the current period via the from the shared preferences.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2000411999%2FFunctions%2F492899073" anchor-label="fetchFaculties" id="2000411999%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/fetch-faculties.html"><span>fetch</span><wbr></wbr><span><span>Faculties</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2000411999%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/fetch-faculties.html"><span class="token function">fetchFaculties</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Retrieves all faculties from the remote database via the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-retrofit-interface/index.html">com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.RetrofitInterface</a> and inserts them into the local room database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-832653498%2FFunctions%2F492899073" anchor-label="getAllCourses" id="-832653498%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-all-courses.html"><span>get</span><wbr></wbr><span>All</span><wbr></wbr><span><span>Courses</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-832653498%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-all-courses.html"><span class="token function">getAllCourses</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns all courses from the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1696759283%2FFunctions%2F492899073" anchor-label="getApplication" id="1696759283%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#1696759283%2FFunctions%2F492899073"><span>get</span><wbr></wbr><span><span>Application</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1696759283%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation">@</span><a href="https://developer.android.com/reference/kotlin/androidx/annotation/NonNull.html"><span class="token annotation">NonNull</span></a></div></div><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-start-view-model/index.html#1696759283%2FFunctions%2F492899073">T</a><span class="token operator"> : </span><a href="https://developer.android.com/reference/kotlin/android/app/Application.html">Application</a><span class="token operator">&gt; </span><a href="../-start-view-model/index.html#1696759283%2FFunctions%2F492899073"><span class="token function">getApplication</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-start-view-model/index.html#1696759283%2FFunctions%2F492899073">T</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1934832383%2FFunctions%2F492899073" anchor-label="getBackgroundUpdates" id="-1934832383%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-background-updates.html"><span>get</span><wbr></wbr><span>Background</span><wbr></wbr><span><span>Updates</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1934832383%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-background-updates.html"><span class="token function">getBackgroundUpdates</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the setting for background updates</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-782238484%2FFunctions%2F492899073" anchor-label="getCalendarId" id="-782238484%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-calendar-id.html"><span>get</span><wbr></wbr><span>Calendar</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-782238484%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-calendar-id.html"><span class="token function">getCalendarId</span></a><span class="token punctuation">(</span>entry<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns the Calendar id for a given <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a> from the shared preferences</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1147214877%2FFunctions%2F492899073" anchor-label="getCalendarIds" id="-1147214877%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-calendar-ids.html"><span>get</span><wbr></wbr><span>Calendar</span><wbr></wbr><span><span>Ids</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1147214877%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-calendar-ids.html"><span class="token function">getCalendarIds</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-list/index.html">MutableList</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">&gt;</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns a list of all ids for Events currently stored in the Calendar that are saved in the shared preferences.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1315096654%2FFunctions%2F492899073" anchor-label="getCalendarInsertionType" id="-1315096654%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-calendar-insertion-type.html"><span>get</span><wbr></wbr><span>Calendar</span><wbr></wbr><span>Insertion</span><wbr></wbr><span><span>Type</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1315096654%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-calendar-insertion-type.html"><span class="token function">getCalendarInsertionType</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.utils/-calendar-i-o/-insertion-type/index.html">CalendarIO.InsertionType</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the setting for the insertion type for each calendar entry</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="934461796%2FFunctions%2F492899073" anchor-label="getCalendarSync" id="934461796%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-calendar-sync.html"><span>get</span><wbr></wbr><span>Calendar</span><wbr></wbr><span><span>Sync</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="934461796%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-calendar-sync.html"><span class="token function">getCalendarSync</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the setting for calendar synchronization</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2041726162%2FFunctions%2F492899073" anchor-label="getChosenDarkMode" id="2041726162%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-chosen-dark-mode.html"><span>get</span><wbr></wbr><span>Chosen</span><wbr></wbr><span>Dark</span><wbr></wbr><span><span>Mode</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2041726162%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-chosen-dark-mode.html"><span class="token function">getChosenDarkMode</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the setting for the darkmode</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1644718219%2FFunctions%2F492899073" anchor-label="getChosenThemeId" id="1644718219%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-chosen-theme-id.html"><span>get</span><wbr></wbr><span>Chosen</span><wbr></wbr><span>Theme</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1644718219%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-chosen-theme-id.html"><span class="token function">getChosenThemeId</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the id of the selected theme</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-301190476%2FFunctions%2F492899073" anchor-label="getCourseById" id="-301190476%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-course-by-id.html"><span>get</span><wbr></wbr><span>Course</span><wbr></wbr><span>By</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-301190476%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-course-by-id.html"><span class="token function">getCourseById</span></a><span class="token punctuation">(</span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns one course for a given Id</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1276405757%2FFunctions%2F492899073" anchor-label="getCourseId" id="1276405757%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-course-id.html"><span>get</span><wbr></wbr><span>Course</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1276405757%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-course-id.html"><span class="token function">getCourseId</span></a><span class="token punctuation">(</span>courseName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns the course id for a given course name.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1411880727%2FFunctions%2F492899073" anchor-label="getCoursesByFacultyId" id="1411880727%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-courses-by-faculty-id.html"><span>get</span><wbr></wbr><span>Courses</span><wbr></wbr><span>By</span><wbr></wbr><span>Faculty</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1411880727%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-courses-by-faculty-id.html"><span class="token function">getCoursesByFacultyId</span></a><span class="token punctuation">(</span>facultyId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Get all courses for one <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a>.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-538907474%2FFunctions%2F492899073" anchor-label="getCurrentPeriod" id="-538907474%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-current-period.html"><span>get</span><wbr></wbr><span>Current</span><wbr></wbr><span><span>Period</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-538907474%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-current-period.html"><span class="token function">getCurrentPeriod</span></a><span class="token punctuation">(</span>periodObjects<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/org/json/JSONArray.html">JSONArray</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/org/json/JSONObject.html">JSONObject</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Checks a list of possible periods for the latest one and returns it.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-653052139%2FFunctions%2F492899073" anchor-label="getDate" id="-653052139%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-date.html"><span>get</span><wbr></wbr><span><span>Date</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-653052139%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">private </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-date.html"><span class="token function">getDate</span></a><span class="token punctuation">(</span>dateResponse<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Return a formatted date as String to save in the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/date.html">TestPlanEntry.date</a>-Paramater.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1003748916%2FFunctions%2F492899073" anchor-label="getEndDate" id="1003748916%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-end-date.html"><span>get</span><wbr></wbr><span>End</span><wbr></wbr><span><span>Date</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1003748916%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-end-date.html"><span class="token function">getEndDate</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the end date of the period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-151378461%2FFunctions%2F492899073" anchor-label="getEndDateString" id="-151378461%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-end-date-string.html"><span>get</span><wbr></wbr><span>End</span><wbr></wbr><span>Date</span><wbr></wbr><span><span>String</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-151378461%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-end-date-string.html"><span class="token function">getEndDateString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the end date of the period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="234409661%2FFunctions%2F492899073" anchor-label="getFacultyById" id="234409661%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-faculty-by-id.html"><span>get</span><wbr></wbr><span>Faculty</span><wbr></wbr><span>By</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="234409661%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-faculty-by-id.html"><span class="token function">getFacultyById</span></a><span class="token punctuation">(</span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a> for a given Id.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1868882037%2FFunctions%2F492899073" anchor-label="getFavorites" id="-1868882037%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-favorites.html"><span>get</span><wbr></wbr><span><span>Favorites</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1868882037%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-favorites.html"><span class="token function">getFavorites</span></a><span class="token punctuation">(</span>favorite<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns a list of <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a>-Objects with a given favorite-state.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="601050441%2FFunctions%2F492899073" anchor-label="getFavoritesByCourseName" id="601050441%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-favorites-by-course-name.html"><span>get</span><wbr></wbr><span>Favorites</span><wbr></wbr><span>By</span><wbr></wbr><span>Course</span><wbr></wbr><span><span>Name</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="601050441%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-favorites-by-course-name.html"><span class="token function">getFavoritesByCourseName</span></a><span class="token punctuation">(</span>course<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span>favorite<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token operator">&gt;</span><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns all <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a>-Objects for a given course name with the given favorite state.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1378182501%2FFunctions%2F492899073" anchor-label="getIDs" id="1378182501%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-i-ds.html"><span>get</span><wbr></wbr><span><span>IDs</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1378182501%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-i-ds.html"><span class="token function">getIDs</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Return the ids of all choosen courses in the Room-Database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1503944110%2FFunctions%2F492899073" anchor-label="getMainCourseId" id="1503944110%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-main-course-id.html"><span>get</span><wbr></wbr><span>Main</span><wbr></wbr><span>Course</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1503944110%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-main-course-id.html"><span class="token function">getMainCourseId</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the course, selected as the maincourse</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1018392334%2FFunctions%2F492899073" anchor-label="getNotificationSounds" id="1018392334%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-notification-sounds.html"><span>get</span><wbr></wbr><span>Notification</span><wbr></wbr><span><span>Sounds</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1018392334%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-notification-sounds.html"><span class="token function">getNotificationSounds</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the setting for notification sounds for the background worker</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="590269712%2FFunctions%2F492899073" anchor-label="getPeriodTerm" id="590269712%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-period-term.html"><span>get</span><wbr></wbr><span>Period</span><wbr></wbr><span><span>Term</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="590269712%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-period-term.html"><span class="token function">getPeriodTerm</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the term of the current period (SoSe or WiSe)</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2007718603%2FFunctions%2F492899073" anchor-label="getPeriodTermin" id="2007718603%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-period-termin.html"><span>get</span><wbr></wbr><span>Period</span><wbr></wbr><span><span>Termin</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2007718603%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-period-termin.html"><span class="token function">getPeriodTermin</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="748340831%2FFunctions%2F492899073" anchor-label="getPeriodYear" id="748340831%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-period-year.html"><span>get</span><wbr></wbr><span>Period</span><wbr></wbr><span><span>Year</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="748340831%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-period-year.html"><span class="token function">getPeriodYear</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the year of the current period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-605342364%2FFunctions%2F492899073" anchor-label="getSelectedCalendar" id="-605342364%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-selected-calendar.html"><span>get</span><wbr></wbr><span>Selected</span><wbr></wbr><span><span>Calendar</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-605342364%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-selected-calendar.html"><span class="token function">getSelectedCalendar</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns the id of the selected Calendar from the shared preferences</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="412500857%2FFunctions%2F492899073" anchor-label="getSelectedFacultyId" id="412500857%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-selected-faculty-id.html"><span>get</span><wbr></wbr><span>Selected</span><wbr></wbr><span>Faculty</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="412500857%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-selected-faculty-id.html"><span class="token function">getSelectedFacultyId</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the faculty, selected by the user</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1614857229%2FFunctions%2F492899073" anchor-label="getStartDate" id="1614857229%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-start-date.html"><span>get</span><wbr></wbr><span>Start</span><wbr></wbr><span><span>Date</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1614857229%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-start-date.html"><span class="token function">getStartDate</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the start date of the period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="489121020%2FFunctions%2F492899073" anchor-label="getStartDateString" id="489121020%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-start-date-string.html"><span>get</span><wbr></wbr><span>Start</span><wbr></wbr><span>Date</span><wbr></wbr><span><span>String</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="489121020%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-start-date-string.html"><span class="token function">getStartDateString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the start date of the period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-215894976%2FFunctions%2F492899073" anchor-label="getTag" id="-215894976%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#-215894976%2FFunctions%2F492899073"><span>get</span><wbr></wbr><span><span>Tag</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-215894976%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-start-view-model/index.html#-215894976%2FFunctions%2F492899073">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="../-start-view-model/index.html#-215894976%2FFunctions%2F492899073"><span class="token function">getTag</span></a><span class="token punctuation">(</span>p0<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-start-view-model/index.html#-215894976%2FFunctions%2F492899073">T</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1710745086%2FFunctions%2F492899073" anchor-label="getUpdateIntervalTimeHour" id="1710745086%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-update-interval-time-hour.html"><span>get</span><wbr></wbr><span>Update</span><wbr></wbr><span>Interval</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Hour</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1710745086%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-update-interval-time-hour.html"><span class="token function">getUpdateIntervalTimeHour</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the hour component of the update interval for the background worker</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1473415538%2FFunctions%2F492899073" anchor-label="getUpdateIntervalTimeMinute" id="-1473415538%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-update-interval-time-minute.html"><span>get</span><wbr></wbr><span>Update</span><wbr></wbr><span>Interval</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Minute</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1473415538%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/get-update-interval-time-minute.html"><span class="token function">getUpdateIntervalTimeMinute</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Gets the minute component of the update interval for the background worker</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-21166366%2FFunctions%2F492899073" anchor-label="getUuid" id="-21166366%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/get-uuid.html"><span>get</span><wbr></wbr><span><span>Uuid</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-21166366%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">suspend </span><span class="token keyword">fun </span><a href="../-base-view-model/get-uuid.html"><span class="token function">getUuid</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-uuid/index.html">Uuid</a><span class="token operator">?</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Returns the <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-uuid/index.html">Uuid</a> from the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1012059258%2FFunctions%2F492899073" anchor-label="insertCourses" id="1012059258%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/insert-courses.html"><span>insert</span><wbr></wbr><span><span>Courses</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1012059258%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-courses.html"><span class="token function">insertCourses</span></a><span class="token punctuation">(</span>courses<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Inserts a list of <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a>-Objects into the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1553793861%2FFunctions%2F492899073" anchor-label="insertCoursesJSON" id="1553793861%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/insert-courses-j-s-o-n.html"><span>insert</span><wbr></wbr><span>Courses</span><wbr></wbr><span><span>JSON</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1553793861%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-courses-j-s-o-n.html"><span class="token function">insertCoursesJSON</span></a><span class="token punctuation">(</span>jsonCourses<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-g-s-o-n-course/index.html">GSONCourse</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Inserts a list of <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-course/index.html">Course</a>-Objects into the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1331432912%2FFunctions%2F492899073" anchor-label="insertEntry" id="-1331432912%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/insert-entry.html"><span>insert</span><wbr></wbr><span><span>Entry</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1331432912%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-entry.html"><span class="token function">insertEntry</span></a><span class="token punctuation">(</span>jsonResponse<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit/-g-s-o-n-entry/index.html">GSONEntry</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-entry.html"><span class="token function">insertEntry</span></a><span class="token punctuation">(</span>testPlanEntry<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Inserts a new <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a> into the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1483564227%2FFunctions%2F492899073" anchor-label="insertFaculty" id="1483564227%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/insert-faculty.html"><span>insert</span><wbr></wbr><span><span>Faculty</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1483564227%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-faculty.html"><span class="token function">insertFaculty</span></a><span class="token punctuation">(</span>faculty<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Inserts a <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a> into the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2011733808%2FFunctions%2F492899073" anchor-label="insertIntoCalendar" id="-2011733808%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/insert-into-calendar.html"><span>insert</span><wbr></wbr><span>Into</span><wbr></wbr><span><span>Calendar</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2011733808%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-into-calendar.html"><span class="token function">insertIntoCalendar</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span>entry<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Inserts a <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a> into the Calendar. On success it saves the id for this entry in the shared preferences.</p></div><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/insert-into-calendar.html"><span class="token function">insertIntoCalendar</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span>entries<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token operator">&gt;</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Inserts a list of <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a>-Objects into the Calendar. On success it saves the id for each entry in the shared preferences.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1930136507%2FFunctions%2F492899073" anchor-label="onCleared" id="-1930136507%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#-1930136507%2FFunctions%2F492899073"><span>on</span><wbr></wbr><span><span>Cleared</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1930136507%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-start-view-model/index.html#-1930136507%2FFunctions%2F492899073"><span class="token function">onCleared</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1779365778%2FFunctions%2F492899073" anchor-label="setBackgroundUpdates" id="1779365778%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-background-updates.html"><span>set</span><wbr></wbr><span>Background</span><wbr></wbr><span><span>Updates</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1779365778%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-background-updates.html"><span class="token function">setBackgroundUpdates</span></a><span class="token punctuation">(</span>status<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the setting for background updates</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1987584799%2FFunctions%2F492899073" anchor-label="setCalendarInserionType" id="-1987584799%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-calendar-inserion-type.html"><span>set</span><wbr></wbr><span>Calendar</span><wbr></wbr><span>Inserion</span><wbr></wbr><span><span>Type</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1987584799%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-calendar-inserion-type.html"><span class="token function">setCalendarInserionType</span></a><span class="token punctuation">(</span>insertionType<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.utils/-calendar-i-o/-insertion-type/index.html">CalendarIO.InsertionType</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the setting for the insertion type for each calendar entry</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="976771357%2FFunctions%2F492899073" anchor-label="setCalendarSync" id="976771357%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-calendar-sync.html"><span>set</span><wbr></wbr><span>Calendar</span><wbr></wbr><span><span>Sync</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="976771357%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-calendar-sync.html"><span class="token function">setCalendarSync</span></a><span class="token punctuation">(</span>sync<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the setting for calendar synchronization</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1256208139%2FFunctions%2F492899073" anchor-label="setChosenDarkMode" id="1256208139%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-chosen-dark-mode.html"><span>set</span><wbr></wbr><span>Chosen</span><wbr></wbr><span>Dark</span><wbr></wbr><span><span>Mode</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1256208139%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-chosen-dark-mode.html"><span class="token function">setChosenDarkMode</span></a><span class="token punctuation">(</span>darkmode<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the setting for the darkmode</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="578737525%2FFunctions%2F492899073" anchor-label="setChosenThemeId" id="578737525%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-chosen-theme-id.html"><span>set</span><wbr></wbr><span>Chosen</span><wbr></wbr><span>Theme</span><wbr></wbr><span><span>Id</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="578737525%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-chosen-theme-id.html"><span class="token function">setChosenThemeId</span></a><span class="token punctuation">(</span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the id of the selected theme</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1070929966%2FFunctions%2F492899073" anchor-label="setEndDate" id="-1070929966%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-end-date.html"><span>set</span><wbr></wbr><span>End</span><wbr></wbr><span><span>Date</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1070929966%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-end-date.html"><span class="token function">setEndDate</span></a><span class="token punctuation">(</span>date<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the end date of the period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-291661017%2FFunctions%2F492899073" anchor-label="setMainCourse" id="-291661017%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-main-course.html"><span>set</span><wbr></wbr><span>Main</span><wbr></wbr><span><span>Course</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-291661017%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-main-course.html"><span class="token function">setMainCourse</span></a><span class="token punctuation">(</span>courseId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the course, selected as the maincourse</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-2137100729%2FFunctions%2F492899073" anchor-label="setNotificationSounds" id="-2137100729%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-notification-sounds.html"><span>set</span><wbr></wbr><span>Notification</span><wbr></wbr><span><span>Sounds</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2137100729%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-notification-sounds.html"><span class="token function">setNotificationSounds</span></a><span class="token punctuation">(</span>status<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the setting for notification sounds for the background worker</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="1904501504%2FFunctions%2F492899073" anchor-label="setPeriodTerm" id="1904501504%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-period-term.html"><span>set</span><wbr></wbr><span>Period</span><wbr></wbr><span><span>Term</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1904501504%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-period-term.html"><span class="token function">setPeriodTerm</span></a><span class="token punctuation">(</span>periode<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the term of the current period (SoSe or WiSe)</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-539874779%2FFunctions%2F492899073" anchor-label="setPeriodTermin" id="-539874779%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-period-termin.html"><span>set</span><wbr></wbr><span>Period</span><wbr></wbr><span><span>Termin</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-539874779%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-period-termin.html"><span class="token function">setPeriodTermin</span></a><span class="token punctuation">(</span>termin<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1165606383%2FFunctions%2F492899073" anchor-label="setPeriodYear" id="-1165606383%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-period-year.html"><span>set</span><wbr></wbr><span>Period</span><wbr></wbr><span><span>Year</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1165606383%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-period-year.html"><span class="token function">setPeriodYear</span></a><span class="token punctuation">(</span>year<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the year of the current period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="601202273%2FFunctions%2F492899073" anchor-label="setSelectedCalendar" id="601202273%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-selected-calendar.html"><span>set</span><wbr></wbr><span>Selected</span><wbr></wbr><span><span>Calendar</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="601202273%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-selected-calendar.html"><span class="token function">setSelectedCalendar</span></a><span class="token punctuation">(</span>id<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Saves the id of the selected Calendar into the shared preferences.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1204036269%2FFunctions%2F492899073" anchor-label="setSelectedFaculty" id="-1204036269%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-selected-faculty.html"><span>set</span><wbr></wbr><span>Selected</span><wbr></wbr><span><span>Faculty</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1204036269%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-selected-faculty.html"><span class="token function">setSelectedFaculty</span></a><span class="token punctuation">(</span>faculty<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-faculty/index.html">Faculty</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-selected-faculty.html"><span class="token function">setSelectedFaculty</span></a><span class="token punctuation">(</span>facultyId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the faculty, selected by the user</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-345363733%2FFunctions%2F492899073" anchor-label="setStartDate" id="-345363733%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-start-date.html"><span>set</span><wbr></wbr><span>Start</span><wbr></wbr><span><span>Date</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-345363733%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-start-date.html"><span class="token function">setStartDate</span></a><span class="token punctuation">(</span>date<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Date.html">Date</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the start date of the period</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1567230750%2FFunctions%2F492899073" anchor-label="setTagIfAbsent" id="-1567230750%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-start-view-model/index.html#-1567230750%2FFunctions%2F492899073"><span>set</span><wbr></wbr><span>Tag</span><wbr></wbr><span>If</span><wbr></wbr><span><span>Absent</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1567230750%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><span class="token operator">&lt;</span><span class="token keyword"></span><a href="../-start-view-model/index.html#-1567230750%2FFunctions%2F492899073">T</a><span class="token operator"> : </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt; </span><a href="../-start-view-model/index.html#-1567230750%2FFunctions%2F492899073"><span class="token function">setTagIfAbsent</span></a><span class="token punctuation">(</span>p0<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span>p1<span class="token operator">: </span><a href="../-start-view-model/index.html#-1567230750%2FFunctions%2F492899073">T</a><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-start-view-model/index.html#-1567230750%2FFunctions%2F492899073">T</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-212172144%2FFunctions%2F492899073" anchor-label="setUpdateIntervalTimeHour" id="-212172144%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-update-interval-time-hour.html"><span>set</span><wbr></wbr><span>Update</span><wbr></wbr><span>Interval</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Hour</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-212172144%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-update-interval-time-hour.html"><span class="token function">setUpdateIntervalTimeHour</span></a><span class="token punctuation">(</span>hour<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the hour component of the update interval for the background worker</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-952085984%2FFunctions%2F492899073" anchor-label="setUpdateIntervalTimeMinute" id="-952085984%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/set-update-interval-time-minute.html"><span>set</span><wbr></wbr><span>Update</span><wbr></wbr><span>Interval</span><wbr></wbr><span>Time</span><wbr></wbr><span><span>Minute</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-952085984%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/set-update-interval-time-minute.html"><span class="token function">setUpdateIntervalTimeMinute</span></a><span class="token punctuation">(</span>minute<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Sets the minute component of the update interval for the background worker</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-186518073%2FFunctions%2F492899073" anchor-label="updateCalendar" id="-186518073%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/update-calendar.html"><span>update</span><wbr></wbr><span><span>Calendar</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-186518073%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/update-calendar.html"><span class="token function">updateCalendar</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Updates the google calendar with the new favorites.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1664823037%2FFunctions%2F492899073" anchor-label="updateCourse" id="-1664823037%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/update-course.html"><span>update</span><wbr></wbr><span><span>Course</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1664823037%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/update-course.html"><span class="token function">updateCourse</span></a><span class="token punctuation">(</span>courseName<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span>chosen<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Updates if a course is chosen or not.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="-1356970013%2FFunctions%2F492899073" anchor-label="updateDatabase" id="-1356970013%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/update-database.html"><span>update</span><wbr></wbr><span><span>Database</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1356970013%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/update-database.html"><span class="token function">updateDatabase</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Updates all data in the local database.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2080340444%2FFunctions%2F492899073" anchor-label="updateEntryFavorite" id="2080340444%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/update-entry-favorite.html"><span>update</span><wbr></wbr><span>Entry</span><wbr></wbr><span><span>Favorite</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2080340444%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/update-entry-favorite.html"><span class="token function">updateEntryFavorite</span></a><span class="token punctuation">(</span>context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span>favorite<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span>entry<span class="token operator">: </span><a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Updates if a <a href="../../com.fachhochschulebib.fhb.pruefungsplaner.model.room/-test-plan-entry/index.html">TestPlanEntry</a> is a favorite or not. Also syncs the calendar if necessary.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+<a data-name="2122545821%2FFunctions%2F492899073" anchor-label="updatePeriod" id="2122545821%2FFunctions%2F492899073" data-filterable-set=":app:dokkaHtml/release"></a>
+                <div class="table-row" data-filterable-current=":app:dokkaHtml/release" data-filterable-set=":app:dokkaHtml/release">
+                  <div class="main-subrow keyValue ">
+                    <div class=""><span class="inline-flex"><a href="../-base-view-model/update-period.html"><span>update</span><wbr></wbr><span><span>Period</span></span></a><span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2122545821%2FFunctions%2F492899073"></span>
+                          <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                        </span></span></div>
+                    <div>
+                      <div class="title">
+                        <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable=":app:dokkaHtml/release"><div class="symbol monospace"><span class="token keyword"></span><span class="token keyword">fun </span><a href="../-base-view-model/update-period.html"><span class="token function">updatePeriod</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><div class="brief "><p class="paragraph">Checks for a new exam period and updates the exam-data if necessary.</p></div></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer"><span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span></div>
+      </div>
+    </div>
+  </body>
+</html>
+
