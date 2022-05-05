@@ -72,7 +72,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         fetchFaculties()
         fetchCourses()
         checkSustainability()
-        updatePeriod()
+        updatePeriod(application.applicationContext)
     }
 
 
@@ -181,7 +181,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
      */
-    fun updatePeriod() {
+    fun updatePeriod(context: Context) {
         viewModelScope.launch(coroutineExceptionHandler) {
             val examPeriods = repository.fetchExamPeriods()
             val currentPeriod= examPeriods?.let { getCurrentPeriod(it) }
@@ -200,7 +200,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
             //Delete all entries if a new plan is available
             if(startDate.after(getEndDate())){
-                deleteAllEntries()
+                deleteAllEntries(context)
             }
 
             setStartDate(startDate.time)
@@ -398,8 +398,9 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun deleteAllEntries() {
+    open fun deleteAllEntries(context: Context) {
         viewModelScope.launch {
+            deleteAllFromCalendar(context)
             repository.deleteAllEntries()
         }
     }
@@ -1064,7 +1065,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun deleteAllFromGoogleCalendar(context: Context){
+    fun deleteAllFromCalendar(context: Context){
         getCalendarIds().forEach {
             deleteFromCalendar(context,it)
         }

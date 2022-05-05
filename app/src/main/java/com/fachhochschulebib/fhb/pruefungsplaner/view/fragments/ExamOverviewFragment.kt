@@ -121,7 +121,7 @@ class ExamOverviewFragment() : MainActivityFragment() {
         }
         fragment_exam_overview_swipe_refresh_layout.setDistanceToTriggerSync(800)
         fragment_exam_overview_swipe_refresh_layout.setOnRefreshListener {
-            viewModel.updatePeriod()
+            viewModel.updatePeriod(requireContext())
             viewModel.updateDataFromServer()
             fragment_exam_overview_swipe_refresh_layout.isRefreshing = false
         }

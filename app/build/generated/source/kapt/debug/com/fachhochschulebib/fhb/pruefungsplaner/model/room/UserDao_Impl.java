@@ -761,7 +761,7 @@ public final class UserDao_Impl implements UserDao {
 
   @Override
   public LiveData<List<TestPlanEntry>> getAllFavoritesLiveData() {
-    final String _sql = "SELECT * FROM TestPlanEntry WHERE favorite = 1 ORDER BY date, termin, module";
+    final String _sql = "SELECT * FROM TestPlanEntry WHERE Favorite = 1 ORDER BY Date, termin, Module";
     final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 0);
     return __db.getInvalidationTracker().createLiveData(new String[]{"TestPlanEntry"}, false, new Callable<List<TestPlanEntry>>() {
       @Override

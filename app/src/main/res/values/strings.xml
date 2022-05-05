@@ -38,7 +38,7 @@
     <string name="settings_snackbar_restart">Neustarten</string>
 
     <string name="fragment_settings_alertdialog_delete_favorites_title">Favoriten löschen</string>
-    <string name="fragment_settings_alertdialog_delete_favorites_message">Sollen alle %1$d Favoriten gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_favorites_message">Sollen alle Favoriten gelöscht werden?</string>
     <string name="fragment_settings_alertdialog_delete_favorites_positive_button">Löschen</string>
     <string name="fragment_settings_alertdialog_delete_favorites_negative_button">Cancel</string>
     <string name="fragment_settings_alertdialog_update_calendar_title">Kalendereinträge aktualisieren</string>
@@ -50,7 +50,7 @@
     <string name="fragment_settings_alertdialog_delete_calendar_positive_button">Ja</string>
     <string name="fragment_settings_alertdialog_delete_calendar_negative_button">Nein</string>
     <string name="fragment_settings_alertdialog_delete_database_title">Datenbank löschen</string>
-    <string name="fragment_settings_alertdialog_delete_database_message">Sollen alle %1$d Einträge gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_database_message">Sollen alle Einträge gelöscht werden?</string>
     <string name="fragment_settings_alertdialog_delete_database_positive_button">Löschen</string>
     <string name="fragment_settings_alertdialog_delete_database_negative_button">Cancel</string>
 

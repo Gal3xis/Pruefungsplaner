@@ -180,7 +180,7 @@ public abstract interface UserDao {
      * @since 1.6
      */
     @org.jetbrains.annotations.NotNull()
-    @androidx.room.Query(value = "SELECT * FROM TestPlanEntry WHERE favorite = 1 ORDER BY date, termin, module")
+    @androidx.room.Query(value = "SELECT * FROM TestPlanEntry WHERE Favorite = 1 ORDER BY Date, termin, Module")
     public abstract androidx.lifecycle.LiveData<java.util.List<com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry>> getAllFavoritesLiveData();
     
     /**

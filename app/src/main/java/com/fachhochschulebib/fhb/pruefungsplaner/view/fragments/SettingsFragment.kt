@@ -195,10 +195,9 @@ class SettingsFragment : MainActivityFragment() {
      */
     private fun initDeleteFavoritesButton() {
         fragment_settings_button_delete_favorites.setOnClickListener {
-            val count = viewModel.liveFavorites.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.fragment_settings_alertdialog_delete_favorites_title))
-                .setMessage(String.format(getString(R.string.fragment_settings_alertdialog_delete_favorites_message),count))
+                .setMessage(getString(R.string.fragment_settings_alertdialog_delete_favorites_message))
                 .setPositiveButton(getString(R.string.fragment_settings_alertdialog_delete_favorites_positive_button)) { _, _ ->
                     viewModel.deleteAllFavorites(requireContext())
                     Toast.makeText(
@@ -267,12 +266,11 @@ class SettingsFragment : MainActivityFragment() {
      */
     private fun initDeleteDatabaseButton() {
         fragment_settings_button_delete_database.setOnClickListener {
-            val count = viewModel.liveEntries.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
                 .setTitle(getString(R.string.fragment_settings_alertdialog_delete_database_title))
-                .setMessage(String.format(getString(R.string.fragment_settings_alertdialog_delete_database_message),count))
+                .setMessage(getString(R.string.fragment_settings_alertdialog_delete_database_message))
                 .setPositiveButton(getString(R.string.fragment_settings_alertdialog_delete_database_positive_button)) { _, _ ->
-                    viewModel.deleteAllEntries()
+                    viewModel.deleteAllEntries(requireContext())
                     Toast.makeText(
                         requireContext(),
                         requireActivity().getString(R.string.delete_db),

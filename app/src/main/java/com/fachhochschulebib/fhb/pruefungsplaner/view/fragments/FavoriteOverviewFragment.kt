@@ -123,7 +123,7 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         }
         fragment_exam_overview_swipe_refresh_layout.setDistanceToTriggerSync(800)
         fragment_exam_overview_swipe_refresh_layout.setOnRefreshListener {
-            viewModel.updatePeriod()
+            viewModel.updatePeriod(requireContext())
             viewModel.updateDatabase()
             fragment_exam_overview_swipe_refresh_layout.isRefreshing = false
         }

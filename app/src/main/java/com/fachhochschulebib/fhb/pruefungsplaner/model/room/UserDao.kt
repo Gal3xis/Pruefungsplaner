@@ -155,7 +155,7 @@ interface UserDao {
      * @author Alexander Lange
      * @since 1.6
      */
-    @Query("SELECT * FROM TestPlanEntry WHERE favorite = 1 ORDER BY date, termin, module")
+    @Query("SELECT * FROM TestPlanEntry WHERE Favorite = 1 ORDER BY Date, termin, Module")
     fun getAllFavoritesLiveData():LiveData<List<TestPlanEntry>?>
 
     /**

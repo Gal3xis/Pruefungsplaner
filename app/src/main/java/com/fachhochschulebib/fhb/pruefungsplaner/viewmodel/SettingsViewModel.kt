@@ -34,7 +34,7 @@ class SettingsViewModel(application: Application) : BaseViewModel(application) {
      */
     fun setCalendarSync(context: Context,sync: Boolean){
         setCalendarSync(sync)
-        if(sync) updateCalendar(context) else deleteAllFromGoogleCalendar(context)
+        if(sync) updateCalendar(context) else deleteAllFromCalendar(context)
     }
 
 

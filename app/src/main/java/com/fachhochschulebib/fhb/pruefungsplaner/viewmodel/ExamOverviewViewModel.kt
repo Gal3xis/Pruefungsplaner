@@ -22,7 +22,7 @@ class ExamOverviewViewModel(application: Application) : BaseViewModel(applicatio
 
 
     init {
-        updatePeriod()
+        updatePeriod(application.applicationContext)
         updateDataFromServer()
     }
 
