@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.helper
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
@@ -18,7 +19,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorit exams.
+ * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorite exams.
  * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
  * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
  *
@@ -36,7 +37,7 @@ class RecyclerViewFavoriteAdapter(
      * Adds an item to the recyclerview.
      *
      * @param[position] The position, where the item needs to be inserted.
-     * @param[item] The item, that needs to be inserted.
+     * @param[entry] The [TestPlanEntry] of the item, that needs to be inserted.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -70,8 +71,8 @@ class RecyclerViewFavoriteAdapter(
     }
 
     /**
-     * Initializes the [ViewHolder] with information of the viewtype. In this case,
-     * passes the examinformation to the UI-Elements.
+     * Initializes the [ViewHolder] with information of the view type. In this case,
+     * passes the exam information to the UI-Elements.
      *
      * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
      * @param[position] The position of the item within the adapter's data set.
@@ -98,13 +99,14 @@ class RecyclerViewFavoriteAdapter(
      * @author Alexander Lange
      * @since 1.6
      */
+    @SuppressLint("NotifyDataSetChanged")
     fun updateContent(entryList: List<TestPlanEntry>) {
         this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
     }
 
     /**
-     * Returns the amount of items in the recyclerview, based on the size of the [moduleAndCourseList].
+     * Returns the amount of items in the recyclerview
      *
      * @return The amount of items in the recyclerview.
      *
@@ -164,42 +166,36 @@ class RecyclerViewFavoriteAdapter(
         private var expansion = layout.findViewById<RelativeLayout>(R.id.layout_favorite_overview_card_layout_details)
 
         /**
-         * Icon that shows, if the [TestPlanEntry] is currently playced in the calendar
+         * Icon that shows, if the [TestPlanEntry] is currently placed in the calendar
          */
         private var iconInCalendar = layout.findViewById<ImageView>(R.id.layout_favorite_overview_card_imageview_icon_in_calendar)
-
-        init {
-            //            ivicon = layout.findViewById<View>(R.id.icon) as ImageView
-//            txtHeader = layout.findViewById<View>(R.id.firstLine) as TextView
-//            txtFooter = layout.findViewById<View>(R.id.secondLine) as TextView
-//            txtSecondScreen = layout.findViewById<View>(R.id.txtSecondscreen) as TextView
-//            txtthirdline = layout.findViewById<View>(R.id.thirdLine) as TextView
-//            layout2 = layout.findViewById<View>(R.id.linearLayout) as LinearLayout
-        }
 
         /**
          * Function to initialize the UI-Elements for a specific [TestPlanEntry].
          *
-         * @param entry The [TestPlanEntry] that contains the data to be displayed in this viewholder.
+         * @param entry The [TestPlanEntry] that contains the data to be displayed in this view holder.
          *
          * @author Alexander Lange
          * @since 1.6
          */
+        @SuppressLint("SetTextI18n")
         fun set(entry: TestPlanEntry) {
-            val dateParser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val dateFormatterDay = SimpleDateFormat("dd.MM.yyyy")
-            val dateFormatterTime = SimpleDateFormat("HH:mm")
+            val dateParser = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val dateFormatterDay = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+            val dateFormatterTime = SimpleDateFormat("HH:mm", Locale.getDefault())
 
             headerModule.text = entry.module
             headerCourse.text = "(${entry.course})"
 
-            val dateStart = dateParser.parse(entry.date)
+            val dateStart = entry.date?.let { dateParser.parse(it) }
             val dateEnd = Calendar.getInstance()
-            dateEnd.time = dateStart
+            if (dateStart != null) {
+                dateEnd.time = dateStart
+            }
             dateEnd.add(Calendar.MINUTE, Utils.getExamDuration(entry.examForm))
             headerDate.text = dateStart?.let { dateFormatterDay.format(it) }
             headerTime.text =
-                "${dateFormatterTime.format(dateStart)}-${dateFormatterTime.format(dateEnd.time)}"
+                "${dateStart?.let { dateFormatterTime.format(it) }}-${dateFormatterTime.format(dateEnd.time)}"
             expandedTextView.text = entry.getString(context)
 
             if (viewModel.getCalendarId(entry) == null) iconInCalendar.setImageResource(R.drawable.icon_favorite_not_in_calendar) else iconInCalendar.setImageResource(
@@ -215,38 +211,6 @@ class RecyclerViewFavoriteAdapter(
                 showContextMenu(entry)
                 true
             }
-
-            /*            name = entry.module
-                txtHeader.text = name
-
-                layout.setOnClickListener {
-                    if (txtSecondScreen.visibility == View.VISIBLE) {
-                        txtSecondScreen.visibility = View.GONE
-                    } else {
-                        if (openItem?.txtSecondScreen?.visibility == View.VISIBLE) {
-                            openItem?.txtSecondScreen?.visibility = View.GONE
-                        }
-                        txtSecondScreen.visibility = View.VISIBLE
-                        txtSecondScreen.text = entry.getString(context)
-                        //Make previous details invisible
-                        openItem = this
-                    }
-                }
-
-                //Prüfitem von der Favoritenliste löschen
-                ivicon.setOnClickListener { remove(position) }
-                txtFooter.text = context!!.getString(R.string.prof) + "${entry.firstExaminer},${entry.secondExaminer}"*/
-//
-//            holder.txtthirdline.text = (context!!.getString(R.string.clockTime2)
-//                    + splitDateAndTime?.get(1)?.substring(0, 5)
-//                    +"\n"
-//                    + context!!.getString(R.string.date2)
-//                    + (splitDayMonthYear?.get(2) ?: "") + "."
-//                    + (splitDayMonthYear?.get(1) ?: "") + "."
-//                    + (splitDayMonthYear?.get(0) ?: ""))
-//            holder.txtFooter.text = (context!!.getString(R.string.prof)
-//                    + entry.firstExaminer + ", " + entry.secondExaminer
-//                    + context!!.getString(R.string.semester) + entry.semester)
         }
 
         /**

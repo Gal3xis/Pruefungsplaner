@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.utils
 
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -29,7 +30,8 @@ object PushService {
      *
      * **See Also:**[Documentation](https://developer.android.com/training/notify-user/build-notification#kotlin)
      */
-    fun sendNotification(context: Context, message:String?=null,title:String? = null,pIntent: PendingIntent? = null){
+    @SuppressLint("UnspecifiedImmutableFlag")
+    fun sendNotification(context: Context, message:String?=null, title:String? = null, pIntent: PendingIntent? = null){
         createNotificationChannel(context)
 
         //Create intent to navigate the user after he tapped the notification. That starts the StartActivity.
@@ -67,7 +69,7 @@ object PushService {
      *
      *    For more information about what the different levels mean, read about notification importance levels.
      */
-    fun createNotificationChannel(context: Context) {
+    private fun createNotificationChannel(context: Context) {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

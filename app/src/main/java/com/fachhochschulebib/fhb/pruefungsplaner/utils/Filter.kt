@@ -6,21 +6,19 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * Inner Class to filter the table of moduls. Used by TermineFragment-fragment and FavoritenFragment-fragment.
+ * Inner Class to filter the table of modules.
  *
  * @author Alexander Lange
  * @since 1.6
- * @see Terminefragment
- * @see Favoritenfragment
  */
 object Filter {
     /**
-     * Parameter to Filter with the Modulename.
-     * Calls the [onModuleNameChangedListener] and the [onFilterChangedListener].
+     * Parameter to Filter with the module name.
+     * Calls the [onFilterChangedListener].
      *
      * @author Alexander Lange
      * @since 1.6
-     * @see onModulNameChangedListener
+     *
      * @see onFilterChangedListener
      */
     var modulName: String? = null
@@ -30,12 +28,12 @@ object Filter {
         }
 
     /**
-     * Parameter to Filter with the Coursename.
-     * Calls the [onCourseNameChangedListener] and the [onFilterChangedListener].
+     * Parameter to Filter with the course name.
+     * Calls the [onFilterChangedListener].
      *
      * @author Alexander Lange
      * @since 1.6
-     * @see onCourseNameChangedListener
+     *
      * @see onFilterChangedListener
      */
     var courseName: String? = null
@@ -61,7 +59,7 @@ object Filter {
 
     /**
      * Parameter to filter with a specific examiner.
-     * Calls the [onExaminerChangedListener] and [onFilterChangedListener].
+     * Calls the [onFilterChangedListener].
      *
      * @author Alexander Lange
      * @since 1.6
@@ -80,6 +78,7 @@ object Filter {
      * @author Alexander Lange
      * @since 1.6
      */
+    @Suppress("SetterBackingFieldAssignment", "UNUSED_PARAMETER")
     var semester: Array<Boolean> = arrayOf(true, true, true, true, true, true)
         set(value) {
             return
@@ -87,12 +86,12 @@ object Filter {
 
     /**
      * Public method to set the value for a specific semester.
-     * Calls the [onSemesterChangedListener] and the [onFilterChangedListener]
+     * Calls the [onFilterChangedListener]
      * @param[pSemester] The semester to set the value.
      * @param[active] If the semester is checked or not.
      * @author Alexander Lange
      * @since 1.6
-     * @see onSemesterChangedListener
+     *
      * @see onFilterChangedListener
 
      */
@@ -116,15 +115,15 @@ object Filter {
     }
 
     /**
-     * Validates a testplanentry-Object. Checks if all Filter-values agree with the given entry.
+     * Validates a [TestPlanEntry]-Object. Checks if all Filter-values agree with the given entry.
      *
-     * @param[context] Current context
      * @param[entry] The Entry that needs to be validated
      * @return true->The entry agrees with the filter,false->the entry does not agree with the filter
      * @author Alexander Lange
      * @since 1.6
      */
-    fun validateFilter(entry: TestPlanEntry?): Boolean {
+    @Suppress("DEPRECATION")
+    private fun validateFilter(entry: TestPlanEntry?): Boolean {
         if (entry == null) {
             return false
         }
@@ -141,9 +140,9 @@ object Filter {
             return false
         }
         if (datum != null) {
-            val sdf = SimpleDateFormat("yyyy-MM-dd")
-            val date = sdf.parse(entry.date)
-            val comp = Date(date.year,date.month,date.date,0,0,0)
+            val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+            val date = entry.date?.let { sdf.parse(it) }
+            val comp = date?.date?.let { Date(date.year, date.month, it,0,0,0) }?:return false
             if (!datum!!.atDay(comp)) {
                 return false
             }

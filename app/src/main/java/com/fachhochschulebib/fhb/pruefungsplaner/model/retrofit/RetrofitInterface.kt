@@ -14,7 +14,7 @@ import retrofit2.http.Path
 interface RetrofitInterface{
     /**
      * Gets all courses from the Rest-Api.
-     * Needs to be called inside a Coroutinescope.
+     * Needs to be called inside a coroutine scope.
      *
      * @return The list of Courses, can be null if no courses where found.
      *
@@ -28,12 +28,12 @@ interface RetrofitInterface{
 
     /**
      * Returns an Array of All Entries from the Rest-Api.
-     * Needs to be called inside a Coroutinescope.
+     * Needs to be called inside a coroutine scope.
      *
-     * @param ppSemester The current Semester, can be taken from the sharedPreferences[SharedPreferencesRepository.getPeriodTerm].
-     * @param pTermin Differences between first and second period. Can be taken from sharedPreferences [SharedPreferencesRepository.getPeriodTermin]]
-     * @param pYear The year from where the entries shall be taken. The current year can be taken from [SharedPreferencesRepository.getPeriodYear]]
-     * @param pId A string with all the ids from which the entries shall be taken. Can be get from [com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel.getIDs]
+     * @param ppSemester The current Semester, can be taken from the sharedPreferences.
+     * @param pTermin Differences between first and second period. Can be taken from sharedPreferences
+     * @param pYear The year from where the entries shall be taken. The current year can be taken from
+     * @param pIds A string with all the ids from which the entries shall be taken. Can be get from
      *
      * @return A list of all Faculties. Can be null if no faculty was found.
      *
@@ -45,7 +45,7 @@ interface RetrofitInterface{
      */
     @GET("$entriesRelativeUrl/{ppSemester}/{pTermin}/{pYear}/{pIds}/")
     suspend fun getEntries(
-        @Path("ppSemester") ppSemetser:String,
+        @Path("ppSemester") ppSemester:String,
         @Path("pTermin")pTermin:String,
         @Path("pYear")pYear:String,
         @Path("pIds")pIds:String):List<GSONEntry>
@@ -54,7 +54,7 @@ interface RetrofitInterface{
     /**
      * Gets the UUID linked to a faculty.
      *
-     * @param faculty The Faculty, linked to the UUID
+     * @param ppFaculty The Faculty, linked to the UUID
      *
      * @return The UUID linked to the faculty
      *
@@ -67,10 +67,10 @@ interface RetrofitInterface{
     /**
      * Send feedback to the server.
      *
-     * @param ratingUsability How good is the usability of the application
-     * @param ratingFunctions Are there enough functions in the application
-     * @param ratingStability How stable was the application, did it crashes?
-     * @param text A comment from the user.
+     * @param ppUsability How good is the usability of the application
+     * @param ppFunctions Are there enough functions in the application
+     * @param ppStability How stable was the application, did it crashes?
+     * @param ppText A comment from the user.
      *
      * @author Alexander Lange
      * @since 1.6

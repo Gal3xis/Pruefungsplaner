@@ -34,7 +34,7 @@ interface UserDao {
      * @since 1.6
      */
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertCourses(cours: List<Course>)
+    suspend fun insertCourses(courses: List<Course>)
 
     /**
      * Inserts a UUID into the local database
@@ -63,15 +63,14 @@ interface UserDao {
     /**
      * Updates if a [TestPlanEntry] is a favorite or not.
      *
-     * @param context The Applicationcontext
      * @param favorite Whether the [TestPlanEntry] is favorite or not
-     * @param entry The [TestPlanEntry] that needs to be updated
+     * @param id The id of the [TestPlanEntry] that needs to be updated
      *
      * @author Alexander Lange
      * @since 1.6
      */
-    @Query("UPDATE TestPlanEntry SET favorite = :favorit WHERE ID = :id")
-    suspend fun update(favorit: Boolean, id: String)
+    @Query("UPDATE TestPlanEntry SET favorite = :favorite WHERE ID = :id")
+    suspend fun update(favorite: Boolean, id: String)
 
     /**
      * Updates if a course is chosen or not.
@@ -82,8 +81,8 @@ interface UserDao {
      * @author Alexander Lange
      * @since 1.6
      */
-    @Query("UPDATE Course SET chosen = :choosen WHERE courseName = :courseName")
-    suspend fun updateCourse(courseName: String, choosen: Boolean)
+    @Query("UPDATE Course SET chosen = :chosen WHERE courseName = :courseName")
+    suspend fun updateCourse(courseName: String, chosen: Boolean)
 
     /**
      * Deletes all favorites.
@@ -270,7 +269,7 @@ interface UserDao {
     /**
      * Gets all [TestPlanEntry]-Objects for a specific [Course].
      *
-     * @param The [Course.courseName] for the [Course].
+     * @param course The [Course.courseName] for the [Course].
      *
      * @return A list with all [TestPlanEntry]-Objects for a specific [Course].
      *

@@ -6,7 +6,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 /**
- * Helperclass to create the access to the remote database via the [RetrofitInterface]
+ * Helper class to create the access to the remote database via the [RetrofitInterface]
  *
  * @author Alexander Lange
  * @since 1.6

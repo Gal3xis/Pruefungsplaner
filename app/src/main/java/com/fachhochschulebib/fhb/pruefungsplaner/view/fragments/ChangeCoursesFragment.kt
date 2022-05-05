@@ -20,7 +20,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_change_courses.*
 
 /**
- *Fragment to change the courseselection. Lets the user add additional courses and change the main course.
+ *Fragment to change the course selection. Lets the user add additional courses and change the main course.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
@@ -33,7 +33,7 @@ class ChangeCoursesFragment : MainActivityFragment() {
     private lateinit var viewModel: ChangeCoursesViewModel
 
     /**
-     * Sets the name of that fragment to "Studiengänge verwalten"
+     * Sets the name of that fragment
      */
     override var name: String="Studiengänge verwalten"
 

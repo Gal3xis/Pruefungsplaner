@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.helper
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.utils.atDay
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about all exams.
@@ -60,14 +62,15 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
      * @author Alexander Lange
      * @since 1.6
      */
+    @SuppressLint("NotifyDataSetChanged")
     fun updateContent(entryList: List<TestPlanEntry>) {
         this.entryList = entryList.toMutableList()
         notifyDataSetChanged()
     }
 
     /**
-     * Initializes the [ViewHolder] with information of the viewtype. In this case,
-     * passes the examinformation to the UI-Elements.
+     * Initializes the [ViewHolder] with information of the view type. In this case,
+     * passes the exam information to the UI-Elements.
      *
      * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
      * @param[position] The position of the item within the adapter's data set.
@@ -82,7 +85,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
     }
 
     /**
-     * Returns the amount of items in the recyclerview, based on the size of the moduleslist.
+     * Returns the amount of items in the recyclerview, based on the size of the modules list.
      *
      * @return The amount of items in the recyclerview.
      *
@@ -138,7 +141,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
         /**
          * Icon that shows if the [TestPlanEntry] is a favorite or not
          */
-        val ivicon: ImageView = v.findViewById(R.id.layout_exam_overview_exam_imageview_favorite_icon)
+        private val favoriteIcon: ImageView = v.findViewById(R.id.layout_exam_overview_exam_imageview_favorite_icon)
 
         /**
          * Icon that shows the status of the [TestPlanEntry]
@@ -151,19 +154,19 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
         val dateTextView: TextView = v.findViewById(R.id.layout_exam_overview_exam_textview_date)
 
         /**
-         * Layout of the second screen, that shows the detailed information. Can be made visible or gone to show/hide the deatils.
+         * Layout of the second screen, that shows the detailed information. Can be made visible or gone to show/hide the details.
          */
         val secondScreen:LinearLayout = v.findViewById(R.id.layout_exam_overview_exam_layout_details)
 
         /**
-         * TextView ont the second screen that shows the datiled information.
+         * TextView ont the second screen that shows the detailed information.
          */
         val txtSecondScreen: TextView = v.findViewById(R.id.layout_exam_overview_exam_textview_details)
 
         /**
          * Function to initialize the UI-Elements for a specific [TestPlanEntry].
          *
-         * @param entry The [TestPlanEntry] that contains the data to be displayed in this viewholder.
+         * @param entry The [TestPlanEntry] that contains the data to be displayed in this view holder.
          *
          * @author Alexander Lange
          * @since 1.6
@@ -177,7 +180,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
             }
             setIcons(entry)
             val splitDay = splitInDays(entry)
-            splitDay?.let { initFooter(it) }
+            initFooter(splitDay)
         }
 
 
@@ -186,27 +189,26 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
          * If that is the case, it removes the date-indicator, so its placed under the indicator
          * of the first exam that day.
          *
-         * @param[holder] The [ViewHolder] that holds the UI-Elements.
-         * @param[position] The position of the item in the Recyclerview.
+         * @param[entry] The [TestPlanEntry] of the item.
          * @return The day the exam takes place.
          * @author Alexander Lange
          * @since 1.6
          */
-        private fun splitInDays(entry: TestPlanEntry): Array<String> {
-            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val date1 = sdf.parse(entry.date)
+        private fun splitInDays(entry: TestPlanEntry): Array<String?> {
+            val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            val date1 = entry.date?.let { sdf.parse(it) }
 
             val ret = arrayOf(
-                SimpleDateFormat("dd.MM.yyyy").format(date1),
-                SimpleDateFormat("HH:mm").format(date1)
+                date1?.let { SimpleDateFormat("dd.MM.yyyy",Locale.getDefault()).format(it) },
+                date1?.let { SimpleDateFormat("HH:mm",Locale.getDefault()).format(it) }
             )
 
             dateTextView.visibility = View.VISIBLE
 
             if (layoutPosition > 0) {
                 val entry2 = entryList[layoutPosition - 1]
-                val date2 = sdf.parse(entry2.date)
-                if (date1.atDay(date2)) {
+                val date2 = entry2.date?.let { sdf.parse(it) }
+                if (date2?.let { date1?.atDay(it) } == true) {
                     dateTextView.visibility = View.GONE
                 }
             }
@@ -215,15 +217,15 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
 
 
         /**
-         * Sets the icons for the items. Determines, the status of the exam an whether it is a favorit
+         * Sets the icons for the items. Determines, the status of the exam an whether it is a favorite
          * or not and sets the corresponding colors.
          *
-         * @param[holder] The [ViewHolder] that holds the UI-Elements.
-         * @param[position] The position of the item in the Recyclerview.
+         * @param entry The [TestPlanEntry] of this item
          *
          * @author Alexander Lange
          * @since 1.6
          */
+        @SuppressLint("UseCompatLoadingForDrawables")
         private fun setIcons(
             entry: TestPlanEntry
         ) {
@@ -233,7 +235,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
                         ?: R.attr.defaultStatusColor, context
                 )
             )
-            ivicon.setImageDrawable(
+            favoriteIcon.setImageDrawable(
                 Utils.favoriteIcons[entry.favorite]?.let {
                     context.resources.getDrawable(
                         it,
@@ -249,7 +251,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
                 ).show()
             }
 
-            ivicon.setOnClickListener {
+            favoriteIcon.setOnClickListener {
                 viewModel.updateEntryFavorite(context, !entry.favorite, entry)
                 notifyItemChanged(layoutPosition)
             }
@@ -260,14 +262,12 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
          * Initializes the UI-Elements, that hold deeper information about the exam.
          *
          * @param[splitDay] The day, the exam takes place.
-         * @param[holder] The [ViewHolder] that holds the UI-Elements.
-         * @param[position] The position of the item in the Recyclerview.
          *
          * @author Alexander Lange
          * @since 1.6
          */
         private fun initFooter(
-            splitDay: Array<String>
+            splitDay: Array<String?>
         ) {
             dateTextView.text = splitDay[0]
         }

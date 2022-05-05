@@ -10,7 +10,7 @@ import android.widget.TextView
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 
 /**
- * Adapterclass for the Theme-Spinner in the options-fragment.
+ * Adapter class for the Theme-Spinner in the options-fragment.
  * Displays the different themes with an icon, that shows the primary-and the accent color.
  *
  * @param context The Applicationcontext
@@ -42,7 +42,7 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
      * @param parent The parent that this view will eventually be attached to
      * @return A View corresponding to the data at the specified position.
      */
-    @SuppressLint("ViewHolder")
+    @SuppressLint("ViewHolder", "InflateParams")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view:View = LayoutInflater.from(context).inflate(R.layout.layout_settings_theme_spinner_row,null,true)
         return view(view,position)
@@ -51,14 +51,15 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
     /**
      * Initializes the view, passes the values to the UI-Elements.
      *
-     * @param[view] The view for a Spinnerrow.
+     * @param[view] The view for a spinner row.
      * @param[position] The index of the item
      *
-     * @return The spinnerrow, containing the initialized UI-Elements.
+     * @return The spinner row, containing the initialized UI-Elements.
      *
      * @author Alexander Lange
      * @since 1.6
      */
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun view(view: View?, position: Int): View {
         val image = view?.findViewById<View>(R.id.layout_settings_theme_spinner_row_image_themeicon)
         val text = view?.findViewById<TextView>(R.id.layout_settings_theme_spinner_row_textview_text)

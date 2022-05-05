@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.model.repositories.DatabaseRepository
 import com.fachhochschulebib.fhb.pruefungsplaner.model.repositories.SharedPreferencesRepository
 import kotlinx.coroutines.*
@@ -18,10 +19,10 @@ import org.json.JSONObject
  * @author Alexander Lange
  * @since 1.6
  */
-class CheckForDatabaseUpdateWorker(private val context: Context, private val workerParams: WorkerParameters) : Worker(context, workerParams) {
+class CheckForDatabaseUpdateWorker(private val context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
     /**
-     * The Coroutinescope, in which the worker will look for new updates
+     * The coroutine scope, in which the worker will look for new updates
      */
     private val iOScope:CoroutineScope = CoroutineScope(CoroutineName("IO-Scope")+Dispatchers.IO)
 
@@ -53,12 +54,10 @@ class CheckForDatabaseUpdateWorker(private val context: Context, private val wor
      *       [androidx.work.ListenableWorker.Result#failure(Data)]
      */
     override fun doWork(): Result {
-        PushService.sendNotification(context,"The examinationplan has been updated!") //
-
         iOScope.launch {
             if(checkDatabase())
             {
-                PushService.sendNotification(context,"The examinationplan has been updated!") //
+                PushService.sendNotification(context,context.getString(R.string.background_worker_notification)) //
             }
         }
         return Result.success()
@@ -71,13 +70,13 @@ class CheckForDatabaseUpdateWorker(private val context: Context, private val wor
      */
     private suspend fun checkDatabase():Boolean{
         return withContext(Dispatchers.IO){
-            val periode = spRepository.getPeriodTerm()
+            val period = spRepository.getPeriodTerm()
             val termin = spRepository.getPeriodTermin()
-            val examinYear = spRepository.getPeriodYear()
-            val Ids = repository.getChosenCourseIds()
+            val examineYear = spRepository.getPeriodYear()
+            val ids = repository.getChosenCourseIds()
             val courseIds = JSONArray()
-            if (Ids != null) {
-                for (id in Ids) {
+            if (ids != null) {
+                for (id in ids) {
                     try {
                         val idJson = JSONObject()
                         idJson.put("ID", id)
@@ -87,10 +86,10 @@ class CheckForDatabaseUpdateWorker(private val context: Context, private val wor
                     }
                 }
             }
-            if (periode == null || termin == null || examinYear == null || courseIds.toString().isNullOrEmpty()) {
+            if (period == null || termin == null || examineYear == null || courseIds.toString().isEmpty()) {
                 return@withContext false
             }
-            val remoteEntries = repository.fetchEntries(periode, termin, examinYear, courseIds.toString())
+            val remoteEntries = repository.fetchEntries(period, termin, examineYear, courseIds.toString())
             val localEntries = repository.getAllEntries()
             if(remoteEntries.isNullOrEmpty()||localEntries.isNullOrEmpty())
             {
@@ -100,7 +99,7 @@ class CheckForDatabaseUpdateWorker(private val context: Context, private val wor
                 return@withContext true
             }
             for(i in remoteEntries.indices){
-                val remoteEntry = remoteEntries.get(i)
+                val remoteEntry = remoteEntries[i]
                 val remoteId = remoteEntry.ID
                 val localEntry = remoteId?.let { repository.getEntryById(it) }
                 if(remoteEntry.Timestamp!=localEntry?.timeStamp)

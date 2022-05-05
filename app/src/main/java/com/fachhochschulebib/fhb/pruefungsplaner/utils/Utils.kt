@@ -1,8 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.utils
 
-import android.app.Application
 import android.content.Context
-import android.content.res.Resources
 import android.util.Log
 import android.util.TypedValue
 import androidx.annotation.AttrRes
@@ -10,7 +8,6 @@ import androidx.annotation.RawRes
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import java.io.BufferedReader
 import java.io.InputStreamReader
-import java.lang.Exception
 
 /**
  * Utility-Function for the application.
@@ -65,9 +62,9 @@ object Utils {
      * @since 1.6
      */
     fun readTextFile(context: Context,@RawRes textResource:Int): String {
-        val _is = context.resources.openRawResource(textResource)
-        val reader = BufferedReader(InputStreamReader(_is))
-        var string:String? = null
+        val inputStream = context.resources.openRawResource(textResource)
+        val reader = BufferedReader(InputStreamReader(inputStream))
+        var string: String?
         val stringBuilder:StringBuilder = StringBuilder()
         while (true){
             string = reader.readLine()
@@ -78,7 +75,7 @@ object Utils {
             }
             stringBuilder.append(string).append("\n")
         }
-        _is.close()
+        inputStream.close()
         return stringBuilder.toString()
     }
 
@@ -100,11 +97,11 @@ object Utils {
     }
 
     /**
-     * Returns the form of the exam, seperated from the duration.
+     * Returns the form of the exam, separated from the duration.
      *
-     * @param examForm The examform from the [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     * @param examForm The exam form from the [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
      *
-     * @return The examform, separated from the duration
+     * @return The exam form, separated from the duration
      *
      * @author Alexander Lange
      * @since 1.6

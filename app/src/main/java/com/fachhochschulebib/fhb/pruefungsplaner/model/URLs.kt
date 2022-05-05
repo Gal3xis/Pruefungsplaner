@@ -1,3 +1,5 @@
+@file:Suppress("PackageDirectoryMismatch", "PackageName")
+
 package com.fachhochschulebib.fhb.pruefungsplaner.model.URLs
 
 const val serverAddress = "http://85.214.233.224:8080/"

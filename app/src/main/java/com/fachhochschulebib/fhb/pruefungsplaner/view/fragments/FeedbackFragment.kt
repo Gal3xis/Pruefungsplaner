@@ -60,20 +60,20 @@ class FeedbackFragment : MainActivityFragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        fragment_feedback_button_send.setOnClickListener { view ->
+        fragment_feedback_button_send.setOnClickListener { v ->
             viewModel.sendFeedBack(fragment_feedback_ratingbar_usability.rating,fragment_feedback_ratingbar_functions.rating,fragment_feedback_ratingbar_stability.rating,fragment_feedback_text_input_feedbacktext.text.toString())
             Toast.makeText(
-                view.context,
-                view.context.getString(R.string.sendedFeedBack),
+                v.context,
+                v.context.getString(R.string.sendedFeedBack),
                 Toast.LENGTH_SHORT
             ).show()
-            val mainWindow = Intent(view.context, MainActivity::class.java)
+            val mainWindow = Intent(v.context, MainActivity::class.java)
             startActivity(mainWindow)
         }
     }
 
     /**
-     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     * Overrides the onCreateView()-Method
      *
      * @return Returns the initialized view of this Fragment
      *

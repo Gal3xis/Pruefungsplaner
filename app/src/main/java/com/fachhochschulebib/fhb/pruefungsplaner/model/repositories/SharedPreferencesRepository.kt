@@ -9,7 +9,7 @@ import com.google.gson.reflect.TypeToken
 /**
  * Repository to access the shared preferences.
  *
- * @param context The Applicationcotext
+ * @param context The Applicationcontext
  *
  * @author Alexander Lange
  * @since 1.6
@@ -32,7 +32,7 @@ class SharedPreferencesRepository(context: Context) {
     private val userSelection = context.getSharedPreferences("userSelection",Context.MODE_PRIVATE)
 
     /**
-     * File to store the ids for each event in the calendar, mapped with the associted [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     * File to store the ids for each event in the calendar, mapped with the associated [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
      */
     private val calendarEntries = context.getSharedPreferences("calendarEntries",Context.MODE_PRIVATE)
 
@@ -59,7 +59,7 @@ class SharedPreferencesRepository(context: Context) {
     /**
      * Adds multiple calendar event ids into the shared preferences.
      *
-     * @param ids A prepared Map with calendar event ids and their [ccom.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     * @param ids A prepared Map with calendar event ids and their [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
      *
      * @author Alexander Lange
      * @since 1.6
@@ -87,7 +87,7 @@ class SharedPreferencesRepository(context: Context) {
     }
 
     /**
-     * Deletes one calendar event id from the shared preferencse.
+     * Deletes one calendar event id from the shared preferences.
      *
      * @param id The Id of the event to be deleted
      *

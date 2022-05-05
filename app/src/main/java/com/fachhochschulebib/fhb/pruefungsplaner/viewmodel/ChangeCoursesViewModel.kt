@@ -68,7 +68,7 @@ class ChangeCoursesViewModel(application: Application) : BaseViewModel(applicati
     }
 
     /**
-     * Loads new courses for a specific faulty in the livadata-object.
+     * Loads new courses for a specific faulty in the livedata-object.
      *
      * @author Alexander Lange
      * @since 1.6

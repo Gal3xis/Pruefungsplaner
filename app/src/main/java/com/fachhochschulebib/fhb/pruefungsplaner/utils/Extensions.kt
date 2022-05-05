@@ -27,7 +27,7 @@ fun Spinner.setSelection(value: String?) {
     }
     for (i in 0 until count) {
         val item = getItemAtPosition(i)
-        if (item.toString().equals(value)) {
+        if (item.toString() == value) {
             setSelection(i)
             return
         }
@@ -44,7 +44,7 @@ fun Spinner.setSelection(value: String?) {
  * @author Alexander Lange
  * @since 1.6
  */
-fun TestPlanEntry.getString(context: Context): String? {
+fun TestPlanEntry.getString(context: Context): String {
     val ret = StringBuilder()
     ret.appendLine(context.getString(R.string.exam_information_title))
     ret.appendLine()
@@ -53,11 +53,17 @@ fun TestPlanEntry.getString(context: Context): String? {
     ret.appendLine()
     ret.appendLine(createStringWithLabel(context, R.string.exam_information_first_prof, firstExaminer))
     ret.appendLine(createStringWithLabel(context, R.string.exam_information_second_prof, secondExaminer))
-    val d = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date)
-    ret.appendLine(createStringWithLabel(context, R.string.exam_information_date, SimpleDateFormat("dd.MM.yyyy").format(d)))
-    ret.appendLine(createStringWithLabel(context, R.string.exam_information_time, SimpleDateFormat("HH:mm").format(d)))
+    val d = date?.let { SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it) }
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_date, d?.let {
+        SimpleDateFormat("dd.MM.yyyy",
+        Locale.getDefault()).format(it)
+    }))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_time, d?.let {
+        SimpleDateFormat("HH:mm",
+        Locale.getDefault()).format(it)
+    }))
     ret.appendLine(createStringWithLabel(context, R.string.exam_information_duration,
-            Utils.getExamDuration(examForm)?.toString() + "min"
+            Utils.getExamDuration(examForm).toString() + "min"
     ))
     ret.appendLine(createStringWithLabel(context, R.string.exam_information_room, room))
     ret.appendLine(createStringWithLabel(context, R.string.exam_information_form, Utils.getExamForm(examForm)))
@@ -92,6 +98,7 @@ private fun createStringWithLabel(context: Context, @StringRes label: Int, info:
  * @since 1.6
  * @see Date
  */
+@Suppress("DEPRECATION")
 fun Date.atDay(date: Date): Boolean {
 
     val year1 = this.year
@@ -109,7 +116,6 @@ fun Date.atDay(date: Date): Boolean {
  * @author Alexander Lange
  * @since 1.6
  *
- * @see Optionen
  */
 fun AppCompatActivity.applySettings(viewModel:BaseViewModel) {
     val themeToApply = if(viewModel.getChosenThemeId()==-1)Utils.themeList[0] else viewModel.getChosenThemeId()

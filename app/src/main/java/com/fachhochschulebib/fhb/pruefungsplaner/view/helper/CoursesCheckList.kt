@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.helper
 
+import android.annotation.SuppressLint
 import android.content.Context
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
@@ -18,7 +19,6 @@ import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  *
- * @see AddCourseFragment
  * @see RecyclerView.Adapter
  */
 class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseViewModel, private val context: Context) : RecyclerView.Adapter<CoursesCheckList.ViewHolder>() {
@@ -34,7 +34,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
     fun getChosen():List<Course>{
         val ret = mutableListOf<Course>()
         courseList.forEach {
-            if(it.chosen==true) ret.add(it)
+            if(it.chosen) ret.add(it)
         }
         return ret
     }
@@ -48,6 +48,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      * @author Alexander Lange
      * @since 1.6
      */
+    @SuppressLint("NotifyDataSetChanged")
     fun updateContent(courseList:List<Course>){
         this.courseList= courseList.toMutableList()
         notifyDataSetChanged()
@@ -101,13 +102,13 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      * @see RecyclerView.Adapter.onBindViewHolder
      */
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        // Initialisierung der Komponenten
+        // Initialising of components
         holder.nameCourse.text = courseList[position].courseName
         holder.checkBoxCourse.isChecked = courseList[position].chosen == true
-        holder.checkBoxCourse.setOnClickListener { // Speichere die auswahl in der Liste
+        holder.checkBoxCourse.setOnClickListener {
             holder.checkBoxCourse.isChecked = toggleFavorite(position)
         }
-        holder.nameCourse.setOnClickListener { // Speichere die auswahl in der Liste
+        holder.nameCourse.setOnClickListener {
             holder.checkBoxCourse.isChecked = toggleFavorite(position)
         }
     }
@@ -135,9 +136,9 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
     }
 
     /**
-     * Returns the size of the courseList.
+     * Returns the size of the course list.
      *
-     * @return the size of the courselist
+     * @return the size of the course list
      *
      * @author Alexander Lange
      * @since 1.6

@@ -251,14 +251,14 @@ public final class UserDao_Impl implements UserDao {
   }
 
   @Override
-  public Object insertCourses(final List<Course> cours,
+  public Object insertCourses(final List<Course> courses,
       final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       public Unit call() throws Exception {
         __db.beginTransaction();
         try {
-          __insertionAdapterOfCourse.insert(cours);
+          __insertionAdapterOfCourse.insert(courses);
           __db.setTransactionSuccessful();
           return Unit.INSTANCE;
         } finally {
@@ -330,14 +330,14 @@ public final class UserDao_Impl implements UserDao {
   }
 
   @Override
-  public Object update(final boolean favorit, final String id,
-      final Continuation<? super Unit> continuation) {
+  public Object update(final boolean favorite, final String id,
+                       final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       public Unit call() throws Exception {
         final SupportSQLiteStatement _stmt = __preparedStmtOfUpdate.acquire();
         int _argIndex = 1;
-        final int _tmp = favorit ? 1 : 0;
+        final int _tmp = favorite ? 1 : 0;
         _stmt.bindLong(_argIndex, _tmp);
         _argIndex = 2;
         if (id == null) {
@@ -359,14 +359,14 @@ public final class UserDao_Impl implements UserDao {
   }
 
   @Override
-  public Object updateCourse(final String courseName, final boolean choosen,
+  public Object updateCourse(final String courseName, final boolean chosen,
       final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       public Unit call() throws Exception {
         final SupportSQLiteStatement _stmt = __preparedStmtOfUpdateCourse.acquire();
         int _argIndex = 1;
-        final int _tmp = choosen ? 1 : 0;
+        final int _tmp = chosen ? 1 : 0;
         _stmt.bindLong(_argIndex, _tmp);
         _argIndex = 2;
         if (courseName == null) {

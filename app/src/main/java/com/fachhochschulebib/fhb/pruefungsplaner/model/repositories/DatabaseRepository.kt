@@ -24,7 +24,7 @@ import java.net.URL
 /**
  * Repository for interacting with different databases.
  * Combines access to the retrofit interface and the local room database.
- * Stores only simple requests as Suspendfunctions with the withcontext-Scope,specific
+ * Stores only simple requests as suspend functions with the withcontext-Scope,specific
  * implementations are located in the ViewModels [com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel].
  * Required for the MVVM-Pattern.
  *
@@ -55,7 +55,7 @@ class DatabaseRepository(
     //Retrofit-Functions
     /**
      * Gets all courses from the Rest-Api.
-     * Needs to be called inside a Coroutinescope.
+     * Needs to be called inside a coroutine scope.
      *
      * @return The list of Courses, can be null if no courses where found.
      *
@@ -73,7 +73,7 @@ class DatabaseRepository(
 
     /**
      * Returns an Array of All Faculties from the Rest-Api.
-     * Needs to be called inside a Coroutinescope.
+     * Needs to be called inside a coroutine scope.
      * Can throw errors if the connection fails and prints them with the Tag "FetchFaculties".
      *
      *
@@ -92,15 +92,12 @@ class DatabaseRepository(
                 urlConn.connectTimeout = 1000 * 10 // mTimeout is in seconds
                 try {
                     urlConn.connect()
-                    //Parsen von den  erhaltene Werte
                     val inputStream: InputStream = BufferedInputStream(urlConn.inputStream)
                     val reader = BufferedReader(InputStreamReader(inputStream))
                     var line: String?
                     while ((reader.readLine().also { line = it }) != null) {
                         result.append(line)
                     }
-
-                    //Erstellen von JSON
                     var jsonObj: JSONObject? = null
                     try {
                         jsonObj = XML.toJSONObject(result.toString())
@@ -113,8 +110,6 @@ class DatabaseRepository(
                         val key: String = x.next() as String
                         jsonArray.put(jsonObj.get(key))
                     }
-
-                    //Werte von JSONARRay in JSONObject konvertieren
                     val receivesFaculties = JSONArray()
                     for (i in 0 until jsonArray.length()) {
                         val jsonObject = jsonArray.getJSONObject(i)
@@ -138,7 +133,7 @@ class DatabaseRepository(
 
     /**
      * Returns an Array of All Entries from the Rest-Api.
-     * Needs to be called inside a Coroutinescope.
+     * Needs to be called inside a coroutine scope.
      *
      * @param ppSemester The current Semester, can be taken from the sharedPreferences[SharedPreferencesRepository.getPeriodTerm].
      * @param pTermin Differences between first and second period. Can be taken from sharedPreferences [SharedPreferencesRepository.getPeriodTermin]]
@@ -166,11 +161,11 @@ class DatabaseRepository(
 
     /**
      * Returns an Array of all examperiods in the retrofit database.
-     * Needs to be called inside a Coroutinescope.
+     * Needs to be called inside a coroutine scope.
      * Can throw errors if the connection fails and prints them with the Tag "FetchPeriods".
      *
      *
-     * @return a JSONArray with all examperiods containing information. The Json-Objects contain data about the first day of the period, the semester (WiSe or SoSe), first or second period, weeknumber and faculty.
+     * @return a JSONArray with all examperiods containing information. The Json-Objects contain data about the first day of the period, the semester (WiSe or SoSe), first or second period, week number and faculty.
      * @since 1.6
      * @author Alexander Lange
      *
@@ -358,9 +353,9 @@ class DatabaseRepository(
      * @author Alexander Lange
      * @since 1.6
      */
-    suspend fun insertCourses(cours: List<Course>) {
+    suspend fun insertCourses(courses: List<Course>) {
         withContext(Dispatchers.IO) {
-            localDataSource.insertCourses(cours)
+            localDataSource.insertCourses(courses)
 
         }
     }
@@ -397,16 +392,15 @@ class DatabaseRepository(
     /**
      * Updates if a [TestPlanEntry] is a favorite or not.
      *
-     * @param context The Applicationcontext
      * @param favorite Whether the [TestPlanEntry] is favorite or not
-     * @param entry The [TestPlanEntry] that needs to be updated
+     * @param id The id of the [TestPlanEntry] that needs to be updated
      *
      * @author Alexander Lange
      * @since 1.6
      */
-    suspend fun updateEntryFavorit(favorit: Boolean, id: String) {
+    suspend fun updateEntryFavorite(favorite: Boolean, id: String) {
         withContext(Dispatchers.IO) {
-            localDataSource.update(favorit, id)
+            localDataSource.update(favorite, id)
         }
     }
 
@@ -419,9 +413,9 @@ class DatabaseRepository(
      * @author Alexander Lange
      * @since 1.6
      */
-    suspend fun updateCourse(courseName: String, choosen: Boolean) {
+    suspend fun updateCourse(courseName: String, chosen: Boolean) {
         withContext(Dispatchers.IO) {
-            localDataSource.updateCourse(courseName, choosen)
+            localDataSource.updateCourse(courseName, chosen)
         }
     }
 
@@ -481,7 +475,7 @@ class DatabaseRepository(
     /**
      * Gets all [TestPlanEntry]-Objects for a specific [Course].
      *
-     * @param The [Course.courseName] for the [Course].
+     * @param name The [Course.courseName] for the [Course].
      *
      * @return A list with all [TestPlanEntry]-Objects for a specific [Course].
      *
@@ -535,9 +529,9 @@ class DatabaseRepository(
      * @author Alexander Lange
      * @since 1.6
      */
-    suspend fun getFavorites(favorit: Boolean): List<TestPlanEntry>? {
+    suspend fun getFavorites(favorite: Boolean): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getFavorites(favorit)
+            return@withContext localDataSource.getFavorites(favorite)
         }
     }
 
@@ -552,9 +546,9 @@ class DatabaseRepository(
      * @author Alexander Lange
      * @since 1.6
      */
-    suspend fun getEntriesByCourseName(course: String, favorit: Boolean): List<TestPlanEntry>? {
+    suspend fun getEntriesByCourseName(course: String, favorite: Boolean): List<TestPlanEntry>? {
         return withContext(Dispatchers.IO) {
-            return@withContext localDataSource.getEntriesByCourseName(course, favorit)
+            return@withContext localDataSource.getEntriesByCourseName(course, favorite)
         }
     }
 

@@ -111,6 +111,34 @@
     <string name="settings_divider_info">App Infos</string>
     <string name="settings_snackbar_restart_needed">Neustart benötigt</string>
     <string name="settings_snackbar_restart">Neustarten</string>
+    <string name="filter_textview_date_all">Alle</string>
+    <string name="filter_spinner_courses_all">Alle</string>
+    <string name="filter_spinner_examiner_all">Alle</string>
+    <string name="filter_spinner_modules_all">Alle</string>
+    <string name="fragment_change_courses_name">Studiengänge verwalten</string>
+    <string name="fragment_exam_overview_name">Prüfungen</string>
+    <string name="fragment_favorite_overview_name">Favoriten</string>
+    <string name="fragment_settings_name">Einstellungen</string>
+    <string name="fragment_settings_delete_favorits_alertdialog_title">Favoriten löschen</string>
+    <string name="fragment_settings_delete_favorites_alertdialog_message">Sollen alle %1$d Favoriten gelöscht werden?</string>
+    <string name="fragment_settings_delete_favorites_alert_dialog_positive_button">Löschen</string>
+    <string name="fragment_settings_delete_favorites_alert_dialog_negative_button">Cancel</string>
+    <string name="fragment_settings_alertdialog_update_calendar_title">Kalendereinträge aktualisieren</string>
+    <string name="fragment_settings_alertdialog_update_calendar_message">Soll der Kalender aktualisiert werden?</string>
+    <string name="fragment_settings_alertdialog_update_calendar_positive_button">Ja</string>
+    <string name="fragment_settings_alertdialog_update_calendar_negative_button">Nein</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_title">Kalendereinträge löschen</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_message">Sollen %1$d Einträge gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_positive_button">Ja</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_negative_button">Nein</string>
+    <string name="fragment_settings_alertdialog_delete_database_title">Datenbank löschen</string>
+    <string name="fragment_settings_alertdialog_delete_database_message">Sollen alle %1$d Einträge gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_database_positive_button">Löschen</string>
+    <string name="fragment_settings_alertdialog_delete_database_negative_button">Cancel</string>
+    <string name="calendario_alertdialog_ask_title">Termin Eintragen</string>
+    <string name="calendario_alertdialog_ask_positive_button">Automatisch</string>
+    <string name="calendario_alertdialog_ask_negative_button">Manuell</string>
+    <string name="background_worker_notification">The examinationplan has been updated!</string>
 
 
 </resources>

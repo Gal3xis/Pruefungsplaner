@@ -33,9 +33,9 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     val liveEntriesForCourse = MutableLiveData<List<TestPlanEntry>?>()
 
     /**
-     * Live Data containg all chosen courses.
+     * Live Data containing all chosen courses.
      */
-    val liveChoosenCourses = repository.getAllChosenCoursesLiveData()
+    val liveChosenCourses = repository.getAllChosenCoursesLiveData()
 
     /**
      * Live Data containing the names of all first examiners.
@@ -63,13 +63,13 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
     }
 
     /**
-     * Gets a list of all entries for the coursename selected in the Filter.
+     * Gets a list of all entries for the course name selected in the Filter.
      * Stores the result in the [liveEntriesForCourse]-LiveDataObject.
      *
      * @author Alexander Lange
      * @since 1.6
      */
-    fun filterCoursename() {
+    fun filterCourseName() {
         viewModelScope.launch {
             val entriesForCourse = Filter.courseName?.let {
                 repository.getEntriesForCourse(it)

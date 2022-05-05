@@ -1,20 +1,20 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.fachhochschulebib.fhb.pruefungsplaner.R
-import com.fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
 import com.fachhochschulebib.fhb.pruefungsplaner.model.room.Faculty
-import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import com.fachhochschulebib.fhb.pruefungsplaner.utils.applySettings
+import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.StartViewModel
+import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -22,9 +22,7 @@ import com.google.android.play.core.install.InstallStateUpdatedListener
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
-import java.util.*
 import kotlinx.android.synthetic.main.activity_change_faculty.*
-import kotlinx.coroutines.*
 
 /**
  * Unique code for the update requests.
@@ -33,19 +31,20 @@ import kotlinx.coroutines.*
 const val UPDATE_REQUEST_CODE = 100
 
 /**
- * String contant that is used as extra in the intent to notify that the Start Activity shall not skip if a selected main course is recognized.
+ * String constant that is used as extra in the intent to notify that the Start Activity shall not skip if a selected main course is recognized.
  * Used for changing the faculty.
  */
 const val CHANGE_FLAG = "changeFlag"
 
 /**
  * Activity, that allows the user to pick a faculty and select courses.
- * First activity called on appstart and can also be opend from navigationdrawer in the [MainActivity].
- * Also initializes a backgroundworker to look for new Database-updates and an Updatemanager to look for new Appupdates.
+ * First activity called on app start and can also be opened from navigationdrawer in the [MainActivity].
+ * Also initializes a background worker to look for new Database-updates and an Updatemanager to look for new App updates.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
+@Suppress("DEPRECATION")
 class StartActivity : AppCompatActivity() {
 
     /**
@@ -61,7 +60,7 @@ class StartActivity : AppCompatActivity() {
 
     /**
      * Listener that checks the state of the update download if an update is initiated.
-     * Displays a [Snackbar] to let the user know that the update is ready to install.
+     * Displays a Snackbar to let the user know that the update is ready to install.
      */
     private val installStateUpdateListener: InstallStateUpdatedListener =
         InstallStateUpdatedListener {
@@ -113,7 +112,7 @@ class StartActivity : AppCompatActivity() {
     }
 
     /**
-     * Initializes the updatemanager. The updatemanager checks the google playstore for new appupdates
+     * Initializes the updatemanager. The updatemanager checks the google playstore for new app updates
      * and if one was found he starts a dialog in which the user can choose if he wants
      * to update or not.
      *
@@ -205,8 +204,6 @@ class StartActivity : AppCompatActivity() {
     /**
      * Creates a dialog that asks the User to select a main course.
      *
-     * @param[view] The view that calls this method.
-     *
      * @author Alexander Lange
      * @since 1.6
      */
@@ -249,6 +246,7 @@ class StartActivity : AppCompatActivity() {
      *
      * @see AppCompatActivity.onActivityResult
      */
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
@@ -287,8 +285,7 @@ class StartActivity : AppCompatActivity() {
      * Called, when the user picked a faculty.
      * Fills the recyclerview with courses.
      *
-     * @param[faculties] The list of faculties.
-     * @param[which] The index of the picked item.
+     * @param faculty The chosen faculty
      *
      * @author Alexander Lange
      * @since 1.6

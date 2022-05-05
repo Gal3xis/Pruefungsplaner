@@ -8,7 +8,6 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.fachhochschulebib.fhb.pruefungsplaner.model.repositories.SharedPreferencesRepository
-import com.fachhochschulebib.fhb.pruefungsplaner.model.*
 import com.fachhochschulebib.fhb.pruefungsplaner.model.repositories.DatabaseRepository
 import com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.GSONCourse
 import com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit.GSONEntry
@@ -31,7 +30,7 @@ import java.util.*
 
 /**
  * Viewmodel that contains the logic of the Application. Implements a more specific access to the
- * Database-Repository and includes the sharedPreferencesRepository. Depper functionalities
+ * Database-Repository and includes the sharedPreferencesRepository. Deeper functionalities
  * for different Fragments and Activities are stored in inheriting classes.
  * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-data#2)
  */
@@ -50,15 +49,15 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     /**
      * The [SimpleDateFormat] to convert dates from the retrofit interface
      */
-    protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy")
+    protected val sdfRetrofit = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     /**
      * The [SimpleDateFormat] to Display dates in the UI
      */
-    protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy")
+    protected val sdfDisplay = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
 
     /**
-     * The Exceptionhandler that is used in the ViewModel-Coroutines. Just prints the stacktrace to the logcat.
+     * The exception handler that is used in the ViewModel-Coroutines. Just prints the stacktrace to the logcat.
      */
     protected val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.d("CoroutineException", exception.stackTraceToString())
@@ -88,7 +87,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     fun fetchCourses() {
         viewModelScope.launch(coroutineExceptionHandler) {
             val courses = repository.fetchCourses()
-            courses?.let { insertCoursesJSON(it) }
+            insertCoursesJSON(courses)
         }
     }
 
@@ -102,15 +101,15 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * */
     fun fetchEntries() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val periode = getPeriodTerm()
+            val period = getPeriodTerm()
             val termin = getPeriodTermin()
-            val examinYear = getPeriodYear()
+            val examineYear = getPeriodYear()
             val ids = getIDs()
-            if (periode == null || termin == null || examinYear == null || ids.isNullOrEmpty()) {
+            if (period == null || termin == null || examineYear == null || ids.isEmpty()) {
                 return@launch
             }
-            val entries = repository.fetchEntries(periode, termin, examinYear, ids)
-            entries?.forEach {
+            val entries = repository.fetchEntries(period, termin, examineYear, ids)
+            entries.forEach {
                 insertEntry(it)
             }
         }
@@ -152,9 +151,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     /**
-     * Return the ids of all choosen courses in the Room-Database.
-     *
-     * @param[roomData] The Room-Database of the application.
+     * Return the ids of all chosen courses in the Room-Database.
      *
      * @return A String containing every course-ID
      *
@@ -162,10 +159,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.5
      */
     suspend fun getIDs(): String {
-        val Ids = repository.getChosenCourseIds()
+        val ids = repository.getChosenCourseIds()
         val courseIds = JSONArray()
-        if (Ids != null) {
-            for (id in Ids) {
+        if (ids != null) {
+            for (id in ids) {
                 try {
                     val idJson = JSONObject()
                     idJson.put("ID", id)
@@ -186,16 +183,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     fun updatePeriod() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val pruefperiodenObjects = repository.fetchExamPeriods()
-            val currentPeriod= pruefperiodenObjects?.let { getCurrentPeriod(it) }
+            val examPeriods = repository.fetchExamPeriods()
+            val currentPeriod= examPeriods?.let { getCurrentPeriod(it) }
             val numberOfWeeks = currentPeriod?.get("PPWochen").toString().toInt()
 
-            //Set start-and enddate
-            val formatter = SimpleDateFormat("yyyy-MM-dd")
+            //Set start-and end date
+            val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             var startDateString = currentPeriod?.get("startDatum").toString()
             startDateString = startDateString.substring(0, 10)
             val startDate = Calendar.getInstance()
-            startDate.time = formatter.parse(startDateString)
+            startDate.time = formatter.parse(startDateString) as Date
 
             val endDate = Calendar.getInstance()
             endDate.time = startDate.time
@@ -222,30 +219,30 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      *
      * @param periodObjects A list of possible periods.
      *
-     * @return The latest period from the fiven list.
+     * @return The latest period from the given list.
      *
      * @author Alexander Lange
      * @since 1.6
      *
      */
     private fun getCurrentPeriod(periodObjects: JSONArray): JSONObject? {
-        val formatter = SimpleDateFormat("yyyy-MM-dd")
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
         var latestDate:Date? =null
-        var latestPeriode:JSONObject? = null
+        var latestPeriod:JSONObject? = null
         val facultyId = getSelectedFacultyId()
 
         for (i in 0 until periodObjects.length()) {
             //Get single object
             val obj = periodObjects.getJSONObject(i)
 
-            //Conitune if the faculitids does not match
+            //Continue if the faculty ids do not match
             val facultyIdDB = obj.getJSONObject("fbFbid")["fbid"].toString()
             if(facultyIdDB!=facultyId){
                 continue
             }
 
-            //Get Startdate
+            //Get Start date
             var startDateString = obj["startDatum"].toString()
             startDateString = startDateString.substring(0, 10)
             val startDate = formatter.parse(startDateString)
@@ -253,16 +250,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             //If no latest date is set, initialize it and continue the loop
             if(latestDate==null){
                 latestDate = startDate
-                latestPeriode = obj
+                latestPeriod = obj
                 continue
             }
 
-            if(startDate.after(latestDate)){
+            if(startDate?.after(latestDate) == true){
                 latestDate = startDate
-                latestPeriode = obj
+                latestPeriod = obj
             }
         }
-        return latestPeriode
+        return latestPeriod
     }
 
 
@@ -286,7 +283,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     /**
      * Inserts a new [TestPlanEntry] into the local database.
      *
-     * @param jsonResponse The jsonobject of the new entry, normally taken from the remote database.
+     * @param jsonResponse The json object of the new entry, normally taken from the remote database.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -354,7 +351,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     open fun updateEntryFavorite(context: Context, favorite: Boolean, entry:TestPlanEntry) {
         viewModelScope.launch {
-            repository.updateEntryFavorit(favorite, entry.id)
+            repository.updateEntryFavorite(favorite, entry.id)
             if (!getCalendarSync()) return@launch
             if (!favorite) {
                 val calendarId = getCalendarId(entry)?:return@launch
@@ -552,7 +549,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     private fun deleteMainCourse() {
-        spRepository.deleteMainCourse();
+        spRepository.deleteMainCourse()
     }
     /**
      * Sets the faculty, selected by the user
@@ -598,8 +595,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun setPeriodTerm(periode: String) {
-        spRepository.setPeriodTerm(periode)
+    open fun setPeriodTerm(period: String) {
+        spRepository.setPeriodTerm(period)
     }
 
     //TODO RENAME
@@ -723,7 +720,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * Manuel->The insertion intent of the calendar will be started, where the user can modify the entry himself;
      * Ask->The user will be asked each time, if an entry should be manuel ro automatic
      */
-    open fun setCalendarInserionType(insertionType: CalendarIO.InsertionType) {
+    open fun setCalendarInsertionType(insertionType: CalendarIO.InsertionType) {
         spRepository.setCalendarInsertionType(insertionType)
     }
 
@@ -972,8 +969,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     fun insertIntoCalendar(context: Context, entry: TestPlanEntry){
-        val CAL_ID = getSelectedCalendar()?:return
-        val id = CalendarIO.insertEntry(context,CAL_ID, entry, getCalendarInsertionType())
+        val calId = getSelectedCalendar()?:return
+        val id = CalendarIO.insertEntry(context,calId, entry, getCalendarInsertionType())
         id?.let {
             spRepository.addCalendarId(it, entry.id )
         }
@@ -989,10 +986,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     fun insertIntoCalendar(context: Context, entries: List<TestPlanEntry>){
-        val CAL_ID = getSelectedCalendar()?:return
+        val calId = getSelectedCalendar()?:return
         val entryIds = mutableMapOf<Long,String>()
         entries.forEach {
-            val id = CalendarIO.insertEntry(context,CAL_ID, it, getCalendarInsertionType())
+            val id = CalendarIO.insertEntry(context,calId, it, getCalendarInsertionType())
             if (id != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     entryIds.putIfAbsent(id,it.id)
@@ -1138,7 +1135,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     /**
-     * Return a formatted date as String to save in the [TestPlanEntry.date]-Paramater.
+     * Return a formatted date as String to save in the [TestPlanEntry.date]-Parameter.
      *
      * @param[dateResponse] The date from the JSON-Response.
      *
@@ -1148,9 +1145,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     private fun getDate(dateResponse: String): String {
-        //Festlegen vom Dateformat
-        var dateTimeZone: String
-        dateTimeZone = dateResponse.replaceFirst("CET".toRegex(), "")
+        var dateTimeZone: String = dateResponse.replaceFirst("CET".toRegex(), "")
         dateTimeZone = dateTimeZone.replaceFirst("CEST".toRegex(), "")
         var dateLastExamFormatted: String? = null
         try {
@@ -1158,11 +1153,11 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
                 "EEE MMM dd HH:mm:ss yyyy", Locale.US//TODO CHANGE LOCAL
             )
             val dateLastExam = dateFormat.parse(dateTimeZone)
-            val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            dateLastExamFormatted = targetFormat.format(dateLastExam)
+            val targetFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            dateLastExamFormatted = dateLastExam?.let { targetFormat.format(it) }
             val currentDate = Calendar.getInstance().time
-            val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-            val currentDateFormated = df.format(currentDate)
+            val df = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            df.format(currentDate)
         } catch (e: ParseException) {
             e.printStackTrace()
         }

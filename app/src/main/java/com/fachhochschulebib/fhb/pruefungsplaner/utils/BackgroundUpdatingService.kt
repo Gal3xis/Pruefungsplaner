@@ -18,8 +18,8 @@ const val updateWorkerName = "updateWorker"
  */
 object BackgroundUpdatingService {
     /**
-     * Sets a backgroundservice, that enables the application to check for changes in the Examplan-database in a specified interval.
-     * Gets the intervalltime from shared preferences.
+     * Sets a background service, that enables the application to check for changes in the remote-database in a specified interval.
+     * Gets the interval time from shared preferences.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -69,7 +69,7 @@ object BackgroundUpdatingService {
      * **See Also:**[Guide to background work](https://developer.android.com/guide/background)
      * **See Also:**[Youtube](https://www.youtube.com/watch?v=pe_yqM16hPQ)
      */
-    fun removePeriodicRequest(context: Context) {
+    private fun removePeriodicRequest(context: Context) {
         context.let { WorkManager.getInstance(it).cancelUniqueWork(updateWorkerName) }
     }
 }

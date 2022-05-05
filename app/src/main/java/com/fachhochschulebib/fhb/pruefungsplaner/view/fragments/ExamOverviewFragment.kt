@@ -1,6 +1,10 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.app.Activity
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,9 +39,9 @@ class ExamOverviewFragment() : MainActivityFragment() {
     private lateinit var viewModel: ExamOverviewViewModel
 
     /**
-     * Sets the name of that fragment to "Prüfungen"
+     * Sets the name of that fragment
      */
-    override var name: String="Prüfungen"
+    override var name: String= "Prüfungen"
 
     /**
      * The adapter of the recyclerview that displays all exams to the user.

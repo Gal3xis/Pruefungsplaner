@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ class FavoriteOverviewFragment : MainActivityFragment() {
     private lateinit var viewModel: FavoriteOverviewViewModel
 
     /**
-     * Sets the name of that fragment to "Favoriten"
+     * Sets the name of that fragment
      */
     override var name: String="Favoriten"
 
@@ -63,7 +64,7 @@ class FavoriteOverviewFragment : MainActivityFragment() {
 
 
     /**
-     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     * Overrides the onCreateView()-Method.
      *
      * @return Returns the initialized view of this Fragment
      *
@@ -99,6 +100,7 @@ class FavoriteOverviewFragment : MainActivityFragment() {
     /**
      * Called when this fragment is resumed after being paused. Invalidates the adapter, so external changes will be made visible like calendar entry.
      */
+    @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
         super.onResume()
         recyclerViewFavoriteAdapter.notifyDataSetChanged()

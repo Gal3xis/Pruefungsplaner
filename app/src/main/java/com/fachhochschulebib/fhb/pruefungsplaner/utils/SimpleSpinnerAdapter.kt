@@ -42,7 +42,7 @@ class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList
      * @param parent The parent that this view will eventually be attached to
      * @return A View corresponding to the data at the specified position.
      */
-    @SuppressLint("ViewHolder")
+    @SuppressLint("ViewHolder", "InflateParams")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view: View = LayoutInflater.from(context).inflate(R.layout.layout_simple_spinner_adapter_background,null,true)
         val text = view.findViewById<TextView>(R.id.layout_simple_spinner_adapter_background_textview)
@@ -54,10 +54,10 @@ class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList
     /**
      * Initializes the view, passes the values to the UI-Elements.
      *
-     * @param[view] The view for a Spinnerrow.
+     * @param[view] The view for a spinner row.
      * @param[position] The index of the item
      *
-     * @return The spinnerrow, containing the initialized UI-Elements.
+     * @return The spinner row, containing the initialized UI-Elements.
      *
      * @author Alexander Lange
      * @since 1.6

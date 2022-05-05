@@ -1,10 +1,12 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.utils
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
 import android.provider.CalendarContract
+import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry
 import java.text.SimpleDateFormat
 import java.util.*
@@ -23,7 +25,7 @@ import kotlin.math.abs
 object CalendarIO {
 
     /**
-     * Enum to differ between mutliple kind of insertion.<br/>
+     * Enum to differ between multiple kind of insertion.<br/>
      * ```
      * Manuel->Always start the insertion process of the calendar, where the user can edit the entry.
      *
@@ -70,7 +72,7 @@ object CalendarIO {
         val projection = arrayOf("_id", "calendar_displayName","visible","calendar_access_level")
         val calendars: Uri = Uri.parse("content://com.android.calendar/calendars")
 
-        val contentResolver: ContentResolver = context.getContentResolver()
+        val contentResolver: ContentResolver = context.contentResolver
         val managedCursor: Cursor = contentResolver.query(calendars, projection, null, null, null)?:return emptyList()
 
         if (managedCursor.moveToFirst()) {
@@ -110,7 +112,7 @@ object CalendarIO {
         val projection = arrayOf("_id", "calendar_displayName","visible","calendar_access_level","isPrimary")
         val calendars: Uri = Uri.parse("content://com.android.calendar/calendars")
 
-        val contentResolver: ContentResolver = context.getContentResolver()
+        val contentResolver: ContentResolver = context.contentResolver
         val managedCursor: Cursor = contentResolver.query(calendars, projection, null, null, null)?:return null
 
         if (managedCursor.moveToFirst()) {
@@ -143,14 +145,14 @@ object CalendarIO {
     }
 
     /**
-     * Creates an intent for a Calendarevent.
+     * Creates an intent for a calendar event.
      *
      * **See Also:**[CalendarContract-Documentation](https://developer.android.com/reference/android/provider/CalendarContract)
      *
      * @author Alexander Lange
      * @since 1.6
      */
-    fun createIntent(
+    private fun createIntent(
         title: String? = "Unnamed",
         description: String? = "",
         startDate: Calendar? = Calendar.getInstance(),
@@ -183,13 +185,23 @@ object CalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun createIntent(context: Context, e: TestPlanEntry?): Intent {
+    private fun createIntent(context: Context, e: TestPlanEntry?): Intent {
         val cs = Calendar.getInstance()
-        e?.let { cs.time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(e.date) }
+        e?.let { cs.time =
+            e.date?.let { it1 ->
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(
+                    it1
+                )
+            } as Date
+        }
         val ce = Calendar.getInstance()
         e?.let {
-            ce.time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(e.date)
-            ce.add(GregorianCalendar.MINUTE, Utils.getExamDuration(e.examForm) ?: 0)
+            ce.time = e.date?.let { it1 ->
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(
+                    it1
+                )
+            } as Date
+            ce.add(GregorianCalendar.MINUTE, Utils.getExamDuration(e.examForm))
         }
         return createIntent(
             title = e?.module ?: "",
@@ -205,10 +217,10 @@ object CalendarIO {
      *
      * @param[title] The title of the event, "Unnamed" by default.
      * @param[description] The description of the event, empty by default.
-     * @param[startDate] The startdate of the event, including day and time, current time by default.
-     * @param[endDate] The enddate of the event, including day and time, current time by default.
+     * @param[startDate] The start date of the event, including day and time, current time by default.
+     * @param[endDate] The end date of the event, including day and time, current time by default.
      * @param[allDay] Determines if the event is for the whole day,false by default.
-     * @param[hasAlarm] Determines if the event has an alarm attatched, false by default.
+     * @param[hasAlarm] Determines if the event has an alarm attached, false by default.
      *
      * @return A set of values, that define an event and can be inserted to the GoogleCalendar.
      *
@@ -255,11 +267,21 @@ object CalendarIO {
      */
     fun createEvent(context: Context,CAL_ID: Long,id:Long, e: TestPlanEntry?): ContentValues {
         val cs = Calendar.getInstance()
-        e?.let { cs.time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(e.date) }
+        e?.let { cs.time =
+            e.date?.let { it1 ->
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(
+                    it1
+                )
+            } as Date
+        }
         val ce = Calendar.getInstance()
         e?.let {
-            ce.time = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(e.date)
-            ce.add(GregorianCalendar.MINUTE, Utils.getExamDuration(e.examForm) ?: 0)
+            ce.time = e.date?.let { it1 ->
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(
+                    it1
+                )
+            } as Date
+            ce.add(GregorianCalendar.MINUTE, Utils.getExamDuration(e.examForm))
         }
         return createEvent(
             id = id,
@@ -276,10 +298,9 @@ object CalendarIO {
      * is turned of, this method has no effect,
      *
      * @param[context] The application context
+     * @param CAL_ID The id of the calendar
      * @param[e] The [TestPlanEntry] that holds the necessary information
-     * @param[force] If false, the User gets an dialog, in which he can view the entry,
-     * before it is saved into the calendar. If true, it is passed directly, without
-     * any user confirmation. The defaulvalue is false.
+     * @param insertionType The [InsertionType] for this entry
      *
      * @author Alexander Lange
      * @since 1.6
@@ -301,11 +322,11 @@ object CalendarIO {
             InsertionType.Ask -> {
                 var ret:Long? = null
                 AlertDialog.Builder(context)
-                    .setTitle("Termin Eintragen")
-                    .setPositiveButton("Automatisch") { _, _ ->
+                    .setTitle(context.getString(R.string.calendario_alertdialog_ask_title))
+                    .setPositiveButton(context.getString(R.string.calendario_alertdialog_ask_positive_button)) { _, _ ->
                         ret = forceInsert(context, CAL_ID, e)
                     }
-                    .setNegativeButton("Manuell") { _, _ ->
+                    .setNegativeButton(context.getString(R.string.calendario_alertdialog_ask_negative_button)) { _, _ ->
                         indirectInsert(context, createIntent(context, e))
                     }
                     .create().show()
@@ -319,7 +340,8 @@ object CalendarIO {
      * Inserts an event into the selected calendar without showing a dialog to the user.
      *
      * @param[context] The application context.
-     * @param[event] The event to be inserted to the calendar.
+     * @param CAL_ID The id of the calendar
+     * @param testPlanEntry The [TestPlanEntry] that is to be inserted
      *
      * @author Alexander Lange
      * @since 1.6
@@ -348,9 +370,9 @@ object CalendarIO {
     }
 
     /**
-     * Inserts an event into the selected calendar, using the contentresolver.
+     * Inserts an event into the selected calendar, using the content resolver.
      *
-     * @param context The Applicationontext
+     * @param context The Applicationcontext
      * @param event The event to be inserted
      *
      * @author Alexander Lange
@@ -367,7 +389,7 @@ object CalendarIO {
      * @param id The id of the event that shall be updated
      * @param event The event that shall replace the current one
      *
-     * @param Alexander Lange
+     * @author Alexander Lange
      * @since 1.6
      */
     private fun updateEvent(context: Context,id:Long,event:ContentValues){
@@ -418,7 +440,7 @@ object CalendarIO {
      *
      * @return The number of events deleted
      *
-     * @author ALexander Lange
+     * @author Alexander Lange
      * @since 1.6
      *
      */
@@ -460,6 +482,7 @@ object CalendarIO {
      * @author Alexander Lange
      * @since 1.6
      */
+    @SuppressLint("QueryPermissionsNeeded")
     private fun indirectInsert(context: Context, intent: Intent) {
         if (intent.resolveActivity(context.packageManager) != null) {
             context.startActivity(intent)

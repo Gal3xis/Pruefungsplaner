@@ -40,14 +40,14 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
     /**
      * Selects a course as the main course.
      *
-     * @param[choosenCourse] The name of th course that is supposed to be the main course.
+     * @param[chosenCourse] The name of th course that is supposed to be the main course.
      *
      * @author Alexander Lange
      * @since 1.6
      */
-    fun addMainCourse(choosenCourse: String) {
+    fun addMainCourse(chosenCourse: String) {
         viewModelScope.launch {
-            val id =  getCourseId(choosenCourse)?:return@launch
+            val id =  getCourseId(chosenCourse)?:return@launch
             setMainCourse(id)
             if (getUuid() == null) {
                 firstStart(id)
@@ -76,7 +76,7 @@ class StartViewModel(application: Application) : BaseViewModel(application) {
     /**
      * Checks if the user already selected a maincourse. If that is the case, he is not asked again and instead redirected to the MainActivity.
      *
-     * @return Wheter a course has been picked or not.
+     * @return Whether a course has been picked or not.
      *
      * @author Alexander Lange
      * @since 1.6

@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.TimePickerDialog
 import android.os.Build
@@ -25,7 +26,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-class SettingsFragment() : MainActivityFragment() {
+class SettingsFragment : MainActivityFragment() {
     /**
      * ViewModel for the SettingsFragment. Is set in [onViewCreated].
      * @see SettingsViewModel
@@ -33,7 +34,7 @@ class SettingsFragment() : MainActivityFragment() {
     private lateinit var viewModel: SettingsViewModel
 
     /**
-     * Sets the name of that fragment to "Datenschutzerklärung"
+     * Sets the name of that fragment
      */
     override var name: String = "Einstellungen"
 
@@ -58,7 +59,7 @@ class SettingsFragment() : MainActivityFragment() {
     }
 
     /**
-     * Overrides the onCreateView()-Method. It sets the current view to the optionfragmnet-layout.
+     * Overrides the onCreateView()-Method
      *
      * @return Returns the initialized view of this Fragment
      * @since 1.6
@@ -89,9 +90,9 @@ class SettingsFragment() : MainActivityFragment() {
 
     /**
      * Overrides the [onCreateOptionsMenu]-Method from the [Fragment]-Superclass.
-     * Initializes the items for the actionmenu. In this case the save-button.
+     * Initializes the items for the action menu. In this case the save-button.
      * @param[menu] The menu where the items should be displayed.
-     * @param[inflater] The [MenuInflater] to inflate the actionmenu.
+     * @param[inflater] The [MenuInflater] to inflate the action menu.
      * @author Alexander Lange
      * @since 1.6
      * @see Fragment.onCreateOptionsMenu
@@ -174,10 +175,10 @@ class SettingsFragment() : MainActivityFragment() {
                     )
                 )
                 textView.textSize = 15f
-                val id = calendar.find {
+                val calendarId = calendar.find {
                     it.name == fragment_settings_spinner_calendar_id.selectedItem.toString()
                 }?.id ?: 0
-                viewModel.setSelectedCalendar(id)
+                viewModel.setSelectedCalendar(calendarId)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
@@ -196,9 +197,9 @@ class SettingsFragment() : MainActivityFragment() {
         fragment_settings_button_delete_favorites.setOnClickListener {
             val count = viewModel.liveFavorites.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
-                .setTitle("Favoriten löschen")
-                .setMessage("Sollen alle $count Favoriten gelöscht werden?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.fragment_settings_delete_favorits_alertdialog_title))
+                .setMessage(String.format(getString(R.string.fragment_settings_delete_favorites_alertdialog_message),count))
+                .setPositiveButton(getString(R.string.fragment_settings_delete_favorites_alert_dialog_positive_button)) { _, _ ->
                     viewModel.deleteAllFavorites(requireContext())
                     Toast.makeText(
                         requireContext(),
@@ -206,7 +207,7 @@ class SettingsFragment() : MainActivityFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.fragment_settings_delete_favorites_alert_dialog_negative_button), null)
                 .create()
                 .show()
         }
@@ -221,12 +222,12 @@ class SettingsFragment() : MainActivityFragment() {
     private fun initUpdateCalendarButton() {
         fragment_settings_button_update_calendar.setOnClickListener {
             AlertDialog.Builder(requireContext())
-                .setTitle("Kalendereinträge aktualisieren")
-                .setMessage("Soll der Kalender aktualisiert werden?")
-                .setPositiveButton("Ja") { _, _ ->
+                .setTitle(getString(R.string.fragment_settings_alertdialog_update_calendar_title))
+                .setMessage(getString(R.string.fragment_settings_alertdialog_update_calendar_message))
+                .setPositiveButton(getString(R.string.fragment_settings_alertdialog_update_calendar_positive_button)) { _, _ ->
                     viewModel.updateCalendar(requireContext())
                 }
-                .setNegativeButton("Nein", null)
+                .setNegativeButton(getString(R.string.fragment_settings_alertdialog_update_calendar_negative_button), null)
                 .create()
                 .show()
 
@@ -244,15 +245,15 @@ class SettingsFragment() : MainActivityFragment() {
             val eventIds = viewModel.getCalendarIds()
 
             AlertDialog.Builder(requireContext())
-                .setTitle("Kalendereinträge löschen")
-                .setMessage("Sollen ${eventIds.count()} Einträge gelöscht werden?")
-                .setPositiveButton("Ja") { _, _ ->
+                .setTitle(getString(R.string.fragment_settings_alertdialog_delete_calendar_title))
+                .setMessage(String.format(getString(R.string.fragment_settings_alertdialog_delete_calendar_message),eventIds.count()))
+                .setPositiveButton(getString(R.string.fragment_settings_alertdialog_delete_calendar_positive_button)) { _, _ ->
                     viewModel.deleteFromCalendar(
                         requireContext(),
                         eventIds
                     )
                 }
-                .setNegativeButton("Nein", null)
+                .setNegativeButton(getString(R.string.fragment_settings_alertdialog_delete_calendar_negative_button), null)
                 .create()
                 .show()
         }
@@ -268,9 +269,9 @@ class SettingsFragment() : MainActivityFragment() {
         fragment_settings_button_delete_database.setOnClickListener {
             val count = viewModel.liveEntries.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
-                .setTitle("Datenbank löschen")
-                .setMessage("Sollen alle $count Einträge gelöscht werden?")
-                .setPositiveButton("Löschen") { _, _ ->
+                .setTitle(getString(R.string.fragment_settings_alertdialog_delete_database_title))
+                .setMessage(String.format(getString(R.string.fragment_settings_alertdialog_delete_database_message),count))
+                .setPositiveButton(getString(R.string.fragment_settings_alertdialog_delete_database_positive_button)) { _, _ ->
                     viewModel.deleteAllEntries()
                     Toast.makeText(
                         requireContext(),
@@ -278,7 +279,7 @@ class SettingsFragment() : MainActivityFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                .setNegativeButton("Cancel", null)
+                .setNegativeButton(getString(R.string.fragment_settings_alertdialog_delete_database_negative_button), null)
                 .create()
                 .show()
         }
@@ -353,7 +354,7 @@ class SettingsFragment() : MainActivityFragment() {
                         )
                     )
                     textView.textSize = 15f
-                    viewModel.setCalendarInserionType(
+                    viewModel.setCalendarInsertionType(
                         CalendarIO.InsertionType.valueOf(
                             fragment_settings_spinner_calendar_insertiontype.selectedItem.toString()
                         )
@@ -380,7 +381,7 @@ class SettingsFragment() : MainActivityFragment() {
     }
 
     /**
-     * Initializes the darkmode-[Switch]. Get the previous selection from sharedpreferences and
+     * Initializes the darkmode-[Switch]. Get the previous selection from shared preferences and
      * pass them to the darkmode-[Switch].
      * @author Alexander Lange
      * @since 1.6
@@ -440,8 +441,8 @@ class SettingsFragment() : MainActivityFragment() {
         }
         fragment_settings_spinner_theme?.adapter = adapter
         val selectedPos: Int
-        val themeid = viewModel.getChosenThemeId()
-        selectedPos = Utils.themeList.indexOf(themeid)
+        val themeId = viewModel.getChosenThemeId()
+        selectedPos = Utils.themeList.indexOf(themeId)
         fragment_settings_spinner_theme?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
@@ -497,19 +498,20 @@ class SettingsFragment() : MainActivityFragment() {
      * @author Alexander Lange
      * @since 1.6
      */
+    @SuppressLint("SetTextI18n")
     private fun initBackgroundUpdateIntervalButton() {
         val currentMinute = { viewModel.getUpdateIntervalTimeMinute() }
         val currentHour = { viewModel.getUpdateIntervalTimeHour() }
 
         fragment_settings_button_background_updates_interval.setOnClickListener {
             TimePickerDialog(context, 3, { _, hour, minute ->
-                var _minute = minute
-                if (hour == 0 && _minute < 15) {
-                    _minute = 15
+                var pMinute = minute
+                if (hour == 0 && pMinute < 15) {
+                    pMinute = 15
                     Toast.makeText(context, "15 Minutes is minimum", Toast.LENGTH_SHORT)
                         .show()//TODO
                 }
-                setIntervallTime(hour, _minute)
+                setIntervalTime(hour, pMinute)
 
             }, currentHour(), currentMinute(), true)
                 .show()
@@ -526,7 +528,8 @@ class SettingsFragment() : MainActivityFragment() {
      *
      * @see initBackgroundUpdateIntervalButton
      */
-    private fun setIntervallTime(
+    @SuppressLint("SetTextI18n")
+    private fun setIntervalTime(
         hour: Int = viewModel.getUpdateIntervalTimeHour(),
         minute: Int = viewModel.getUpdateIntervalTimeHour()
     ) {
@@ -535,36 +538,5 @@ class SettingsFragment() : MainActivityFragment() {
         fragment_settings_button_background_updates_interval.text =
             "${resources.getString(R.string.settings_button_auto_updates_interval)} ${hour}:${minute}"
         context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
-    }
-
-    /**
-     * Save the current selected options and recreate the activity to change the theme and the darkmmode.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun save() {
-        view?:return
-
-
-        if ( darkMode.isChecked != viewModel.getChosenDarkMode()) {
-
-            AlertDialog.Builder(requireContext()).setTitle("Neustart benötigt")
-                .setMessage("Jetzt Neustarten?").setPositiveButton(
-                    "Neustarten"
-                ) { _, _ ->
-                    val pid = Process.myPid()
-                    Process.killProcess(pid)
-                }.setNegativeButton("Nicht Neustarten") { _, _ ->
-                    (activity as MainActivity).changeFragment(ExamOverviewFragment())
-
-                }.create().show()
-        } else {
-            viewModel.setChosenDarkMode(darkMode.isChecked)
-            (activity as MainActivity).changeFragment(ExamOverviewFragment())
-
-        }
-
-
     }
 }
