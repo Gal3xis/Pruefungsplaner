@@ -12,12 +12,12 @@
         "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\raw\\text_impressum"
     },
     {
-        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
-    },
-    {
         "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_icon_navigation_drawer_settings.png.flat",
         "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\icon_navigation_drawer_settings.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
     },
     {
         "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
@@ -138,10 +138,6 @@
     {
         "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_ic_launcher_round.xml.flat",
         "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-anydpi-v26\\ic_launcher_round.xml"
-    },
-    {
-        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_layout_settings_theme_spinner_background.xml.flat",
-        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\layout\\layout_settings_theme_spinner_background.xml"
     },
     {
         "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\layout_fragment_feedback.xml.flat",

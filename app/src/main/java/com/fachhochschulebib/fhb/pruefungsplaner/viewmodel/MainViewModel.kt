@@ -78,24 +78,6 @@ class MainViewModel(application: Application) : BaseViewModel(application) {
         }
     }
 
-
-    /**
-     * Gets the timespan for the next period.
-     *
-     * @return The timespan as a string to display in the ui.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    fun getPeriodeTimeSpan(): String? {
-        val start = getStartDate()
-        val end = getEndDate()
-
-        if(start==null||end==null)return null
-
-        return sdfDisplay.format(start) + "-" + sdfDisplay.format(end)
-    }
-
     /**
      * Gets the main course from the shared preferences and stores it in the [liveMainCourse].LiveData-Object.
      *

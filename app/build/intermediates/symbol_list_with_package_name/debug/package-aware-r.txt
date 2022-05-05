@@ -2879,10 +2879,10 @@ id layout_favorite_overview_card_textview_header_date
 id layout_favorite_overview_card_textview_header_module
 id layout_favorite_overview_card_textview_header_time
 id layout_navigation_drawer_header_fh_logo
-id layout_settings_theme_spinner_background_image_themeicon
-id layout_settings_theme_spinner_background_textview_text
 id layout_settings_theme_spinner_row_image_themeicon
 id layout_settings_theme_spinner_row_textview_text
+id layout_simple_spinner_adapter_background_textview
+id layout_simple_spinner_adapter_item_textview
 id left
 id leftToRight
 id legacy
@@ -3036,8 +3036,6 @@ id shortcut
 id showCustom
 id showHome
 id showTitle
-id simple_spinner_background_text
-id simple_spinner_item_text
 id sin
 id skipCollapsed
 id skipped
@@ -3259,7 +3257,6 @@ layout layout_exam_overview_exam
 layout layout_favorite_overview_card
 layout layout_favorite_overview_card_contextmenu
 layout layout_navigation_drawer_header
-layout layout_settings_theme_spinner_background
 layout layout_settings_theme_spinner_row
 layout layout_simple_spinner_adapter_background
 layout layout_simpler_spinner_adapter_item

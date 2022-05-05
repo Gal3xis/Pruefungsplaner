@@ -70,20 +70,20 @@ class MainActivity : AppCompatActivity() {
         applySettings(viewModel)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initPeriodeTimeSpan()
+        viewModel.updatePeriod()
         initViewPager()
         initTabLayout()
         initActionBar()
         initNavigationDrawer()
-        setPruefungszeitraum()
         //initBottomNavigationView()
         initFilterDialog()
 
 
-        viewModel.updatePeriod()
+        userFilter()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
 
         changeFragment(ExamOverviewFragment())
-        userFilter()
 
     }
 
@@ -442,8 +442,10 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      *
      */
-    fun setPruefungszeitraum() {
-        viewModel.getPeriodeTimeSpan()?.let { activity_main_textview_current_period_timestamp?.text = it }
+    fun initPeriodeTimeSpan() {
+        viewModel.livePeriodTimeSpan.observe(this){
+            activity_main_textview_current_period_timestamp.text = it?:return@observe
+        }
     }
 
     /**

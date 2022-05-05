@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
-INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
-INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
-INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
+ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
 MERGED from [com.google.android.material:material:1.5.0] C:\Users\Alex\.gradle\caches\transforms-3\3e2429fd1fc8383574b4f9b3ec488623\transformed\material-1.5.0\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.3] C:\Users\Alex\.gradle\caches\transforms-3\afcbd0dafac0b85eda3893727dcfad9d\transformed\constraintlayout-2.1.3\AndroidManifest.xml:2:1-11:12
 MERGED from [androidx.appcompat:appcompat:1.4.1] C:\Users\Alex\.gradle\caches\transforms-3\42011bc131d65c6f2416f63f88fb888e\transformed\appcompat-1.4.1\AndroidManifest.xml:17:1-24:12
@@ -59,20 +59,20 @@ MERGED from [androidx.documentfile:documentfile:1.0.0] C:\Users\Alex\.gradle\cac
 MERGED from [androidx.localbroadcastmanager:localbroadcastmanager:1.0.0] C:\Users\Alex\.gradle\caches\transforms-3\657f174588f3c4a02c6f6a51924fa746\transformed\localbroadcastmanager-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.print:print:1.0.0] C:\Users\Alex\.gradle\caches\transforms-3\f374752cf0975360242f1e87160ef97c\transformed\print-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.annotation:annotation-experimental:1.1.0] C:\Users\Alex\.gradle\caches\transforms-3\e530416400af373f1b8782b25a71379a\transformed\jetified-annotation-experimental-1.1.0\AndroidManifest.xml:17:1-24:12
-INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
-INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
-INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
+INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
+INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
 	package
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:3:5-56
 		INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml
 		INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml
 	android:versionName
 		INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
+		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
 		INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml
 	android:versionCode
 		INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml
-		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-34:12
+		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:1-33:12
 		INJECTED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:2:11-69
@@ -95,7 +95,7 @@ MERGED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\tran
 	android:name
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:8:22-76
 application
-ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:10:5-32:19
+ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:10:5-31:19
 MERGED from [com.google.android.material:material:1.5.0] C:\Users\Alex\.gradle\caches\transforms-3\3e2429fd1fc8383574b4f9b3ec488623\transformed\material-1.5.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.5.0] C:\Users\Alex\.gradle\caches\transforms-3\3e2429fd1fc8383574b4f9b3ec488623\transformed\material-1.5.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.3] C:\Users\Alex\.gradle\caches\transforms-3\afcbd0dafac0b85eda3893727dcfad9d\transformed\constraintlayout-2.1.3\AndroidManifest.xml:9:5-20
@@ -147,13 +147,11 @@ ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\Andro
 	android:name
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:23:27-74
 activity#com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
-ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-31:67
-	android:label
-		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:29:13-71
+ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-30:67
 	android:launchMode
-		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:30:13-48
+		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:29:13-48
 	android:windowSoftInputMode
-		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:31:13-55
+		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:30:13-55
 	android:configChanges
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:28:13-59
 	android:name

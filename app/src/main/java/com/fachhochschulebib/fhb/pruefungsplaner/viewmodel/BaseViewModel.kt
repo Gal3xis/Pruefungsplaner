@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.fachhochschulebib.fhb.pruefungsplaner.model.repositories.SharedPreferencesRepository
 import com.fachhochschulebib.fhb.pruefungsplaner.model.*
@@ -32,7 +33,7 @@ import java.util.*
  * Viewmodel that contains the logic of the Application. Implements a more specific access to the
  * Database-Repository and includes the sharedPreferencesRepository. Depper functionalities
  * for different Fragments and Activities are stored in inheriting classes.
- * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-livedata#2)
+ * **See Also:**[LiveData](https://developer.android.com/codelabs/basic-android-kotlin-training-data#2)
  */
 open class BaseViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -62,6 +63,11 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     protected val coroutineExceptionHandler = CoroutineExceptionHandler { _, exception ->
         Log.d("CoroutineException", exception.stackTraceToString())
     }
+
+    /**
+     * Live Data storing the current period as a string
+     */
+    val livePeriodTimeSpan = MutableLiveData<String>()
 
     init {
         fetchFaculties()
@@ -180,13 +186,13 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     fun updatePeriod() {
         viewModelScope.launch(coroutineExceptionHandler) {
-            val pruefperiodenObjects = repository.fetchExamPeriods() ?: return@launch
-            val currentPeriod= getCurrentPeriod(pruefperiodenObjects) ?:return@launch
-            val numberOfWeeks = currentPeriod["PPWochen"].toString().toInt()
+            val pruefperiodenObjects = repository.fetchExamPeriods()
+            val currentPeriod= pruefperiodenObjects?.let { getCurrentPeriod(it) }
+            val numberOfWeeks = currentPeriod?.get("PPWochen").toString().toInt()
 
             //Set start-and enddate
             val formatter = SimpleDateFormat("yyyy-MM-dd")
-            var startDateString = currentPeriod["startDatum"].toString()
+            var startDateString = currentPeriod?.get("startDatum").toString()
             startDateString = startDateString.substring(0, 10)
             val startDate = Calendar.getInstance()
             startDate.time = formatter.parse(startDateString)
@@ -202,10 +208,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
             setStartDate(startDate.time)
             setEndDate(endDate.time)
-            setPeriodTermin(currentPeriod.get("pruefTermin").toString())
-            setPeriodYear(currentPeriod.get("PPJahr").toString())
-            setPeriodTerm(currentPeriod.get("pruefSemester").toString())
+            setPeriodTermin(currentPeriod?.get("pruefTermin").toString())
+            setPeriodYear(currentPeriod?.get("PPJahr").toString())
+            setPeriodTerm(currentPeriod?.get("pruefSemester").toString())
             fetchEntries()
+            val formattedTimeSpan = "${sdfDisplay.format(startDate.time)}-${sdfDisplay.format(endDate.time)}"
+            livePeriodTimeSpan.postValue(formattedTimeSpan)
         }
     }
 

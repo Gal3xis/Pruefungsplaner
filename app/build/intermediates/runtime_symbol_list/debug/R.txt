@@ -2878,10 +2878,10 @@ int id layout_favorite_overview_card_textview_header_date 0x7f08028e
 int id layout_favorite_overview_card_textview_header_module 0x7f08028f
 int id layout_favorite_overview_card_textview_header_time 0x7f080290
 int id layout_navigation_drawer_header_fh_logo 0x7f080291
-int id layout_settings_theme_spinner_background_image_themeicon 0x7f080292
-int id layout_settings_theme_spinner_background_textview_text 0x7f080293
 int id layout_settings_theme_spinner_row_image_themeicon 0x7f080294
 int id layout_settings_theme_spinner_row_textview_text 0x7f080295
+int id layout_simple_spinner_adapter_background_textview 0x7f080296
+int id layout_simple_spinner_adapter_item_textview 0x7f080297
 int id left 0x7f08011e
 int id leftToRight 0x7f08011f
 int id legacy 0x7f080120
@@ -3035,8 +3035,6 @@ int id shortcut 0x7f0801ca
 int id showCustom 0x7f0801cb
 int id showHome 0x7f0801cc
 int id showTitle 0x7f0801cd
-int id simple_spinner_background_text 0x7f0801ce
-int id simple_spinner_item_text 0x7f0801cf
 int id sin 0x7f0801d0
 int id skipCollapsed 0x7f0801d1
 int id skipped 0x7f0801d2
@@ -3258,7 +3256,6 @@ int layout layout_exam_overview_exam 0x7f0b0036
 int layout layout_favorite_overview_card 0x7f0b0037
 int layout layout_favorite_overview_card_contextmenu 0x7f0b0038
 int layout layout_navigation_drawer_header 0x7f0b0039
-int layout layout_settings_theme_spinner_background 0x7f0b003a
 int layout layout_settings_theme_spinner_row 0x7f0b003b
 int layout layout_simple_spinner_adapter_background 0x7f0b003c
 int layout layout_simpler_spinner_adapter_item 0x7f0b003d
