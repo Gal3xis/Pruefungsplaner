@@ -22,7 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -37,7 +38,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
 
@@ -84,7 +86,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -99,7 +102,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -131,7 +135,7 @@
                 android:textSize="15sp" />
 
             <Spinner
-                android:id="@+id/fragment_settings_spinner_calendar_insertiontype"
+                android:id="@+id/fragment_settings_spinner_calendar_insertion_type"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
@@ -177,7 +181,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -192,7 +197,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -219,7 +225,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -234,7 +241,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <Switch
@@ -262,7 +270,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -278,7 +287,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="5dp"
                 android:src="@drawable/divider_dotted_line"
-                app:tint="?attr/colorOnBackground" />
+                app:tint="?attr/colorOnBackground"
+                tools:ignore="ContentDescription" />
         </LinearLayout>
 
         <androidx.appcompat.widget.AppCompatButton

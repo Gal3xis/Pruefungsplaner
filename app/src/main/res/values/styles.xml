@@ -67,8 +67,8 @@
         <item name="zukuenftigePlanung">#FFFFFF</item>
         <item name="defaultStatusColor">#000</item>
         <item name="spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
-        <item name="isFavorit">#f00</item>
-        <item name="isNotFavorit">#0f0</item>
+        <item name="is_favorite">#f00</item>
+        <item name="is_not_favorite">#0f0</item>
     </style>
 
     <!-- Alert Dialog -->
@@ -158,7 +158,7 @@
     <style name="customAlertDialog" parent="@android:style/Theme.Dialog">
         <item name="android:background">?attr/colorPrimaryDark</item>
         <item name="textColorAlertDialogListItem">?attr/colorOnPrimaryDark</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">20sp</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 

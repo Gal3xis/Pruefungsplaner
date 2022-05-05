@@ -27,7 +27,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/activity_change_faculty_title"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/image_fhb_logo" />
+        android:src="@drawable/image_fhb_logo"
+        tools:ignore="ContentDescription" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/activity_change_faculty_button_select_faculty"

@@ -42,7 +42,7 @@ public final class SimpleSpinnerAdapter extends android.widget.ArrayAdapter<java
      * @return A View corresponding to the data at the specified position.
      */
     @org.jetbrains.annotations.NotNull()
-    @android.annotation.SuppressLint(value = {"ViewHolder"})
+    @android.annotation.SuppressLint(value = {"ViewHolder", "InflateParams"})
     @java.lang.Override()
     public android.view.View getView(int position, @org.jetbrains.annotations.Nullable()
     android.view.View convertView, @org.jetbrains.annotations.NotNull()
@@ -53,10 +53,10 @@ public final class SimpleSpinnerAdapter extends android.widget.ArrayAdapter<java
     /**
      * Initializes the view, passes the values to the UI-Elements.
      *
-     * @param[view] The view for a Spinnerrow.
+     * @param[view] The view for a spinner row.
      * @param[position] The index of the item
      *
-     * @return The spinnerrow, containing the initialized UI-Elements.
+     * @return The spinner row, containing the initialized UI-Elements.
      *
      * @author Alexander Lange
      * @since 1.6

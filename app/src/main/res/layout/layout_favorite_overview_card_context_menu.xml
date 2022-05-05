@@ -7,7 +7,7 @@
     android:padding="20dp"
     >
     <Button
-        android:id="@+id/layout_favorite_overview_card_contextmenu_button_add_to_calendar"
+        android:id="@+id/layout_favorite_overview_card_context_menu_button_add_to_calendar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/background_rounded_corners_strong"
@@ -16,7 +16,7 @@
         />
 
     <Button
-        android:id="@+id/layout_favorite_overview_card_contextmenu_button_remove_from_favorites"
+        android:id="@+id/layout_favorite_overview_card_context_menu_button_remove_from_favorites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

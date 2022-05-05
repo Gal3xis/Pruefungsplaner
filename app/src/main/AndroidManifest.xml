@@ -27,7 +27,7 @@
             android:name=".view.activities.MainActivity"
             android:configChanges="orientation|screenSize"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>

@@ -579,11 +579,11 @@ int attr indicatorInset 0x7f030201
 int attr indicatorSize 0x7f030202
 int attr initialActivityCount 0x7f030203
 int attr insetForeground 0x7f030204
-int attr isFavorit 0x7f030205
 int attr isLightTheme 0x7f030206
 int attr isMaterial3Theme 0x7f030207
 int attr isMaterialTheme 0x7f030208
-int attr isNotFavorit 0x7f030209
+int attr is_favorite 0x7f03045d
+int attr is_not_favorite 0x7f03045e
 int attr itemActiveIndicatorStyle 0x7f03020a
 int attr itemBackground 0x7f03020b
 int attr itemFillColor 0x7f03020c
@@ -2487,7 +2487,7 @@ int drawable avd_hide_password 0x7f070055
 int drawable avd_show_password 0x7f070056
 int drawable background_period_timespan 0x7f070057
 int drawable background_rounded_corners_strong 0x7f070058
-int drawable background_settings_themecolor 0x7f070059
+int drawable background_settings_theme_color 0x7f0700ab
 int drawable btn_checkbox_checked_mtrl 0x7f07005a
 int drawable btn_checkbox_checked_to_unchecked_mtrl_animation 0x7f07005b
 int drawable btn_checkbox_unchecked_mtrl 0x7f07005c
@@ -2787,7 +2787,7 @@ int id fragment_feedback_button_send 0x7f080258
 int id fragment_feedback_ratingbar_functions 0x7f080259
 int id fragment_feedback_ratingbar_stability 0x7f08025a
 int id fragment_feedback_ratingbar_usability 0x7f08025b
-int id fragment_feedback_text_input_feedbacktext 0x7f08025c
+int id fragment_feedback_text_input_feedback_text 0x7f080298
 int id fragment_impressum_textview_impressum 0x7f08025d
 int id fragment_privacy_declaration_textview_privacy_declaration 0x7f08025e
 int id fragment_settings_button_background_updates_interval 0x7f08025f
@@ -2799,7 +2799,7 @@ int id fragment_settings_button_privacy_declaration 0x7f080264
 int id fragment_settings_button_update_calendar 0x7f080265
 int id fragment_settings_button_update_database 0x7f080266
 int id fragment_settings_spinner_calendar_id 0x7f080267
-int id fragment_settings_spinner_calendar_insertiontype 0x7f080268
+int id fragment_settings_spinner_calendar_insertion_type 0x7f080299
 int id fragment_settings_spinner_theme 0x7f080269
 int id fragment_settings_switch_background_updates 0x7f08026a
 int id fragment_settings_switch_background_updates_notification_sound 0x7f08026b
@@ -2865,8 +2865,8 @@ int id layout_exam_overview_exam_textview_module 0x7f080281
 int id layout_exam_overview_exam_textview_time 0x7f080282
 int id layout_favorite_overview_card 0x7f080283
 int id layout_favorite_overview_card_base 0x7f080284
-int id layout_favorite_overview_card_contextmenu_button_add_to_calendar 0x7f080285
-int id layout_favorite_overview_card_contextmenu_button_remove_from_favorites 0x7f080286
+int id layout_favorite_overview_card_context_menu_button_add_to_calendar 0x7f08029a
+int id layout_favorite_overview_card_context_menu_button_remove_from_favorites 0x7f08029b
 int id layout_favorite_overview_card_divider_base 0x7f080287
 int id layout_favorite_overview_card_divider_details 0x7f080288
 int id layout_favorite_overview_card_imageview_icon_in_calendar 0x7f080289
@@ -2878,7 +2878,7 @@ int id layout_favorite_overview_card_textview_header_date 0x7f08028e
 int id layout_favorite_overview_card_textview_header_module 0x7f08028f
 int id layout_favorite_overview_card_textview_header_time 0x7f080290
 int id layout_navigation_drawer_header_fh_logo 0x7f080291
-int id layout_settings_theme_spinner_row_image_themeicon 0x7f080294
+int id layout_settings_theme_spinner_row_image_theme_icon 0x7f08029c
 int id layout_settings_theme_spinner_row_textview_text 0x7f080295
 int id layout_simple_spinner_adapter_background_textview 0x7f080296
 int id layout_simple_spinner_adapter_item_textview 0x7f080297
@@ -3082,7 +3082,6 @@ int id tag_transition_group 0x7f0801fe
 int id tag_unhandled_key_event_manager 0x7f0801ff
 int id tag_unhandled_key_listeners 0x7f080200
 int id tag_window_insets_animation_callback 0x7f080201
-int id termineFragment_Root 0x7f080202
 int id test_checkbox_android_button_tint 0x7f080204
 int id test_checkbox_app_button_tint 0x7f080205
 int id test_radiobutton_android_button_tint 0x7f080206
@@ -3254,7 +3253,7 @@ int layout layout_courses_checklist_view_holder 0x7f0b0034
 int layout layout_dialog_filter 0x7f0b0035
 int layout layout_exam_overview_exam 0x7f0b0036
 int layout layout_favorite_overview_card 0x7f0b0037
-int layout layout_favorite_overview_card_contextmenu 0x7f0b0038
+int layout layout_favorite_overview_card_context_menu 0x7f0b008e
 int layout layout_navigation_drawer_header 0x7f0b0039
 int layout layout_settings_theme_spinner_row 0x7f0b003b
 int layout layout_simple_spinner_adapter_background 0x7f0b003c
@@ -3378,12 +3377,18 @@ int string abc_searchview_description_voice 0x7f100019
 int string abc_shareactionprovider_share_with 0x7f10001a
 int string abc_shareactionprovider_share_with_application 0x7f10001b
 int string abc_toolbar_collapse_description 0x7f10001c
+int string action_menu_item_filter 0x7f1000f7
+int string action_menu_item_legend 0x7f1000f8
 int string action_menu_item_search 0x7f10001d
 int string androidx_startup 0x7f10001e
 int string app_name 0x7f10001f
 int string appbar_scrolling_view_behavior 0x7f100020
+int string background_worker_notification 0x7f1000e7
 int string bottom_sheet_behavior 0x7f100021
 int string bottomsheet_action_expand_halfway 0x7f100022
+int string calendar_io_alertdialog_ask_negative_button 0x7f1000f9
+int string calendar_io_alertdialog_ask_positive_button 0x7f1000fa
+int string calendar_io_alertdialog_ask_title 0x7f1000fb
 int string cannot_load_current_period 0x7f100025
 int string change_button_courses_ok 0x7f1000c9
 int string change_courses_label_change_main 0x7f1000ca
@@ -3428,19 +3433,30 @@ int string feedback_stability 0x7f10004d
 int string feedback_text 0x7f10004e
 int string feedback_usability 0x7f10004f
 int string filter_dialog_course_label 0x7f1000d0
+int string filter_dialog_label_date 0x7f1000fc
+int string filter_dialog_label_examiner 0x7f1000fd
+int string filter_dialog_label_semester 0x7f1000fe
 int string filter_dialog_module_label 0x7f1000d1
 int string filter_spinner_courses_all 0x7f1000db
 int string filter_spinner_examiner_all 0x7f1000dc
 int string filter_spinner_modules_all 0x7f1000dd
 int string filter_textview_date_all 0x7f1000de
-int string fragment_change_courses_name 0x7f1000df
-int string fragment_exam_overview_name 0x7f1000e0
-int string fragment_favorite_overview_name 0x7f1000e1
-int string fragment_settings_delete_favorites_alert_dialog_negative_button 0x7f1000e2
-int string fragment_settings_delete_favorites_alert_dialog_positive_button 0x7f1000e3
-int string fragment_settings_delete_favorites_alertdialog_message 0x7f1000e4
-int string fragment_settings_delete_favorits_alertdialog_title 0x7f1000e5
-int string fragment_settings_name 0x7f1000e6
+int string fragment_settings_alertdialog_delete_calendar_message 0x7f1000eb
+int string fragment_settings_alertdialog_delete_calendar_negative_button 0x7f1000ec
+int string fragment_settings_alertdialog_delete_calendar_positive_button 0x7f1000ed
+int string fragment_settings_alertdialog_delete_calendar_title 0x7f1000ee
+int string fragment_settings_alertdialog_delete_database_message 0x7f1000ef
+int string fragment_settings_alertdialog_delete_database_negative_button 0x7f1000f0
+int string fragment_settings_alertdialog_delete_database_positive_button 0x7f1000f1
+int string fragment_settings_alertdialog_delete_database_title 0x7f1000f2
+int string fragment_settings_alertdialog_delete_favorites_message 0x7f1000ff
+int string fragment_settings_alertdialog_delete_favorites_negative_button 0x7f100100
+int string fragment_settings_alertdialog_delete_favorites_positive_button 0x7f100101
+int string fragment_settings_alertdialog_delete_favorites_title 0x7f100102
+int string fragment_settings_alertdialog_update_calendar_message 0x7f1000f3
+int string fragment_settings_alertdialog_update_calendar_negative_button 0x7f1000f4
+int string fragment_settings_alertdialog_update_calendar_positive_button 0x7f1000f5
+int string fragment_settings_alertdialog_update_calendar_title 0x7f1000f6
 int string hide_bottom_view_on_scroll_behavior 0x7f100050
 int string icon_content_description 0x7f100051
 int string impressum_ok 0x7f100052
@@ -3538,7 +3554,7 @@ int string path_password_eye_mask_visible 0x7f1000b0
 int string path_password_strike_through 0x7f1000b1
 int string privacy_declaration_ok 0x7f1000b2
 int string search_menu_title 0x7f1000b3
-int string sendedFeedBack 0x7f1000b4
+int string sendFeedBack 0x7f100103
 int string settings_button_auto_updates_interval 0x7f1000b5
 int string settings_button_delete_calendar 0x7f1000b6
 int string settings_button_delete_database 0x7f1000b7
@@ -5579,9 +5595,9 @@ int styleable ExtendedFloatingActionButton_shrinkMotionSpec 5
 int[] styleable ExtendedFloatingActionButton_Behavior_Layout { 0x7f030055, 0x7f030056 }
 int styleable ExtendedFloatingActionButton_Behavior_Layout_behavior_autoHide 0
 int styleable ExtendedFloatingActionButton_Behavior_Layout_behavior_autoShrink 1
-int[] styleable Favorit { 0x7f030205, 0x7f030209 }
-int styleable Favorit_isFavorit 0
-int styleable Favorit_isNotFavorit 1
+int[] styleable Favorite { 0x7f03045d, 0x7f03045e }
+int styleable Favorite_is_favorite 0
+int styleable Favorite_is_not_favorite 1
 int[] styleable FloatingActionButton { 0x0101000e, 0x7f030049, 0x7f03004a, 0x7f030063, 0x7f030170, 0x7f03017e, 0x7f03019d, 0x7f03019e, 0x7f0301df, 0x7f0301ea, 0x7f0302ba, 0x7f030324, 0x7f03033c, 0x7f03034e, 0x7f030351, 0x7f030358, 0x7f03043a }
 int styleable FloatingActionButton_android_enabled 0
 int styleable FloatingActionButton_backgroundTint 1

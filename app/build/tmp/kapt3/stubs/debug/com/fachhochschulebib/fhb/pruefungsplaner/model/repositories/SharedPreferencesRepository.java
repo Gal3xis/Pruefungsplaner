@@ -5,7 +5,7 @@ import java.lang.System;
 /**
  * Repository to access the shared preferences.
  *
- * @param context The Applicationcotext
+ * @param context The Applicationcontext
  *
  * @author Alexander Lange
  * @since 1.6
@@ -29,7 +29,7 @@ public final class SharedPreferencesRepository {
     private final android.content.SharedPreferences userSelection = null;
     
     /**
-     * File to store the ids for each event in the calendar, mapped with the associted [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     * File to store the ids for each event in the calendar, mapped with the associated [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
      */
     private final android.content.SharedPreferences calendarEntries = null;
     
@@ -54,7 +54,7 @@ public final class SharedPreferencesRepository {
     /**
      * Adds multiple calendar event ids into the shared preferences.
      *
-     * @param ids A prepared Map with calendar event ids and their [ccom.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     * @param ids A prepared Map with calendar event ids and their [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
      *
      * @author Alexander Lange
      * @since 1.6
@@ -77,7 +77,7 @@ public final class SharedPreferencesRepository {
     }
     
     /**
-     * Deletes one calendar event id from the shared preferencse.
+     * Deletes one calendar event id from the shared preferences.
      *
      * @param id The Id of the event to be deleted
      *

@@ -4,13 +4,14 @@ import java.lang.System;
 
 /**
  * Activity, that allows the user to pick a faculty and select courses.
- * First activity called on appstart and can also be opend from navigationdrawer in the [MainActivity].
- * Also initializes a backgroundworker to look for new Database-updates and an Updatemanager to look for new Appupdates.
+ * First activity called on app start and can also be opened from navigationdrawer in the [MainActivity].
+ * Also initializes a background worker to look for new Database-updates and an Updatemanager to look for new App updates.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0005\u00a2\u0006\u0002\u0010\u0002J\b\u0010\u000b\u001a\u00020\fH\u0002J\b\u0010\r\u001a\u00020\fH\u0002J\u0010\u0010\u000e\u001a\u00020\f2\u0006\u0010\u000f\u001a\u00020\u0010H\u0002J\b\u0010\u0011\u001a\u00020\fH\u0002J\b\u0010\u0012\u001a\u00020\fH\u0002J\b\u0010\u0013\u001a\u00020\fH\u0002J\"\u0010\u0014\u001a\u00020\f2\u0006\u0010\u0015\u001a\u00020\u00162\u0006\u0010\u0017\u001a\u00020\u00162\b\u0010\u0018\u001a\u0004\u0018\u00010\u0019H\u0014J\u0012\u0010\u001a\u001a\u00020\f2\b\u0010\u001b\u001a\u0004\u0018\u00010\u001cH\u0016J\b\u0010\u001d\u001a\u00020\fH\u0014J\b\u0010\u001e\u001a\u00020\fH\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0082.\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0007\u001a\u0004\u0018\u00010\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0082.\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u001f"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/activities/StartActivity;", "Landroidx/appcompat/app/AppCompatActivity;", "()V", "installStateUpdateListener", "Lcom/google/android/play/core/install/InstallStateUpdatedListener;", "recyclerViewCourses", "Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/CoursesCheckList;", "updateManager", "Lcom/google/android/play/core/appupdate/AppUpdateManager;", "viewModel", "Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/StartViewModel;", "clickedChooseFaculty", "", "clickedOk", "facultyChosen", "faculty", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/Faculty;", "initButtons", "initRecyclerviewCourses", "initUpdateManager", "onActivityResult", "requestCode", "", "resultCode", "data", "Landroid/content/Intent;", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onStop", "startApplication", "app_debug"})
+@kotlin.Suppress(names = {"DEPRECATION"})
+@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000L\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\b\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u00002\u00020\u0001B\u0005\u00a2\u0006\u0002\u0010\u0002J\b\u0010\u000b\u001a\u00020\fH\u0002J\b\u0010\r\u001a\u00020\fH\u0002J\u0010\u0010\u000e\u001a\u00020\f2\u0006\u0010\u000f\u001a\u00020\u0010H\u0002J\b\u0010\u0011\u001a\u00020\fH\u0002J\b\u0010\u0012\u001a\u00020\fH\u0002J\b\u0010\u0013\u001a\u00020\fH\u0002J\"\u0010\u0014\u001a\u00020\f2\u0006\u0010\u0015\u001a\u00020\u00162\u0006\u0010\u0017\u001a\u00020\u00162\b\u0010\u0018\u001a\u0004\u0018\u00010\u0019H\u0015J\u0012\u0010\u001a\u001a\u00020\f2\b\u0010\u001b\u001a\u0004\u0018\u00010\u001cH\u0016J\b\u0010\u001d\u001a\u00020\fH\u0014J\b\u0010\u001e\u001a\u00020\fH\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0006X\u0082.\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0007\u001a\u0004\u0018\u00010\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\nX\u0082.\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u001f"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/activities/StartActivity;", "Landroidx/appcompat/app/AppCompatActivity;", "()V", "installStateUpdateListener", "Lcom/google/android/play/core/install/InstallStateUpdatedListener;", "recyclerViewCourses", "Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/CoursesCheckList;", "updateManager", "Lcom/google/android/play/core/appupdate/AppUpdateManager;", "viewModel", "Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/StartViewModel;", "clickedChooseFaculty", "", "clickedOk", "facultyChosen", "faculty", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/Faculty;", "initButtons", "initRecyclerviewCourses", "initUpdateManager", "onActivityResult", "requestCode", "", "resultCode", "data", "Landroid/content/Intent;", "onCreate", "savedInstanceState", "Landroid/os/Bundle;", "onStop", "startApplication", "app_debug"})
 public final class StartActivity extends androidx.appcompat.app.AppCompatActivity {
     
     /**
@@ -26,7 +27,7 @@ public final class StartActivity extends androidx.appcompat.app.AppCompatActivit
     
     /**
      * Listener that checks the state of the update download if an update is initiated.
-     * Displays a [Snackbar] to let the user know that the update is ready to install.
+     * Displays a Snackbar to let the user know that the update is ready to install.
      */
     private final com.google.android.play.core.install.InstallStateUpdatedListener installStateUpdateListener = null;
     
@@ -55,7 +56,7 @@ public final class StartActivity extends androidx.appcompat.app.AppCompatActivit
     }
     
     /**
-     * Initializes the updatemanager. The updatemanager checks the google playstore for new appupdates
+     * Initializes the updatemanager. The updatemanager checks the google playstore for new app updates
      * and if one was found he starts a dialog in which the user can choose if he wants
      * to update or not.
      *
@@ -94,8 +95,6 @@ public final class StartActivity extends androidx.appcompat.app.AppCompatActivit
     /**
      * Creates a dialog that asks the User to select a main course.
      *
-     * @param[view] The view that calls this method.
-     *
      * @author Alexander Lange
      * @since 1.6
      */
@@ -115,6 +114,7 @@ public final class StartActivity extends androidx.appcompat.app.AppCompatActivit
      * @see AppCompatActivity.onActivityResult
      */
     @java.lang.Override()
+    @java.lang.Deprecated()
     protected void onActivityResult(int requestCode, int resultCode, @org.jetbrains.annotations.Nullable()
     android.content.Intent data) {
     }
@@ -144,8 +144,7 @@ public final class StartActivity extends androidx.appcompat.app.AppCompatActivit
      * Called, when the user picked a faculty.
      * Fills the recyclerview with courses.
      *
-     * @param[faculties] The list of faculties.
-     * @param[which] The index of the picked item.
+     * @param faculty The chosen faculty
      *
      * @author Alexander Lange
      * @since 1.6

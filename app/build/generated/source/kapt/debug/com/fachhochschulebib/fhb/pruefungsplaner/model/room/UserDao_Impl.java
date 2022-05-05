@@ -331,7 +331,7 @@ public final class UserDao_Impl implements UserDao {
 
   @Override
   public Object update(final boolean favorite, final String id,
-                       final Continuation<? super Unit> continuation) {
+      final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
       public Unit call() throws Exception {

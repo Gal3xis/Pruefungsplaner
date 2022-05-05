@@ -12,7 +12,7 @@ public final class StartActivityKt {
     public static final int UPDATE_REQUEST_CODE = 100;
     
     /**
-     * String contant that is used as extra in the intent to notify that the Start Activity shall not skip if a selected main course is recognized.
+     * String constant that is used as extra in the intent to notify that the Start Activity shall not skip if a selected main course is recognized.
      * Used for changing the faculty.
      */
     @org.jetbrains.annotations.NotNull()

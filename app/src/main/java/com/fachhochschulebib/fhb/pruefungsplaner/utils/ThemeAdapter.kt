@@ -61,10 +61,10 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
      */
     @SuppressLint("UseCompatLoadingForDrawables")
     private fun view(view: View?, position: Int): View {
-        val image = view?.findViewById<View>(R.id.layout_settings_theme_spinner_row_image_themeicon)
+        val image = view?.findViewById<View>(R.id.layout_settings_theme_spinner_row_image_theme_icon)
         val text = view?.findViewById<TextView>(R.id.layout_settings_theme_spinner_row_textview_text)
         val theme = getItem(position)
-        val drawable = view?.resources?.getDrawable(R.drawable.background_settings_themecolor,theme?.theme?:view.context.theme)
+        val drawable = view?.resources?.getDrawable(R.drawable.background_settings_theme_color,theme?.theme?:view.context.theme)
         image?.background = drawable
         text?.text = theme?.name?:"Unnamed"
         return view?:View(context)

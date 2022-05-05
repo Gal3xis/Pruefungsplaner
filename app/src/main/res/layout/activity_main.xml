@@ -52,13 +52,12 @@
                 android:text="@string/cannot_load_current_period"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:autoSizeTextType="uniform"
                 android:textColor="?attr/colorOnPrimary"
                 android:outlineProvider="bounds"
                 android:elevation="30dp"
                 android:textSize="20sp"
                 android:layout_below="@id/activity_main_toolbar"
-                />
+                tools:targetApi="o" />
 
 
 

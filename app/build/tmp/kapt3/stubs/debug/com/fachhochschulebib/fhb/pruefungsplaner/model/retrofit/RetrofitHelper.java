@@ -3,7 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.model.retrofit;
 import java.lang.System;
 
 /**
- * Helperclass to create the access to the remote database via the [RetrofitInterface]
+ * Helper class to create the access to the remote database via the [RetrofitInterface]
  *
  * @author Alexander Lange
  * @since 1.6

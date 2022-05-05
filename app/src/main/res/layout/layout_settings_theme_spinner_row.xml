@@ -10,11 +10,11 @@
     >
 
     <View
-        android:id="@+id/layout_settings_theme_spinner_row_image_themeicon"
+        android:id="@+id/layout_settings_theme_spinner_row_image_theme_icon"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center_vertical"
-        tools:background="@drawable/background_settings_themecolor"
+        tools:background="@drawable/background_settings_theme_color"
         />
 
     <TextView

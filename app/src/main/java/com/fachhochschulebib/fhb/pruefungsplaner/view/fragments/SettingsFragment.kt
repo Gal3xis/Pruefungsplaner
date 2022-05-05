@@ -197,9 +197,9 @@ class SettingsFragment : MainActivityFragment() {
         fragment_settings_button_delete_favorites.setOnClickListener {
             val count = viewModel.liveFavorites.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
-                .setTitle(getString(R.string.fragment_settings_delete_favorits_alertdialog_title))
-                .setMessage(String.format(getString(R.string.fragment_settings_delete_favorites_alertdialog_message),count))
-                .setPositiveButton(getString(R.string.fragment_settings_delete_favorites_alert_dialog_positive_button)) { _, _ ->
+                .setTitle(getString(R.string.fragment_settings_alertdialog_delete_favorites_title))
+                .setMessage(String.format(getString(R.string.fragment_settings_alertdialog_delete_favorites_message),count))
+                .setPositiveButton(getString(R.string.fragment_settings_alertdialog_delete_favorites_positive_button)) { _, _ ->
                     viewModel.deleteAllFavorites(requireContext())
                     Toast.makeText(
                         requireContext(),
@@ -207,7 +207,7 @@ class SettingsFragment : MainActivityFragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-                .setNegativeButton(getString(R.string.fragment_settings_delete_favorites_alert_dialog_negative_button), null)
+                .setNegativeButton(getString(R.string.fragment_settings_alertdialog_delete_favorites_negative_button), null)
                 .create()
                 .show()
         }
@@ -335,9 +335,9 @@ class SettingsFragment : MainActivityFragment() {
         CalendarIO.InsertionType.values().forEach {
             names.add(it.name)
         }
-        fragment_settings_spinner_calendar_insertiontype.adapter =
+        fragment_settings_spinner_calendar_insertion_type.adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, names)
-        fragment_settings_spinner_calendar_insertiontype.onItemSelectedListener =
+        fragment_settings_spinner_calendar_insertion_type.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -356,7 +356,7 @@ class SettingsFragment : MainActivityFragment() {
                     textView.textSize = 15f
                     viewModel.setCalendarInsertionType(
                         CalendarIO.InsertionType.valueOf(
-                            fragment_settings_spinner_calendar_insertiontype.selectedItem.toString()
+                            fragment_settings_spinner_calendar_insertion_type.selectedItem.toString()
                         )
                     )
                 }
@@ -365,7 +365,7 @@ class SettingsFragment : MainActivityFragment() {
 
                 }
             }
-        fragment_settings_spinner_calendar_insertiontype.setSelection(viewModel.getCalendarInsertionType().name)
+        fragment_settings_spinner_calendar_insertion_type.setSelection(viewModel.getCalendarInsertionType().name)
     }
 
     /**

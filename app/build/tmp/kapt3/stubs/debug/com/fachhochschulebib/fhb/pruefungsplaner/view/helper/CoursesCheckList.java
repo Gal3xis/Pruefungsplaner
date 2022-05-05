@@ -8,10 +8,9 @@ import java.lang.System;
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  *
- * @see AddCourseFragment
  * @see RecyclerView.Adapter
  */
-@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\u0018\u00002\f\u0012\b\u0012\u00060\u0002R\u00020\u00000\u0001:\u0001\u001eB#\u0012\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u00a2\u0006\u0002\u0010\nJ\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004J\b\u0010\u0010\u001a\u00020\u0011H\u0016J\u0010\u0010\u0012\u001a\u00020\u00112\u0006\u0010\u0013\u001a\u00020\u0011H\u0016J\u001c\u0010\u0014\u001a\u00020\u00152\n\u0010\u0016\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0013\u001a\u00020\u0011H\u0016J\u001c\u0010\u0017\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0018\u001a\u00020\u00192\u0006\u0010\u001a\u001a\u00020\u0011H\u0016J\u0010\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0013\u001a\u00020\u0011H\u0002J\u0014\u0010\u001d\u001a\u00020\u00152\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004R\u000e\u0010\b\u001a\u00020\tX\u0082\u0004\u00a2\u0006\u0002\n\u0000R \u0010\u0003\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u000e\u0010\u0006\u001a\u00020\u0007X\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u001f"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/CoursesCheckList;", "Landroidx/recyclerview/widget/RecyclerView$Adapter;", "Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/CoursesCheckList$ViewHolder;", "courseList", "", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/Course;", "viewModel", "Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;", "context", "Landroid/content/Context;", "(Ljava/util/List;Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;Landroid/content/Context;)V", "getCourseList", "()Ljava/util/List;", "setCourseList", "(Ljava/util/List;)V", "getChosen", "getItemCount", "", "getItemViewType", "position", "onBindViewHolder", "", "holder", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "toggleFavorite", "", "updateContent", "ViewHolder", "app_debug"})
+@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000F\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010 \n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0007\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0010\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000b\n\u0002\b\u0003\u0018\u00002\f\u0012\b\u0012\u00060\u0002R\u00020\u00000\u0001:\u0001\u001eB#\u0012\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004\u0012\u0006\u0010\u0006\u001a\u00020\u0007\u0012\u0006\u0010\b\u001a\u00020\t\u00a2\u0006\u0002\u0010\nJ\f\u0010\u000f\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004J\b\u0010\u0010\u001a\u00020\u0011H\u0016J\u0010\u0010\u0012\u001a\u00020\u00112\u0006\u0010\u0013\u001a\u00020\u0011H\u0016J\u001c\u0010\u0014\u001a\u00020\u00152\n\u0010\u0016\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0013\u001a\u00020\u0011H\u0016J\u001c\u0010\u0017\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0018\u001a\u00020\u00192\u0006\u0010\u001a\u001a\u00020\u0011H\u0016J\u0010\u0010\u001b\u001a\u00020\u001c2\u0006\u0010\u0013\u001a\u00020\u0011H\u0002J\u0016\u0010\u001d\u001a\u00020\u00152\f\u0010\u0003\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004H\u0007R\u000e\u0010\b\u001a\u00020\tX\u0082\u0004\u00a2\u0006\u0002\n\u0000R \u0010\u0003\u001a\b\u0012\u0004\u0012\u00020\u00050\u0004X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u000e\u0010\u0006\u001a\u00020\u0007X\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u001f"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/CoursesCheckList;", "Landroidx/recyclerview/widget/RecyclerView$Adapter;", "Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/CoursesCheckList$ViewHolder;", "courseList", "", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/Course;", "viewModel", "Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;", "context", "Landroid/content/Context;", "(Ljava/util/List;Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;Landroid/content/Context;)V", "getCourseList", "()Ljava/util/List;", "setCourseList", "(Ljava/util/List;)V", "getChosen", "getItemCount", "", "getItemViewType", "position", "onBindViewHolder", "", "holder", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "toggleFavorite", "", "updateContent", "ViewHolder", "app_debug"})
 public final class CoursesCheckList extends androidx.recyclerview.widget.RecyclerView.Adapter<com.fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList.ViewHolder> {
     @org.jetbrains.annotations.NotNull()
     private java.util.List<com.fachhochschulebib.fhb.pruefungsplaner.model.room.Course> courseList;
@@ -56,6 +55,7 @@ public final class CoursesCheckList extends androidx.recyclerview.widget.Recycle
      * @author Alexander Lange
      * @since 1.6
      */
+    @android.annotation.SuppressLint(value = {"NotifyDataSetChanged"})
     public final void updateContent(@org.jetbrains.annotations.NotNull()
     java.util.List<com.fachhochschulebib.fhb.pruefungsplaner.model.room.Course> courseList) {
     }
@@ -116,9 +116,9 @@ public final class CoursesCheckList extends androidx.recyclerview.widget.Recycle
     }
     
     /**
-     * Returns the size of the courseList.
+     * Returns the size of the course list.
      *
-     * @return the size of the courselist
+     * @return the size of the course list
      *
      * @author Alexander Lange
      * @since 1.6

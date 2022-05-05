@@ -3,7 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.view.helper;
 import java.lang.System;
 
 /**
- * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorit exams.
+ * The [RecyclerView.Adapter] for the [RecyclerView] that holds information about the favorite exams.
  * The information is stored in multiple [List]-Objects, each holding one kind of information for every exam that
  * needs to be displayed. E.g. the exam at position 1 gets his information from every list at index 1.
  *
@@ -12,7 +12,7 @@ import java.lang.System;
  * @see RecyclerView.Adapter
  * @see RecyclerView
  */
-@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000D\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\b\u0002\u0018\u00002\f\u0012\b\u0012\u00060\u0002R\u00020\u00000\u0001:\u0001\u001eB#\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u0006\u0012\u0006\u0010\b\u001a\u00020\t\u00a2\u0006\u0002\u0010\nJ\u001d\u0010\u000f\u001a\u00020\u00102\b\u0010\u0011\u001a\u0004\u0018\u00010\u00122\u0006\u0010\u0013\u001a\u00020\u0007\u00a2\u0006\u0002\u0010\u0014J\b\u0010\u0015\u001a\u00020\u0012H\u0016J\u001c\u0010\u0016\u001a\u00020\u00102\n\u0010\u0017\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0011\u001a\u00020\u0012H\u0016J\u001c\u0010\u0018\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0019\u001a\u00020\u001a2\u0006\u0010\u001b\u001a\u00020\u0012H\u0016J\u0014\u0010\u001c\u001a\u00020\u00102\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u001dR\u000e\u0010\u0003\u001a\u00020\u0004X\u0082\u0004\u00a2\u0006\u0002\n\u0000R \u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u0006X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u000e\u0010\b\u001a\u00020\tX\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u001f"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter;", "Landroidx/recyclerview/widget/RecyclerView$Adapter;", "Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter$ViewHolder;", "context", "Landroid/content/Context;", "entryList", "", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/TestPlanEntry;", "viewModel", "Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;", "(Landroid/content/Context;Ljava/util/List;Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;)V", "getEntryList", "()Ljava/util/List;", "setEntryList", "(Ljava/util/List;)V", "add", "", "position", "", "entry", "(Ljava/lang/Integer;Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/TestPlanEntry;)V", "getItemCount", "onBindViewHolder", "holder", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "updateContent", "", "ViewHolder", "app_debug"})
+@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000D\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010!\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0006\n\u0002\u0010\u0002\n\u0000\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\b\u0002\u0018\u00002\f\u0012\b\u0012\u00060\u0002R\u00020\u00000\u0001:\u0001\u001eB#\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u0006\u0012\u0006\u0010\b\u001a\u00020\t\u00a2\u0006\u0002\u0010\nJ\u001d\u0010\u000f\u001a\u00020\u00102\b\u0010\u0011\u001a\u0004\u0018\u00010\u00122\u0006\u0010\u0013\u001a\u00020\u0007\u00a2\u0006\u0002\u0010\u0014J\b\u0010\u0015\u001a\u00020\u0012H\u0016J\u001c\u0010\u0016\u001a\u00020\u00102\n\u0010\u0017\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0011\u001a\u00020\u0012H\u0016J\u001c\u0010\u0018\u001a\u00060\u0002R\u00020\u00002\u0006\u0010\u0019\u001a\u00020\u001a2\u0006\u0010\u001b\u001a\u00020\u0012H\u0016J\u0016\u0010\u001c\u001a\u00020\u00102\f\u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u001dH\u0007R\u000e\u0010\u0003\u001a\u00020\u0004X\u0082\u0004\u00a2\u0006\u0002\n\u0000R \u0010\u0005\u001a\b\u0012\u0004\u0012\u00020\u00070\u0006X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u000b\u0010\f\"\u0004\b\r\u0010\u000eR\u000e\u0010\b\u001a\u00020\tX\u0082\u0004\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u001f"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter;", "Landroidx/recyclerview/widget/RecyclerView$Adapter;", "Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter$ViewHolder;", "context", "Landroid/content/Context;", "entryList", "", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/TestPlanEntry;", "viewModel", "Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;", "(Landroid/content/Context;Ljava/util/List;Lcom/fachhochschulebib/fhb/pruefungsplaner/viewmodel/BaseViewModel;)V", "getEntryList", "()Ljava/util/List;", "setEntryList", "(Ljava/util/List;)V", "add", "", "position", "", "entry", "(Ljava/lang/Integer;Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/TestPlanEntry;)V", "getItemCount", "onBindViewHolder", "holder", "onCreateViewHolder", "parent", "Landroid/view/ViewGroup;", "viewType", "updateContent", "", "ViewHolder", "app_debug"})
 public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewFavoriteAdapter.ViewHolder> {
     private final android.content.Context context = null;
     @org.jetbrains.annotations.NotNull()
@@ -39,7 +39,7 @@ public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.wid
      * Adds an item to the recyclerview.
      *
      * @param[position] The position, where the item needs to be inserted.
-     * @param[item] The item, that needs to be inserted.
+     * @param[entry] The [TestPlanEntry] of the item, that needs to be inserted.
      *
      * @author Alexander Lange
      * @since 1.6
@@ -70,8 +70,8 @@ public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.wid
     }
     
     /**
-     * Initializes the [ViewHolder] with information of the viewtype. In this case,
-     * passes the examinformation to the UI-Elements.
+     * Initializes the [ViewHolder] with information of the view type. In this case,
+     * passes the exam information to the UI-Elements.
      *
      * @param[holder] The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
      * @param[position] The position of the item within the adapter's data set.
@@ -95,12 +95,13 @@ public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.wid
      * @author Alexander Lange
      * @since 1.6
      */
+    @android.annotation.SuppressLint(value = {"NotifyDataSetChanged"})
     public final void updateContent(@org.jetbrains.annotations.NotNull()
     java.util.List<com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry> entryList) {
     }
     
     /**
-     * Returns the amount of items in the recyclerview, based on the size of the [moduleAndCourseList].
+     * Returns the amount of items in the recyclerview
      *
      * @return The amount of items in the recyclerview.
      *
@@ -122,7 +123,7 @@ public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.wid
      *
      * @see RecyclerView.ViewHolder
      */
-    @kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000>\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0086\u0004\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004J\u000e\u0010\u0016\u001a\u00020\u00172\u0006\u0010\u0018\u001a\u00020\u0019J\u0010\u0010\u001a\u001a\u00020\u00172\u0006\u0010\u0018\u001a\u00020\u0019H\u0002R\u0016\u0010\u0005\u001a\n \u0007*\u0004\u0018\u00010\u00060\u0006X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\b\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\n\u001a\n \u0007*\u0004\u0018\u00010\u000b0\u000bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\f\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\r\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u000e\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u000f\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u0010\u001a\n \u0007*\u0004\u0018\u00010\u00110\u0011X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u001a\u0010\u0002\u001a\u00020\u0003X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0012\u0010\u0013\"\u0004\b\u0014\u0010\u0015\u00a8\u0006\u001b"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter$ViewHolder;", "Landroidx/recyclerview/widget/RecyclerView$ViewHolder;", "layout", "Landroid/view/View;", "(Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter;Landroid/view/View;)V", "card", "Lcom/google/android/material/card/MaterialCardView;", "kotlin.jvm.PlatformType", "expandedTextView", "Landroid/widget/TextView;", "expansion", "Landroid/widget/RelativeLayout;", "headerCourse", "headerDate", "headerModule", "headerTime", "iconInCalendar", "Landroid/widget/ImageView;", "getLayout", "()Landroid/view/View;", "setLayout", "(Landroid/view/View;)V", "set", "", "entry", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/TestPlanEntry;", "showContextMenu", "app_debug"})
+    @kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000>\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\b\u0086\u0004\u0018\u00002\u00020\u0001B\r\u0012\u0006\u0010\u0002\u001a\u00020\u0003\u00a2\u0006\u0002\u0010\u0004J\u0010\u0010\u0016\u001a\u00020\u00172\u0006\u0010\u0018\u001a\u00020\u0019H\u0007J\u0010\u0010\u001a\u001a\u00020\u00172\u0006\u0010\u0018\u001a\u00020\u0019H\u0002R\u0016\u0010\u0005\u001a\n \u0007*\u0004\u0018\u00010\u00060\u0006X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\b\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\n\u001a\n \u0007*\u0004\u0018\u00010\u000b0\u000bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\f\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\r\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u000e\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u000f\u001a\n \u0007*\u0004\u0018\u00010\t0\tX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0016\u0010\u0010\u001a\n \u0007*\u0004\u0018\u00010\u00110\u0011X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u001a\u0010\u0002\u001a\u00020\u0003X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0012\u0010\u0013\"\u0004\b\u0014\u0010\u0015\u00a8\u0006\u001b"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter$ViewHolder;", "Landroidx/recyclerview/widget/RecyclerView$ViewHolder;", "layout", "Landroid/view/View;", "(Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/RecyclerViewFavoriteAdapter;Landroid/view/View;)V", "card", "Lcom/google/android/material/card/MaterialCardView;", "kotlin.jvm.PlatformType", "expandedTextView", "Landroid/widget/TextView;", "expansion", "Landroid/widget/RelativeLayout;", "headerCourse", "headerDate", "headerModule", "headerTime", "iconInCalendar", "Landroid/widget/ImageView;", "getLayout", "()Landroid/view/View;", "setLayout", "(Landroid/view/View;)V", "set", "", "entry", "Lcom/fachhochschulebib/fhb/pruefungsplaner/model/room/TestPlanEntry;", "showContextMenu", "app_debug"})
     public final class ViewHolder extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
         @org.jetbrains.annotations.NotNull()
         private android.view.View layout;
@@ -163,7 +164,7 @@ public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.wid
         private android.widget.RelativeLayout expansion;
         
         /**
-         * Icon that shows, if the [TestPlanEntry] is currently playced in the calendar
+         * Icon that shows, if the [TestPlanEntry] is currently placed in the calendar
          */
         private android.widget.ImageView iconInCalendar;
         
@@ -184,11 +185,12 @@ public final class RecyclerViewFavoriteAdapter extends androidx.recyclerview.wid
         /**
          * Function to initialize the UI-Elements for a specific [TestPlanEntry].
          *
-         * @param entry The [TestPlanEntry] that contains the data to be displayed in this viewholder.
+         * @param entry The [TestPlanEntry] that contains the data to be displayed in this view holder.
          *
          * @author Alexander Lange
          * @since 1.6
          */
+        @android.annotation.SuppressLint(value = {"SetTextI18n"})
         public final void set(@org.jetbrains.annotations.NotNull()
         com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry entry) {
         }

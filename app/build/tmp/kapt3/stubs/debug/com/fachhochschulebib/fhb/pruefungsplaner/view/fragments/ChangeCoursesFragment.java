@@ -3,7 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments;
 import java.lang.System;
 
 /**
- * Fragment to change the courseselection. Lets the user add additional courses and change the main course.
+ * Fragment to change the course selection. Lets the user add additional courses and change the main course.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
@@ -18,7 +18,7 @@ public final class ChangeCoursesFragment extends com.fachhochschulebib.fhb.pruef
     private com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel viewModel;
     
     /**
-     * Sets the name of that fragment to "Studiengänge verwalten"
+     * Sets the name of that fragment
      */
     @org.jetbrains.annotations.NotNull()
     private java.lang.String name = "Studieng\u00e4nge verwalten";

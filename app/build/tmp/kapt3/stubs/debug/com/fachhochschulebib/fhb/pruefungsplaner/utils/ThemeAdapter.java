@@ -3,7 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.utils;
 import java.lang.System;
 
 /**
- * Adapterclass for the Theme-Spinner in the options-fragment.
+ * Adapter class for the Theme-Spinner in the options-fragment.
  * Displays the different themes with an icon, that shows the primary-and the accent color.
  *
  * @param context The Applicationcontext
@@ -13,7 +13,7 @@ import java.lang.System;
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010!\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B#\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\f\u0010\u0007\u001a\b\u0012\u0004\u0012\u00020\u00020\b\u00a2\u0006\u0002\u0010\tJ\"\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\u00062\b\u0010\r\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\u000e\u001a\u00020\u000fH\u0016J\"\u0010\u0010\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\u00062\b\u0010\r\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\u000e\u001a\u00020\u000fH\u0017J\u001a\u0010\u0011\u001a\u00020\u000b2\b\u0010\u0011\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\f\u001a\u00020\u0006H\u0002\u00a8\u0006\u0012"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/utils/ThemeAdapter;", "Landroid/widget/ArrayAdapter;", "Lcom/fachhochschulebib/fhb/pruefungsplaner/utils/Theme;", "context", "Landroid/content/Context;", "resource", "", "objects", "", "(Landroid/content/Context;ILjava/util/List;)V", "getDropDownView", "Landroid/view/View;", "position", "convertView", "parent", "Landroid/view/ViewGroup;", "getView", "view", "app_debug"})
+@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u00002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0000\n\u0002\u0010\b\n\u0000\n\u0002\u0010!\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0003\u0018\u00002\b\u0012\u0004\u0012\u00020\u00020\u0001B#\u0012\u0006\u0010\u0003\u001a\u00020\u0004\u0012\u0006\u0010\u0005\u001a\u00020\u0006\u0012\f\u0010\u0007\u001a\b\u0012\u0004\u0012\u00020\u00020\b\u00a2\u0006\u0002\u0010\tJ\"\u0010\n\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\u00062\b\u0010\r\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\u000e\u001a\u00020\u000fH\u0016J\"\u0010\u0010\u001a\u00020\u000b2\u0006\u0010\f\u001a\u00020\u00062\b\u0010\r\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\u000e\u001a\u00020\u000fH\u0017J\u001a\u0010\u0011\u001a\u00020\u000b2\b\u0010\u0011\u001a\u0004\u0018\u00010\u000b2\u0006\u0010\f\u001a\u00020\u0006H\u0003\u00a8\u0006\u0012"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/utils/ThemeAdapter;", "Landroid/widget/ArrayAdapter;", "Lcom/fachhochschulebib/fhb/pruefungsplaner/utils/Theme;", "context", "Landroid/content/Context;", "resource", "", "objects", "", "(Landroid/content/Context;ILjava/util/List;)V", "getDropDownView", "Landroid/view/View;", "position", "convertView", "parent", "Landroid/view/ViewGroup;", "getView", "view", "app_debug"})
 public final class ThemeAdapter extends android.widget.ArrayAdapter<com.fachhochschulebib.fhb.pruefungsplaner.utils.Theme> {
     
     public ThemeAdapter(@org.jetbrains.annotations.NotNull()
@@ -41,7 +41,7 @@ public final class ThemeAdapter extends android.widget.ArrayAdapter<com.fachhoch
      * @return A View corresponding to the data at the specified position.
      */
     @org.jetbrains.annotations.NotNull()
-    @android.annotation.SuppressLint(value = {"ViewHolder"})
+    @android.annotation.SuppressLint(value = {"ViewHolder", "InflateParams"})
     @java.lang.Override()
     public android.view.View getView(int position, @org.jetbrains.annotations.Nullable()
     android.view.View convertView, @org.jetbrains.annotations.NotNull()
@@ -52,14 +52,15 @@ public final class ThemeAdapter extends android.widget.ArrayAdapter<com.fachhoch
     /**
      * Initializes the view, passes the values to the UI-Elements.
      *
-     * @param[view] The view for a Spinnerrow.
+     * @param[view] The view for a spinner row.
      * @param[position] The index of the item
      *
-     * @return The spinnerrow, containing the initialized UI-Elements.
+     * @return The spinner row, containing the initialized UI-Elements.
      *
      * @author Alexander Lange
      * @since 1.6
      */
+    @android.annotation.SuppressLint(value = {"UseCompatLoadingForDrawables"})
     private final android.view.View view(android.view.View view, int position) {
         return null;
     }

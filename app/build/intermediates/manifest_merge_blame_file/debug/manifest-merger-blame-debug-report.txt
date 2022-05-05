@@ -69,7 +69,7 @@
 37            </intent-filter>
 38        </activity>
 39        <activity
-39-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-30:67
+39-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-30:58
 40            android:name="com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity"
 40-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:27:13-57
 41            android:configChanges="orientation|screenSize"
@@ -288,13 +288,13 @@
 150        </receiver>
 151
 152        <service
-152-->[androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:25:9-28:40
+152-->[androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:25:9-28:40
 153            android:name="androidx.room.MultiInstanceInvalidationService"
-153-->[androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:26:13-74
+153-->[androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:26:13-74
 154            android:directBootAware="true"
-154-->[androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:27:13-43
+154-->[androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:27:13-43
 155            android:exported="false" /> <!-- The activities will be merged into the manifest of the hosting app. -->
-155-->[androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:28:13-37
+155-->[androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:28:13-37
 156        <activity
 156-->[com.google.android.play:core:1.10.3] C:\Users\Alex\.gradle\caches\transforms-3\f140134fa9c2e197201061e061a8e796\transformed\jetified-core-1.10.3\AndroidManifest.xml:18:9-24:45
 157            android:name="com.google.android.play.core.missingsplits.PlayCoreMissingSplitsActivity"

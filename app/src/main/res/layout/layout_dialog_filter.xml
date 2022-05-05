@@ -19,12 +19,11 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_span="2"
-                android:autoSizeTextType="uniform"
                 android:lines="1"
                 android:textAlignment="center"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="20sp"
-                tools:text="Inginieurswissenschaften" />
+                />
 
         </TableRow>
 
@@ -75,7 +74,7 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="Prüfer:"
+                android:text="@string/filter_dialog_label_examiner"
                 android:textColor="?attr/colorOnPrimaryDark"
                 android:textSize="15sp" />
 
@@ -92,7 +91,7 @@
 
             <TextView
                 android:layout_gravity="center_vertical"
-                android:text="Semester:"
+                android:text="@string/filter_dialog_label_semester"
                 android:textColor="?attr/colorOnPrimaryDark"
                 android:textSize="15sp" />
 
@@ -107,7 +106,8 @@
 
                     <TextView
                         style="@style/AlertDialog.Filter.CheckBox.TextView"
-                        android:text="1" />
+                        android:text="1"
+                        tools:ignore="HardcodedText" />
 
                     <CheckBox
                         android:id="@+id/layout_dialog_filter_checkbox_semester_1"
@@ -121,7 +121,8 @@
 
                     <TextView
                         style="@style/AlertDialog.Filter.CheckBox.TextView"
-                        android:text="2" />
+                        android:text="2"
+                        tools:ignore="HardcodedText" />
 
                     <CheckBox
                         android:id="@+id/layout_dialog_filter_checkbox_semester_2"
@@ -135,7 +136,8 @@
 
                     <TextView
                         style="@style/AlertDialog.Filter.CheckBox.TextView"
-                        android:text="3" />
+                        android:text="3"
+                        tools:ignore="HardcodedText" />
 
                     <CheckBox
                         android:id="@+id/layout_dialog_filter_checkbox_semester_3"
@@ -149,7 +151,8 @@
 
                     <TextView
                         style="@style/AlertDialog.Filter.CheckBox.TextView"
-                        android:text="4" />
+                        android:text="4"
+                        tools:ignore="HardcodedText" />
 
                     <CheckBox
                         android:id="@+id/layout_dialog_filter_checkbox_semester_4"
@@ -163,7 +166,8 @@
 
                     <TextView
                         style="@style/AlertDialog.Filter.CheckBox.TextView"
-                        android:text="5" />
+                        android:text="5"
+                        tools:ignore="HardcodedText" />
 
                     <CheckBox
                         android:id="@+id/layout_dialog_filter_checkbox_semester_5"
@@ -177,7 +181,8 @@
 
                     <TextView
                         style="@style/AlertDialog.Filter.CheckBox.TextView"
-                        android:text="6" />
+                        android:text="6"
+                        tools:ignore="HardcodedText" />
 
                     <CheckBox
                         android:id="@+id/layout_dialog_filter_checkbox_semester_6"
@@ -194,7 +199,7 @@
             <TextView
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="Tag:"
+                android:text="@string/filter_dialog_label_date"
                 android:textColor="?attr/colorOnPrimary"
                 android:textSize="15sp" />
 
@@ -220,7 +225,8 @@
                     android:background="@android:color/transparent"
                     android:textAlignment="center"
                     app:srcCompat="@drawable/icon_filter_calendar"
-                    app:tint="?attr/colorOnPrimary" />
+                    app:tint="?attr/colorOnPrimary"
+                    tools:ignore="ContentDescription" />
 
             </LinearLayout>
 

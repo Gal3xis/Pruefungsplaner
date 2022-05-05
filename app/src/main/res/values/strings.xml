@@ -33,6 +33,27 @@
     <string name="settings_divider_calendar">Kalender</string>
     <string name="settings_divider_exams">Prüfungen</string>
     <string name="settings_divider_updates">Updates</string>
+    <string name="settings_divider_info">App Infos</string>
+    <string name="settings_snackbar_restart_needed">Neustart benötigt</string>
+    <string name="settings_snackbar_restart">Neustarten</string>
+
+    <string name="fragment_settings_alertdialog_delete_favorites_title">Favoriten löschen</string>
+    <string name="fragment_settings_alertdialog_delete_favorites_message">Sollen alle %1$d Favoriten gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_favorites_positive_button">Löschen</string>
+    <string name="fragment_settings_alertdialog_delete_favorites_negative_button">Cancel</string>
+    <string name="fragment_settings_alertdialog_update_calendar_title">Kalendereinträge aktualisieren</string>
+    <string name="fragment_settings_alertdialog_update_calendar_message">Soll der Kalender aktualisiert werden?</string>
+    <string name="fragment_settings_alertdialog_update_calendar_positive_button">Ja</string>
+    <string name="fragment_settings_alertdialog_update_calendar_negative_button">Nein</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_title">Kalendereinträge löschen</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_message">Sollen %1$d Einträge gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_positive_button">Ja</string>
+    <string name="fragment_settings_alertdialog_delete_calendar_negative_button">Nein</string>
+    <string name="fragment_settings_alertdialog_delete_database_title">Datenbank löschen</string>
+    <string name="fragment_settings_alertdialog_delete_database_message">Sollen alle %1$d Einträge gelöscht werden?</string>
+    <string name="fragment_settings_alertdialog_delete_database_positive_button">Löschen</string>
+    <string name="fragment_settings_alertdialog_delete_database_negative_button">Cancel</string>
+
 
 
     <!-- Change Courses -->
@@ -45,7 +66,7 @@
     <string name="change_faculty_choose_main_course">Wählen Sie Ihren Hauptstudiengang</string>
     <string name="change_faculty_choose_faculty">Fachbereich auswählen</string>
     <string name="change_faculty_choose_course">Wählen Sie Ihre Studiengänge:</string>
-    <string name="change_faculty_ok">Ok</string>
+    <string name="change_faculty_ok">OK</string>
     <string name="change_faculty_title">PRÜFPLAN</string>
 
     <!-- Feedback -->
@@ -54,7 +75,7 @@
     <string name="feedback_stability">Fehlerfrei</string>
     <string name="feedback_functions">Funktionsumfang</string>
     <string name="feedback_text">Folgendes fand ich gut/schlecht:</string>
-    <string name="sendedFeedBack">Danke für Ihr Feedback.</string>
+    <string name="sendFeedBack">Danke für Ihr Feedback.</string>
 
 
     <!-- Impressum -->
@@ -67,7 +88,13 @@
     <!-- Filter Dialog -->
     <string name="filter_dialog_module_label">Modul:</string>
     <string name="filter_dialog_course_label">Studiengang:</string>
-
+    <string name="filter_textview_date_all">Alle</string>
+    <string name="filter_spinner_courses_all">Alle</string>
+    <string name="filter_spinner_examiner_all">Alle</string>
+    <string name="filter_spinner_modules_all">Alle</string>
+    <string name="filter_dialog_label_examiner">Prüfer:</string>
+    <string name="filter_dialog_label_semester">Semester:</string>
+    <string name="filter_dialog_label_date">Tag:</string>
 
     <!-- Close App Dialog -->
     <string name="close_app_dialog_message">App beenden?</string>
@@ -88,6 +115,8 @@
 
     <!-- Actionbar -->
     <string name="action_menu_item_search">Suche</string>
+    <string name="action_menu_item_filter">Filter</string>
+    <string name="action_menu_item_legend">Legende</string>
 
     <!-- Toasts -->
     <string name="delete_db">Lokale Datenbank gelöscht.</string>
@@ -107,38 +136,14 @@
 
     <!-- Notification Channel -->
     <string name="channel_name">Pruefungsplaner Channel</string>
-    <string name="channel_description">Used to send updates about new Examinationplans</string>
-    <string name="settings_divider_info">App Infos</string>
-    <string name="settings_snackbar_restart_needed">Neustart benötigt</string>
-    <string name="settings_snackbar_restart">Neustarten</string>
-    <string name="filter_textview_date_all">Alle</string>
-    <string name="filter_spinner_courses_all">Alle</string>
-    <string name="filter_spinner_examiner_all">Alle</string>
-    <string name="filter_spinner_modules_all">Alle</string>
-    <string name="fragment_change_courses_name">Studiengänge verwalten</string>
-    <string name="fragment_exam_overview_name">Prüfungen</string>
-    <string name="fragment_favorite_overview_name">Favoriten</string>
-    <string name="fragment_settings_name">Einstellungen</string>
-    <string name="fragment_settings_delete_favorits_alertdialog_title">Favoriten löschen</string>
-    <string name="fragment_settings_delete_favorites_alertdialog_message">Sollen alle %1$d Favoriten gelöscht werden?</string>
-    <string name="fragment_settings_delete_favorites_alert_dialog_positive_button">Löschen</string>
-    <string name="fragment_settings_delete_favorites_alert_dialog_negative_button">Cancel</string>
-    <string name="fragment_settings_alertdialog_update_calendar_title">Kalendereinträge aktualisieren</string>
-    <string name="fragment_settings_alertdialog_update_calendar_message">Soll der Kalender aktualisiert werden?</string>
-    <string name="fragment_settings_alertdialog_update_calendar_positive_button">Ja</string>
-    <string name="fragment_settings_alertdialog_update_calendar_negative_button">Nein</string>
-    <string name="fragment_settings_alertdialog_delete_calendar_title">Kalendereinträge löschen</string>
-    <string name="fragment_settings_alertdialog_delete_calendar_message">Sollen %1$d Einträge gelöscht werden?</string>
-    <string name="fragment_settings_alertdialog_delete_calendar_positive_button">Ja</string>
-    <string name="fragment_settings_alertdialog_delete_calendar_negative_button">Nein</string>
-    <string name="fragment_settings_alertdialog_delete_database_title">Datenbank löschen</string>
-    <string name="fragment_settings_alertdialog_delete_database_message">Sollen alle %1$d Einträge gelöscht werden?</string>
-    <string name="fragment_settings_alertdialog_delete_database_positive_button">Löschen</string>
-    <string name="fragment_settings_alertdialog_delete_database_negative_button">Cancel</string>
-    <string name="calendario_alertdialog_ask_title">Termin Eintragen</string>
-    <string name="calendario_alertdialog_ask_positive_button">Automatisch</string>
-    <string name="calendario_alertdialog_ask_negative_button">Manuell</string>
+    <string name="channel_description">Used to send updates about new plans</string>
+
     <string name="background_worker_notification">The examinationplan has been updated!</string>
+
+
+    <string name="calendar_io_alertdialog_ask_title">Termin Eintragen</string>
+    <string name="calendar_io_alertdialog_ask_positive_button">Automatisch</string>
+    <string name="calendar_io_alertdialog_ask_negative_button">Manuell</string>
 
 
 </resources>

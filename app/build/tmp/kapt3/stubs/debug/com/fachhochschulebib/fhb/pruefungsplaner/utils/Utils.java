@@ -105,11 +105,11 @@ public final class Utils {
     }
     
     /**
-     * Returns the form of the exam, seperated from the duration.
+     * Returns the form of the exam, separated from the duration.
      *
-     * @param examForm The examform from the [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
+     * @param examForm The exam form from the [com.fachhochschulebib.fhb.pruefungsplaner.model.room.TestPlanEntry]
      *
-     * @return The examform, separated from the duration
+     * @return The exam form, separated from the duration
      *
      * @author Alexander Lange
      * @since 1.6

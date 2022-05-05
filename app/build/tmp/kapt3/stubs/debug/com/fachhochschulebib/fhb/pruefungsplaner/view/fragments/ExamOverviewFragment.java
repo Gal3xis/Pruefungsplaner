@@ -21,7 +21,7 @@ public final class ExamOverviewFragment extends com.fachhochschulebib.fhb.pruefu
     private com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ExamOverviewViewModel viewModel;
     
     /**
-     * Sets the name of that fragment to "Prüfungen"
+     * Sets the name of that fragment
      */
     @org.jetbrains.annotations.NotNull()
     private java.lang.String name = "Pr\u00fcfungen";

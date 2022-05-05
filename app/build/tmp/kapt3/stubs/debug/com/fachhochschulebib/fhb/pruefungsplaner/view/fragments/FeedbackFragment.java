@@ -69,7 +69,7 @@ public final class FeedbackFragment extends com.fachhochschulebib.fhb.pruefungsp
     }
     
     /**
-     * Overrides the onCreateView()-Method. It sets the current view to the terminefragment-layout.
+     * Overrides the onCreateView()-Method
      *
      * @return Returns the initialized view of this Fragment
      *

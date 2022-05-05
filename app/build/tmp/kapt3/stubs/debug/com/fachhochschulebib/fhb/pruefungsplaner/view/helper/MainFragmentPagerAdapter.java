@@ -34,7 +34,7 @@ public final class MainFragmentPagerAdapter extends androidx.viewpager2.adapter.
     }
     
     /**
-     * Called to create a new Fragment when the position int the tablayout changes.
+     * Called to create a new Fragment when the position int the tab layout changes.
      * In this case it is fixed, on the first position it creates the [ExamOverviewFragment] and on the second the [FavoriteOverviewFragment]
      *
      * @param position The current position in the tab layout

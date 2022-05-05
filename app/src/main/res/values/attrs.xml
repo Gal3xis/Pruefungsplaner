@@ -30,8 +30,8 @@
         <attr name="zukuenftigePlanung" format="color"/>
     </declare-styleable>
 
-    <declare-styleable name="Favorit">
-        <attr name="isFavorit" format="color"/>
-        <attr name="isNotFavorit" format="color"/>
+    <declare-styleable name="Favorite">
+        <attr name="is_favorite" format="color"/>
+        <attr name="is_not_favorite" format="color"/>
     </declare-styleable>
 </resources>

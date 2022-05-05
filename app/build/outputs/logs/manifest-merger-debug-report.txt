@@ -11,9 +11,9 @@ MERGED from [androidx.viewpager2:viewpager2:1.0.0] C:\Users\Alex\.gradle\caches\
 MERGED from [androidx.recyclerview:recyclerview:1.2.1] C:\Users\Alex\.gradle\caches\transforms-3\9e8ee2e89e526e33b7f1dfd777fa5bd1\transformed\recyclerview-1.2.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\Alex\.gradle\caches\transforms-3\ffdaca7ed812cd0e400ae2d5bec67a9f\transformed\legacy-support-v4-1.0.0\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.work:work-runtime-ktx:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\b4794cab6e3adbdc833c5d3e4f3e2453\transformed\work-runtime-ktx-2.7.1\AndroidManifest.xml:17:1-24:12
-MERGED from [androidx.room:room-ktx:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\fb970819da469682809782e0aa8cc980\transformed\jetified-room-ktx-2.4.1\AndroidManifest.xml:17:1-24:12
+MERGED from [androidx.room:room-ktx:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\e7d4cb0edfdb6a2c34b0612791c450a9\transformed\jetified-room-ktx-2.4.2\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:17:1-145:12
-MERGED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:17:1-31:12
+MERGED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:17:1-31:12
 MERGED from [androidx.core:core-ktx:1.7.0] C:\Users\Alex\.gradle\caches\transforms-3\40231269938e204e17ec893e56f37338\transformed\jetified-core-ktx-1.7.0\AndroidManifest.xml:2:1-9:12
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ca19f826cdb4b94a3753db77bd21f4c7\transformed\jetified-lifecycle-viewmodel-ktx-2.4.1\AndroidManifest.xml:17:1-24:12
 MERGED from [androidx.fragment:fragment:1.3.6] C:\Users\Alex\.gradle\caches\transforms-3\3297a7bc934c06e3b7c765fcc3adfe32\transformed\fragment-1.3.6\AndroidManifest.xml:17:1-24:12
@@ -102,8 +102,8 @@ MERGED from [androidx.constraintlayout:constraintlayout:2.1.3] C:\Users\Alex\.gr
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.3] C:\Users\Alex\.gradle\caches\transforms-3\afcbd0dafac0b85eda3893727dcfad9d\transformed\constraintlayout-2.1.3\AndroidManifest.xml:9:5-20
 MERGED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:30:5-143:19
 MERGED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:30:5-143:19
-MERGED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:24:5-29:19
-MERGED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:24:5-29:19
+MERGED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:24:5-29:19
+MERGED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:24:5-29:19
 MERGED from [com.google.android.play:core:1.10.3] C:\Users\Alex\.gradle\caches\transforms-3\f140134fa9c2e197201061e061a8e796\transformed\jetified-core-1.10.3\AndroidManifest.xml:15:5-44:19
 MERGED from [com.google.android.play:core:1.10.3] C:\Users\Alex\.gradle\caches\transforms-3\f140134fa9c2e197201061e061a8e796\transformed\jetified-core-1.10.3\AndroidManifest.xml:15:5-44:19
 MERGED from [androidx.emoji2:emoji2:1.0.0] C:\Users\Alex\.gradle\caches\transforms-3\c4076271cc841a7a9d4f47bd04a80238\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:25:5-35:19
@@ -147,7 +147,7 @@ ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\Andro
 	android:name
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:23:27-74
 activity#com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
-ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-30:67
+ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-30:58
 	android:launchMode
 		ADDED from C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:29:13-48
 	android:windowSoftInputMode
@@ -174,12 +174,12 @@ MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\Alex\.gradle\cach
 MERGED from [androidx.legacy:legacy-support-v4:1.0.0] C:\Users\Alex\.gradle\caches\transforms-3\ffdaca7ed812cd0e400ae2d5bec67a9f\transformed\legacy-support-v4-1.0.0\AndroidManifest.xml:20:5-44
 MERGED from [androidx.work:work-runtime-ktx:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\b4794cab6e3adbdc833c5d3e4f3e2453\transformed\work-runtime-ktx-2.7.1\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.work:work-runtime-ktx:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\b4794cab6e3adbdc833c5d3e4f3e2453\transformed\work-runtime-ktx-2.7.1\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.room:room-ktx:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\fb970819da469682809782e0aa8cc980\transformed\jetified-room-ktx-2.4.1\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.room:room-ktx:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\fb970819da469682809782e0aa8cc980\transformed\jetified-room-ktx-2.4.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.room:room-ktx:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\e7d4cb0edfdb6a2c34b0612791c450a9\transformed\jetified-room-ktx-2.4.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.room:room-ktx:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\e7d4cb0edfdb6a2c34b0612791c450a9\transformed\jetified-room-ktx-2.4.2\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:21:5-23:41
 MERGED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:21:5-23:41
-MERGED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:20:5-22:41
-MERGED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:20:5-22:41
+MERGED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:20:5-22:41
 MERGED from [androidx.core:core-ktx:1.7.0] C:\Users\Alex\.gradle\caches\transforms-3\40231269938e204e17ec893e56f37338\transformed\jetified-core-ktx-1.7.0\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.core:core-ktx:1.7.0] C:\Users\Alex\.gradle\caches\transforms-3\40231269938e204e17ec893e56f37338\transformed\jetified-core-ktx-1.7.0\AndroidManifest.xml:5:5-7:41
 MERGED from [androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ca19f826cdb4b94a3753db77bd21f4c7\transformed\jetified-lifecycle-viewmodel-ktx-2.4.1\AndroidManifest.xml:20:5-22:41
@@ -515,13 +515,13 @@ ADDED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\trans
 	android:name
 		ADDED from [androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:140:25-85
 service#androidx.room.MultiInstanceInvalidationService
-ADDED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:25:9-28:40
+ADDED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:25:9-28:40
 	android:exported
-		ADDED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:28:13-37
+		ADDED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:28:13-37
 	android:directBootAware
-		ADDED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:27:13-43
+		ADDED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:27:13-43
 	android:name
-		ADDED from [androidx.room:room-runtime:2.4.1] C:\Users\Alex\.gradle\caches\transforms-3\ddbd271958ab8682d6bac215a13eda02\transformed\room-runtime-2.4.1\AndroidManifest.xml:26:13-74
+		ADDED from [androidx.room:room-runtime:2.4.2] C:\Users\Alex\.gradle\caches\transforms-3\c22cf2a020d4c7e2b16faccf282a6cbf\transformed\room-runtime-2.4.2\AndroidManifest.xml:26:13-74
 activity#com.google.android.play.core.missingsplits.PlayCoreMissingSplitsActivity
 ADDED from [com.google.android.play:core:1.10.3] C:\Users\Alex\.gradle\caches\transforms-3\f140134fa9c2e197201061e061a8e796\transformed\jetified-core-1.10.3\AndroidManifest.xml:18:9-24:45
 	android:process

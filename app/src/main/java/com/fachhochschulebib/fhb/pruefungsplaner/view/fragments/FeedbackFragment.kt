@@ -61,10 +61,10 @@ class FeedbackFragment : MainActivityFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragment_feedback_button_send.setOnClickListener { v ->
-            viewModel.sendFeedBack(fragment_feedback_ratingbar_usability.rating,fragment_feedback_ratingbar_functions.rating,fragment_feedback_ratingbar_stability.rating,fragment_feedback_text_input_feedbacktext.text.toString())
+            viewModel.sendFeedBack(fragment_feedback_ratingbar_usability.rating,fragment_feedback_ratingbar_functions.rating,fragment_feedback_ratingbar_stability.rating,fragment_feedback_text_input_feedback_text.text.toString())
             Toast.makeText(
                 v.context,
-                v.context.getString(R.string.sendedFeedBack),
+                v.context.getString(R.string.sendFeedBack),
                 Toast.LENGTH_SHORT
             ).show()
             val mainWindow = Intent(v.context, MainActivity::class.java)

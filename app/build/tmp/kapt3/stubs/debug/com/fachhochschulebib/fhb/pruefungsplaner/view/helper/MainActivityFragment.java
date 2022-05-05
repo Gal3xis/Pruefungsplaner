@@ -3,7 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.view.helper;
 import java.lang.System;
 
 /**
- * The baseclass for all Fragments used isnide the mainactivity. They are given an extra parameter [name] that is used to set the header in the [com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity]
+ * The baseclass for all Fragments used inside the main activity. They are given an extra parameter [name] that is used to set the header in the [com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity]
  * It is abstract, so it cannot be instantiated without inheritation.
  *
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)

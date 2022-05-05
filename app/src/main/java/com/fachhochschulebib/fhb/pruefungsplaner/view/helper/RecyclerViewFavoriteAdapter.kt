@@ -224,15 +224,15 @@ class RecyclerViewFavoriteAdapter(
 
 
             val contextMenuView = LayoutInflater.from(context)
-                .inflate(R.layout.layout_favorite_overview_card_contextmenu, null, false)
-            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_contextmenu_button_add_to_calendar).text =
+                .inflate(R.layout.layout_favorite_overview_card_context_menu, null, false)
+            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_context_menu_button_add_to_calendar).text =
                 if (viewModel.getCalendarId(entry) == null) {
                     context.resources.getString(R.string.favorite_overview_card_context_menu_add_to_calendar)
 
                 } else context.resources.getString(
                     R.string.favorite_overview_card_context_menu_remove_from_calendar
                 )
-            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_contextmenu_button_add_to_calendar).setOnClickListener {
+            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_context_menu_button_add_to_calendar).setOnClickListener {
                 viewModel.getCalendarId(entry)
                     ?.let { viewModel.deleteFromCalendar(context, it) }
                     ?: viewModel.insertIntoCalendar(context, entry)
@@ -241,7 +241,7 @@ class RecyclerViewFavoriteAdapter(
                 )
                 dialog.hide()
             }
-            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_contextmenu_button_remove_from_favorites).setOnClickListener {
+            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_context_menu_button_remove_from_favorites).setOnClickListener {
                 viewModel.updateEntryFavorite(context, false, entry)
                 dialog.hide()
             }

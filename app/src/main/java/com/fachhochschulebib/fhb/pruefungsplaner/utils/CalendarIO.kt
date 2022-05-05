@@ -322,11 +322,11 @@ object CalendarIO {
             InsertionType.Ask -> {
                 var ret:Long? = null
                 AlertDialog.Builder(context)
-                    .setTitle(context.getString(R.string.calendario_alertdialog_ask_title))
-                    .setPositiveButton(context.getString(R.string.calendario_alertdialog_ask_positive_button)) { _, _ ->
+                    .setTitle(context.getString(R.string.calendar_io_alertdialog_ask_title))
+                    .setPositiveButton(context.getString(R.string.calendar_io_alertdialog_ask_positive_button)) { _, _ ->
                         ret = forceInsert(context, CAL_ID, e)
                     }
-                    .setNegativeButton(context.getString(R.string.calendario_alertdialog_ask_negative_button)) { _, _ ->
+                    .setNegativeButton(context.getString(R.string.calendar_io_alertdialog_ask_negative_button)) { _, _ ->
                         indirectInsert(context, createIntent(context, e))
                     }
                     .create().show()
