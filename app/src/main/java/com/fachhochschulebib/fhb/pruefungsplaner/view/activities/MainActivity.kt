@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.res.ColorStateList
 import android.os.*
 import android.util.Log
@@ -98,14 +99,14 @@ class MainActivity : AppCompatActivity() {
      * @see MainFragmentPagerAdapter
      */
     private fun initTabLayout(){
-        TabLayoutMediator(tabLayout,viewPager
+        TabLayoutMediator(activity_main_tab_layout,activity_main_viewpager
         ) {
                 tab, position ->
             tab.text = when(position){
-                1->resources.getString(R.string.title_exam)
-                else->resources.getString(R.string.title_calender)
+                1->resources.getString(R.string.tab_layout_exam)
+                else->resources.getString(R.string.tab_layout_exam_overview)
             }
-            tabLayout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
+            activity_main_tab_layout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
                 override fun onTabReselected(tab: TabLayout.Tab?) {
                     when(tab?.position){
                         1->changeFragment(FavoriteOverviewFragment())
@@ -140,7 +141,7 @@ class MainActivity : AppCompatActivity() {
      * @see MainFragmentPagerAdapter
      */
     private fun initViewPager(){
-        viewPager.adapter = MainFragmentPagerAdapter(this)
+        activity_main_viewpager.adapter = MainFragmentPagerAdapter(this)
     }
 
     /**
@@ -150,8 +151,8 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initActionBar() {
-        setSupportActionBar(headerModule)
-        headerModule.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, theme))
+        setSupportActionBar(activity_main_toolbar)
+        activity_main_toolbar.setTitleTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark, this))
     }
 
     /**
@@ -179,9 +180,8 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initMenu(menu: Menu) {
         menu.clear()
-        menuInflater.inflate(R.menu.action_menu, menu);
+        menuInflater.inflate(R.menu.menu_actionbar, menu);
         menu.findItem(R.id.menu_item_filter).isVisible = true
-        menu.findItem(R.id.menu_item_save).isVisible = false
     }
 
     /**
@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
             searchAutoComplete.setAdapter(
                 SimpleSpinnerAdapter(
                     this,
-                    R.layout.simple_spinner_item,
+                    R.layout.layout_simpler_spinner_adapter_item,
                     list
                 )
             )
@@ -273,17 +273,17 @@ class MainActivity : AppCompatActivity() {
     private fun initNavigationDrawer() {
         val states = arrayOf(intArrayOf(android.R.attr.state_enabled))
         val colors = intArrayOf(
-            Utils.getColorFromAttr(R.attr.colorOnBackground, theme)
+            Utils.getColorFromAttr(R.attr.colorOnBackground, this)
         )
 
-        nav_view.setBackgroundColor(Utils.getColorFromAttr(R.attr.colorBackground, theme))
-        nav_view.itemTextColor = ColorStateList(states, colors)
-        nav_view.itemIconTintList = ColorStateList(states, colors)
+        activity_main_navigation_drawer.setBackgroundColor(Utils.getColorFromAttr(R.attr.colorBackground, this))
+        activity_main_navigation_drawer.itemTextColor = ColorStateList(states, colors)
+        activity_main_navigation_drawer.itemIconTintList = ColorStateList(states, colors)
 
-        headerModule.setNavigationOnClickListener {
+        activity_main_toolbar.setNavigationOnClickListener {
             onNavigationDrawerButtonClicked()
         }
-        nav_view.setNavigationItemSelectedListener { item ->
+        activity_main_navigation_drawer.setNavigationItemSelectedListener { item ->
             onNavigationDrawerItemClicked(item)
         }
     }
@@ -316,9 +316,10 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_settings -> changeFragment(SettingsFragment())
             R.id.navigation_feedback -> changeFragment(FeedbackFragment())
             R.id.navigation_changeFaculty -> {
-                val intent = Intent(recyclerView4.context, StartActivity::class.java)
+                val intent = Intent(applicationContext, StartActivity::class.java)
                 intent.putExtra(CHANGE_FLAG,true)
-                recyclerView4.context.startActivity(intent)
+                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                applicationContext.startActivity(intent)
                 true
             }
             R.id.navigation_addCourse -> changeFragment(ChangeCoursesFragment())
@@ -357,26 +358,25 @@ class MainActivity : AppCompatActivity() {
      *
      */
     fun changeFragment(fragment: MainActivityFragment): Boolean {
-        recyclerView4?.visibility = View.INVISIBLE
-        headerModule?.title = fragment.name
+        activity_main_toolbar?.title = fragment.name
         drawer_layout.closeDrawer(GravityCompat.START)
-        currentPeriode.visibility = View.VISIBLE
+        activity_main_textview_current_period_timestamp.visibility = View.VISIBLE
         if(fragment::class==ExamOverviewFragment::class){
-            frame_placeholder.visibility = View.INVISIBLE
-            viewPager.visibility = View.VISIBLE
-            viewPager.setCurrentItem(0,true)
-            viewPager.invalidate()
+            activity_main_placeholder.visibility = View.INVISIBLE
+            activity_main_viewpager.visibility = View.VISIBLE
+            activity_main_viewpager.setCurrentItem(0,true)
+            activity_main_viewpager.invalidate()
         }else if(fragment::class==FavoriteOverviewFragment::class){
-            frame_placeholder.visibility = View.INVISIBLE
-            viewPager.visibility = View.VISIBLE
-            viewPager.setCurrentItem(1,true)
-            viewPager.invalidate()
+            activity_main_placeholder.visibility = View.INVISIBLE
+            activity_main_viewpager.visibility = View.VISIBLE
+            activity_main_viewpager.setCurrentItem(1,true)
+            activity_main_viewpager.invalidate()
         }else{
             val ft = supportFragmentManager.beginTransaction()
-            viewPager.visibility = View.INVISIBLE
-            currentPeriode.visibility = View.GONE
-            frame_placeholder.visibility = View.VISIBLE
-            ft.replace(R.id.frame_placeholder, fragment)
+            activity_main_viewpager.visibility = View.INVISIBLE
+            activity_main_textview_current_period_timestamp.visibility = View.GONE
+            activity_main_placeholder.visibility = View.VISIBLE
+            ft.replace(R.id.activity_main_placeholder, fragment)
 
             ft.commit()
         }
@@ -443,7 +443,7 @@ class MainActivity : AppCompatActivity() {
      *
      */
     fun setPruefungszeitraum() {
-        viewModel.getPeriodeTimeSpan()?.let { currentPeriode?.text = it }
+        viewModel.getPeriodeTimeSpan()?.let { activity_main_textview_current_period_timestamp?.text = it }
     }
 
     /**
@@ -468,7 +468,7 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initFilterHeader(context: Context, filterView: View) {
-        val tvFaculty = filterView.findViewById<TextView>(R.id.layout_dialog_filter_faculty_tv)
+        val tvFaculty = filterView.findViewById<TextView>(R.id.layout_dialog_filter_textview_faculty)
         viewModel.liveSelectedFaculty.observe(this) {
             tvFaculty.text = it?.facultyName ?: "No Faculty selected"
         }
@@ -485,12 +485,12 @@ class MainActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initFilterSemesterBoxes(context: Context, filterView: View) {
-        val c1 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_1)
-        val c2 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_2)
-        val c3 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_3)
-        val c4 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_4)
-        val c5 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_5)
-        val c6 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_semester_6)
+        val c1 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_checkbox_semester_1)
+        val c2 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_checkbox_semester_2)
+        val c3 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_checkbox_semester_3)
+        val c4 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_checkbox_semester_4)
+        val c5 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_checkbox_semester_5)
+        val c6 = filterView.findViewById<CheckBox>(R.id.layout_dialog_filter_checkbox_semester_6)
 
         initFilterCheckbox(c1, 1)
         initFilterCheckbox(c2, 2)
@@ -527,7 +527,7 @@ class MainActivity : AppCompatActivity() {
      *
      */
     private fun initFilterExaminer(context: Context, filterView: View) {
-        val spExaminer = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_examiner_sp)
+        val spExaminer = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_spinner_examiner)
         spExaminer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
@@ -539,7 +539,7 @@ class MainActivity : AppCompatActivity() {
                 (view as TextView).setTextColor(
                     Utils.getColorFromAttr(
                         R.attr.colorOnPrimaryDark,
-                        context.theme
+                        context
                     )
                 )
                 Filter.examiner = if (position == 0) null else spExaminer.selectedItem.toString()
@@ -578,7 +578,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initFilterCourse(context: Context, filterView: View) {
         try {
-            val spCourse = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_course_sp)
+            val spCourse = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_spinner_course)
 
             viewModel.liveChoosenCourses.observe(this) {
                 val list = mutableListOf<String>("Alle")//TODO extract String
@@ -605,7 +605,7 @@ class MainActivity : AppCompatActivity() {
                     (view as TextView).setTextColor(
                         Utils.getColorFromAttr(
                             R.attr.colorOnPrimaryDark,
-                            context.theme
+                            context
                         )
                     )
                     Filter.courseName =
@@ -639,7 +639,7 @@ class MainActivity : AppCompatActivity() {
      */
     private fun initFilterModule(context: Context, filterView: View) {
         try {
-            val spModul = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_modul_sp)
+            val spModul = filterView.findViewById<Spinner>(R.id.layout_dialog_filter_spinner_module)
             viewModel.liveEntriesForCourse.observe(this) { it ->
                 val list: MutableList<String> = mutableListOf("Alle")
                 it?.forEach { entry ->
@@ -664,7 +664,7 @@ class MainActivity : AppCompatActivity() {
                     (view as TextView).setTextColor(
                         Utils.getColorFromAttr(
                             R.attr.colorOnPrimaryDark,
-                            context.theme
+                            context
                         )
                     )
                     Filter.modulName = if (position == 0) null else spModul.selectedItem.toString()
@@ -692,8 +692,8 @@ class MainActivity : AppCompatActivity() {
      * @see Filter
      */
     private fun initFilterCalendar(context: Context, filterView: View) {
-        val imgbtnDate = filterView.findViewById<ImageButton>(R.id.layout_dialog_filter_date_ib)
-        val tvDate = filterView.findViewById<TextView>(R.id.layout_dialog_filter_date_tv)
+        val imgbtnDate = filterView.findViewById<ImageButton>(R.id.layout_dialog_filter_button_date)
+        val tvDate = filterView.findViewById<TextView>(R.id.layout_dialog_filter_textview_date)
 
 
         //Get start-and enddate from sharedPrefs

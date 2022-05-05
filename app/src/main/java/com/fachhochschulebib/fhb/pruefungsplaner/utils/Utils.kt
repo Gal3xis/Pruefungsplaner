@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.utils
 
+import android.app.Application
 import android.content.Context
 import android.content.res.Resources
 import android.util.Log
@@ -23,7 +24,7 @@ object Utils {
      * Provides access to the colorscheme, so they can be assigned dynamically in code.
      *
      * @param[attrColor] The id of the Color (R.attr.*)
-     * @param[theme] The current theme of the application
+     * @param[context] The context (not applicationcontext!!!)
      * @param[typedValue] Stores the data of the resolved attribute, does not need to be given
      * @param[resolveRes] If true, resource references will be walked; if false, outValue may be a TYPE_REFERENCE. In either case, it will never be a TYPE_ATTRIBUTE.
      *
@@ -32,8 +33,8 @@ object Utils {
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getColorFromAttr(@AttrRes attrColor:Int, theme: Resources.Theme, typedValue: TypedValue= TypedValue(), resolveRes:Boolean=true):Int{
-        theme.resolveAttribute(attrColor,typedValue,resolveRes)
+    fun getColorFromAttr(@AttrRes attrColor:Int, context: Context, typedValue: TypedValue= TypedValue(), resolveRes:Boolean=true):Int{
+        context.theme.resolveAttribute(attrColor,typedValue,resolveRes)
         return typedValue.data
     }
 
@@ -45,7 +46,7 @@ object Utils {
     /**
      * A map, where the icons for favorite/not favorite entry are defined
      */
-    val favoriteIcons:Map<Boolean,Int> = mapOf(true to R.drawable.ic_favorit,false to R.drawable.ic_not_favorit )//TODO Customize
+    val favoriteIcons:Map<Boolean,Int> = mapOf(true to R.drawable.icon_exam_favorit,false to R.drawable.icon_exam_not_favorit )//TODO Customize
 
     /**
      * A list of all available themes

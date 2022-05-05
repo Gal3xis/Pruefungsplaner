@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import android.view.LayoutInflater
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.fachhochschulebib.fhb.pruefungsplaner.R
@@ -15,7 +14,6 @@ import com.fachhochschulebib.fhb.pruefungsplaner.utils.Utils
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.getString
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.BaseViewModel
 import com.google.android.material.card.MaterialCardView
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -67,7 +65,7 @@ class RecyclerViewFavoriteAdapter(
         viewType: Int
     ): ViewHolder {
         val inflater = LayoutInflater.from(context)
-        val v = inflater.inflate(R.layout.favoriten, parent, false)
+        val v = inflater.inflate(R.layout.layout_favorite_overview_card, parent, false)
         return ViewHolder(v)
     }
 
@@ -133,42 +131,42 @@ class RecyclerViewFavoriteAdapter(
         /**
          * Card that shows all information. Can be clicked on to show/hide detailed information.
          */
-        private var card = layout.findViewById<MaterialCardView>(R.id.card)
+        private var card = layout.findViewById<MaterialCardView>(R.id.layout_favorite_overview_card)
 
         /**
          * TextView that shows the name of the module.
          */
-        private var headerModule = layout.findViewById<TextView>(R.id.headerModule)
+        private var headerModule = layout.findViewById<TextView>(R.id.layout_favorite_overview_card_textview_header_module)
 
         /**
          * TextView that shows the name of the course.
          */
-        private var headerCourse = layout.findViewById<TextView>(R.id.headerCourse)
+        private var headerCourse = layout.findViewById<TextView>(R.id.layout_favorite_overview_card_textview_header_course)
 
         /**
          * TextView that shows the date of the exam.
          */
-        private var headerDate = layout.findViewById<TextView>(R.id.headerDate)
+        private var headerDate = layout.findViewById<TextView>(R.id.layout_favorite_overview_card_textview_header_date)
 
         /**
          * TextView that shows the timespan of the exam (eg. 08:00-09:30)
          */
-        private var headerTime = layout.findViewById<TextView>(R.id.headerTime)
+        private var headerTime = layout.findViewById<TextView>(R.id.layout_favorite_overview_card_textview_header_time)
 
         /**
          * TextView that shows the detailed information
          */
-        private var expandedTextView = layout.findViewById<TextView>(R.id.expandedCardTextView)
+        private var expandedTextView = layout.findViewById<TextView>(R.id.layout_favorite_overview_card_textview_details)
 
         /**
          * Layout that can be expanded to show the detailed information
          */
-        private var expansion = layout.findViewById<RelativeLayout>(R.id.expansion)
+        private var expansion = layout.findViewById<RelativeLayout>(R.id.layout_favorite_overview_card_layout_details)
 
         /**
          * Icon that shows, if the [TestPlanEntry] is currently playced in the calendar
          */
-        private var iconInCalendar = layout.findViewById<ImageView>(R.id.icon_in_calendar)
+        private var iconInCalendar = layout.findViewById<ImageView>(R.id.layout_favorite_overview_card_imageview_icon_in_calendar)
 
         init {
             //            ivicon = layout.findViewById<View>(R.id.icon) as ImageView
@@ -204,8 +202,8 @@ class RecyclerViewFavoriteAdapter(
                 "${dateFormatterTime.format(dateStart)}-${dateFormatterTime.format(dateEnd.time)}"
             expandedTextView.text = entry.getString(context)
 
-            if (viewModel.getCalendarId(entry) == null) iconInCalendar.setImageResource(R.drawable.ic_not_in_calendar) else iconInCalendar.setImageResource(
-                R.drawable.ic_in_calendar
+            if (viewModel.getCalendarId(entry) == null) iconInCalendar.setImageResource(R.drawable.icon_favorite_not_in_calendar) else iconInCalendar.setImageResource(
+                R.drawable.icon_favorite_in_calendar
             )
 
             card.setOnClickListener {
@@ -262,24 +260,24 @@ class RecyclerViewFavoriteAdapter(
 
 
             val contextMenuView = LayoutInflater.from(context)
-                .inflate(R.layout.layout_favorite_contextmenu, null, false)
-            contextMenuView.findViewById<Button>(R.id.AddToCalendar).text =
+                .inflate(R.layout.layout_favorite_overview_card_contextmenu, null, false)
+            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_contextmenu_button_add_to_calendar).text =
                 if (viewModel.getCalendarId(entry) == null) {
-                    context.resources.getString(R.string.favorite_contextmenu_add_to_calendar)
+                    context.resources.getString(R.string.favorite_overview_card_context_menu_add_to_calendar)
 
                 } else context.resources.getString(
-                    R.string.favorite_contextmenu_remove_from_calendar
+                    R.string.favorite_overview_card_context_menu_remove_from_calendar
                 )
-            contextMenuView.findViewById<Button>(R.id.AddToCalendar).setOnClickListener {
+            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_contextmenu_button_add_to_calendar).setOnClickListener {
                 viewModel.getCalendarId(entry)
                     ?.let { viewModel.deleteFromCalendar(context, it) }
                     ?: viewModel.insertIntoCalendar(context, entry)
-                if (viewModel.getCalendarId(entry) == null) iconInCalendar.setImageResource(R.drawable.ic_not_in_calendar) else iconInCalendar.setImageResource(
-                    R.drawable.ic_in_calendar
+                if (viewModel.getCalendarId(entry) == null) iconInCalendar.setImageResource(R.drawable.icon_favorite_not_in_calendar) else iconInCalendar.setImageResource(
+                    R.drawable.icon_favorite_in_calendar
                 )
                 dialog.hide()
             }
-            contextMenuView.findViewById<Button>(R.id.removeFromFavorits).setOnClickListener {
+            contextMenuView.findViewById<Button>(R.id.layout_favorite_overview_card_contextmenu_button_remove_from_favorites).setOnClickListener {
                 viewModel.updateEntryFavorite(context, false, entry)
                 dialog.hide()
             }

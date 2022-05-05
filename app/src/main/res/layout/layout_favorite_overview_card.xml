@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_favorite_overview_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardBackgroundColor="?attr/colorPrimaryDark"
+    app:contentPadding="10dp"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <RelativeLayout
+            android:id="@+id/layout_favorite_overview_card_base"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/layout_favorite_overview_card_imageview_icon_in_calendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:src="@drawable/icon_favorite_in_calendar" />
+
+            <TextView
+                android:id="@+id/layout_favorite_overview_card_textview_header_date"
+                android:layout_width="90dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp"
+                tools:text="22.02.2022" />
+
+            <View
+                android:id="@+id/layout_favorite_overview_card_divider_base"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_alignBottom="@id/layout_favorite_overview_card_layout_course_module_info"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@id/layout_favorite_overview_card_textview_header_date"
+                android:background="?attr/colorPrimary"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                />
+
+            <LinearLayout
+                android:id="@+id/layout_favorite_overview_card_layout_course_module_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_favorite_overview_card_imageview_icon_in_calendar"
+                android:orientation="vertical"
+                android:layout_toEndOf="@id/layout_favorite_overview_card_divider_base"
+                >
+
+                <TextView
+                    android:id="@+id/layout_favorite_overview_card_textview_header_module"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="19sp"
+                    tools:text="Mathematik" />
+
+                <TextView
+                    android:id="@+id/layout_favorite_overview_card_textview_header_course"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp"
+                    tools:text="Ingenieurinformatik" />
+
+                <TextView
+                    android:id="@+id/layout_favorite_overview_card_textview_header_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnPrimaryDark"
+                    android:textSize="15sp"
+
+                    tools:text="08:00-10:00" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/layout_favorite_overview_card_layout_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/layout_favorite_overview_card_base"
+            android:visibility="gone"
+            >
+
+            <View
+                android:id="@+id/layout_favorite_overview_card_divider_details"
+                android:layout_width="match_parent"
+                android:layout_height="3dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentTop="true"
+                android:background="?attr/colorPrimary" />
+
+            <TextView
+                android:id="@+id/layout_favorite_overview_card_textview_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/layout_favorite_overview_card_divider_details"
+                android:layout_marginTop="5dp"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="14sp"
+                tools:text="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+                 />
+        </RelativeLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>
+
+

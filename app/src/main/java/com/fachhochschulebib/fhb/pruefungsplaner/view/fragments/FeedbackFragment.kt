@@ -12,9 +12,8 @@ import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
-import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.FavoriteOverviewViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.FeedbackViewModel
-import kotlinx.android.synthetic.main.feedback.*
+import kotlinx.android.synthetic.main.fragment_feedback.*
 /**
  * Fragment that lets the user give Feedback about the app.
  *
@@ -61,8 +60,8 @@ class FeedbackFragment : MainActivityFragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        buttonSend.setOnClickListener { view ->
-            viewModel.sendFeedBack(ratingBarUsability.rating,ratingBarFuntions.rating,ratingBarStability.rating,feedBackInput.text.toString())
+        fragment_feedback_button_send.setOnClickListener { view ->
+            viewModel.sendFeedBack(fragment_feedback_ratingbar_usability.rating,fragment_feedback_ratingbar_functions.rating,fragment_feedback_ratingbar_stability.rating,fragment_feedback_text_input_feedbacktext.text.toString())
             Toast.makeText(
                 view.context,
                 view.context.getString(R.string.sendedFeedBack),
@@ -87,6 +86,6 @@ class FeedbackFragment : MainActivityFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.feedback, container, false)
+        return inflater.inflate(R.layout.fragment_feedback, container, false)
     }
 }

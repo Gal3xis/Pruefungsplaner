@@ -17,7 +17,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.CoursesCheckList
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
-import kotlinx.android.synthetic.main.choose_courses.*
+import kotlinx.android.synthetic.main.fragment_change_courses.*
 
 /**
  *Fragment to change the courseselection. Lets the user add additional courses and change the main course.
@@ -51,7 +51,7 @@ class ChangeCoursesFragment : MainActivityFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.choose_courses, container, false)
+        return inflater.inflate(R.layout.fragment_change_courses, container, false)
     }
 
     /**
@@ -85,11 +85,11 @@ class ChangeCoursesFragment : MainActivityFragment() {
                     selectedMainCourseName = course.courseName
                 }
             }
-            choose_course_change_main_spinner.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
-            choose_course_change_main_spinner.setSelection(selectedMainCourseName)
+            fragment_change_courses_spinner_change_main.adapter = ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,courseNames)
+            fragment_change_courses_spinner_change_main.setSelection(selectedMainCourseName)
         }
         viewModel.getCourses()
-        choose_course_change_main_spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        fragment_change_courses_spinner_change_main.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -97,8 +97,8 @@ class ChangeCoursesFragment : MainActivityFragment() {
                 id: Long
             ) {
                 if(view == null) return
-                (view as TextView).setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,requireContext().theme))
-                val name:String =choose_course_change_main_spinner.selectedItem.toString()
+                (view as TextView).setTextColor(Utils.getColorFromAttr(R.attr.colorOnPrimaryDark,requireContext()))
+                val name:String =fragment_change_courses_spinner_change_main.selectedItem.toString()
                 viewModel.changeMainCourse(name)
             }
 
@@ -116,11 +116,11 @@ class ChangeCoursesFragment : MainActivityFragment() {
      * @author Alexander Lange
      */
     private fun initRecyclerview() {
-        recyclerViewChecklist.setHasFixedSize(true)
+        fragment_change_courses_recyclerview_courses.setHasFixedSize(true)
         val layoutManager = LinearLayoutManager(context)
-        recyclerViewChecklist.layoutManager = layoutManager
+        fragment_change_courses_recyclerview_courses.layoutManager = layoutManager
         viewModel.liveCoursesForFaculty.observe(viewLifecycleOwner){
-            recyclerViewChecklist?.adapter = context?.let { it1 ->
+            fragment_change_courses_recyclerview_courses?.adapter = context?.let { it1 ->
                 it?.let { it2 ->
                     CoursesCheckList(
                         it2,viewModel,

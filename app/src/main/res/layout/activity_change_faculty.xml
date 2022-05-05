@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorPrimaryDark">
+
+
+    <TextView
+        android:id="@+id/activity_change_faculty_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/change_faculty_title"
+        android:textColor="?attr/colorOnPrimaryDark"
+        android:textSize="30sp"
+        app:fontFamily="monospace"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        />
+
+    <ImageView
+        android:id="@+id/activity_change_faculty_fh_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_change_faculty_title"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/image_fhb_logo" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/activity_change_faculty_button_select_faculty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_change_faculty_fh_logo"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background_rounded_corners_strong"
+        android:backgroundTint="?attr/colorAccent"
+        android:padding="15dp"
+        android:text="@string/change_faculty_choose_faculty"
+        android:textColor="?attr/colorOnAccent"
+        android:textSize="18sp"
+        android:visibility="visible"
+        tools:ignore="TextContrastCheck" />
+
+    <TextView
+        android:id="@+id/activity_change_faculty_label_select_courses"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/activity_change_faculty_button_select_faculty"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="11dp"
+        android:text="@string/change_faculty_choose_course"
+        android:textColor="?attr/colorOnPrimary"
+        android:textSize="20sp"
+        android:visibility="invisible"
+        tools:visibility="visible" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/activity_change_faculty_recyclerview_courses"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_above="@id/activity_change_faculty_button_ok"
+        android:layout_below="@id/activity_change_faculty_label_select_courses"
+        android:layout_centerHorizontal="true"
+        android:overScrollMode="never"
+        android:scrollbars="vertical" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/activity_change_faculty_button_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_rounded_corners_strong"
+        android:backgroundTint="?attr/colorAccent"
+        android:text="@string/change_faculty_ok"
+        android:textColor="?attr/colorOnAccent"
+        android:textSize="18sp"
+        android:layout_marginBottom="10dp"
+        android:visibility="visible"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+
+</RelativeLayout>

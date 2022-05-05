@@ -46,21 +46,21 @@ fun Spinner.setSelection(value: String?) {
  */
 fun TestPlanEntry.getString(context: Context): String? {
     val ret = StringBuilder()
-    ret.appendLine(context.getString(R.string.information))
+    ret.appendLine(context.getString(R.string.exam_information_title))
     ret.appendLine()
-    ret.appendLine(createStringWithLabel(context, R.string.course, course))
-    ret.appendLine(createStringWithLabel(context, R.string.modul, module))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_course, course))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_modul, module))
     ret.appendLine()
-    ret.appendLine(createStringWithLabel(context, R.string.firstProf, firstExaminer))
-    ret.appendLine(createStringWithLabel(context, R.string.secondProf, secondExaminer))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_first_prof, firstExaminer))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_second_prof, secondExaminer))
     val d = SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date)
-    ret.appendLine(createStringWithLabel(context, R.string.date2, SimpleDateFormat("dd.MM.yyyy").format(d)))
-    ret.appendLine(createStringWithLabel(context, R.string.clockTime2, SimpleDateFormat("HH:mm").format(d)))
-    ret.appendLine(createStringWithLabel(context, R.string.duration,
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_date, SimpleDateFormat("dd.MM.yyyy").format(d)))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_time, SimpleDateFormat("HH:mm").format(d)))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_duration,
             Utils.getExamDuration(examForm)?.toString() + "min"
     ))
-    ret.appendLine(createStringWithLabel(context, R.string.room, room))
-    ret.appendLine(createStringWithLabel(context, R.string.form, Utils.getExamForm(examForm)))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_room, room))
+    ret.appendLine(createStringWithLabel(context, R.string.exam_information_form, Utils.getExamForm(examForm)))
 
     return ret.toString()
 }
@@ -130,9 +130,9 @@ fun AppCompatActivity.applySettings(viewModel:BaseViewModel) {
  */
 fun AppCompatActivity.closeApp() {
     AlertDialog.Builder(this)
-        .setMessage(R.string.close_app)
-        .setTitle(R.string.title_close_app)
-        .setPositiveButton(R.string.title_close_app) { _, _ ->
+        .setMessage(R.string.close_app_dialog_message)
+        .setTitle(R.string.close_app_dialog_close)
+        .setPositiveButton(R.string.close_app_dialog_close) { _, _ ->
             setResult(0)
             finishAffinity()
         }

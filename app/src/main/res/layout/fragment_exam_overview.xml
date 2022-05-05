@@ -5,7 +5,6 @@
     android:id="@+id/termineFragment_Root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="45dp"
     android:background="?attr/colorBackground"
     android:orientation="vertical"
     >
@@ -13,29 +12,20 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/termineFragment_swiperefres"
+        android:id="@+id/fragment_exam_overview_swipe_refresh_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         >
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView4"
+            android:id="@+id/fragment_exam_overview_recyclerview_exam"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            tools:listitem="@layout/termine">
+            tools:listitem="@layout/layout_exam_overview_exam">
 
 
         </androidx.recyclerview.widget.RecyclerView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <include
-        android:id="@+id/termineFragment_legend"
-        layout="@layout/layout_status_legend"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:visibility="invisible"
-        />
 </RelativeLayout>

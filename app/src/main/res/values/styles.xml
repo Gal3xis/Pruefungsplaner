@@ -1,4 +1,7 @@
 <resources>
+
+    <color name="launcher_icon_background">#0000ff</color>
+
     <!-- Base application theme. -->
     <style name="Theme.AppTheme_1" parent="BaseTheme">
         <item name="themeName">@string/Theme1_ThemeName</item>
@@ -82,25 +85,9 @@
     </style>
 
 
-    <style name="OptionenFragment.Entry" parent="Base.CardView">
-        <item name="android:background">@drawable/rounded_color_border</item>
+    <style name="Settings.Item" parent="Base.CardView">
+        <item name="android:background">@drawable/background_rounded_corners_strong</item>
         <item name="android:backgroundTint">?attr/colorPrimaryDark</item>
-        <item name="android:textColor">?attr/colorOnPrimaryDark</item>
-        <item name="android:padding">10dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginBottom">2dp</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">70dp</item>
-        <item name="android:textSize">15sp</item>
-        <item name="textAllCaps">false</item>
-        <item name="android:textAlignment">textStart</item>
-    </style>
-
-    <style name="OptionenFragment.Entry.Button" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/rounded_color_border</item>
-        <item name="backgroundTint">?attr/colorPrimaryDark</item>
         <item name="android:textColor">?attr/colorOnPrimaryDark</item>
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginLeft">5dp</item>
@@ -153,22 +140,10 @@
         <item name="backgroundTint">?attr/colorPrimary</item>
     </style>
 
-    <style name="spinnerItemStyle" parent="android:Widget.TextView.SpinnerItem">
-        <item name="android:background">?attr/colorPrimaryDark</item>
-        <item name="android:editTextColor">?attr/colorOnPrimaryDark</item>
-    </style>
-    <style name="ThemeOverlay.SearchView" parent="">
-        <!-- Text color -->
-        <item name="android:editTextColor">?attr/colorOnPrimaryDark</item>
-    </style>
     <style name="spinnerDropDownItemStyle" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
         <item name="android:background">?attr/colorPrimaryDark</item>
         <item name="android:editTextColor">?attr/colorOnPrimaryDark</item>
     </style>
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="ProgressStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">?attr/colorPrimary</item>
@@ -180,18 +155,12 @@
         <item name="android:secondaryProgressTint">?attr/colorPrimary</item>
     </style>
 
-    <style name="AutoCompleteStyle">
-        <item name="colorAccent">?attr/colorAccent</item>
-    </style>
-
     <style name="customAlertDialog" parent="@android:style/Theme.Dialog">
         <item name="android:background">?attr/colorPrimaryDark</item>
         <item name="textColorAlertDialogListItem">?attr/colorOnPrimaryDark</item>
         <item name="android:textSize">20dp</item>
         <item name="android:windowNoTitle">true</item>
     </style>
-
-    <style name="OptionenFragment"></style>
 
     <string name="Theme1_ThemeName">Green</string>
     <string name="Theme2_ThemeName">Blue</string>

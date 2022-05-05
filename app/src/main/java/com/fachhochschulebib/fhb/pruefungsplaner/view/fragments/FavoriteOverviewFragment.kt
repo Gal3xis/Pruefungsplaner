@@ -112,18 +112,18 @@ class FavoriteOverviewFragment : MainActivityFragment() {
      */
     private fun initRecyclerview() {
         recyclerViewFavoriteAdapter = RecyclerViewFavoriteAdapter(requireContext(),mutableListOf(),viewModel)
-        recyclerView4.adapter = recyclerViewFavoriteAdapter
-        recyclerView4?.layoutManager =  LinearLayoutManager(view?.context)
+        fragment_exam_overview_recyclerview_exam.adapter = recyclerViewFavoriteAdapter
+        fragment_exam_overview_recyclerview_exam?.layoutManager =  LinearLayoutManager(view?.context)
         viewModel.liveFavorites.observe(viewLifecycleOwner) { entryList ->
             if (entryList != null) {
                 recyclerViewFavoriteAdapter.updateContent(Filter.validateList(entryList))
             }
         }
-        termineFragment_swiperefres.setDistanceToTriggerSync(800)
-        termineFragment_swiperefres.setOnRefreshListener {
+        fragment_exam_overview_swipe_refresh_layout.setDistanceToTriggerSync(800)
+        fragment_exam_overview_swipe_refresh_layout.setOnRefreshListener {
             viewModel.updatePeriod()
             viewModel.updateDatabase()
-            termineFragment_swiperefres.isRefreshing = false
+            fragment_exam_overview_swipe_refresh_layout.isRefreshing = false
         }
     }
 }

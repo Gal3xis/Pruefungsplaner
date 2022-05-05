@@ -1,321 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorBackground"
-    android:minHeight="140dp"
-    android:screenOrientation="portrait"
-    tools:layout_editor_absoluteY="81dp"
-    android:id="@+id/settings_relative_layout"
     >
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
+            <ImageView
                 android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/optionfragment_header_design"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp" />
+                android:layout_gravity="center_horizontal"
+                android:text="@string/settings_divider_design"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp" />
 
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-            </LinearLayout>
-
-
-            <Switch
-                android:id="@+id/darkMode"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/optionenfragment_darkmode"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-
-            <LinearLayout
-                style="@style/OptionenFragment.Entry"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/optionenfragment_theme"
-                    android:textColor="?attr/colorOnPrimaryDark"
-                    android:textSize="18sp" />
-
-                <Spinner
-                    android:id="@+id/themeSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="?attr/colorAccent"
-                    android:spinnerMode="dialog"
-                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
+            <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/optionfragment_header_calendar"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp" />
-
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-            </LinearLayout>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnCalClear"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_del_cal" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnGoogleUpdate"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_act_cal" />
-
-            <Switch
-                android:id="@+id/switch2"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_sync_cal"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                style="@style/OptionenFragment.Entry"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/calendarInsertionTypeLabel"
-                    android:textColor="?attr/colorOnPrimaryDark"
-                    android:textSize="15sp" />
-
-                <Spinner
-                    android:id="@+id/calendarInsertionTypeSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="?attr/colorAccent"
-                    android:spinnerMode="dialog"
-                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                style="@style/OptionenFragment.Entry"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/calendarIdSpinnerLabel"
-                    android:textColor="?attr/colorOnPrimaryDark"
-                    android:textSize="15sp" />
-
-                <Spinner
-                    android:id="@+id/calendarIdSpinner"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="10dp"
-                    android:layout_weight="1"
-                    android:backgroundTint="?attr/colorAccent"
-                    android:spinnerMode="dialog"
-                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/optionfragment_header_pruefungen"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp" />
-
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-            </LinearLayout>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnFav"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_del_fav" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnDB"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_del_db" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btnupdate"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_act_fav" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/optionfragment_header_updates"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp" />
-
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-            </LinearLayout>
-
-            <Switch
-                android:id="@+id/optionenfragment_auto_updates"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/optionenfragment_auto_updates_switch_text"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/optionenfragment_auto_updates_intervall_button"
-                style="@style/OptionenFragment.Entry"
-                android:text = "@string/optionenfragment_auto_updates_intervall_button"
-                tools:text="Intervall:10min"
-                />
-
-            <Switch
-                android:id="@+id/optionenfragment_auto_updates_notificationsound"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/optionenfragment_auto_updates_notificationsound_text"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/optionfragment_header_about"
-                    android:textColor="?attr/colorOnBackground"
-                    android:textSize="20sp" />
-
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:src="@drawable/dotted_line"
-                    app:tint="?attr/colorOnBackground" />
-            </LinearLayout>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/privacyDeclaration"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/settings_privacy_declaration" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/optionenfragment_impressum"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/optionenfragment_impressum_text" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/optionenfragment_about"
-                style="@style/OptionenFragment.Entry"
-                android:text="@string/optionenfragment_about_text" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/optionenfragment_save_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:background="@drawable/button_rounded_corners"
-                android:backgroundTint="?attr/colorAccent"
-                android:text="@string/optionenfragment_save_btn_text"
-                android:textColor="?attr/colorOnAccent" />
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
         </LinearLayout>
-    </ScrollView>
-</RelativeLayout>
+
+
+        <Switch
+            android:id="@+id/darkMode"
+            style="@style/Settings.Item"
+            android:text="@string/settings_label_darkmode"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+
+        <LinearLayout
+            style="@style/Settings.Item"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/settings_label_theme"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="18sp" />
+
+            <Spinner
+                android:id="@+id/fragment_settings_spinner_theme"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:spinnerMode="dialog"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/settings_divider_calendar"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_clear_calendar"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_delete_calendar" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_update_calendar"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_update_calendar" />
+
+        <Switch
+            android:id="@+id/fragment_settings_switch_synchronize_calendar"
+            style="@style/Settings.Item"
+            android:text="@string/settings_switch_synchronize_calendar"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <LinearLayout
+            style="@style/Settings.Item"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/settings_label_calendar_insertion_type"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/fragment_settings_spinner_calendar_insertiontype"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:spinnerMode="dialog"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/Settings.Item"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/settings_label_calendar_id"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp" />
+
+            <Spinner
+                android:id="@+id/fragment_settings_spinner_calendar_id"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:backgroundTint="?attr/colorAccent"
+                android:spinnerMode="dialog"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/settings_divider_exams"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_delete_favorites"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_delete_favorites" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_delete_database"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_delete_database" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_update_database"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_update_database" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/settings_divider_updates"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp" />
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/fragment_settings_switch_background_updates"
+            style="@style/Settings.Item"
+            android:text="@string/settings_label_auto_updates"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_background_updates_interval"
+            style="@style/Settings.Item" />
+
+        <Switch
+            android:id="@+id/fragment_settings_switch_background_updates_notification_sound"
+            style="@style/Settings.Item"
+            android:text="@string/settings_label_auto_updates_notificationsound"
+            tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/settings_divider_info"
+                android:textColor="?attr/colorOnBackground"
+                android:textSize="20sp" />
+
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:src="@drawable/divider_dotted_line"
+                app:tint="?attr/colorOnBackground" />
+        </LinearLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_privacy_declaration"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_privacy_declaration" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/fragment_settings_button_impressum"
+            style="@style/Settings.Item"
+            android:text="@string/settings_button_impressum" />
+    </LinearLayout>
+</ScrollView>
 
 

@@ -47,7 +47,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
         val inflater = LayoutInflater.from(
             parent.context
         )
-        val view = inflater.inflate(R.layout.termine, parent, false)
+        val view = inflater.inflate(R.layout.layout_exam_overview_exam, parent, false)
         return ViewHolder(view)
     }
 
@@ -128,37 +128,37 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
         /**
          * TextView that shows the name of the module
          */
-        val txtModule: TextView = v.findViewById(R.id.moduleTextView)
+        val txtModule: TextView = v.findViewById(R.id.layout_exam_overview_exam_textview_module)
 
         /**
          * Layout that can be clicked on to show/hide the detailed information.
          */
-        val layout: LinearLayout = v.findViewById(R.id.examInfoLayout)
+        val layout: LinearLayout = v.findViewById(R.id.layout_exam_overview_exam_layout_info)
 
         /**
          * Icon that shows if the [TestPlanEntry] is a favorite or not
          */
-        val ivicon: ImageView = v.findViewById(R.id.favoriteIcon)
+        val ivicon: ImageView = v.findViewById(R.id.layout_exam_overview_exam_imageview_favorite_icon)
 
         /**
          * Icon that shows the status of the [TestPlanEntry]
          */
-        val statusIcon: ImageView = v.findViewById(R.id.statusIcon)
+        val statusIcon: ImageView = v.findViewById(R.id.layout_exam_overview_exam_imageview_status_icon)
 
         /**
          * TextView that shows the date of the exam
          */
-        val dateTextView: TextView = v.findViewById(R.id.date)
+        val dateTextView: TextView = v.findViewById(R.id.layout_exam_overview_exam_textview_date)
 
         /**
          * Layout of the second screen, that shows the detailed information. Can be made visible or gone to show/hide the deatils.
          */
-        val secondScreen:LinearLayout = v.findViewById(R.id.secondScreen)
+        val secondScreen:LinearLayout = v.findViewById(R.id.layout_exam_overview_exam_layout_details)
 
         /**
          * TextView ont the second screen that shows the datiled information.
          */
-        val txtSecondScreen: TextView = v.findViewById(R.id.txtSecondscreen)
+        val txtSecondScreen: TextView = v.findViewById(R.id.layout_exam_overview_exam_textview_details)
 
         /**
          * Function to initialize the UI-Elements for a specific [TestPlanEntry].
@@ -230,7 +230,7 @@ class RecyclerViewExamAdapter(private val context: Context,var entryList: Mutabl
             statusIcon.setColorFilter(
                 Utils.getColorFromAttr(
                     Utils.statusColors[entry.status]
-                        ?: R.attr.defaultStatusColor, context.theme
+                        ?: R.attr.defaultStatusColor, context
                 )
             )
             ivicon.setImageDrawable(

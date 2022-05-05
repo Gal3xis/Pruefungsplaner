@@ -44,7 +44,7 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
      */
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view:View = LayoutInflater.from(context).inflate(R.layout.layout_theme_spinner_background,null,true)
+        val view:View = LayoutInflater.from(context).inflate(R.layout.layout_settings_theme_spinner_row,null,true)
         return view(view,position)
     }
 
@@ -60,10 +60,10 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
      * @since 1.6
      */
     private fun view(view: View?, position: Int): View {
-        val image = view?.findViewById<View>(R.id.layout_theme_spinner_row_image)
-        val text = view?.findViewById<TextView>(R.id.layout_theme_spinner_row_text)
+        val image = view?.findViewById<View>(R.id.layout_settings_theme_spinner_row_image_themeicon)
+        val text = view?.findViewById<TextView>(R.id.layout_settings_theme_spinner_row_textview_text)
         val theme = getItem(position)
-        val drawable = view?.resources?.getDrawable(R.drawable.ic_themecolor,theme?.theme?:view.context.theme)
+        val drawable = view?.resources?.getDrawable(R.drawable.background_settings_themecolor,theme?.theme?:view.context.theme)
         image?.background = drawable
         text?.text = theme?.name?:"Unnamed"
         return view?:View(context)
@@ -87,7 +87,7 @@ class ThemeAdapter(context: Context, resource: Int, objects: MutableList<Theme>)
         convertView: View?,
         parent: ViewGroup
     ): View {
-        val cv = convertView?:LayoutInflater.from(context).inflate(R.layout.layout_theme_spinner_row,parent,false)
+        val cv = convertView?:LayoutInflater.from(context).inflate(R.layout.layout_settings_theme_spinner_row,parent,false)
         return view(cv,position)
     }
 }

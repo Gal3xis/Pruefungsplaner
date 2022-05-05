@@ -15,6 +15,7 @@ import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.SettingsViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_settings.*
 
 
@@ -97,31 +98,10 @@ class SettingsFragment() : MainActivityFragment() {
      * @see Menu
      */
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.findItem(R.id.menu_item_save).isVisible = true
         menu.findItem(R.id.menu_item_filter).isVisible = false
         super.onCreateOptionsMenu(menu, inflater)
     }
 
-    /**
-     * Overrides the [onOptionsItemSelected]-Method from the [Fragment]-Superclass.
-     * Called when the user clicks an item in the actionmenu.
-     * Determines what to do for each item.
-     * @param[item] The item, which was clicked by the user.
-     * @return Return false to allow normal menu processing to proceed, true to consume it here.
-     * @author Alexander Lange
-     * @since 1.6
-     * @see Fragment.onOptionsItemSelected
-     * @see MenuItem
-     */
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_item_save -> {
-                save()
-                true
-            }
-            else -> false
-        }
-    }
 
     /**
      * Initialized the UI.
@@ -142,7 +122,6 @@ class SettingsFragment() : MainActivityFragment() {
         initDeleteCalendarEntriesButton()
         initUpdateCalendarButton()
         initDeleteFavoritesButton()
-        initSaveButton()
         initBackgroundUpdateSwitch()
         initBackgroundUpdateIntervalButton()
     }
@@ -174,12 +153,12 @@ class SettingsFragment() : MainActivityFragment() {
                 selectedName = it.name
             }
         }
-        calendarIdSpinner.adapter =
+        fragment_settings_spinner_calendar_id.adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, names)
-        calendarIdSpinner.setSelection(
+        fragment_settings_spinner_calendar_id.setSelection(
             selectedName ?: CalendarIO.getPrimaryCalendar(requireContext())?.name
         )
-        calendarIdSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        fragment_settings_spinner_calendar_id.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?,
                 view: View?,
@@ -191,12 +170,12 @@ class SettingsFragment() : MainActivityFragment() {
                 textView.setTextColor(
                     Utils.getColorFromAttr(
                         R.attr.colorOnPrimaryDark,
-                        requireContext().theme
+                        requireContext()
                     )
                 )
                 textView.textSize = 15f
                 val id = calendar.find {
-                    it.name == calendarIdSpinner.selectedItem.toString()
+                    it.name == fragment_settings_spinner_calendar_id.selectedItem.toString()
                 }?.id ?: 0
                 viewModel.setSelectedCalendar(id)
             }
@@ -208,23 +187,13 @@ class SettingsFragment() : MainActivityFragment() {
     }
 
     /**
-     * Initializes the save button. Saves all remaining changes to the shared preferences, and if necessary, asks the user to restart the app.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun initSaveButton() {
-        optionenfragment_save_btn.setOnClickListener { save() }
-    }
-
-    /**
      * Initializes the button to delete all favorites.
      *
      * @author Alexander Lange
      * @since 1.6
      */
     private fun initDeleteFavoritesButton() {
-        btnFav.setOnClickListener {
+        fragment_settings_button_delete_favorites.setOnClickListener {
             val count = viewModel.liveFavorites.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
                 .setTitle("Favoriten löschen")
@@ -250,7 +219,7 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initUpdateCalendarButton() {
-        btnGoogleUpdate.setOnClickListener {
+        fragment_settings_button_update_calendar.setOnClickListener {
             AlertDialog.Builder(requireContext())
                 .setTitle("Kalendereinträge aktualisieren")
                 .setMessage("Soll der Kalender aktualisiert werden?")
@@ -271,7 +240,7 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initDeleteCalendarEntriesButton() {
-        btnCalClear.setOnClickListener {
+        fragment_settings_button_clear_calendar.setOnClickListener {
             val eventIds = viewModel.getCalendarIds()
 
             AlertDialog.Builder(requireContext())
@@ -296,8 +265,8 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initDeleteDatabaseButton() {
-        btnDB.setOnClickListener {
-            val count = viewModel.liveEntries.value?.size?:return@setOnClickListener
+        fragment_settings_button_delete_database.setOnClickListener {
+            val count = viewModel.liveEntries.value?.size ?: return@setOnClickListener
             AlertDialog.Builder(requireContext())
                 .setTitle("Datenbank löschen")
                 .setMessage("Sollen alle $count Einträge gelöscht werden?")
@@ -323,7 +292,7 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initImpressumButton() {
-        optionenfragment_impressum?.setOnClickListener {
+        fragment_settings_button_impressum?.setOnClickListener {
             (activity as MainActivity).changeFragment(ImpressumFragment())
         }
     }
@@ -336,7 +305,7 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initPrivacyDeclarationButton() {
-        privacyDeclaration.setOnClickListener {
+        fragment_settings_button_privacy_declaration.setOnClickListener {
             (activity as MainActivity).changeFragment(PrivacyDeclarationFragment())
         }
     }
@@ -348,8 +317,8 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initCalendarSynchronizationSwitch() {
-        switch2.isChecked = viewModel.getCalendarSync()
-        switch2.setOnCheckedChangeListener { _, isChecked ->
+        fragment_settings_switch_synchronize_calendar.isChecked = viewModel.getCalendarSync()
+        fragment_settings_switch_synchronize_calendar.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setCalendarSync(requireContext(), isChecked)
         }
     }
@@ -365,9 +334,9 @@ class SettingsFragment() : MainActivityFragment() {
         CalendarIO.InsertionType.values().forEach {
             names.add(it.name)
         }
-        calendarInsertionTypeSpinner.adapter =
+        fragment_settings_spinner_calendar_insertiontype.adapter =
             ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, names)
-        calendarInsertionTypeSpinner.onItemSelectedListener =
+        fragment_settings_spinner_calendar_insertiontype.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
                     parent: AdapterView<*>?,
@@ -380,13 +349,13 @@ class SettingsFragment() : MainActivityFragment() {
                     textView.setTextColor(
                         Utils.getColorFromAttr(
                             R.attr.colorOnPrimaryDark,
-                            requireContext().theme
+                            requireContext()
                         )
                     )
                     textView.textSize = 15f
                     viewModel.setCalendarInserionType(
                         CalendarIO.InsertionType.valueOf(
-                            calendarInsertionTypeSpinner.selectedItem.toString()
+                            fragment_settings_spinner_calendar_insertiontype.selectedItem.toString()
                         )
                     )
                 }
@@ -395,7 +364,7 @@ class SettingsFragment() : MainActivityFragment() {
 
                 }
             }
-        calendarInsertionTypeSpinner.setSelection(viewModel.getCalendarInsertionType().name)
+        fragment_settings_spinner_calendar_insertiontype.setSelection(viewModel.getCalendarInsertionType().name)
     }
 
     /**
@@ -405,7 +374,7 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initUpdateDatabaseButton() {
-        btnupdate?.setOnClickListener {
+        fragment_settings_button_update_database?.setOnClickListener {
             viewModel.updateDatabase()
         }
     }
@@ -419,6 +388,33 @@ class SettingsFragment() : MainActivityFragment() {
      */
     private fun initDarkModeSwitch() {
         darkMode.isChecked = viewModel.getChosenDarkMode()
+        darkMode.setOnCheckedChangeListener { _, _ ->
+            if(darkMode.isChecked!=viewModel.getChosenDarkMode()){
+                setDirty()
+            }
+            viewModel.setChosenDarkMode(darkMode.isChecked)
+        }
+    }
+
+    /**
+     * Parameter that stores if the app needs a restart to apply the changes
+     */
+    private var dirty = false
+
+    private fun setDirty(){
+        if(!dirty){
+            Snackbar.make(requireView(),requireContext().resources.getString(R.string.settings_snackbar_restart_needed),Snackbar.LENGTH_INDEFINITE)
+                .setAction(requireContext().resources.getString(R.string.settings_snackbar_restart)){
+                    val pid = Process.myPid()
+                    Process.killProcess(pid)
+                    dirty = false
+                }
+                .setBackgroundTint(Utils.getColorFromAttr(R.attr.colorAccent,requireContext()))
+                .setTextColor(Utils.getColorFromAttr(R.attr.colorOnAccent,requireContext()))
+                .setActionTextColor(Utils.getColorFromAttr(R.attr.colorOnAccent,requireContext()))
+                .show()
+        }
+        dirty = true
     }
 
     /**
@@ -438,19 +434,40 @@ class SettingsFragment() : MainActivityFragment() {
         val adapter = view?.context?.let {
             ThemeAdapter(
                 it,
-                R.layout.layout_theme_spinner_row,
+                R.layout.layout_settings_theme_spinner_row,
                 themeList
             )
         }
-        themeSpinner?.adapter = adapter
+        fragment_settings_spinner_theme?.adapter = adapter
         val selectedPos: Int
         val themeid = viewModel.getChosenThemeId()
         selectedPos = Utils.themeList.indexOf(themeid)
+        fragment_settings_spinner_theme?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+
+            }
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                val chosenThemeId:Int = when (position) {
+                    1 -> R.style.Theme_AppTheme_2
+                    else -> R.style.Theme_AppTheme_1
+                }
+                if(chosenThemeId != viewModel.getChosenThemeId()){
+                    setDirty()
+                }
+                viewModel.setChosenThemeId(chosenThemeId)
+            }
+        }
         try {
-            themeSpinner?.setSelection(selectedPos)
+            fragment_settings_spinner_theme?.setSelection(selectedPos)
         } catch (ex: Exception) {
 
         }
+
     }
 
     /**
@@ -460,15 +477,15 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initBackgroundUpdateSwitch() {
-        optionenfragment_auto_updates.isChecked = viewModel.getBackgroundUpdates()
-        optionenfragment_auto_updates.setOnCheckedChangeListener { _, isChecked ->
+        fragment_settings_switch_background_updates.isChecked = viewModel.getBackgroundUpdates()
+        fragment_settings_switch_background_updates.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setBackgroundUpdates(isChecked)
             context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
 
-        optionenfragment_auto_updates_notificationsound.isChecked =
+        fragment_settings_switch_background_updates_notification_sound.isChecked =
             viewModel.getNotificationSounds()
-        optionenfragment_auto_updates_notificationsound.setOnCheckedChangeListener { _, isChecked ->
+        fragment_settings_switch_background_updates_notification_sound.setOnCheckedChangeListener { _, isChecked ->
             viewModel.setNotificationSounds(isChecked)
             context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
         }
@@ -481,18 +498,24 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun initBackgroundUpdateIntervalButton() {
-        optionenfragment_auto_updates_intervall_button.setOnClickListener {
+        val currentMinute = { viewModel.getUpdateIntervalTimeMinute() }
+        val currentHour = { viewModel.getUpdateIntervalTimeHour() }
+
+        fragment_settings_button_background_updates_interval.setOnClickListener {
             TimePickerDialog(context, 3, { _, hour, minute ->
                 var _minute = minute
                 if (hour == 0 && _minute < 15) {
                     _minute = 15
-                    Toast.makeText(context, "15 Minutes is minimum", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "15 Minutes is minimum", Toast.LENGTH_SHORT)
+                        .show()//TODO
                 }
                 setIntervallTime(hour, _minute)
 
-            }, viewModel.getUpdateIntervalTimeHour(), viewModel.getUpdateIntervalTimeMinute(), true)
+            }, currentHour(), currentMinute(), true)
                 .show()
         }
+        fragment_settings_button_background_updates_interval.text =
+            "${resources.getString(R.string.settings_button_auto_updates_interval)} ${currentHour()}:${currentMinute()}"
     }
 
     /**
@@ -509,11 +532,8 @@ class SettingsFragment() : MainActivityFragment() {
     ) {
         viewModel.setUpdateIntervalTimeMinute(minute)
         viewModel.setUpdateIntervalTimeHour(hour)
-        optionenfragment_auto_updates_intervall_button.text = "%s%02d:%02d".format(
-            resources.getString(R.string.optionenfragment_auto_updates_intervall_text),
-            hour,
-            minute
-        )
+        fragment_settings_button_background_updates_interval.text =
+            "${resources.getString(R.string.settings_button_auto_updates_interval)} ${hour}:${minute}"
         context?.let { BackgroundUpdatingService.invalidatePeriodicRequests(it) }
     }
 
@@ -524,29 +544,22 @@ class SettingsFragment() : MainActivityFragment() {
      * @since 1.6
      */
     private fun save() {
-        val position = themeSpinner.selectedItemPosition
-        val chosenThemeId: Int
-        when (position) {
-            1 -> chosenThemeId = R.style.Theme_AppTheme_2
-            else -> chosenThemeId = R.style.Theme_AppTheme_1
-        }
+        view?:return
 
-        if (chosenThemeId != viewModel.getChosenThemeId() || darkMode.isChecked != viewModel.getChosenDarkMode()) {
-            viewModel.setChosenThemeId(chosenThemeId)
-            viewModel.setChosenDarkMode(darkMode.isChecked)
+
+        if ( darkMode.isChecked != viewModel.getChosenDarkMode()) {
 
             AlertDialog.Builder(requireContext()).setTitle("Neustart benötigt")
                 .setMessage("Jetzt Neustarten?").setPositiveButton(
-                "Neustarten"
-            ) { _, _ ->
-                val pid = Process.myPid()
-                Process.killProcess(pid)
-            }.setNegativeButton("Nicht Neustarten") { _, _ ->
-                (activity as MainActivity).changeFragment(ExamOverviewFragment())
+                    "Neustarten"
+                ) { _, _ ->
+                    val pid = Process.myPid()
+                    Process.killProcess(pid)
+                }.setNegativeButton("Nicht Neustarten") { _, _ ->
+                    (activity as MainActivity).changeFragment(ExamOverviewFragment())
 
-            }.create().show()
+                }.create().show()
         } else {
-            viewModel.setChosenThemeId(chosenThemeId)
             viewModel.setChosenDarkMode(darkMode.isChecked)
             (activity as MainActivity).changeFragment(ExamOverviewFragment())
 

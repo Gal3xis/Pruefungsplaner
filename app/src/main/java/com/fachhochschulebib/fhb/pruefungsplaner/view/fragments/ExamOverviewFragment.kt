@@ -12,7 +12,6 @@ import com.fachhochschulebib.fhb.pruefungsplaner.*
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Filter
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.RecyclerViewExamAdapter
-import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ChangeCoursesViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ExamOverviewViewModel
 import kotlinx.android.synthetic.main.fragment_exam_overview.*
@@ -108,20 +107,20 @@ class ExamOverviewFragment() : MainActivityFragment() {
      */
     private fun initRecyclerview() {
         recyclerViewExamAdapter = RecyclerViewExamAdapter(requireContext(),mutableListOf(),viewModel)
-        recyclerView4.adapter = recyclerViewExamAdapter
-        recyclerView4.visibility = RecyclerView.VISIBLE
+        fragment_exam_overview_recyclerview_exam.adapter = recyclerViewExamAdapter
+        fragment_exam_overview_recyclerview_exam.visibility = RecyclerView.VISIBLE
         viewModel.liveEntryList.observe(viewLifecycleOwner){ entryList ->
             entryList?.let {
                 recyclerViewExamAdapter.updateContent(Filter.validateList(it).toMutableList())
             }
-            termineFragment_swiperefres.isRefreshing = false
+            fragment_exam_overview_swipe_refresh_layout.isRefreshing = false
         }
-        termineFragment_swiperefres.setDistanceToTriggerSync(800)
-        termineFragment_swiperefres.setOnRefreshListener {
+        fragment_exam_overview_swipe_refresh_layout.setDistanceToTriggerSync(800)
+        fragment_exam_overview_swipe_refresh_layout.setOnRefreshListener {
             viewModel.updatePeriod()
             viewModel.updateDataFromServer()
-            termineFragment_swiperefres.isRefreshing = false
+            fragment_exam_overview_swipe_refresh_layout.isRefreshing = false
         }
-        recyclerView4?.layoutManager = LinearLayoutManager(view?.context)
+        fragment_exam_overview_recyclerview_exam?.layoutManager = LinearLayoutManager(view?.context)
     }
 }

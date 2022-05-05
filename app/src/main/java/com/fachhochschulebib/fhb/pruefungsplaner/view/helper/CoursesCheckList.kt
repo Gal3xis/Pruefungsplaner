@@ -79,7 +79,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
             parent.context
         )
         // Inflate view to add to the Recyclerview
-        val v = inflater.inflate(R.layout.checkliste, parent, false)
+        val v = inflater.inflate(R.layout.layout_courses_checklist_view_holder, parent, false)
         //Create ViewHolder
         //Return ViewHolder
         return ViewHolder(v)
@@ -127,7 +127,7 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
             viewModel.updateCourse(courseList[position].courseName,courseList[position].chosen)
         } else {
             Toast.makeText(
-                context, context.getString(R.string.favorite_main_course),
+                context, context.getString(R.string.change_courses_toast_cannot_unfavor_main_course),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -176,8 +176,8 @@ class CoursesCheckList(var courseList:List<Course>, private val viewModel: BaseV
      */
     inner class ViewHolder internal constructor(v: View) : RecyclerView.ViewHolder(v) {
         // each data item is just a string in this case
-        val nameCourse: TextView = v.findViewById<View>(R.id.courseName) as TextView
-        val checkBoxCourse: CheckBox = v.findViewById<View>(R.id.checkBox) as CheckBox
+        val nameCourse: TextView = v.findViewById<View>(R.id.layout_courses_checklist_view_holder_textview_course_name) as TextView
+        val checkBoxCourse: CheckBox = v.findViewById<View>(R.id.layout_courses_checklist_view_holder_checkbox) as CheckBox
 
     }
 }

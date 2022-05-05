@@ -7,9 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.fachhochschulebib.fhb.pruefungsplaner.R
 import com.fachhochschulebib.fhb.pruefungsplaner.utils.Utils
-import com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragment
-import kotlinx.android.synthetic.main.privacy_declaration.*
+import kotlinx.android.synthetic.main.fragment_privacy_declaration.*
 /**
  * Fragment, that shows the privacy-declaration.
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
@@ -33,10 +32,7 @@ class PrivacyDeclarationFragment : MainActivityFragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        privacyDeclarationText.text = context?.let { Utils.readTextFile(it,R.raw.privacy_declarement) }
-        privacyDeclarationButton.setOnClickListener {
-            (activity as MainActivity).changeFragment(SettingsFragment())
-        }
+        fragment_privacy_declaration_textview_privacy_declaration.text = context?.let { Utils.readTextFile(it,R.raw.text_privacy_declarement) }
     }
 
     /**
@@ -53,6 +49,6 @@ class PrivacyDeclarationFragment : MainActivityFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.privacy_declaration, container, false)
+        return inflater.inflate(R.layout.fragment_privacy_declaration, container, false)
     }
 }

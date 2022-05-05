@@ -33,7 +33,7 @@
 17-->[androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:28:22-74
 18
 19    <application
-19-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:10:5-32:19
+19-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:10:5-31:19
 20        android:allowBackup="true"
 20-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:11:9-35
 21        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
@@ -48,37 +48,36 @@
 26-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:14:9-54
 27        android:supportsRtl="true"
 27-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:15:9-35
-28        android:usesCleartextTraffic="true" >
-28-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:16:9-44
-29        <activity
-29-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:17:9-25:20
-30            android:name="com.fachhochschulebib.fhb.pruefungsplaner.view.activities.StartActivity"
-30-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:18:13-58
-31            android:exported="true" >
-31-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:19:13-36
-32            <intent-filter>
-32-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:20:13-24:29
-33                <action android:name="android.intent.action.MAIN" />
-33-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:21:17-69
-33-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:21:25-66
-34
-35                <category android:name="android.intent.category.LAUNCHER" />
-35-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:23:17-77
-35-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:23:27-74
-36            </intent-filter>
-37        </activity>
-38        <activity
-38-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-31:67
-39            android:name="com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity"
-39-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:27:13-57
-40            android:configChanges="orientation|screenSize"
-40-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:28:13-59
-41            android:label="@string/title_activity_recycleview_tabelle"
-41-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:29:13-71
+28        android:testOnly="true"
+29        android:usesCleartextTraffic="true" >
+29-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:16:9-44
+30        <activity
+30-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:17:9-25:20
+31            android:name="com.fachhochschulebib.fhb.pruefungsplaner.view.activities.StartActivity"
+31-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:18:13-58
+32            android:exported="true" >
+32-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:19:13-36
+33            <intent-filter>
+33-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:20:13-24:29
+34                <action android:name="android.intent.action.MAIN" />
+34-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:21:17-69
+34-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:21:25-66
+35
+36                <category android:name="android.intent.category.LAUNCHER" />
+36-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:23:17-77
+36-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:23:27-74
+37            </intent-filter>
+38        </activity>
+39        <activity
+39-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:26:9-30:67
+40            android:name="com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity"
+40-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:27:13-57
+41            android:configChanges="orientation|screenSize"
+41-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:28:13-59
 42            android:launchMode="singleInstance"
-42-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:30:13-48
+42-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:29:13-48
 43            android:windowSoftInputMode="adjustResize" />
-43-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:31:13-55
+43-->C:\Users\Alex\Documents\EigeneApps\Pruefungsplaner\app\src\main\AndroidManifest.xml:30:13-55
 44
 45        <provider
 45-->[androidx.work:work-runtime:2.7.1] C:\Users\Alex\.gradle\caches\transforms-3\467bc36d6d265149aa77b4d56b2d6fbb\transformed\work-runtime-2.7.1\AndroidManifest.xml:31:9-39:20

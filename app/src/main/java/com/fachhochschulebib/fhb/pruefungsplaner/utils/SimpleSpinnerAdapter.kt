@@ -44,10 +44,10 @@ class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList
      */
     @SuppressLint("ViewHolder")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view: View = LayoutInflater.from(context).inflate(R.layout.simple_spinner_background,null,true)
-        val text = view.findViewById<TextView>(R.id.simple_spinner_background_text)
+        val view: View = LayoutInflater.from(context).inflate(R.layout.layout_simple_spinner_adapter_background,null,true)
+        val text = view.findViewById<TextView>(R.id.layout_simple_spinner_adapter_background_textview)
         text.text = getItem(position)
-        text.setTextColor(Utils.getColorFromAttr(R.attr.colorOnBackground,context.theme))
+        text.setTextColor(Utils.getColorFromAttr(R.attr.colorOnBackground,context))
         return view(view,position)
     }
 
@@ -63,9 +63,9 @@ class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList
      * @since 1.6
      */
     private fun view(view: View?, position: Int): View {
-        val text = view?.findViewById<TextView>(R.id.simple_spinner_item_text)
+        val text = view?.findViewById<TextView>(R.id.layout_simple_spinner_adapter_item_textview)
         view?.setBackgroundColor(Color.TRANSPARENT)
-        text?.setTextColor(Utils.getColorFromAttr(R.attr.colorOnBackground,context.theme))
+        text?.setTextColor(Utils.getColorFromAttr(R.attr.colorOnBackground,context))
         text?.text = getItem(position)
         return view?: View(context)
     }
@@ -88,7 +88,7 @@ class SimpleSpinnerAdapter(context: Context, resource: Int, objects: MutableList
         convertView: View?,
         parent: ViewGroup
     ): View {
-        val cv = convertView?: LayoutInflater.from(context).inflate(R.layout.simple_spinner_item,parent,false)
+        val cv = convertView?: LayoutInflater.from(context).inflate(R.layout.layout_simpler_spinner_adapter_item,parent,false)
         return view(cv,position)
     }
 }

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:layout_editor_absoluteY="25dp"
+    android:backgroundTint="?attr/colorBackground"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="20sp"
+        android:text="@string/feedback_usability" />
+
+    <RatingBar
+        android:id="@+id/fragment_feedback_ratingbar_usability"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.RatingBar"
+        android:numStars="5"
+        android:rating="3"
+        android:layout_weight="0"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="20sp"
+        android:layout_weight="0"
+        android:text="@string/feedback_stability" />
+
+    <RatingBar
+        android:id="@+id/fragment_feedback_ratingbar_stability"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.RatingBar"
+        android:numStars="5"
+        android:rating="3"
+        android:layout_weight="0"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="20sp"
+        android:layout_weight="0"
+        android:text="@string/feedback_functions" />
+
+    <RatingBar
+        android:id="@+id/fragment_feedback_ratingbar_functions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.RatingBar"
+        android:numStars="5"
+        android:rating="3"
+        android:layout_weight="0" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:textColor="?attr/colorOnBackground"
+        android:textSize="20sp"
+        android:text="@string/feedback_text" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fragment_feedback_text_input_feedbacktext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnBackground"
+            android:textSize="20sp"
+            android:singleLine="false"
+            android:theme="@style/ProgressStyle"
+            android:hint="" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/fragment_feedback_button_send"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:background="@drawable/background_rounded_corners_strong"
+        android:backgroundTint="?attr/colorAccent"
+        android:textColor="?attr/colorOnAccent"
+        android:text="@string/feedback_send" />
+
+</LinearLayout>

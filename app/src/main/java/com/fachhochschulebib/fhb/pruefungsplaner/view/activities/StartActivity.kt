@@ -3,6 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.view.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -22,7 +23,7 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import java.util.*
-import kotlinx.android.synthetic.main.start.*
+import kotlinx.android.synthetic.main.activity_change_faculty.*
 import kotlinx.coroutines.*
 
 /**
@@ -97,7 +98,7 @@ class StartActivity : AppCompatActivity() {
         )[StartViewModel::class.java]
         applySettings(viewModel)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.start)
+        setContentView(R.layout.activity_change_faculty)
         initUpdateManager()
         initRecyclerviewCourses()
         initButtons()
@@ -144,14 +145,17 @@ class StartActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initRecyclerviewCourses() {
-        recyclerViewChecklist.setHasFixedSize(true)
-        recyclerViewChecklist.layoutManager = LinearLayoutManager(applicationContext)
+        activity_change_faculty_recyclerview_courses.setHasFixedSize(true)
+        activity_change_faculty_recyclerview_courses.layoutManager = LinearLayoutManager(applicationContext)
         recyclerViewCourses = CoursesCheckList(listOf(), viewModel, applicationContext)
-        recyclerViewChecklist.adapter = recyclerViewCourses
+        activity_change_faculty_recyclerview_courses.adapter = recyclerViewCourses
         viewModel.liveCoursesForFaculty.observe(this) { items ->
             if (items != null) {
+                activity_change_faculty_label_select_courses.visibility = View.VISIBLE
                 recyclerViewCourses.updateContent(items)
+                return@observe
             }
+            activity_change_faculty_label_select_courses.visibility = View.GONE
         }
 
     }
@@ -163,10 +167,10 @@ class StartActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun initButtons() {
-        buttonForSpinner.setOnClickListener {
+        activity_change_faculty_button_select_faculty.setOnClickListener {
             clickedChooseFaculty()
         }
-        buttonOk.setOnClickListener {
+        activity_change_faculty_button_ok.setOnClickListener {
             clickedOk()
         }
     }
@@ -221,7 +225,7 @@ class StartActivity : AppCompatActivity() {
                     this@StartActivity,
                     R.style.customAlertDialog
                 )
-                chooseCourse.setTitle(R.string.choose_main)
+                chooseCourse.setTitle(R.string.change_faculty_choose_main_course)
                 chooseCourse.setItems(
                     stringCourses.toTypedArray()
                 ) { _, which ->
@@ -290,6 +294,7 @@ class StartActivity : AppCompatActivity() {
      * @since 1.6
      */
     private fun facultyChosen(faculty: Faculty) {
+        activity_change_faculty_button_select_faculty.text = faculty.facultyName
         viewModel.setSelectedFaculty(faculty)
     }
 }

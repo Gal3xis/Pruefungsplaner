@@ -1,250 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="350dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="40dp"
     android:maxHeight="200dp"
-    android:padding="20dp"
-    tools:background="?attr/colorPrimaryDark">
+    android:padding="20dp">
 
-    <ScrollView
+    <TableLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TableLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+        <TableRow>
 
-            <TableRow>
+            <TextView
+                android:id="@+id/layout_dialog_filter_textview_faculty"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_span="2"
+                android:autoSizeTextType="uniform"
+                android:lines="1"
+                android:textAlignment="center"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="20sp"
+                tools:text="Inginieurswissenschaften" />
 
-                <TextView
-                    android:id="@+id/layout_dialog_filter_faculty_tv"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:lines="1"
-                    android:autoSizeTextType="uniform"
-                    android:layout_span="2"
-                    android:textAlignment="center"
-                    tools:text="Inginieurswissenschaften"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="20sp"
-                    />
+        </TableRow>
 
-            </TableRow>
+        <View style="@style/AlertDialog.Filter.Divider" />
 
-            <View style="@style/AlertDialog.Filter.Divider" />
+        <TableRow android:layout_marginTop="10dp">
 
-            <TableRow android:layout_marginTop="10dp">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/filter_dialog_course_label"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="15sp"
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/layout_dialogue_filter_course_tv"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="15sp"
+                />
 
-                    />
-
-                <Spinner
-                    android:id="@+id/layout_dialog_filter_course_sp"
-                    style="@style/AlertDialog.Filter.Spinner"
-                    />
-            </TableRow>
+            <Spinner
+                android:id="@+id/layout_dialog_filter_spinner_course"
+                style="@style/AlertDialog.Filter.Spinner" />
+        </TableRow>
 
 
-            <View style="@style/AlertDialog.Filter.Divider" />
+        <View style="@style/AlertDialog.Filter.Divider" />
 
-            <TableRow android:layout_marginTop="10dp">
+        <TableRow android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/layout_dialogue_filter_modul_tv"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="15sp"
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="@string/filter_dialog_module_label"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="15sp"
 
-                    />
+                />
 
-                <Spinner
-                    android:id="@+id/layout_dialog_filter_modul_sp"
-                    style="@style/AlertDialog.Filter.Spinner" />
-            </TableRow>
+            <Spinner
+                android:id="@+id/layout_dialog_filter_spinner_module"
+                style="@style/AlertDialog.Filter.Spinner" />
+        </TableRow>
 
-            <View style="@style/AlertDialog.Filter.Divider" />
+        <View style="@style/AlertDialog.Filter.Divider" />
 
-            <TableRow android:layout_marginTop="10dp">
+        <TableRow android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:text="Prüfer:"
-                    android:textColor="?attr/colorOnPrimaryDark"
-                    android:textSize="15sp" />
-
-
-                <Spinner
-                    android:id="@+id/layout_dialog_filter_examiner_sp"
-                    style="@style/AlertDialog.Filter.Spinner" />
-            </TableRow>
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="Prüfer:"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp" />
 
 
-            <View style="@style/AlertDialog.Filter.Divider" />
-
-            <TableRow android:layout_marginTop="10dp">
-
-                <TextView
-                    android:layout_gravity="center_vertical"
-                    android:text="Semester:"
-                    android:textColor="?attr/colorOnPrimaryDark"
-                    android:textSize="15sp" />
-
-                <LinearLayout
-                    android:layout_span="2"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AlertDialog.Filter.CheckBox.TextView"
-                            android:text="1"
-                            />
-
-                        <CheckBox
-                            android:id="@+id/layout_dialog_filter_semester_1"
-                            style="@style/AlertDialog.Filter.CheckBox.Box"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AlertDialog.Filter.CheckBox.TextView"
-                            android:text="2"
-                            />
-
-                        <CheckBox
-                            android:id="@+id/layout_dialog_filter_semester_2"
-                            style="@style/AlertDialog.Filter.CheckBox.Box"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AlertDialog.Filter.CheckBox.TextView"
-                            android:text="3"
-                            />
-
-                        <CheckBox
-                            android:id="@+id/layout_dialog_filter_semester_3"
-                            style="@style/AlertDialog.Filter.CheckBox.Box"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AlertDialog.Filter.CheckBox.TextView"
-                            android:text="4"
-                            />
-
-                        <CheckBox
-                            android:id="@+id/layout_dialog_filter_semester_4"
-                            style="@style/AlertDialog.Filter.CheckBox.Box"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AlertDialog.Filter.CheckBox.TextView"
-                            android:text="5"
-                            />
-
-                        <CheckBox
-                            android:id="@+id/layout_dialog_filter_semester_5"
-                            style="@style/AlertDialog.Filter.CheckBox.Box"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <TextView
-                            style="@style/AlertDialog.Filter.CheckBox.TextView"
-                            android:text="6"
-                            />
-
-                        <CheckBox
-                            android:id="@+id/layout_dialog_filter_semester_6"
-                            style="@style/AlertDialog.Filter.CheckBox.Box"
-                            />
-                    </LinearLayout>
-                </LinearLayout>
-            </TableRow>
+            <Spinner
+                android:id="@+id/layout_dialog_filter_spinner_examiner"
+                style="@style/AlertDialog.Filter.Spinner" />
+        </TableRow>
 
 
-            <View style="@style/AlertDialog.Filter.Divider" />
+        <View style="@style/AlertDialog.Filter.Divider" />
 
-            <TableRow android:layout_marginTop="10dp">
+        <TableRow android:layout_marginTop="10dp">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:text="Tag:"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:textSize="15sp" />
+            <TextView
+                android:layout_gravity="center_vertical"
+                android:text="Semester:"
+                android:textColor="?attr/colorOnPrimaryDark"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_span="2"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/layout_dialog_filter_date_tv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="?attr/colorOnPrimary"
-                        android:textSize="17sp"
-                        tools:text="01.01.1970" />
+                        style="@style/AlertDialog.Filter.CheckBox.TextView"
+                        android:text="1" />
 
-                    <ImageButton
-                        android:id="@+id/layout_dialog_filter_date_ib"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="10dp"
-                        android:background="@android:color/transparent"
-                        android:textAlignment="center"
-                        app:srcCompat="@drawable/ic_calendar"
-                        app:tint="?attr/colorOnPrimary" />
-
+                    <CheckBox
+                        android:id="@+id/layout_dialog_filter_checkbox_semester_1"
+                        style="@style/AlertDialog.Filter.CheckBox.Box" />
                 </LinearLayout>
 
-            </TableRow>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-        </TableLayout>
-    </ScrollView>
+                    <TextView
+                        style="@style/AlertDialog.Filter.CheckBox.TextView"
+                        android:text="2" />
 
-</LinearLayout>
+                    <CheckBox
+                        android:id="@+id/layout_dialog_filter_checkbox_semester_2"
+                        style="@style/AlertDialog.Filter.CheckBox.Box" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/AlertDialog.Filter.CheckBox.TextView"
+                        android:text="3" />
+
+                    <CheckBox
+                        android:id="@+id/layout_dialog_filter_checkbox_semester_3"
+                        style="@style/AlertDialog.Filter.CheckBox.Box" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/AlertDialog.Filter.CheckBox.TextView"
+                        android:text="4" />
+
+                    <CheckBox
+                        android:id="@+id/layout_dialog_filter_checkbox_semester_4"
+                        style="@style/AlertDialog.Filter.CheckBox.Box" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/AlertDialog.Filter.CheckBox.TextView"
+                        android:text="5" />
+
+                    <CheckBox
+                        android:id="@+id/layout_dialog_filter_checkbox_semester_5"
+                        style="@style/AlertDialog.Filter.CheckBox.Box" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/AlertDialog.Filter.CheckBox.TextView"
+                        android:text="6" />
+
+                    <CheckBox
+                        android:id="@+id/layout_dialog_filter_checkbox_semester_6"
+                        style="@style/AlertDialog.Filter.CheckBox.Box" />
+                </LinearLayout>
+            </LinearLayout>
+        </TableRow>
+
+
+        <View style="@style/AlertDialog.Filter.Divider" />
+
+        <TableRow android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Tag:"
+                android:textColor="?attr/colorOnPrimary"
+                android:textSize="15sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/layout_dialog_filter_textview_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="17sp"
+                    tools:text="01.01.1970" />
+
+                <ImageButton
+                    android:id="@+id/layout_dialog_filter_button_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:background="@android:color/transparent"
+                    android:textAlignment="center"
+                    app:srcCompat="@drawable/icon_filter_calendar"
+                    app:tint="?attr/colorOnPrimary" />
+
+            </LinearLayout>
+
+        </TableRow>
+
+    </TableLayout>
+
+</ScrollView>
