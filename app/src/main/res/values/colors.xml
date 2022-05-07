@@ -13,11 +13,6 @@
     <color name="Theme1.colorAccent">#00BCD4</color>
     <color name="Theme1.colorOnAccent">#fff</color>
 
-    <color name="Theme1.colorPrimaryText">#212121</color>
-    <color name="Theme1.colorSecondaryText">#757575</color>
-
-    <color name="Theme1.colorDivider">#BDBDBD</color>
-
     <color name="Theme1.colorBackground">#fff</color>
     <color name="Theme1.colorOnBackground">#000</color>
 
@@ -34,12 +29,6 @@
     <color name="Theme2.colorAccent">#607D8B</color>
     <color name="Theme2.colorOnAccent">#fff</color>
 
-    <color name="Theme2.colorPrimaryText">#212121</color>
-    <color name="Theme2.colorSecondaryText">#757575</color>
-
-    <color name="Theme2.colorDivider">#BDBDBD</color>
-
     <color name="Theme2.colorBackground">#fff</color>
     <color name="Theme2.colorOnBackground">#000</color>
-
 </resources>

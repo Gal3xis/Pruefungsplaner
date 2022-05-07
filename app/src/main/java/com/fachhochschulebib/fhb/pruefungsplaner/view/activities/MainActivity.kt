@@ -357,7 +357,7 @@ class MainActivity : AppCompatActivity() {
      *
      */
     fun changeFragment(fragment: MainActivityFragment): Boolean {
-        activity_main_toolbar?.title = fragment.name
+        activity_main_toolbar.title = fragment.getName(this)
         drawer_layout.closeDrawer(GravityCompat.START)
         activity_main_textview_current_period_timestamp.visibility = View.VISIBLE
         when {

@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +17,7 @@ import kotlinx.android.synthetic.main.fragment_privacy_declaration.*
  */
 class PrivacyDeclarationFragment : MainActivityFragment() {
 
-    /**
-     * Sets the name of that fragment to "Datenschutzerklärung"
-     */
-    override var name: String="Datenschutzerklärung"
+
 
     /**
      * Overrides the onViewCreated()-Method, which is called in the Fragment LifeCycle right after the onCreateView()-Method.
@@ -33,6 +31,21 @@ class PrivacyDeclarationFragment : MainActivityFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         fragment_privacy_declaration_textview_privacy_declaration.text = context?.let { Utils.readTextFile(it,R.raw.text_privacy_declarement) }
+    }
+
+
+    /**
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_privacy_declaration_name)
     }
 
     /**

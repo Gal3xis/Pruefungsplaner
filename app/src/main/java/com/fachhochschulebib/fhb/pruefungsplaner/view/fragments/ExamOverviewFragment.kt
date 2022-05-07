@@ -39,11 +39,6 @@ class ExamOverviewFragment() : MainActivityFragment() {
     private lateinit var viewModel: ExamOverviewViewModel
 
     /**
-     * Sets the name of that fragment
-     */
-    override var name: String= "Prüfungen"
-
-    /**
      * The adapter of the recyclerview that displays all exams to the user.
      * Contains a list of all exams for the selected courses with the current Filter applied.
      * @see RecyclerViewExamAdapter
@@ -61,6 +56,21 @@ class ExamOverviewFragment() : MainActivityFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+    }
+
+
+    /**
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_exam_overview_name)
     }
 
     /**

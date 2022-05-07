@@ -13,11 +13,6 @@
     <color name="Theme1.colorAccent">#00BCD4</color>
     <color name="Theme1.colorOnAccent">#ddd</color>
 
-    <color name="Theme1.colorPrimaryText">#fff</color>
-    <color name="Theme1.colorSecondaryText">#ddd</color>
-
-    <color name="Theme1.colorDivider">#BDBDBD</color>
-
     <color name="Theme1.colorBackground">#202020</color>
     <color name="Theme1.colorOnBackground">#ddd</color>
 
@@ -33,11 +28,6 @@
 
     <color name="Theme2.colorAccent">#607D8B</color>
     <color name="Theme2.colorOnAccent">#ddd</color>
-
-    <color name="Theme2.colorPrimaryText">#fff</color>
-    <color name="Theme2.colorSecondaryText">#ddd</color>
-
-    <color name="Theme2.colorDivider">#BDBDBD</color>
 
     <color name="Theme2.colorBackground">#202020</color>
     <color name="Theme2.colorOnBackground">#ddd</color>

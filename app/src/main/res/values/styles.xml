@@ -18,16 +18,8 @@
         <item name="colorAccent">@color/Theme1.colorAccent</item>
         <item name="colorOnAccent">@color/Theme1.colorOnAccent</item>
 
-        <item name="colorPrimaryText">@color/Theme1.colorPrimaryText</item>
-        <item name="colorSecondaryText">@color/Theme1.colorSecondaryText</item>
-
-        <item name="colorDivider">@color/Theme1.colorDivider</item>
-
         <item name="colorBackground">@color/Theme1.colorBackground</item>
         <item name="colorOnBackground">@color/Theme1.colorOnBackground</item>
-
-        <item name="colorChecked">@color/Theme1.colorPrimary</item>
-        <item name="colorUnchecked">@color/Theme1.colorAccent</item>
 
         <item name="actionMenuTextColor">@color/Theme1.colorOnPrimaryDark</item>
 
@@ -35,7 +27,7 @@
 
     <style name="Theme.AppTheme_2" parent="BaseTheme">
         <item name="themeName">@string/Theme2_ThemeName</item>
-        <!-- Customize your theme here. -->
+
         <item name="colorPrimary">@color/Theme2.colorPrimary</item>
         <item name="colorOnPrimary">@color/Theme2.colorOnPrimary</item>
 
@@ -47,11 +39,6 @@
 
         <item name="colorAccent">@color/Theme2.colorAccent</item>
         <item name="colorOnAccent">@color/Theme2.colorOnAccent</item>
-
-        <item name="colorPrimaryText">@color/Theme2.colorPrimaryText</item>
-        <item name="colorSecondaryText">@color/Theme2.colorSecondaryText</item>
-
-        <item name="colorDivider">@color/Theme2.colorDivider</item>
 
         <item name="colorBackground">@color/Theme2.colorBackground</item>
         <item name="colorOnBackground">@color/Theme2.colorOnBackground</item>

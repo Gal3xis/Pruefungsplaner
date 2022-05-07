@@ -145,5 +145,14 @@
     <string name="calendar_io_alertdialog_ask_positive_button">Automatisch</string>
     <string name="calendar_io_alertdialog_ask_negative_button">Manuell</string>
 
+    <!-- Fragment names -->
+    <string name="fragment_change_courses_name">Studiengänge verwalten</string>
+    <string name="fragment_exam_overview_name">Prüfungen</string>
+    <string name="fragment_favorites_overview_name">Favoriten</string>
+    <string name="fragment_feedback_name">Feedback</string>
+    <string name="fragment_impressum_name">Impressum</string>
+    <string name="fragment_privacy_declaration_name">Datenschutzerklärung</string>
+    <string name="fragment_settings_name">Einstellungen</string>
+
 
 </resources>

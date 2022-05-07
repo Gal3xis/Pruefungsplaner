@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -28,10 +29,7 @@ class FeedbackFragment : MainActivityFragment() {
      */
     private lateinit var viewModel: FeedbackViewModel
 
-    /**
-     * Sets the name of that fragment to "Feedback"
-     */
-    override var name: String="Feedback"
+
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
@@ -48,6 +46,21 @@ class FeedbackFragment : MainActivityFragment() {
         viewModel = ViewModelProvider(
             requireActivity(), ViewModelFactory(requireActivity().application)
         )[FeedbackViewModel::class.java]
+    }
+
+
+    /**
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_feedback_name)
     }
 
     /**

@@ -282,12 +282,10 @@ int attr colorAccent 0x7f0300d8
 int attr colorBackground 0x7f0300d9
 int attr colorBackgroundFloating 0x7f0300da
 int attr colorButtonNormal 0x7f0300db
-int attr colorChecked 0x7f0300dc
 int attr colorContainer 0x7f0300dd
 int attr colorControlActivated 0x7f0300de
 int attr colorControlHighlight 0x7f0300df
 int attr colorControlNormal 0x7f0300e0
-int attr colorDivider 0x7f0300e1
 int attr colorError 0x7f0300e2
 int attr colorErrorContainer 0x7f0300e3
 int attr colorOnAccent 0x7f0300e4
@@ -314,11 +312,9 @@ int attr colorPrimaryDark 0x7f0300f8
 int attr colorPrimaryInverse 0x7f0300f9
 int attr colorPrimaryLight 0x7f0300fa
 int attr colorPrimarySurface 0x7f0300fb
-int attr colorPrimaryText 0x7f0300fc
 int attr colorPrimaryVariant 0x7f0300fd
 int attr colorSecondary 0x7f0300fe
 int attr colorSecondaryContainer 0x7f0300ff
-int attr colorSecondaryText 0x7f030100
 int attr colorSecondaryVariant 0x7f030101
 int attr colorSurface 0x7f030102
 int attr colorSurfaceInverse 0x7f030103
@@ -326,7 +322,6 @@ int attr colorSurfaceVariant 0x7f030104
 int attr colorSwitchThumbNormal 0x7f030105
 int attr colorTertiary 0x7f030106
 int attr colorTertiaryContainer 0x7f030107
-int attr colorUnchecked 0x7f030108
 int attr commitIcon 0x7f030109
 int attr constraintRotate 0x7f03010a
 int attr constraintSet 0x7f03010b
@@ -1203,7 +1198,6 @@ int bool mtrl_btn_textappearance_all_caps 0x7f040014
 int bool workmanager_test_configuration 0x7f040015
 int color Theme1_colorAccent 0x7f050000
 int color Theme1_colorBackground 0x7f050001
-int color Theme1_colorDivider 0x7f050002
 int color Theme1_colorOnAccent 0x7f050003
 int color Theme1_colorOnBackground 0x7f050004
 int color Theme1_colorOnPrimary 0x7f050005
@@ -1212,11 +1206,8 @@ int color Theme1_colorOnPrimaryLight 0x7f050007
 int color Theme1_colorPrimary 0x7f050008
 int color Theme1_colorPrimaryDark 0x7f050009
 int color Theme1_colorPrimaryLight 0x7f05000a
-int color Theme1_colorPrimaryText 0x7f05000b
-int color Theme1_colorSecondaryText 0x7f05000c
 int color Theme2_colorAccent 0x7f05000d
 int color Theme2_colorBackground 0x7f05000e
-int color Theme2_colorDivider 0x7f05000f
 int color Theme2_colorOnAccent 0x7f050010
 int color Theme2_colorOnBackground 0x7f050011
 int color Theme2_colorOnPrimary 0x7f050012
@@ -1225,8 +1216,6 @@ int color Theme2_colorOnPrimaryLight 0x7f050014
 int color Theme2_colorPrimary 0x7f050015
 int color Theme2_colorPrimaryDark 0x7f050016
 int color Theme2_colorPrimaryLight 0x7f050017
-int color Theme2_colorPrimaryText 0x7f050018
-int color Theme2_colorSecondaryText 0x7f050019
 int color abc_background_cache_hint_selector_material_dark 0x7f05001a
 int color abc_background_cache_hint_selector_material_light 0x7f05001b
 int color abc_btn_colored_borderless_text_material 0x7f05001c
@@ -3441,6 +3430,12 @@ int string filter_spinner_courses_all 0x7f100059
 int string filter_spinner_examiner_all 0x7f10005a
 int string filter_spinner_modules_all 0x7f10005b
 int string filter_textview_date_all 0x7f10005c
+int string fragment_change_courses_name 0x7f1000e9
+int string fragment_exam_overview_name 0x7f1000ea
+int string fragment_favorites_overview_name 0x7f1000eb
+int string fragment_feedback_name 0x7f1000ec
+int string fragment_impressum_name 0x7f1000ed
+int string fragment_privacy_declaration_name 0x7f1000ee
 int string fragment_settings_alertdialog_delete_calendar_message 0x7f10005d
 int string fragment_settings_alertdialog_delete_calendar_negative_button 0x7f10005e
 int string fragment_settings_alertdialog_delete_calendar_positive_button 0x7f10005f
@@ -3457,6 +3452,7 @@ int string fragment_settings_alertdialog_update_calendar_message 0x7f100069
 int string fragment_settings_alertdialog_update_calendar_negative_button 0x7f10006a
 int string fragment_settings_alertdialog_update_calendar_positive_button 0x7f10006b
 int string fragment_settings_alertdialog_update_calendar_title 0x7f10006c
+int string fragment_settings_name 0x7f1000ef
 int string hide_bottom_view_on_scroll_behavior 0x7f10006d
 int string icon_content_description 0x7f10006e
 int string impressum_ok 0x7f10006f
@@ -6468,18 +6464,13 @@ int styleable TextInputLayout_startIconTintMode 61
 int styleable TextInputLayout_suffixText 62
 int styleable TextInputLayout_suffixTextAppearance 63
 int styleable TextInputLayout_suffixTextColor 64
-int[] styleable Theme { 0x7f0300d9, 0x7f0300dc, 0x7f0300e1, 0x7f0300e4, 0x7f0300eb, 0x7f0300ec, 0x7f0300fa, 0x7f0300fc, 0x7f030100, 0x7f030108, 0x7f0303f9 }
+int[] styleable Theme { 0x7f0300d9, 0x7f0300e4, 0x7f0300eb, 0x7f0300ec, 0x7f0300fa, 0x7f0303f9 }
 int styleable Theme_colorBackground 0
-int styleable Theme_colorChecked 1
-int styleable Theme_colorDivider 2
-int styleable Theme_colorOnAccent 3
-int styleable Theme_colorOnPrimaryDark 4
-int styleable Theme_colorOnPrimaryLight 5
-int styleable Theme_colorPrimaryLight 6
-int styleable Theme_colorPrimaryText 7
-int styleable Theme_colorSecondaryText 8
-int styleable Theme_colorUnchecked 9
-int styleable Theme_themeName 10
+int styleable Theme_colorOnAccent 1
+int styleable Theme_colorOnPrimaryDark 2
+int styleable Theme_colorOnPrimaryLight 3
+int styleable Theme_colorPrimaryLight 4
+int styleable Theme_themeName 5
 int[] styleable ThemeEnforcement { 0x01010034, 0x7f03017c, 0x7f03017d }
 int styleable ThemeEnforcement_android_textAppearance 0
 int styleable ThemeEnforcement_enforceMaterialTheme 1

@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,9 +34,18 @@ class ChangeCoursesFragment : MainActivityFragment() {
     private lateinit var viewModel: ChangeCoursesViewModel
 
     /**
-     * Sets the name of that fragment
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
      */
-    override var name: String="Studiengänge verwalten"
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_change_courses_name)
+    }
 
     /**
      * Overrides the onCreateView()-Method.

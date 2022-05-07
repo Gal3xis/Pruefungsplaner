@@ -1,5 +1,6 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
+import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -17,10 +18,6 @@ import kotlinx.android.synthetic.main.fragment_impressum.*
  * @since 1.6
  */
 class ImpressumFragment : MainActivityFragment() {
-    /**
-     * Sets the name of that fragment to "Impressum"
-     */
-    override var name: String="Impressum"
 
     /**
      * Overrides the onCreateView()-Method. It sets the current view to the fragment_impressum-layout.
@@ -35,6 +32,21 @@ class ImpressumFragment : MainActivityFragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_impressum, container, false)
+    }
+
+
+    /**
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_impressum_name)
     }
 
     /**

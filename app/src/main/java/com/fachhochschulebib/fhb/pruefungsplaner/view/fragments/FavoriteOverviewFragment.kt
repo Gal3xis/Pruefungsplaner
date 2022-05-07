@@ -1,6 +1,7 @@
 package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -32,10 +33,6 @@ class FavoriteOverviewFragment : MainActivityFragment() {
      */
     private lateinit var viewModel: FavoriteOverviewViewModel
 
-    /**
-     * Sets the name of that fragment
-     */
-    override var name: String="Favoriten"
 
     /**
      * The adapter of the recyclerview that displays all favorite exams to the user.
@@ -62,6 +59,21 @@ class FavoriteOverviewFragment : MainActivityFragment() {
         )[FavoriteOverviewViewModel::class.java]
     }
 
+
+    /**
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_favorites_overview_name)
+
+    }
 
     /**
      * Overrides the onCreateView()-Method.

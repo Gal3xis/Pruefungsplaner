@@ -9,7 +9,7 @@ import java.lang.System;
  * @author Alexander Lange (Email:alexander.lange@fh-bielefeld.de)
  * @since 1.6
  */
-@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000\u0014\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0002\b\u0005\b&\u0018\u00002\u00020\u0001B\u0005\u00a2\u0006\u0002\u0010\u0002R\u0018\u0010\u0003\u001a\u00020\u0004X\u00a6\u000e\u00a2\u0006\f\u001a\u0004\b\u0005\u0010\u0006\"\u0004\b\u0007\u0010\b\u00a8\u0006\t"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/MainActivityFragment;", "Landroidx/fragment/app/Fragment;", "()V", "name", "", "getName", "()Ljava/lang/String;", "setName", "(Ljava/lang/String;)V", "app_debug"})
+@kotlin.Metadata(mv = {1, 6, 0}, k = 1, d1 = {"\u0000\u0018\n\u0002\u0018\u0002\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010\u000e\n\u0000\n\u0002\u0018\u0002\n\u0000\b&\u0018\u00002\u00020\u0001B\u0005\u00a2\u0006\u0002\u0010\u0002J\u0010\u0010\u0003\u001a\u00020\u00042\u0006\u0010\u0005\u001a\u00020\u0006H&\u00a8\u0006\u0007"}, d2 = {"Lcom/fachhochschulebib/fhb/pruefungsplaner/view/helper/MainActivityFragment;", "Landroidx/fragment/app/Fragment;", "()V", "getName", "", "context", "Landroid/content/Context;", "app_debug"})
 public abstract class MainActivityFragment extends androidx.fragment.app.Fragment {
     private java.util.HashMap _$_findViewCache;
     
@@ -18,14 +18,16 @@ public abstract class MainActivityFragment extends androidx.fragment.app.Fragmen
     }
     
     /**
-     * A parameter that stores the name of the fragment,which is displayed in the toolbar. Needs to be overridden by ever fragment in the main activity.
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
      */
     @org.jetbrains.annotations.NotNull()
-    public abstract java.lang.String getName();
-    
-    /**
-     * A parameter that stores the name of the fragment,which is displayed in the toolbar. Needs to be overridden by ever fragment in the main activity.
-     */
-    public abstract void setName(@org.jetbrains.annotations.NotNull()
-    java.lang.String p0);
+    public abstract java.lang.String getName(@org.jetbrains.annotations.NotNull()
+    android.content.Context context);
 }

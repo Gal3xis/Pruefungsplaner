@@ -3,6 +3,7 @@ package com.fachhochschulebib.fhb.pruefungsplaner.view.fragments
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.TimePickerDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
@@ -33,19 +34,13 @@ class SettingsFragment : MainActivityFragment() {
      */
     private lateinit var viewModel: SettingsViewModel
 
-    /**
-     * Sets the name of that fragment
-     */
-    override var name: String = "Einstellungen"
 
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
-     * In this Method, the global parameter which are independent of the UI get initialized,
-     * like the App-SharedPreferences and the reference to the Room-Database
      *
      * @since 1.6
      *
-     * @author Alexander Lange (E-Mail:alexander.lange@fh-bielefeld.de)
+     * @author Alexander Lange
      *
      * @see Fragment.onCreate
      */
@@ -56,6 +51,21 @@ class SettingsFragment : MainActivityFragment() {
             ViewModelFactory(requireActivity().application)
         )[SettingsViewModel::class.java]
         setHasOptionsMenu(true)
+    }
+
+
+    /**
+     * Needs to be implemented by every fragment to return the name of the fragment
+     *
+     * @param context The applicationcontext to access the string resources
+     *
+     * @return The name of the fragment
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    override fun getName(context: Context): String {
+        return context.getString(R.string.fragment_settings_name)
     }
 
     /**
