@@ -446,6 +446,20 @@ class DatabaseRepository(
     }
 
     /**
+     * Deletes a  [TestPlanEntry] from the local database.
+     *
+     * @param entry The [TestPlanEntry] that needs to be deleted from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    suspend fun deleteEntry(entry: TestPlanEntry) {
+        withContext(Dispatchers.IO) {
+            localDataSource.deleteEntry(entry)
+        }
+    }
+
+    /**
      * Deletes all [TestPlanEntry]-Objects from the local database.
      *
      * @author Alexander Lange
@@ -457,6 +471,21 @@ class DatabaseRepository(
         }
     }
 
+    /**
+     * Returns a single [TestPlanEntry] for a given id.
+     *
+     * @param id The Id of the [TestPlanEntry]
+     *
+     * @return The [TestPlanEntry] for the Id
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    suspend fun getSingleEntryById(id:String):TestPlanEntry?{
+        return withContext(Dispatchers.IO){
+            return@withContext localDataSource.getSingleEntryById(id)
+        }
+    }
 
     /**
      * Gets all [TestPlanEntry]-Objects from the local database

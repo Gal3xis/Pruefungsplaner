@@ -145,7 +145,7 @@ class SharedPreferencesRepository(context: Context) {
      * @since 1.6
      */
     fun getSelectedCalendar():Long{
-        return settings.getLong("selectedCalendar",0)
+        return settings.getLong("selectedCalendar",-1)
     }
 
 //Period information

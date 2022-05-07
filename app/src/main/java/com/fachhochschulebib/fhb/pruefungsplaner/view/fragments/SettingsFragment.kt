@@ -150,7 +150,7 @@ class SettingsFragment : MainActivityFragment() {
         var selectedName: String? = null
         calendar.forEach {
             names.add(it.name)
-            if (it.id == viewModel.getSelectedCalendar()) {
+            if (it.id == viewModel.getSelectedCalendar(requireContext())) {
                 selectedName = it.name
             }
         }

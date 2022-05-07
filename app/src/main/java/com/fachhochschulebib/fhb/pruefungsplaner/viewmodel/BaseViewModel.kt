@@ -276,7 +276,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      */
     open fun insertEntry(testPlanEntry: TestPlanEntry) {
         viewModelScope.launch {
-            repository.insertEntry(testPlanEntry)
+            repository.getSingleEntryById(testPlanEntry.id)?.let { updateEntry(it,testPlanEntry) }?:repository.insertEntry(testPlanEntry)
         }
     }
 
@@ -377,6 +377,23 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    /**
+     * Updates an existing [TestPlanEntry] with a new one. Keeps the favorite state.
+     *
+     * @param old The existing [TestPlanEntry]
+     * @param new The [TestPlanEntry] that shall replace the existing one.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun updateEntry(old:TestPlanEntry,new: TestPlanEntry){
+        viewModelScope.launch(coroutineExceptionHandler) {
+            new.favorite = old.favorite
+            repository.deleteEntry(old)
+            repository.insertEntry(new)
+        }
+    }
+
     //DELETE
     /**
      * Deletes a list of [TestPlanEntry]-Objects from the local database.
@@ -405,6 +422,19 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
         }
     }
 
+    /**
+     * Deletes a  [TestPlanEntry] from the local database.
+     *
+     * @param entry The [TestPlanEntry] that needs to be deleted from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    open fun deleteEntry(entry:TestPlanEntry){
+        viewModelScope.launch (coroutineExceptionHandler){
+            repository.deleteEntry(entry)
+        }
+    }
     //GET
     /**
      * Returns a list of [TestPlanEntry]-Objects with a given favorite-state.
@@ -943,8 +973,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getSelectedCalendar():Long?{
-        return if(spRepository.getSelectedCalendar()==0L)null else spRepository.getSelectedCalendar()
+    fun getSelectedCalendar(context: Context):Long?{
+        return if(spRepository.getSelectedCalendar() <0L)CalendarIO.getPrimaryCalendar(context)?.id else spRepository.getSelectedCalendar()
     }
 
     //Calendar
@@ -970,7 +1000,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     fun insertIntoCalendar(context: Context, entry: TestPlanEntry){
-        val calId = getSelectedCalendar()?:return
+        val calId = getSelectedCalendar(context)?:return
         val id = CalendarIO.insertEntry(context,calId, entry, getCalendarInsertionType())
         id?.let {
             spRepository.addCalendarId(it, entry.id )
@@ -987,7 +1017,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     fun insertIntoCalendar(context: Context, entries: List<TestPlanEntry>){
-        val calId = getSelectedCalendar()?:return
+        val calId = getSelectedCalendar(context)?:return
         val entryIds = mutableMapOf<Long,String>()
         entries.forEach {
             val id = CalendarIO.insertEntry(context,calId, it, getCalendarInsertionType())

@@ -106,6 +106,17 @@ interface UserDao {
     suspend fun deleteEntries(entries: List<TestPlanEntry>)
 
     /**
+     * Deletes a  [TestPlanEntry] from the local database.
+     *
+     * @param entry The [TestPlanEntry] that needs to be deleted from the local database.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    @Delete
+    suspend fun deleteEntry(entry: TestPlanEntry)
+
+    /**
      * Deletes all [TestPlanEntry]-Objects from the local database.
      *
      * @author Alexander Lange
@@ -114,6 +125,18 @@ interface UserDao {
     @Query("DELETE FROM TestPlanEntry ")
     suspend fun deleteAllEntries()
     //Queries
+    /**
+     * Returns a single [TestPlanEntry] for a given id.
+     *
+     * @param id The Id of the [TestPlanEntry]
+     *
+     * @return The [TestPlanEntry] for the Id
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    @Query("SELECT * FROM TestPlanEntry WHERE id = :id LIMIT 1")
+    suspend fun getSingleEntryById(id:String):TestPlanEntry?
     /**
      * Gets the Live Data with all [TestPlanEntry]-Objects, ordered by their exam date
      *

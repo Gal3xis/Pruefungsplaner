@@ -305,6 +305,24 @@ public final class UserDao_Impl implements UserDao {
   }
 
   @Override
+  public Object deleteEntry(final TestPlanEntry entry,
+      final Continuation<? super Unit> continuation) {
+    return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
+      @Override
+      public Unit call() throws Exception {
+        __db.beginTransaction();
+        try {
+          __deletionAdapterOfTestPlanEntry.handle(entry);
+          __db.setTransactionSuccessful();
+          return Unit.INSTANCE;
+        } finally {
+          __db.endTransaction();
+        }
+      }
+    }, continuation);
+  }
+
+  @Override
   public Object insertUuid(final String uuid, final Continuation<? super Unit> continuation) {
     return CoroutinesRoom.execute(__db, true, new Callable<Unit>() {
       @Override
@@ -420,6 +438,148 @@ public final class UserDao_Impl implements UserDao {
         } finally {
           __db.endTransaction();
           __preparedStmtOfDeleteAllEntries.release(_stmt);
+        }
+      }
+    }, continuation);
+  }
+
+  @Override
+  public Object getSingleEntryById(final String id,
+      final Continuation<? super TestPlanEntry> continuation) {
+    final String _sql = "SELECT * FROM TestPlanEntry WHERE id = ? LIMIT 1";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    if (id == null) {
+      _statement.bindNull(_argIndex);
+    } else {
+      _statement.bindString(_argIndex, id);
+    }
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<TestPlanEntry>() {
+      @Override
+      public TestPlanEntry call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "ID");
+          final int _cursorIndexOfFavorite = CursorUtil.getColumnIndexOrThrow(_cursor, "Favorite");
+          final int _cursorIndexOfFirstExaminer = CursorUtil.getColumnIndexOrThrow(_cursor, "FirstExaminer");
+          final int _cursorIndexOfSecondExaminer = CursorUtil.getColumnIndexOrThrow(_cursor, "SecondExaminer");
+          final int _cursorIndexOfDate = CursorUtil.getColumnIndexOrThrow(_cursor, "Date");
+          final int _cursorIndexOfExamForm = CursorUtil.getColumnIndexOrThrow(_cursor, "ExamForm");
+          final int _cursorIndexOfSemester = CursorUtil.getColumnIndexOrThrow(_cursor, "Semester");
+          final int _cursorIndexOfModule = CursorUtil.getColumnIndexOrThrow(_cursor, "Module");
+          final int _cursorIndexOfCourse = CursorUtil.getColumnIndexOrThrow(_cursor, "course");
+          final int _cursorIndexOfTermin = CursorUtil.getColumnIndexOrThrow(_cursor, "termin");
+          final int _cursorIndexOfRoom = CursorUtil.getColumnIndexOrThrow(_cursor, "room");
+          final int _cursorIndexOfStatus = CursorUtil.getColumnIndexOrThrow(_cursor, "Status");
+          final int _cursorIndexOfHint = CursorUtil.getColumnIndexOrThrow(_cursor, "Hint");
+          final int _cursorIndexOfTimeStamp = CursorUtil.getColumnIndexOrThrow(_cursor, "TimeStamp");
+          final TestPlanEntry _result;
+          if(_cursor.moveToFirst()) {
+            _result = new TestPlanEntry();
+            final String _tmpId;
+            if (_cursor.isNull(_cursorIndexOfId)) {
+              _tmpId = null;
+            } else {
+              _tmpId = _cursor.getString(_cursorIndexOfId);
+            }
+            _result.setId(_tmpId);
+            final boolean _tmpFavorite;
+            final int _tmp;
+            _tmp = _cursor.getInt(_cursorIndexOfFavorite);
+            _tmpFavorite = _tmp != 0;
+            _result.setFavorite(_tmpFavorite);
+            final String _tmpFirstExaminer;
+            if (_cursor.isNull(_cursorIndexOfFirstExaminer)) {
+              _tmpFirstExaminer = null;
+            } else {
+              _tmpFirstExaminer = _cursor.getString(_cursorIndexOfFirstExaminer);
+            }
+            _result.setFirstExaminer(_tmpFirstExaminer);
+            final String _tmpSecondExaminer;
+            if (_cursor.isNull(_cursorIndexOfSecondExaminer)) {
+              _tmpSecondExaminer = null;
+            } else {
+              _tmpSecondExaminer = _cursor.getString(_cursorIndexOfSecondExaminer);
+            }
+            _result.setSecondExaminer(_tmpSecondExaminer);
+            final String _tmpDate;
+            if (_cursor.isNull(_cursorIndexOfDate)) {
+              _tmpDate = null;
+            } else {
+              _tmpDate = _cursor.getString(_cursorIndexOfDate);
+            }
+            _result.setDate(_tmpDate);
+            final String _tmpExamForm;
+            if (_cursor.isNull(_cursorIndexOfExamForm)) {
+              _tmpExamForm = null;
+            } else {
+              _tmpExamForm = _cursor.getString(_cursorIndexOfExamForm);
+            }
+            _result.setExamForm(_tmpExamForm);
+            final String _tmpSemester;
+            if (_cursor.isNull(_cursorIndexOfSemester)) {
+              _tmpSemester = null;
+            } else {
+              _tmpSemester = _cursor.getString(_cursorIndexOfSemester);
+            }
+            _result.setSemester(_tmpSemester);
+            final String _tmpModule;
+            if (_cursor.isNull(_cursorIndexOfModule)) {
+              _tmpModule = null;
+            } else {
+              _tmpModule = _cursor.getString(_cursorIndexOfModule);
+            }
+            _result.setModule(_tmpModule);
+            final String _tmpCourse;
+            if (_cursor.isNull(_cursorIndexOfCourse)) {
+              _tmpCourse = null;
+            } else {
+              _tmpCourse = _cursor.getString(_cursorIndexOfCourse);
+            }
+            _result.setCourse(_tmpCourse);
+            final String _tmpTermin;
+            if (_cursor.isNull(_cursorIndexOfTermin)) {
+              _tmpTermin = null;
+            } else {
+              _tmpTermin = _cursor.getString(_cursorIndexOfTermin);
+            }
+            _result.setTermin(_tmpTermin);
+            final String _tmpRoom;
+            if (_cursor.isNull(_cursorIndexOfRoom)) {
+              _tmpRoom = null;
+            } else {
+              _tmpRoom = _cursor.getString(_cursorIndexOfRoom);
+            }
+            _result.setRoom(_tmpRoom);
+            final String _tmpStatus;
+            if (_cursor.isNull(_cursorIndexOfStatus)) {
+              _tmpStatus = null;
+            } else {
+              _tmpStatus = _cursor.getString(_cursorIndexOfStatus);
+            }
+            _result.setStatus(_tmpStatus);
+            final String _tmpHint;
+            if (_cursor.isNull(_cursorIndexOfHint)) {
+              _tmpHint = null;
+            } else {
+              _tmpHint = _cursor.getString(_cursorIndexOfHint);
+            }
+            _result.setHint(_tmpHint);
+            final String _tmpTimeStamp;
+            if (_cursor.isNull(_cursorIndexOfTimeStamp)) {
+              _tmpTimeStamp = null;
+            } else {
+              _tmpTimeStamp = _cursor.getString(_cursorIndexOfTimeStamp);
+            }
+            _result.setTimeStamp(_tmpTimeStamp);
+          } else {
+            _result = null;
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
         }
       }
     }, continuation);
