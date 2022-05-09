@@ -374,6 +374,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     open fun updateCourse(courseName: String, chosen: Boolean) {
         viewModelScope.launch {
             repository.updateCourse(courseName, chosen)
+            updateDatabase()
         }
     }
 

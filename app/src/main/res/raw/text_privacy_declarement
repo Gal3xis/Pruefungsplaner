@@ -1,0 +1,24 @@
+Datenschutzerklärung
+
+Diese Datenschutzerklärung informiert Sie über die Verarbeitung personenbezogener Daten, die innerhalb der Prüfplan-App der Fachhochschule (FH) Bielefeld verarbeitet werden. Mit der Datenschutzerklärung kommt die FH Bielefeld ihrer Informationspflicht gemäß Artikel 13 der EU-Datenschutz-Grundverordnung (DSGVO) nach. Internetseiten, die über Formulare personenbezogene Daten erheben, informieren dort gesondert über die Verarbeitung der dort erhobenen Daten.
+
+Verarbeitung von Daten
+Zugriffsdaten
+
+Die Fachhochschule Bielefeld erhebt und verarbeitet die hier genannten und für den technischen Betrieb erforderlichen Daten in Logfiles zur Wahrung der technischen Sicherheit der Systeme zur Wahrung berechtigter Interessen der Hochschule gemäß Art. 6 Abs. 1 lit. f. DSGVO. Die Daten sind für die Auslieferung von Webseiten, für den sicheren Betrieb der Webserver sowie die Verbesserung des Webangebots erforderlich und werden nur für die jeweils genannten Zwecke genutzt.
+
+Bei ersten Zugriff eines Nutzers auf die Prüfplan-App wird eine anonyme UUID erstellt und gespeichert.
+
+Bei jedem weiteren Zugriff eines Nutzers auf die Prüfplan-App werden Zugriffsdaten gespeichert. Jeder Datensatz besteht aus:
+
+    dem Datum und der Uhrzeit des Abrufs,
+    der anonymen UUID des Nutzers.
+
+Die Daten werden ausschließlich anonymisiert zu statistischen Zwecken ausgewertet. Personenbezogene Nutzerprofile werden seitens der FH Bielefeld nicht gebildet.
+
+Personenbezogene Daten
+Personenbezogene Daten, die Ihre Prüfungen betreffen, werden ausschließlich lokal auf Ihrem Smartphone gespeichert.
+Sie können diese Daten jederzeit über die Prüfplan-App löschen.
+
+Datenweitergabe an Dritte
+Es erfolgt keine Weitergabe von Daten an Dritte.
