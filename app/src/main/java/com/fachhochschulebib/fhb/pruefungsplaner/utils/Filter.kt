@@ -123,7 +123,7 @@ object Filter {
      * @since 1.6
      */
     @Suppress("DEPRECATION")
-    private fun validateFilter(entry: TestPlanEntry?): Boolean {
+    fun validateFilter(entry: TestPlanEntry?): Boolean {
         if (entry == null) {
             return false
         }

@@ -9,7 +9,6 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/FH/Semester 9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/choose_courses.xml" value="0.3022522522522523" />
-        <entry key="..\:/FH/Semester 9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/fragment_change_courses.xml" value="0.30720720720720723" />
         <entry key="..\:/FH/Semester 9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/fragment_impressum.xml" value="0.47612612612612615" />
         <entry key="..\:/FH/Semester 9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_dialog_filter.xml" value="0.47612612612612615" />
         <entry key="..\:/FH/Semester 9/Projektarbeit/-Pruefungsplaner-/app/src/main/res/layout/layout_theme_spinner_background.xml" value="0.47612612612612615" />
@@ -79,6 +78,98 @@
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/activity_main_drawer.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation.xml" value="0.1" />
         <entry key="..\:/Users/Alex/Desktop/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation_bottom.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable-anydpi/ic_change_course.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable-anydpi/ic_elective.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable-anydpi/icon_navigation_drawer_change_course.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_period_timespan.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_rounded_corners.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_rounded_corners_strong.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_settings_theme_color.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/background_timespan.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/baseline_library_add.xml" value="0.1075" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/button_rounded_corners.xml" value="0.1075" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/button_rounded_corners2.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/divider_dotted_line.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/dotted_line.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.16" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_baseline_close_24.xml" value="0.16" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_baseline_feedback.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_baseline_menu.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_calendar.xml" value="0.16" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_circle.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_favorit.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_filter.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_in_calendar.xml" value="0.16" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_not_favorit.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_not_in_calendar.xml" value="0.16" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_search.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_themecolor.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_update.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/ic_zoom_in_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_actionbar_filter.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_actionbar_navigation_drawer.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_exam_favorit.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_exam_not_favorit.xml" value="0.159" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_favorite_in_calendar.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_favorite_not_in_calendar.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_filter_calendar.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_navigation_drawer_change_courses.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/icon_navigation_drawer_feedback.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/nav_background.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/rounded_color_border.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/settings_button.xml" value="0.13" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/drawable/spinnerbackground.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout-v26/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout-v26/layout_dialog_filter.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/activity_change_faculty.xml" value="0.12" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/activity_start.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/checkliste.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/choose_courses.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/favoriten.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/feedback.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_about.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_change_courses.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_exam_overview.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_feedback.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_impressum.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_privacy_declaration.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/fragment_settings.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/hauptfenster.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_courses_checklist_view_holder.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_dialog_filter.xml" value="0.2542372881355932" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_exam_overview_exam.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_favorite_contextmenu.xml" value="0.15049166310389056" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_favorite_overview_card.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_favorite_overview_card_contextmenu.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_navigation_drawer_header.xml" value="0.15049166310389056" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_settings_theme_spinner_background.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_settings_theme_spinner_row.xml" value="0.6666666666666666" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_simple_spinner_adapter_background.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_simpler_spinner_adapter_item.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_status_legend.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/layout_theme_spinner_background.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/nav_header_main.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/optionfragment.xml" value="0.12" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/simple_spinner_background.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/start.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/termine.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/layout/terminefragment.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/menu/action_menu.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/menu/activity_main_drawer.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/menu/menu_actionbar.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/menu/menu_navigation_drawer.xml" value="0.15049166310389056" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation.xml" value="0.1638888888888889" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/menu/navigation_bottom.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/favoriten.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/favoriten_round.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/ic_inCalendar.xml" value="0.16" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/optionen.xml" value="0.1" />
+        <entry key="..\:/Users/Alex/Documents/EigeneApps/Pruefungsplaner/app/src/main/res/mipmap-anydpi-v26/suche_round.xml" value="0.1" />
       </map>
     </option>
   </component>

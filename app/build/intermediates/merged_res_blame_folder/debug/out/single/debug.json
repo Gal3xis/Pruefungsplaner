@@ -16,12 +16,12 @@
         "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\raw\\text_impressum"
     },
     {
-        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
-    },
-    {
         "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\drawable-xhdpi_icon_navigation_drawer_settings.png.flat",
         "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\drawable-xhdpi\\icon_navigation_drawer_settings.png"
+    },
+    {
+        "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\src\\main\\res\\mipmap-xhdpi\\ic_launcher_round.png"
     },
     {
         "merged": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\merged_res\\debug\\mipmap-anydpi-v26_ic_launcher.xml.flat",
