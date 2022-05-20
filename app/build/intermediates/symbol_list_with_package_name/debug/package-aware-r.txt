@@ -2631,7 +2631,6 @@ id action_text
 id actions
 id activity_change_faculty_button_ok
 id activity_change_faculty_button_select_faculty
-id activity_change_faculty_fh_logo
 id activity_change_faculty_label_select_courses
 id activity_change_faculty_recyclerview_courses
 id activity_change_faculty_title
