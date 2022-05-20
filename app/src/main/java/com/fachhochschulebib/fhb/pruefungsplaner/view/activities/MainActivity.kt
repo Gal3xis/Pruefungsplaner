@@ -107,10 +107,10 @@ class MainActivity : AppCompatActivity() {
             }
             activity_main_tab_layout.addOnTabSelectedListener(object:TabLayout.OnTabSelectedListener{
                 override fun onTabReselected(tab: TabLayout.Tab?) {
+                    userFilter()
                     when(tab?.position){
                         1->changeFragment(FavoriteOverviewFragment())
                         else->{
-                            userFilter()
                             changeFragment(ExamOverviewFragment())
                         }
                     }
