@@ -2904,7 +2904,6 @@ id material_timepicker_view
 id material_value_index
 id media_actions
 id menu_item_filter
-id menu_item_legend
 id menu_item_search
 id message
 id middle

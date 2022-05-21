@@ -17,11 +17,4 @@
         app:showAsAction="always"
         android:visible="false"
         />
-
-
-
-    <item android:id="@+id/menu_item_legend"
-        android:title="@string/action_menu_item_legend"
-        app:showAsAction="always"
-        android:visible="false"/>
 </menu>
