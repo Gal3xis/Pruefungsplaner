@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose
  * @author Alexander Lange
  * @since 1.6
  */
-class JsonUuid {
+class GSONUuid {
     @SerializedName("uuid")
     @Expose
     var uuid: String? = null

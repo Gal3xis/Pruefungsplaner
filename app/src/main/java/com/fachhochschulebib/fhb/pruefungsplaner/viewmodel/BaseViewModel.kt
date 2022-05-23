@@ -275,7 +275,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun insertEntry(testPlanEntry: TestPlanEntry) {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             repository.getSingleEntryById(testPlanEntry.id)?.let { updateEntry(it,testPlanEntry) }?:repository.insertEntry(testPlanEntry)
         }
     }
@@ -301,7 +301,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun insertCourses(courses: List<Course>) {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             repository.insertCourses(courses)
         }
     }
@@ -332,7 +332,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      *
      */
     open fun insertFaculty(faculty: Faculty) {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             repository.insertFaculty(faculty)
         }
     }
@@ -350,7 +350,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun updateEntryFavorite(context: Context, favorite: Boolean, entry:TestPlanEntry) {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             repository.updateEntryFavorite(favorite, entry.id)
             if (!getCalendarSync()) return@launch
             if (!favorite) {
@@ -372,7 +372,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun updateCourse(courseName: String, chosen: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.updateCourse(courseName, chosen)
             updateDatabase()
         }
@@ -405,7 +405,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun deleteEntries(entries: List<TestPlanEntry>) {
-        viewModelScope.launch {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.deleteEntries(entries)
         }
     }
@@ -417,7 +417,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun deleteAllEntries(context: Context) {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             deleteAllFromCalendar(context)
             repository.deleteAllEntries()
         }
@@ -1128,7 +1128,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     private fun checkSustainability() {
-        viewModelScope.launch {
+        viewModelScope.launch (coroutineExceptionHandler){
             val mainCourse = getMainCourseId()?.let { getCourseById(it) }
             if (mainCourse?.chosen == false) {
                 deleteMainCourse()

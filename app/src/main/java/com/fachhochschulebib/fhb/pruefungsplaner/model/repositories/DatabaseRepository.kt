@@ -257,7 +257,7 @@ class DatabaseRepository(
      * @author Alexander Lange
      * @since 1.6
      */
-    suspend fun fetchUUID(faculty: String): JsonUuid? {
+    suspend fun fetchUUID(faculty: String): GSONUuid? {
         return withContext(Dispatchers.IO) {
             return@withContext remoteDataSource.getUUID(faculty)
         }

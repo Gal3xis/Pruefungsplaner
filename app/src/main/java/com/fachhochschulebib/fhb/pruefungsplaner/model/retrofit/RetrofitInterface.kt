@@ -62,7 +62,7 @@ interface RetrofitInterface{
      * @since 1.6
      */
     @GET("$uuidRelativeUrl/{pFaculty}/")
-    suspend fun getUUID(@Path("pFaculty") ppFaculty: String): JsonUuid?
+    suspend fun getUUID(@Path("pFaculty") ppFaculty: String): GSONUuid?
 
     /**
      * Send feedback to the server.
