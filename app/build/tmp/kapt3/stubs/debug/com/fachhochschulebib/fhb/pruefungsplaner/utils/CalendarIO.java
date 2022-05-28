@@ -135,6 +135,8 @@ public final class CalendarIO {
      * @param[e] The [TestPlanEntry] that holds the necessary information
      * @param insertionType The [InsertionType] for this entry
      *
+     * @return The ID of the new Calendar event
+     *
      * @author Alexander Lange
      * @since 1.6
      */

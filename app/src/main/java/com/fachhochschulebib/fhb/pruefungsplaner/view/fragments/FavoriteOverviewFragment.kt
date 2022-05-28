@@ -72,7 +72,6 @@ class FavoriteOverviewFragment : MainActivityFragment() {
      */
     override fun getName(context: Context): String {
         return context.getString(R.string.fragment_favorites_overview_name)
-
     }
 
     /**

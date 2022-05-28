@@ -54,28 +54,6 @@ class StartActivity : AppCompatActivity() {
     private lateinit var viewModel: StartViewModel
 
     /**
-     * Updatemanager that checks the Playstore for new App updates.
-     */
-    private var updateManager: AppUpdateManager? = null
-
-    /**
-     * Listener that checks the state of the update download if an update is initiated.
-     * Displays a Snackbar to let the user know that the update is ready to install.
-     */
-    private val installStateUpdateListener: InstallStateUpdatedListener =
-        InstallStateUpdatedListener {
-            if (it.installStatus() == InstallStatus.DOWNLOADED) {
-                Snackbar.make(
-                    findViewById(android.R.id.content),
-                    "Update is ready",
-                    Snackbar.LENGTH_INDEFINITE
-                ).setAction("Install") {
-                    updateManager?.completeUpdate()
-                }.show()
-            }
-        }
-
-    /**
      * The recyclerview to display all courses for a selected faculty, from where the user can pick his courses.
      */
     private lateinit var recyclerViewCourses: CoursesCheckList
@@ -98,7 +76,6 @@ class StartActivity : AppCompatActivity() {
         applySettings(viewModel)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_change_faculty)
-        initUpdateManager()
         initRecyclerviewCourses()
         initButtons()
         viewModel.fetchFaculties()
@@ -111,31 +88,6 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Initializes the updatemanager. The updatemanager checks the google playstore for new app updates
-     * and if one was found he starts a dialog in which the user can choose if he wants
-     * to update or not.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     */
-    private fun initUpdateManager() {
-        updateManager = AppUpdateManagerFactory.create(this)
-        updateManager?.appUpdateInfo?.addOnSuccessListener {
-            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
-                    AppUpdateType.FLEXIBLE
-                )
-            ) {
-                updateManager?.startUpdateFlowForResult(
-                    it,
-                    AppUpdateType.FLEXIBLE,
-                    this,
-                    UPDATE_REQUEST_CODE
-                )
-            }
-        }
-        updateManager?.registerListener(installStateUpdateListener)
-    }
 
     /**
      * Initializes the recyclerview that shows all courses for the selected faculty.
@@ -234,41 +186,7 @@ class StartActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Dispatch incoming result to the correct fragment.
-     *
-     * @param[requestCode] – The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
-     * @param[resultCode] – The integer result code returned by the child activity through its setResult().
-     * @param[data] – An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     * @see AppCompatActivity.onActivityResult
-     */
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
-            Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
-        }
-        if (resultCode == 0) {
-            finish()
-        }
-    }
 
-    /**
-     * Called when the app is stopped.
-     *
-     * @author Alexander Lange
-     * @since 1.6
-     *
-     * @see AppCompatActivity.onStop
-     */
-    override fun onStop() {
-        updateManager?.unregisterListener(installStateUpdateListener)
-        super.onStop()
-    }
 
     /**
      * Opens the [MainActivity].

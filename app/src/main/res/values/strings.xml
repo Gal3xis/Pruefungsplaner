@@ -136,9 +136,9 @@
 
     <!-- Notification Channel -->
     <string name="channel_name">Pruefungsplaner Channel</string>
-    <string name="channel_description">Used to send updates about new plans</string>
+    <string name="channel_description">Zum senden von Benachrichtigungen, wenn sich die Prüfplan Datenbank ändert</string>
 
-    <string name="background_worker_notification">The examinationplan has been updated!</string>
+    <string name="background_worker_notification">Ein neuer Prüfplan ist verfügbar!</string>
 
 
     <string name="calendar_io_alertdialog_ask_title">Termin Eintragen</string>

@@ -28,8 +28,15 @@ import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainActivityFragmen
 import com.fachhochschulebib.fhb.pruefungsplaner.view.helper.MainFragmentPagerAdapter
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.MainViewModel
 import com.fachhochschulebib.fhb.pruefungsplaner.viewmodel.ViewModelFactory
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.install.InstallStateUpdatedListener
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.InstallStatus
+import com.google.android.play.core.install.model.UpdateAvailability
 import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -55,6 +62,30 @@ class MainActivity : AppCompatActivity() {
      */
     private lateinit var viewModel: MainViewModel
 
+
+    /**
+     * Updatemanager that checks the Playstore for new App updates.
+     */
+    private var updateManager: AppUpdateManager? = null
+
+    /**
+     * Listener that checks the state of the update download if an update is initiated.
+     * Displays a Snackbar to let the user know that the update is ready to install.
+     */
+    private val installStateUpdateListener: InstallStateUpdatedListener =
+        InstallStateUpdatedListener {
+            if (it.installStatus() == InstallStatus.DOWNLOADED) {
+                Snackbar.make(
+                    findViewById(android.R.id.content),
+                    "Update is ready",
+                    Snackbar.LENGTH_INDEFINITE
+                ).setAction("Install") {
+                    updateManager?.completeUpdate()
+                }.show()
+            }
+        }
+
+
     /**
      * Overrides the onCreate()-Method, which is called first in the Fragment-LifeCycle.
      *
@@ -70,6 +101,7 @@ class MainActivity : AppCompatActivity() {
         applySettings(viewModel)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initUpdateManager()
         initPeriodTimeSpan()
         viewModel.updatePeriod(this)
         initViewPager()
@@ -84,6 +116,70 @@ class MainActivity : AppCompatActivity() {
 
         changeFragment(ExamOverviewFragment())
 
+    }
+
+
+    /**
+     * Called when the app is stopped.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see AppCompatActivity.onStop
+     */
+    override fun onStop() {
+        updateManager?.unregisterListener(installStateUpdateListener)
+        super.onStop()
+    }
+
+
+    /**
+     * Dispatch incoming result to the correct fragment.
+     *
+     * @param[requestCode] – The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param[resultCode] – The integer result code returned by the child activity through its setResult().
+     * @param[data] – An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     *
+     * @see AppCompatActivity.onActivityResult
+     */
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
+            Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
+        }
+        if (resultCode == 0) {
+            finish()
+        }
+    }
+
+    /**
+     * Initializes the updatemanager. The updatemanager checks the google playstore for new app updates
+     * and if one was found he starts a dialog in which the user can choose if he wants
+     * to update or not.
+     *
+     * @author Alexander Lange
+     * @since 1.6
+     */
+    private fun initUpdateManager() {
+        updateManager = AppUpdateManagerFactory.create(this)
+        updateManager?.appUpdateInfo?.addOnSuccessListener {
+            if (it.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE && it.isUpdateTypeAllowed(
+                    AppUpdateType.FLEXIBLE
+                )
+            ) {
+                updateManager?.startUpdateFlowForResult(
+                    it,
+                    AppUpdateType.FLEXIBLE,
+                    this,
+                    UPDATE_REQUEST_CODE
+                )
+            }
+        }
+        updateManager?.registerListener(installStateUpdateListener)
     }
 
     /**

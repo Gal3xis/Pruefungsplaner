@@ -80,7 +80,6 @@ object CalendarIO {
             var calID: Long
             var calVisible:Boolean
             var calAccessLevel:Int
-            var cont = 0
             val nameCol: Int = managedCursor.getColumnIndex(projection[1])
             val idCol: Int = managedCursor.getColumnIndex(projection[0])
             val idVisibility:Int = managedCursor.getColumnIndex(projection[2])
@@ -91,7 +90,6 @@ object CalendarIO {
                 calVisible = (managedCursor.getInt(idVisibility)) == 1
                 calAccessLevel = managedCursor.getInt(idAccessLevel)
                 ret.add(SmartphoneCalendar(calID,calName,calVisible,calAccessLevel))
-                cont++
             } while (managedCursor.moveToNext())
             managedCursor.close()
         }
@@ -302,6 +300,8 @@ object CalendarIO {
      * @param[e] The [TestPlanEntry] that holds the necessary information
      * @param insertionType The [InsertionType] for this entry
      *
+     * @return The ID of the new Calendar event
+     *
      * @author Alexander Lange
      * @since 1.6
      */
@@ -323,6 +323,7 @@ object CalendarIO {
                 var ret:Long? = null
                 AlertDialog.Builder(context)
                     .setTitle(context.getString(R.string.calendar_io_alertdialog_ask_title))
+                    .setMessage(e.module)
                     .setPositiveButton(context.getString(R.string.calendar_io_alertdialog_ask_positive_button)) { _, _ ->
                         ret = forceInsert(context, CAL_ID, e)
                     }

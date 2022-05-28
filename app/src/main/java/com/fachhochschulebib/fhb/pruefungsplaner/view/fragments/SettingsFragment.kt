@@ -147,11 +147,11 @@ class SettingsFragment : MainActivityFragment() {
         val calendar = CalendarIO.getCalendars(requireContext()).toMutableList()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             calendar.removeIf {
-                it.accessLevel < 700
+                it.accessLevel < 700 || !it.visible
             }
         } else {
             calendar.forEach {
-                if (it.accessLevel < 700) {
+                if (it.accessLevel < 700||!it.visible) {
                     calendar.remove(it)
                 }
             }
