@@ -68,11 +68,7 @@ object Utils {
         val stringBuilder:StringBuilder = StringBuilder()
         while (true){
             string = reader.readLine()
-            try {
-                if (string==null) break
-            }catch (ex:Exception){
-                Log.e("Utils",ex.stackTraceToString())
-            }
+            if (string==null) break
             stringBuilder.append(string).append("\n")
         }
         inputStream.close()
