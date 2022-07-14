@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alex\\.gradle\\caches\\transforms-3\\3e2429fd1fc8383574b4f9b3ec488623\\transformed\\material-1.5.0\\res\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
+                    "source": "C:\\Users\\Alex\\.gradle\\caches\\transforms-3\\cd34141fd4fcfd9bff2db49ee9f71e51\\transformed\\material-1.5.0\\res\\values-h550dp-port-v13\\values-h550dp-port-v13.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

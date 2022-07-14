@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.Fachhochschulebib.fhb.pruefungsplaner"
-    android:versionCode="12"
-    android:versionName="1.6" >
+    android:versionCode="16"
+    android:versionName="1.8" >
 
     <uses-sdk
         android:minSdkVersion="23"
@@ -37,7 +37,6 @@
         <activity
             android:name="com.fachhochschulebib.fhb.pruefungsplaner.view.activities.MainActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/title_activity_recycleview_tabelle"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="adjustResize" />
 

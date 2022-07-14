@@ -107,7 +107,7 @@
     <string name="navigation_drawer_settings">Optionen</string>
     <string name="navigation_drawer_change_course">Studiengänge verwalten</string>
     <string name="navigation_drawer_change_faculty">Fachbereich ändern</string>
-    <string name="navigation_drawer_feedback">Feedback geben</string>
+    <string name="navigation_drawer_feedback">Feedback</string>
 
     <!-- Tab Layout -->
     <string name="tab_layout_exam_overview">Alle Prüfungen</string>

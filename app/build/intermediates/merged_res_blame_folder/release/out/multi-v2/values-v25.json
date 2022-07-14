@@ -4,7 +4,7 @@
             "outputFile": "C:\\Users\\Alex\\Documents\\EigeneApps\\Pruefungsplaner\\app\\build\\intermediates\\incremental\\mergeReleaseResources\\merged.dir\\values-v25\\values-v25.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Alex\\.gradle\\caches\\transforms-3\\42011bc131d65c6f2416f63f88fb888e\\transformed\\appcompat-1.4.1\\res\\values-v25\\values-v25.xml",
+                    "source": "C:\\Users\\Alex\\.gradle\\caches\\transforms-3\\a66dea581319bbd7cd3678c8d83c5edd\\transformed\\appcompat-1.4.1\\res\\values-v25\\values-v25.xml",
                     "from": {
                         "startLines": "2,3,4,6",
                         "startColumns": "4,4,4,4",

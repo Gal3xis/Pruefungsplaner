@@ -4,7 +4,7 @@ import java.lang.System;
 
 /**
  * A background worker, that checks the Server-Database for changes and then notifies the user.
- * TODO Checking process not implemented yet.
+ *
  *
  * @author Alexander Lange
  * @since 1.6

@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.os.Process
+import android.provider.CalendarContract
 import android.view.*
 import android.widget.*
 import androidx.fragment.app.Fragment
@@ -147,11 +148,17 @@ class SettingsFragment : MainActivityFragment() {
         val calendar = CalendarIO.getCalendars(requireContext()).toMutableList()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             calendar.removeIf {
-                it.accessLevel < 700 || !it.visible
+                (it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_OWNER
+                        &&it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_ROOT
+                        &&it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_EDITOR
+                        &&it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR) || !it.visible
             }
         } else {
             calendar.forEach {
-                if (it.accessLevel < 700||!it.visible) {
+                if ((it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_OWNER
+                            &&it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_ROOT
+                            &&it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_EDITOR
+                            &&it.accessLevel != CalendarContract.Calendars.CAL_ACCESS_CONTRIBUTOR)||!it.visible) {
                     calendar.remove(it)
                 }
             }
