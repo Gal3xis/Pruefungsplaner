@@ -122,8 +122,9 @@ interface UserDao {
      * @author Alexander Lange
      * @since 1.6
      */
-    @Query("DELETE FROM TestPlanEntry ")
+    @Query("DELETE FROM TestPlanEntry")
     suspend fun deleteAllEntries()
+
     //Queries
     /**
      * Returns a single [TestPlanEntry] for a given id.
