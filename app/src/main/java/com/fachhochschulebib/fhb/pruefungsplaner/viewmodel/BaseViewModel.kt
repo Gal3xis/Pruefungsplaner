@@ -184,7 +184,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     fun updatePeriod(context: Context) {
         viewModelScope.launch(coroutineExceptionHandler) {
             val examPeriods = repository.fetchExamPeriods()
-            val currentPeriod= examPeriods?.let { getCurrentPeriod(it) }
+            val currentPeriod = examPeriods?.let { getCurrentPeriod(it) }
             val numberOfWeeks = currentPeriod?.get("PPWochen").toString().toInt()
 
             //Set start-and end date
@@ -196,21 +196,34 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
             val endDate = Calendar.getInstance()
             endDate.time = startDate.time
-            endDate.add(Calendar.DATE,numberOfWeeks*7-2)
-
-            //Delete all entries if a new plan is available
-            if(startDate.after(getEndDate())){
-                deleteAllEntries(context)
-            }
+            endDate.add(Calendar.DATE, numberOfWeeks * 7 - 2)
 
             setStartDate(startDate.time)
             setEndDate(endDate.time)
             setPeriodTermin(currentPeriod?.get("pruefTermin").toString())
             setPeriodYear(currentPeriod?.get("PPJahr").toString())
             setPeriodTerm(currentPeriod?.get("pruefSemester").toString())
+
+            removeOutdatedEntries()
             fetchEntries()
-            val formattedTimeSpan = "${sdfDisplay.format(startDate.time)}-${sdfDisplay.format(endDate.time)}"
+            val formattedTimeSpan =
+                "${sdfDisplay.format(startDate.time)}-${sdfDisplay.format(endDate.time)}"
             livePeriodTimeSpan.postValue(formattedTimeSpan)
+        }
+    }
+
+    private fun removeOutdatedEntries() {
+        viewModelScope.launch(coroutineExceptionHandler) {
+            val entries = repository.getAllEntries()
+            val startDate = getStartDate()
+            val endDate = getEndDate()
+            entries?.forEach {
+                var date =
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).parse(it.date)
+                if (date.before(startDate) || date.after(endDate)) {
+                    repository.deleteEntry(it)
+                }
+            }
         }
     }
 
@@ -228,8 +241,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     private fun getCurrentPeriod(periodObjects: JSONArray): JSONObject? {
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
 
-        var latestDate:Date? =null
-        var latestPeriod:JSONObject? = null
+        var latestDate: Date? = null
+        var latestPeriod: JSONObject? = null
         val facultyId = getSelectedFacultyId()
 
         for (i in 0 until periodObjects.length()) {
@@ -238,7 +251,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
 
             //Continue if the faculty ids do not match
             val facultyIdDB = obj.getJSONObject("fbFbid")["fbid"].toString()
-            if(facultyIdDB!=facultyId){
+            if (facultyIdDB != facultyId) {
                 continue
             }
 
@@ -248,13 +261,13 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
             val startDate = formatter.parse(startDateString)
 
             //If no latest date is set, initialize it and continue the loop
-            if(latestDate==null){
+            if (latestDate == null) {
                 latestDate = startDate
                 latestPeriod = obj
                 continue
             }
 
-            if(startDate?.after(latestDate) == true){
+            if (startDate?.after(latestDate) == true) {
                 latestDate = startDate
                 latestPeriod = obj
             }
@@ -275,8 +288,9 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun insertEntry(testPlanEntry: TestPlanEntry) {
-        viewModelScope.launch (coroutineExceptionHandler){
-            repository.getSingleEntryById(testPlanEntry.id)?.let { updateEntry(it,testPlanEntry) }?:repository.insertEntry(testPlanEntry)
+        viewModelScope.launch(coroutineExceptionHandler) {
+            repository.getSingleEntryById(testPlanEntry.id)?.let { updateEntry(it, testPlanEntry) }
+                ?: repository.insertEntry(testPlanEntry)
         }
     }
 
@@ -301,7 +315,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun insertCourses(courses: List<Course>) {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.insertCourses(courses)
         }
     }
@@ -332,7 +346,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      *
      */
     open fun insertFaculty(faculty: Faculty) {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.insertFaculty(faculty)
         }
     }
@@ -349,16 +363,15 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun updateEntryFavorite(context: Context, favorite: Boolean, entry:TestPlanEntry) {
-        viewModelScope.launch (coroutineExceptionHandler){
+    open fun updateEntryFavorite(context: Context, favorite: Boolean, entry: TestPlanEntry) {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.updateEntryFavorite(favorite, entry.id)
             if (!getCalendarSync()) return@launch
             if (!favorite) {
-                val calendarId = getCalendarId(entry)?:return@launch
-                deleteFromCalendar(context,calendarId)
-            }
-            else
-                insertIntoCalendar(context,entry)
+                val calendarId = getCalendarId(entry) ?: return@launch
+                deleteFromCalendar(context, calendarId)
+            } else
+                insertIntoCalendar(context, entry)
         }
     }
 
@@ -387,7 +400,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun updateEntry(old:TestPlanEntry,new: TestPlanEntry){
+    open fun updateEntry(old: TestPlanEntry, new: TestPlanEntry) {
         viewModelScope.launch(coroutineExceptionHandler) {
             new.favorite = old.favorite
             repository.deleteEntry(old)
@@ -417,7 +430,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     open fun deleteAllEntries(context: Context) {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             deleteAllFromCalendar(context)
             repository.deleteAllEntries()
         }
@@ -431,8 +444,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    open fun deleteEntry(entry:TestPlanEntry){
-        viewModelScope.launch (coroutineExceptionHandler){
+    open fun deleteEntry(entry: TestPlanEntry) {
+        viewModelScope.launch(coroutineExceptionHandler) {
             repository.deleteEntry(entry)
         }
     }
@@ -583,6 +596,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
     private fun deleteMainCourse() {
         spRepository.deleteMainCourse()
     }
+
     /**
      * Sets the faculty, selected by the user
      *
@@ -764,7 +778,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun setSelectedCalendar(id:Long){
+    fun setSelectedCalendar(id: Long) {
         spRepository.setSelectedCalendar(id)
     }
 
@@ -974,8 +988,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getSelectedCalendar(context: Context):Long?{
-        return if(spRepository.getSelectedCalendar() <0L)CalendarIO.getPrimaryCalendar(context)?.id else spRepository.getSelectedCalendar()
+    fun getSelectedCalendar(context: Context): Long? {
+        return if (spRepository.getSelectedCalendar() < 0L) CalendarIO.getPrimaryCalendar(context)?.id else spRepository.getSelectedCalendar()
     }
 
     //Calendar
@@ -987,7 +1001,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getCalendarIds():MutableList<Long>{
+    fun getCalendarIds(): MutableList<Long> {
         return spRepository.getIds().keys.toMutableList()
     }
 
@@ -1000,11 +1014,11 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun insertIntoCalendar(context: Context, entry: TestPlanEntry){
-        val calId = getSelectedCalendar(context)?:return
-        val id = CalendarIO.insertEntry(context,calId, entry, getCalendarInsertionType())
+    fun insertIntoCalendar(context: Context, entry: TestPlanEntry) {
+        val calId = getSelectedCalendar(context) ?: return
+        val id = CalendarIO.insertEntry(context, calId, entry, getCalendarInsertionType())
         id?.let {
-            spRepository.addCalendarId(it, entry.id )
+            spRepository.addCalendarId(it, entry.id)
         }
     }
 
@@ -1017,16 +1031,16 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun insertIntoCalendar(context: Context, entries: List<TestPlanEntry>){
-        val calId = getSelectedCalendar(context)?:return
-        val entryIds = mutableMapOf<Long,String>()
+    fun insertIntoCalendar(context: Context, entries: List<TestPlanEntry>) {
+        val calId = getSelectedCalendar(context) ?: return
+        val entryIds = mutableMapOf<Long, String>()
         entries.forEach {
-            val id = CalendarIO.insertEntry(context,calId, it, getCalendarInsertionType())
+            val id = CalendarIO.insertEntry(context, calId, it, getCalendarInsertionType())
             if (id != null) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    entryIds.putIfAbsent(id,it.id)
-                }else{
-                    if(!entryIds.containsKey(id)){
+                    entryIds.putIfAbsent(id, it.id)
+                } else {
+                    if (!entryIds.containsKey(id)) {
                         entryIds[id] = it.id
                     }
                 }
@@ -1046,10 +1060,10 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun getCalendarId(entry: TestPlanEntry):Long?{
-        var ret:Long? = null
+    fun getCalendarId(entry: TestPlanEntry): Long? {
+        var ret: Long? = null
         spRepository.getIds().forEach {
-            if(it.value==entry.id){
+            if (it.value == entry.id) {
                 ret = it.key
             }
         }
@@ -1067,8 +1081,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      *
      * @see getCalendarId
      */
-    fun deleteFromCalendar(context: Context, id:Long){
-        CalendarIO.deleteEvent(context,id)
+    fun deleteFromCalendar(context: Context, id: Long) {
+        CalendarIO.deleteEvent(context, id)
         spRepository.deleteId(id)
     }
 
@@ -1083,8 +1097,8 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      *
      * @see getCalendarId
      */
-    fun deleteFromCalendar(context: Context, ids:List<Long>){
-        CalendarIO.deleteEvents(context,ids)
+    fun deleteFromCalendar(context: Context, ids: List<Long>) {
+        CalendarIO.deleteEvents(context, ids)
         spRepository.deleteIds(ids)
     }
 
@@ -1096,9 +1110,9 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun deleteAllFromCalendar(context: Context){
+    fun deleteAllFromCalendar(context: Context) {
         getCalendarIds().forEach {
-            deleteFromCalendar(context,it)
+            deleteFromCalendar(context, it)
         }
     }
 
@@ -1110,12 +1124,12 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @author Alexander Lange
      * @since 1.6
      */
-    fun updateCalendar(context: Context){
-        viewModelScope.launch (coroutineExceptionHandler){
+    fun updateCalendar(context: Context) {
+        viewModelScope.launch(coroutineExceptionHandler) {
             val ids = getCalendarIds()
-            deleteFromCalendar(context,ids)
-            val favorites = getFavorites()?:return@launch
-            insertIntoCalendar(context,favorites)
+            deleteFromCalendar(context, ids)
+            val favorites = getFavorites() ?: return@launch
+            insertIntoCalendar(context, favorites)
         }
     }
 
@@ -1128,7 +1142,7 @@ open class BaseViewModel(application: Application) : AndroidViewModel(applicatio
      * @since 1.6
      */
     private fun checkSustainability() {
-        viewModelScope.launch (coroutineExceptionHandler){
+        viewModelScope.launch(coroutineExceptionHandler) {
             val mainCourse = getMainCourseId()?.let { getCourseById(it) }
             if (mainCourse?.chosen == false) {
                 deleteMainCourse()

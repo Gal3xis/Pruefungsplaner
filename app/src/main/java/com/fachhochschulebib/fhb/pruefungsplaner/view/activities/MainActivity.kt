@@ -102,18 +102,17 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         viewModel.updatePeriod(this)
-        initUpdateManager()
+        if(!intent.getBooleanExtra("NoUpdate",false)){
+            initUpdateManager()
+        }
         initPeriodTimeSpan()
         initViewPager()
         initTabLayout()
         initActionBar()
         initNavigationDrawer()
         initFilterDialog()
-
-
         userFilter()
         BackgroundUpdatingService.initPeriodicRequests(applicationContext)
-
         changeFragment(ExamOverviewFragment())
 
     }
@@ -150,6 +149,10 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == UPDATE_REQUEST_CODE && resultCode != RESULT_OK) {
             Toast.makeText(this, "Cancel", Toast.LENGTH_LONG).show()
+            val intent = Intent(this,MainActivity::class.java)
+            intent.putExtra("NoUpdate",true)
+            startActivity(intent)
+            return
         }
         if (resultCode == 0) {
             finish()

@@ -226,7 +226,7 @@ public final class UserDao_Impl implements UserDao {
     this.__preparedStmtOfDeleteAllEntries = new SharedSQLiteStatement(__db) {
       @Override
       public String createQuery() {
-        final String _query = "DELETE FROM TestPlanEntry ";
+        final String _query = "DELETE FROM TestPlanEntry";
         return _query;
       }
     };

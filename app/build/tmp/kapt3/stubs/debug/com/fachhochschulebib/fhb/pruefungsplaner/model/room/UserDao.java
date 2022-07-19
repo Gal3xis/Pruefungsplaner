@@ -145,7 +145,7 @@ public abstract interface UserDao {
      * @since 1.6
      */
     @org.jetbrains.annotations.Nullable()
-    @androidx.room.Query(value = "DELETE FROM TestPlanEntry ")
+    @androidx.room.Query(value = "DELETE FROM TestPlanEntry")
     public abstract java.lang.Object deleteAllEntries(@org.jetbrains.annotations.NotNull()
     kotlin.coroutines.Continuation<? super kotlin.Unit> continuation);
     
